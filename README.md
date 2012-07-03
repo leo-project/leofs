@@ -47,7 +47,7 @@ $ make release
 ````
 
 * Modify Configuration File: [detail](http://www.leofs.org/docs/install.html#set-up-leofs-s-system-configuration-only-leofs-manager)
-* Open Manager Console: [detail](http://www.leofs.org/docs/admin_guide.html#system-operation)
+* Operate on "Manager Console": [detail](http://www.leofs.org/docs/admin_guide.html#system-operation)
 
 ```text
 $ cd package/leofs
