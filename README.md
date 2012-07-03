@@ -23,15 +23,19 @@ LeoFS is the Web shaped object storage system.
       * HIGH Reliability
       * HIGH Scalability
 
-* Where to find more
-  * Detail document is [here](http://www.leofs.org/docs/).
+Where to find more
+-------------------
 
-* Quich Start
-  * Prepare
-    * "leofs" uses the "rebar" build system. Makefile so that simply running "make" at the top level should work.
-      * [rebar](https://github.com/basho/rebar)
-    * "leofs" requires [Erlang R14B04](http://www.erlang.org/download_release/12).
-  * Build and Package
+* Detail document is [here](http://www.leofs.org/docs/).
+
+Quich Start
+-------------
+
+* Prepare
+  * "leofs" uses the "rebar" build system. Makefile so that simply running "make" at the top level should work.
+    * [rebar](https://github.com/basho/rebar)
+  * "leofs" requires [Erlang R14B04](http://www.erlang.org/download_release/12).
+* Build and Package
 
 ```text
 $ git clone https://github.com/leo-project/leofs.git
@@ -40,8 +44,8 @@ $ make prepare
 $ make release
 ````
 
-  * Modify Configuration File: [detail](http://www.leofs.org/docs/install.html#set-up-leofs-s-system-configuration-only-leofs-manager)
-  * Open Manager Console: [detail](http://www.leofs.org/docs/admin_guide.html#system-operation)
+* Modify Configuration File: [detail](http://www.leofs.org/docs/install.html#set-up-leofs-s-system-configuration-only-leofs-manager)
+* Open Manager Console: [detail](http://www.leofs.org/docs/admin_guide.html#system-operation)
 
 ```text
 $ cd package/leofs
