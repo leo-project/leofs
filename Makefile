@@ -4,9 +4,9 @@ all: deps compile
 
 prepare:
 	mkdir -p ./apps
-	(cd apps/ && git clone https://bitbucket.org/yosukehara/leo_manager.git)
-	(cd apps/ && git clone https://bitbucket.org/yosukehara/leo_storage.git)
-	(cd apps/ && git clone https://bitbucket.org/yosukehara/leo_gateway.git)
+	(cd apps/ && git clone https://github.com/leo-project/leo_manager.git)
+	(cd apps/ && git clone https://github.com/leo-project/leo_storage.git)
+	(cd apps/ && git clone https://github.com/leo-project/leo_gateway.git)
 
 compile:
 	@./rebar compile
