@@ -72,4 +72,28 @@ curl -v -X PUT -H "Content-Type: image/jpeg" --data-binary @stockholm-0.jpg http
 curl -v http://localhost:8080/swe/stockholm-0.jpg > stockholm-0-1.jpg
 ```
 
+GOALs
+-------
+* LeoFS aims to provide the following advantages:
+  * HIGH Cost Performance
+     * Fast - Over 200GB/sec into 10GE
+     * A lower cost than other storage
+     * Provide easy management and easy operation
+  * HIGH Reliability
+     * Nine nines - Operating ratios is 99.9999999%
+  * High Scalability
+     * Build Huge-Cluster at low cost
 
+Milestones
+-----------
+* 0.9.1
+  * Large Object Support (over 64MB)
+  * Support Cowboy on "leo-gateway"
+  * Enhance S3-API (1)
+     * Bucket-related
+* 0.9.2
+  * Enhance S3-API (2)
+     * Authentication
+  * Web-Console (Leo Tamer)
+     * Log Analysis/Search
+     * File Manager
