@@ -32,15 +32,18 @@ LeoFS is the Web shaped object storage system.
       * [rebar](https://github.com/basho/rebar)
     * "leofs" requires [Erlang R14B04](http://www.erlang.org/download_release/12).
   * Build and Package
-``` text
+
+```text
 $ git clone https://github.com/leo-project/leofs.git
 $ cd leofs
 $ make prepare
 $ make release
 ````
+
   * Modify Configuration File: [detail](http://www.leofs.org/docs/install.html#set-up-leofs-s-system-configuration-only-leofs-manager)
   * Open Manager Console: [detail](http://www.leofs.org/docs/admin_guide.html#system-operation)
-````text
+
+```text
 $ cd package/leofs
 $ manager_0/bin/leo_manager start
 $ manager_1/bin/leo_manager start
