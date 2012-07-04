@@ -51,14 +51,24 @@ $ make release
 * Operate on "Manager Console": [detail](http://www.leofs.org/docs/admin_guide.html#system-operation)
 
 ```text
+## Need to modify configuration files - 
+##     manager_master: leofs/package/leofs/manager_0/etc/app.config
+##      manager_slave: leofs/package/leofs/manager_1/etc/app.config
+##            storage: leofs/package/leofs/storage/etc/app.config
+##            gateway: leofs/package/leofs/storage/etc/app.config
+
 $ cd package/leofs
 $ manager_0/bin/leo_manager start
 $ manager_1/bin/leo_manager start
 $ storage/bin/leo_storage start
-.
-.
-.
+
+## Need to operate on "LeoFS-Manager's Console" - 
+##     - Command: [ATTACH, START, STATUS]
+
 $ gateway/bin/leo_gateway start
+
+## Confirm LeoFS's Status on "LeoFS-Manager's Console" - 
+##     - Command: [STATUS]
 ````
 
 * PUT an Object into LeoFS
