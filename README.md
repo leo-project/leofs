@@ -71,13 +71,13 @@ $ gateway/bin/leo_gateway start
 ##     - Command: [STATUS]
 ````
 
-* PUT an Object into LeoFS
+* Example - PUT an Object into LeoFS
 
 ```text
 curl -v -X PUT -H "Content-Type: image/jpeg" --data-binary @stockholm-0.jpg http://localhost:8080/swe/stockholm-0.jpg
 ```
 
-* GET an Object from LeoFS
+* Example - GET an Object from LeoFS
 
 ```text
 curl -v http://localhost:8080/swe/stockholm-0.jpg > stockholm-0-1.jpg
