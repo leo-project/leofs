@@ -31,7 +31,7 @@ Where to find more
 
 * Detail document is [here](http://www.leofs.org/docs/).
 
-Quich Start
+Quick Start
 -------------
 
 * Prepare
