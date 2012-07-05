@@ -2,17 +2,11 @@
 
 all: deps compile
 
-prepare:
-	mkdir -p ./apps
-	(cd apps/ && git clone https://github.com/leo-project/leo_manager.git)
-	(cd apps/ && git clone https://github.com/leo-project/leo_storage.git)
-	(cd apps/ && git clone https://github.com/leo-project/leo_gateway.git)
-
 compile:
 	@./rebar compile
 	rm -rf deps/cherly
-	(cd apps/leo_gateway/cherly && make clean && make)
-	(cp -r apps/leo_gateway/cherly deps/)
+	(cd deps/leo_gateway/cherly && make clean && make)
+	(cp -r deps/leo_gateway/cherly deps/)
 
 deps:
 	@./rebar get-deps
