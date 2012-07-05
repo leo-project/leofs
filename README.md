@@ -43,7 +43,6 @@ Quich Start
 ```text
 $ git clone https://github.com/leo-project/leofs.git
 $ cd leofs
-$ make prepare
 $ make
 $ make release
 ````
