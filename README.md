@@ -13,11 +13,11 @@ Feature
     * LeoFS is the Web shaped object storage system.
     * LeoFS is built to operate in highly distributed environments, such as the private cloud.
     * LeoFS has NO SPOF.
-    * LeoFS's cluster consists of a set of loosely connected nodes. So, They can be viewed as "ONE-Huge Storage".
+    * LeoFS's cluster consists of a set of loosely connected nodes. So, They can be viewed as ONE-Huge Storage.
     * LeoFS is made by modular-system. So, It realize a lower cost of operations.
 * 3-HIGHs
-    * “LeoFS” is highly scalable, fault-tolerant "Distributed File System" for the Web.
-    * Different than other DFS — “LeoFS” offers a number of unique benefits to users:
+    * LeoFS is highly scalable, fault-tolerant Distributed File System for the Web.
+    * Different than other DFS — LeoFS offers a number of unique benefits to users:
        * HIGH cost performance
        * HIGH Reliability
        * HIGH Scalability
@@ -87,7 +87,7 @@ GOALs
 -------
 * LeoFS aims to provide the following advantages:
   * HIGH Cost Performance
-     * Fast - Over 200MB/sec into 10GE
+     * Fast - Over 200MB/sec into 10GE (READ)
      * A lower cost than other storage
      * Provide easy management and easy operation
   * HIGH Reliability
