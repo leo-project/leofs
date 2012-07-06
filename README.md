@@ -14,7 +14,7 @@ Feature
     * LeoFS is built to operate in highly distributed environments, such as the private cloud.
     * LeoFS has NO SPOF.
     * LeoFS's cluster consists of a set of loosely connected nodes. So, They can be viewed as ONE-Huge Storage.
-    * LeoFS is made by modular-system. So, It realize a lower cost of operations.
+    * LeoFS is made by modular-system. So, It realizes a lower cost of operations.
 * 3-HIGHs
     * LeoFS is highly scalable, fault-tolerant Distributed File System for the Web.
     * Different than other DFS — LeoFS offers a number of unique benefits to users:
@@ -22,8 +22,8 @@ Feature
        * HIGH Reliability
        * HIGH Scalability
 * S3 Compatible
-    * LeoFS is Amazon S3 comapatible storage system.
-    * If you think public-cloud's cost is HIGH, You can easily switch to LeoFS.
+    * LeoFS is Amazon S3 compatible storage system.
+    * Switch to LeoFS to decrease your cost from more expensive public-cloud solution.
 
 
 Where to find more
