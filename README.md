@@ -97,14 +97,14 @@ GOALs
 
 Milestones
 -----------
-* 0.9.1
+* 0.10
   * Large Object Support (over 64MB)
-  * Support [Cowboy](https://github.com/essen) on "[leo_gateway](https://github.com/leo-project/leo_gateway)"
   * Enhance S3-API (1)
      * Bucket-related
-* 0.9.2
+* 0.11
   * Enhance S3-API (2)
      * Authentication
+  * Support [Cowboy](https://github.com/essen) on "[leo_gateway](https://github.com/leo-project/leo_gateway)"
   * Web-Console ([Leo Tamer](https://github.com/leo-project/leo_tamer))
      * Log Analysis/Search
      * File Manager

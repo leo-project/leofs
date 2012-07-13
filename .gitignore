@@ -1,6 +1,5 @@
 apps/
 deps/
-*.sh
 rel/leo_manager/leo_manager/
 rel/leo_gateway/leo_gateway/
 rel/leo_storage/leo_storage/
