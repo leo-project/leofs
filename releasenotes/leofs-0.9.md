@@ -10,12 +10,13 @@ Improvements
 -------------
 
 * Removed ZMQ log-appender and AMQP log-appender for leo_logger, They will be provided LeoFS's sub projects.
-* Updated "LeoFS's object container's header", because of be able to add items in it. So, It's NOT compatibility of 0.9.0 and 0.9.1. But from this version later, We will consider its compatiblity.
+* In order to be able to extend "LeoFS's Object Container's file format", We updated its header structure. So, There is NO comatiblity between 0.9.0 and 0.9.1.
+
 
 Bugs Fixed
 -----------
 
-* Removed 'apps' directory in leofs - Modified 'reltool.config'
+* Removed "apps" directory in leofs - Modified "reltool.config"
 * Fixed 'shadow vars'
 
 
