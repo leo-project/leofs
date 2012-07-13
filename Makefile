@@ -5,7 +5,8 @@ all: deps compile
 compile:
 	@./rebar compile
 	rm -rf deps/cherly
-	(cd deps/leo_gateway/cherly && make clean && make)
+	# XXX blindly assume $(MAKE) is GNU make, which cherly expects.
+	(cd deps/leo_gateway/cherly && $(MAKE) clean && $(MAKE))
 	(cp -r deps/leo_gateway/cherly deps/)
 
 deps:
