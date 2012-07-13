@@ -4,9 +4,6 @@ all: deps compile
 
 compile:
 	@./rebar compile
-	rm -rf deps/cherly
-	(cd deps/leo_gateway/cherly && make clean && make)
-	(cp -r deps/leo_gateway/cherly deps/)
 
 deps:
 	@./rebar get-deps
