@@ -7,6 +7,8 @@ compile:
 
 deps:
 	@./rebar get-deps
+update-deps:
+	@./rebar update-deps
 clean:
 	@./rebar clean
 xref:
