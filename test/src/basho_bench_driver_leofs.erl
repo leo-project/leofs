@@ -25,12 +25,17 @@
          run/4]).
 
 -include("basho_bench.hrl").
+-include("leo_s3_auth.hrl").
 
 -record(url, {abspath, host, port, username, password, path, protocol, host_type}).
 
 -record(state, { base_urls,          % Tuple of #url -- one for each IP
                  base_urls_index,    % #url to use for next request
                  path_params }).     % Params to append on the path
+
+-define(S3_ACC_KEY,      "05236").
+-define(S3_SEC_KEY,      "802562235").
+-define(S3_CONTENT_TYPE, "application/octet-strea").
 
 %% ====================================================================
 %% API
@@ -47,9 +52,9 @@ new(_Id) ->
     application:start(ibrowse),
 
     %% The IPs, port and path we'll be testing
-    Ips  = basho_bench_config:get(http_raw_ips,      ["127.0.0.1"]),
+    Ips  = basho_bench_config:get(http_raw_ips,      ["localhost"]),
     Port = basho_bench_config:get(http_raw_port,     8080),
-    Path = basho_bench_config:get(http_raw_path,     "/air/_test"),
+    Path = basho_bench_config:get(http_raw_path,     "/bbb/_test"),
     Params = basho_bench_config:get(http_raw_params, ""),
     Disconnect = basho_bench_config:get(http_raw_disconnect_frequency, infinity),
 
@@ -153,8 +158,22 @@ do_get(Url) ->
             {error, Reason}
     end.
 
+gen_sig(HTTPMethod, Url) ->
+    [Bucket|_] = string:tokens(Url#url.path, "/"),
+    SignParams = #sign_params{http_verb    = HTTPMethod,
+                              content_md5  = [],
+                              content_type = ?S3_CONTENT_TYPE,
+                              date         = [],
+                              bucket       = Bucket,
+                              uri          = Url#url.path,
+                              query_str    = [],
+                              amz_headers  = []
+                              },
+    Sig = leo_s3_auth:get_signature(?S3_SEC_KEY, SignParams),
+    io_lib:format("AWS ~s:~s", [?S3_ACC_KEY, Sig]).
+    
 do_put(Url, Headers, ValueGen) ->
-    case send_request(Url, Headers ++ [{'Content-Type', 'application/octet-stream'}],
+    case send_request(Url, Headers ++ [{'Content-Type', ?S3_CONTENT_TYPE}, {'Authorization', gen_sig("PUT", Url)}],
                       put, ValueGen(), [{response_format, binary}]) of
         {ok, "200", _Header, _Body} ->
             ok;
@@ -182,7 +201,7 @@ do_put(Url, Headers, ValueGen) ->
 %%     end.
 
 do_delete(Url) ->
-    case send_request(Url, [], delete, [], [{response_format, binary}]) of
+    case send_request(Url, [{'Authorization', gen_sig("DELETE", Url)}], delete, [], [{response_format, binary}]) of
         {ok, "404", _Headers, _Body} ->
             {not_found, Url};
         {ok, "200", Headers, _Body} ->
