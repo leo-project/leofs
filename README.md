@@ -97,17 +97,22 @@ GOALs
 
 Milestones
 -----------
-* 0.10
-  * Enhance S3-API (1)
-     * Bucket-related
-     * Authentication
-* 0.11
-  * Enhance S3-API (2)
-     * Bucket ACL
-  * Large Object Support (over 64MB)
-  * Support [Cowboy](https://github.com/essen) on "[leo_gateway](https://github.com/leo-project/leo_gateway)"
-* 0.12
-  * Web-Console ([Leo Tamer](https://github.com/leo-project/leo_tamer))
-     * Log Analysis/Search
-     * Cluster Manager
+
+* 0.10 (Aug 2012)
+    * Enhance S3-API
+        * Authentication
+        * Bucket-related
+* 0.12 (Oct 2012)
+    * Large Object Support
+    * Support Cowboy on "leo_gateway"
+    * Web-Console (Leo Tamer)
+        * Log Analysis/Search
+* 0.14 (Dec 2012)
+    * Multi-layer Cache (Using SSD)
+    * Streaming
+    * Web-Console (Leo Tamer)
+        * Cluster manager/monitor
+* 0.16 (2013)
+    * HBase integration
+        * Distributed Lock Mechanism
 
