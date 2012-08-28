@@ -63,7 +63,7 @@ $ manager_1/bin/leo_manager start
 $ storage/bin/leo_storage start
 
 ## Need to operate on "LeoFS-Manager's Console" - 
-##     - Command: [ATTACH, START, STATUS]
+##     - Command: [START, STATUS]
 
 $ gateway/bin/leo_gateway start
 
@@ -71,17 +71,11 @@ $ gateway/bin/leo_gateway start
 ##     - Command: [STATUS]
 ````
 
-* Example - PUT an Object into LeoFS
+* Clients
+    * Connect LeoFS from [DragonDisk](http://www.dragondisk.com/)
+    * Connect LeoFS from [Client of Program Language](http://www.leofs.org/docs/s3_client.html)
+    * Connect LeoFS from [S3FS-C](http://www.leofs.org.docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
 
-```text
-curl -v -X PUT -H "Content-Type: image/jpeg" --data-binary @stockholm-0.jpg http://localhost:8080/swe/stockholm-0.jpg
-```
-
-* Example - GET an Object from LeoFS
-
-```text
-curl -v http://localhost:8080/swe/stockholm-0.jpg > stockholm-0-1.jpg
-```
 
 GOALs
 -------
