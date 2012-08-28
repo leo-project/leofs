@@ -74,7 +74,7 @@ $ gateway/bin/leo_gateway start
 * Clients
     * Connect LeoFS from [DragonDisk](http://www.dragondisk.com/)
     * Connect LeoFS from [Client of Program Language](http://www.leofs.org/docs/s3_client.html)
-    * Connect LeoFS from [S3FS-C](http://www.leofs.org.docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
+    * Connect LeoFS from [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
 
 
 GOALs
