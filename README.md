@@ -63,7 +63,7 @@ $ manager_1/bin/leo_manager start
 $ storage/bin/leo_storage start
 
 ## Need to operate on "LeoFS-Manager's Console" - 
-##     - Command: [ATTACH, START, STATUS]
+##     - Command: [START, STATUS]
 
 $ gateway/bin/leo_gateway start
 
@@ -71,17 +71,11 @@ $ gateway/bin/leo_gateway start
 ##     - Command: [STATUS]
 ````
 
-* Example - PUT an Object into LeoFS
+* Clients
+    * Connect LeoFS from [DragonDisk](http://www.dragondisk.com/)
+    * Connect LeoFS from [Client of Program Language](http://www.leofs.org/docs/s3_client.html)
+    * Connect LeoFS from [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
 
-```text
-curl -v -X PUT -H "Content-Type: image/jpeg" --data-binary @stockholm-0.jpg http://localhost:8080/swe/stockholm-0.jpg
-```
-
-* Example - GET an Object from LeoFS
-
-```text
-curl -v http://localhost:8080/swe/stockholm-0.jpg > stockholm-0-1.jpg
-```
 
 GOALs
 -------
@@ -97,14 +91,23 @@ GOALs
 
 Milestones
 -----------
-* 0.10
-  * Large Object Support (over 64MB)
-  * Enhance S3-API (1)
-     * Bucket-related
-* 0.11
-  * Enhance S3-API (2)
-     * Authentication
-  * Support [Cowboy](https://github.com/essen) on "[leo_gateway](https://github.com/leo-project/leo_gateway)"
-  * Web-Console ([Leo Tamer](https://github.com/leo-project/leo_tamer))
-     * Log Analysis/Search
-     * File Manager
+
+* 0.10 (Aug 2012)
+    * Enhance S3-API
+        * Authentication
+        * Bucket-related
+* 0.12 (Oct 2012)
+    * Large Object Support
+    * Support Cowboy on "leo_gateway"
+    * Web-Console (Leo Tamer)
+        * Log Analysis/Search
+* 0.14 (Dec 2012)
+    * Multi-layer Cache (Using SSD)
+    * Multi-tenant
+    * Streaming
+    * Web-Console (Leo Tamer)
+        * Cluster manager/monitor
+* 0.16 (2013)
+    * HBase integration
+        * Distributed Lock Mechanism
+
