@@ -32,5 +32,5 @@ Bugs Fixed
 Known Issues
 -------------
 
-* [DU comand](http://www.leofs.org/docs/admin_guide.html#du-retrieve-a-number-of-objects-from-object-storage) and [Compact command](http://www.leofs.org/docs/admin_guide.html#compact-remove-logical-deleted-objects-and-metadata-from-object-storage-and-metadata-storage-respectively) are NOT stable. We will resolve them with v0.10.1
+* [DU comand](http://www.leofs.org/docs/admin_guide.html#du-retrieve-a-number-of-objects-from-object-storage) is NOT stable. We will resolve it with v0.10.1
 
