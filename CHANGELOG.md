@@ -16,6 +16,7 @@ CHANGELOG
 * Improve order of system launch
     * Remove "attach command" in manager - After Storage launched, the node's state is automatically changed to "attached"
 * Improve rebalance-function's performance which is about 5 times compare with v0.9.1
+* Improve compact-function. Restrain storage's load when compact objects.
 * Fix bugs
     * Deletion of Zero bytes in Storage
     * Behavior after the restart of Manager
