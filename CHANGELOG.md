@@ -1,6 +1,26 @@
 CHANGELOG
 =========
 
+0.10.1
+-------
+
+* Improve leo_hex performances
+    * "binary_to_hex" function
+    * Related libs:
+        * leo_gateway
+        * leo_object_storage
+        * leo_redundant_manager
+    * By this correspondence, LeoFS's performance improved 20% up.
+* Improve leo_manager
+    * Format of output from manager-console
+        * Commands:
+            * "status"
+            * "whereis"
+* Improve performance of "storage-stats" in manager-console
+* Fix bugs
+    * A handling error in S3-libs
+
+
 0.10.0
 -------
 
@@ -30,6 +50,7 @@ CHANGELOG
 * Fix 'shadow vars'
 * Remove ZMQ log-appender and AMQP log-appender for leo_logger, They will be provided LeoFS's sub projects.
 * Improve - In order to be able to extend "LeoFS's Object Container's file format".
+
 
 0.9.0
 -----
