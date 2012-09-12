@@ -1,3 +1,30 @@
+leofs-0.10.1
+============
+
+Features and Improvements for LeoFS
+-----------------------------------
+
+* Improve leo_hex performances
+    * "binary_to_hex" function
+    * Related libs:
+        * leo_gateway
+        * leo_object_storage
+        * leo_redundant_manager
+    * By this correspondence, LeoFS's performance improved 20% up.
+* Improve leo_manager
+    * Format of output from manager-console
+        * Commands:
+            * "status"
+            * "whereis"
+* Improve performance of "storage-stats" in manager-console
+
+Bugs Fixed
+-----------
+
+* Fixed a handling error in S3-libs
+
+
+
 leofs-0.10.0
 ============
 

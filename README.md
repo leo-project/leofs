@@ -34,6 +34,7 @@ Where to find more
 Quick Start
 -------------
 
+* Document is [here](http://www.leofs.org/docs/getting_started.html#quick-start)
 * Prepare
   * "leofs" uses the "rebar" build system. Makefile so that simply running "make" at the top level should work.
     * [rebar](https://github.com/basho/rebar)
