@@ -1,3 +1,41 @@
+leofs-0.10.2
+============
+
+Features and Improvements for LeoFS
+-----------------------------------
+
+* Improve performances
+    * NOT used "proplists:get_value" function
+        * Replace from "proplists:get_value/2,3" to "lists:keyfind/2"
+    * Related libs:
+        * leo_gateway
+        * leo_storage
+        * leo_manager
+        * leo_logger
+        * leo_mq
+        * leo_object_storage
+        * leo_ordning_reda
+        * leo_redundant_manager
+        * leo_s3_libs
+        * leo_statistics
+* Improve leo_manager
+    * Support output of json-format
+    * Support multi-ports TCP-server
+        * for CUI console
+        * for Application (JSON-Format)
+* Improve leo_storage
+    * Support plural devices
+    * Reduced rebalance/recover costs
+        * Support compression of stacked objects and decompresson of received objects (Using snappy)
+
+Bugs Fixed
+-----------
+
+    * leo-gateway related (S3-related):
+        * Create bucket from 'Dragon Disk'
+        * When using cowboy can send bad values(not iodata)
+
+
 leofs-0.10.1
 ============
 
