@@ -31,9 +31,9 @@ Features and Improvements for LeoFS
 Bugs Fixed
 -----------
 
-    * leo-gateway related (S3-related):
-        * Create bucket from 'Dragon Disk'
-        * When using cowboy can send bad values(not iodata)
+* leo-gateway related (S3-related):
+    * Create bucket from 'Dragon Disk'
+    * When using cowboy can send bad values(not iodata)
 
 
 leofs-0.10.1
