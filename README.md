@@ -97,18 +97,14 @@ Milestones
     * Enhance S3-API
         * Authentication
         * Bucket-related
-* 0.12 (Oct 2012)
-    * Large Object Support
-    * Support Cowboy on "leo_gateway"
-    * Web-Console (Leo Tamer)
-        * Log Analysis/Search
-* 0.14 (Dec 2012)
-    * Multi-layer Cache (Using SSD)
-    * Multi-tenant
-    * Streaming
+* 0.12 (Oct 2012 - Dec 2012)
+    * Large Object Support (incl.Streaming, multi-part support)
     * Web-Console (Leo Tamer)
         * Cluster manager/monitor
-* 0.16 (2013)
+        * Log Analysis/Search
+* Future works (2013)
+    * Multi-Datacenter for Geographical Optimization
+    * Multi-layer Cache (Using SSD)
     * HBase integration
         * Distributed Lock Mechanism
 
