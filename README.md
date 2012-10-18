@@ -98,13 +98,14 @@ Milestones
         * Authentication
         * Bucket-related
 * 0.12 (Oct 2012 - Dec 2012)
-    * Large Object Support (incl.Streaming, multi-part support)
+    * Large Object Support (incl.Streaming/Multi-part/Range Requests)
+    * Object Expiration
+    * Multi-layer Cache (Using SSD)
     * Web-Console (Leo Tamer)
         * Cluster manager/monitor
         * Log Analysis/Search
 * Future works (2013)
     * Multi-Datacenter for Geographical Optimization
-    * Multi-layer Cache (Using SSD)
     * HBase integration
         * Distributed Lock Mechanism
 
