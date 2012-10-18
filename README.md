@@ -94,7 +94,7 @@ Milestones
 -----------
 
 * 0.10 (Aug 2012)
-    * Enhance S3-API
+    * Increase compatibility S3-APIs
         * Authentication
         * Bucket-related
 * 0.12 (Oct 2012 - Dec 2012)
