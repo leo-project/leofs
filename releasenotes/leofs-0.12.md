@@ -1,4 +1,4 @@
-leofs-0.10.2
+leofs-0.12.0
 ============
 
 Features and Improvements for LeoFS
