@@ -20,19 +20,27 @@ CHANGELOG
         * When put-operation, NOT returned 'ETag' header
     * Compaction
         * When excuting compact-command, Objects to be removed partly may remain
-* Used version of libs
-    * leo_commons : 0.12.0
-    * leo_backend-db : 0.10.4
-    * leo_object_storage : 0.12.3
-    * leo_mq : 0.10.2
-    * leo_ordning_reda : 0.6.1
-    * leo_redundant_manager : 0.10.2
-    * leo_s3_libs : 0.10.2
-    * leo_statistics : 0.10.1
-    * leo_logger : 0.9.7
-    * ecache : 0.10.1
-    * cherly : 0.10.0
-    * cowboy : 0.6.2
+* Used libraries
+    * leo project
+        * [leo_commons v0.12.0](https://github.com/leo-project/leo_commons.git)
+        * [leo_backend-db v0.10.4](https://github.com/leo-project/leo_backend_db.git)
+        * [leo_object_storage v0.12.3](https://github.com/leo-project/leo_object_storage.git)
+        * [leo_mq v0.10.2](https://github.com/leo-project/leo_mq.git)
+        * [leo_ordning_reda v0.6.1](https://github.com/leo-project/leo_ordning_reda.git)
+        * [leo_redundant_manager v0.10.2](https://github.com/leo-project/leo_redundant_manager.git)
+        * [leo_s3_libs v0.10.2](https://github.com/leo-project/leo_s3_libs.git)
+        * [leo_statistics v0.10.1](https://github.com/leo-project/leo_statistics.git)
+        * [leo_logger v0.9.7](https://github.com/leo-project/leo_logger.git)
+        * [ecache v0.10.1](https://github.com/leo-project/ecache.git)
+        * [cherly v0.10.0](https://github.com/leo-project/cherly.git)
+    * others
+        * [bear](htts://github.com/boundary/bear.git)
+        * [bitcask](https://github.com/basho/bitcask.git)
+        * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
+        * [folsom](https://github.com/boundary/folsom.git)
+        * [jiffy](https://github.com/davisp/jiffy.git)
+        * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlang-lz4)
+        * [snappy](https://github.com/fdmanana/snappy-erlang-nif.git)
 
 
 0.10.2
