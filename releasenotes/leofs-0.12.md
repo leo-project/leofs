@@ -12,6 +12,7 @@ Features and Improvements for LeoFS
             * Revised data-flow from storage-engine to object/metadata storage
     * Reduced using list_to_binary/1
         * Modified buecket-related libs: [leo_gateway,leo_manager,leo_s3_libs]
+    * Compressor/Decompressor replace from snappy to lz4
 
 Bugs Fixed
 -----------
