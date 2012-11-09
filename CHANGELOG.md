@@ -16,6 +16,8 @@ CHANGELOG
         * Sum of object-length/storage-node
 * Fix bugs
     * Deletion of chunked objects (large-object)
+    * Fail rebalance when exists a restarting node
+        * Adjust the start timing of RPC for reject requests from remote-node(s)
 
 * Used libraries
     * leo project
