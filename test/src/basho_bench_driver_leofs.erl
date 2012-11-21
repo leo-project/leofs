@@ -54,7 +54,7 @@ new(_Id) ->
     %% The IPs, port and path we'll be testing
     Ips  = basho_bench_config:get(http_raw_ips,      ["localhost"]),
     Port = basho_bench_config:get(http_raw_port,     8080),
-    Path = basho_bench_config:get(http_raw_path,     "/bbb/_test"),
+    Path = basho_bench_config:get(http_raw_path,     "/test_bucket/_test"),
     Params = basho_bench_config:get(http_raw_params, ""),
     Disconnect = basho_bench_config:get(http_raw_disconnect_frequency, infinity),
 
