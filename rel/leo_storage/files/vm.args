@@ -20,3 +20,7 @@
 
 ## SNMP Config file
 -config {{platform_snmp_dir}}/{{snmp_conf_dir}}/leo_storage_snmp
+
+
+## Sets the maximum number of concurrent processes for this system
++P 262144
