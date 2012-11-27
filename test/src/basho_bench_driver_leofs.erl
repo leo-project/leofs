@@ -1,6 +1,6 @@
 %% -------------------------------------------------------------------
 %%
-%% basho_bench: Benchmarking Suite 
+%% basho_bench: Benchmarking Suite
 %%
 %% Copyright (c) 2012 Rakuten, Inc.
 %%
@@ -35,7 +35,7 @@
 
 -define(S3_ACC_KEY,      "05236").
 -define(S3_SEC_KEY,      "802562235").
--define(S3_CONTENT_TYPE, "application/octet-strea").
+-define(S3_CONTENT_TYPE, "application/octet-stream").
 
 %% ====================================================================
 %% API
@@ -168,10 +168,10 @@ gen_sig(HTTPMethod, Url) ->
                               uri          = Url#url.path,
                               query_str    = [],
                               amz_headers  = []
-                              },
+                             },
     Sig = leo_s3_auth:get_signature(?S3_SEC_KEY, SignParams),
     io_lib:format("AWS ~s:~s", [?S3_ACC_KEY, Sig]).
-    
+
 do_put(Url, Headers, ValueGen) ->
     case send_request(Url, Headers ++ [{'Content-Type', ?S3_CONTENT_TYPE}, {'Authorization', gen_sig("PUT", Url)}],
                       put, ValueGen(), [{response_format, binary}]) of
@@ -291,8 +291,8 @@ send_request(_Url, _Headers, _Method, _Body, _Options, 0) ->
 send_request(Url, Headers, Method, Body, Options, Count) ->
     Pid = connect(Url),
     case catch(ibrowse_http_client:send_req(
-           Pid, Url, Headers, Method, Body, Options,
-           basho_bench_config:get(http_raw_request_timeout, 5000))) of
+                 Pid, Url, Headers, Method, Body, Options,
+                 basho_bench_config:get(http_raw_request_timeout, 5000))) of
 
         {ok, Status, RespHeaders, RespBody} ->
             maybe_disconnect(Url),
