@@ -46,17 +46,12 @@ main(Args) ->
         ["stop"] ->
             %% [stop order]
             %%   1. leo_object_storage
-            %%   2. leo_mq
-            %%   3. leo_redundant_manager
-            %%   4. leo_backend_db
-            %%   5. leo_statistics
-            %%   6. leo_logger
-            catch rpc:call(TargetNode, leo_object_storage_sup,    stop, [], 60000),
-            catch rpc:call(TargetNode, leo_mq_sup,                stop, [], 60000),
-            catch rpc:call(TargetNode, leo_redundant_manager_sup, stop, [], 60000),
-            catch rpc:call(TargetNode, leo_backend_db_sup,        stop, [], 60000),
-            catch rpc:call(TargetNode, leo_statistics_sup,        stop, [], 60000),
-            catch rpc:call(TargetNode, leo_logger_sup,            stop, [], 60000),
+            %%   2. leo_backend_db
+            %%   3. leo_logger
+            catch rpc:call(TargetNode, leo_object_storage_sup, stop, [], 60000),
+            catch rpc:call(TargetNode, leo_backend_db_sup,     stop, [], 60000),
+            catch rpc:call(TargetNode, leo_logger_sup,         stop, [], 60000),
+            timer:sleep(250),
             io:format("~p\n", [rpc:call(TargetNode, init, stop, [], 60000)]);
         ["restart"] ->
             io:format("~p\n", [rpc:call(TargetNode, init, restart, [], 60000)]);
