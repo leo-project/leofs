@@ -22,4 +22,4 @@
 -config {{platform_snmp_dir}}/{{snmp_conf_dir}}/leo_gateway_snmp
 
 ## Sets the maximum number of concurrent processes for this system
-+P 262144
++P 1048576

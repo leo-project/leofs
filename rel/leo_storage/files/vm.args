@@ -23,4 +23,4 @@
 
 
 ## Sets the maximum number of concurrent processes for this system
-+P 262144
++P 1048576
