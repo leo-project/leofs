@@ -100,7 +100,6 @@ Milestones
 * 0.12 (Oct 2012 - Jan 2013)
     * Increase compatibility S3-APIs#2
         * Large Object Support (incl.Streaming/Multi-part/Range Requests)
-    * Object Expiration
     * Web-Console (Leo Tamer - Option)
         * Cluster manager/monitor
         * Log Analysis/Search
