@@ -52,7 +52,7 @@ $ make release
 * Operate on "Manager Console": [detail](http://www.leofs.org/docs/admin_guide.html#system-operation)
 
 ```text
-## Need to modify configuration files - 
+## Need to modify configuration files -
 ##     manager_master: leofs/package/leofs/manager_0/etc/app.config
 ##      manager_slave: leofs/package/leofs/manager_1/etc/app.config
 ##            storage: leofs/package/leofs/storage/etc/app.config
@@ -63,12 +63,12 @@ $ manager_0/bin/leo_manager start
 $ manager_1/bin/leo_manager start
 $ storage/bin/leo_storage start
 
-## Need to operate on "LeoFS-Manager's Console" - 
+## Need to operate on "LeoFS-Manager's Console" -
 ##     - Command: [START, STATUS]
 
 $ gateway/bin/leo_gateway start
 
-## Confirm LeoFS's Status on "LeoFS-Manager's Console" - 
+## Confirm LeoFS's Status on "LeoFS-Manager's Console" -
 ##     - Command: [STATUS]
 ````
 
@@ -94,18 +94,23 @@ Milestones
 -----------
 
 * 0.10 (Aug 2012)
-    * Increase compatibility S3-APIs
+    * Increase compatibility S3-APIs#1
         * Authentication
         * Bucket-related
-* 0.12 (Oct 2012 - Dec 2012)
-    * Large Object Support (incl.Streaming/Multi-part/Range Requests)
+* 0.12 (Oct 2012 - Jan 2013)
+    * Increase compatibility S3-APIs#2
+        * Large Object Support (incl.Streaming/Multi-part/Range Requests)
     * Object Expiration
-    * Multi-layer Cache (Using SSD)
-    * Web-Console (Leo Tamer)
+    * Web-Console (Leo Tamer - Option)
         * Cluster manager/monitor
         * Log Analysis/Search
+* 0.14 (Feb 2013 - Apr)
+    * Increase compatibility S3-APIs#3
+        * Objects Expiration into the bucket
+        * Other bucket operations
+    * Job Scheduler on the Manager
+    * QoS System (LeoDenebola - Option)
 * Future works (2013)
+    * Multi-layer Cache (Using SSD)
     * Multi-Datacenter for Geographical Optimization
-    * HBase integration
-        * Distributed Lock Mechanism
 
