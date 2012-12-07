@@ -44,6 +44,14 @@ main(Args) ->
             %% a "pong"
             io:format("pong\n");
         ["stop"] ->
+            %% [stop order]
+            %%   1. leo_object_storage
+            %%   2. leo_backend_db
+            %%   3. leo_logger
+            catch rpc:call(TargetNode, leo_object_storage_sup, stop, [], 60000),
+            catch rpc:call(TargetNode, leo_backend_db_sup,     stop, [], 60000),
+            catch rpc:call(TargetNode, leo_logger_sup,         stop, [], 60000),
+            timer:sleep(250),
             io:format("~p\n", [rpc:call(TargetNode, init, stop, [], 60000)]);
         ["restart"] ->
             io:format("~p\n", [rpc:call(TargetNode, init, restart, [], 60000)]);
