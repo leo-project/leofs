@@ -38,7 +38,7 @@ Quick Start
 * Prepare
   * "leofs" uses the "rebar" build system. Makefile so that simply running "make" at the top level should work.
     * [rebar](https://github.com/basho/rebar)
-  * "leofs" requires [Erlang R14B04](http://www.erlang.org/download_release/12).
+  * "leofs" requires [Erlang R14B04](http://www.erlang.org/download_release/12) OR [Erlang R15B03](http://www.erlang.org/download_release/16)
 * Build and Package
 
 ```text
