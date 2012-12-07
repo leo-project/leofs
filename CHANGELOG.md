@@ -1,13 +1,58 @@
 CHANGELOG
 =========
 
+0.12.5 (Dec 7, 2012)
+---------------------
+
+* Improve performances
+    * Storage Performance Tuning#5
+        * Related libs: [leo_storage, leo_object_storage]
+        * Reduced using spawn/1 in replicator #2
+* Improve
+    * Able to monitor VM-values on Leo Manager's console
+    * Deprecate parameterized module in leo_object_storage
+        * Reference: http://www.erlang.org/news/35
+    * Modified re-launch storage process
+        * When regularly stop the storage-process, It writes current status in a file. Then it restarts the storage-process when reading the file.
+    * Able to post a large part of an object to LeoFS with multipart-upload API.
+* Fix bugs
+    * Respond invalid "Etag" from the gateway when using multipart-upload API.
+    * Possibility of file-destruction
+        * Termination of storages for the restriction of file-destruction
+            * Related libs: [leo_storage, leo_object_storage]
+
+* Used libraries
+    * leo project
+        * [leo_commons v0.12.6](https://github.com/leo-project/leo_commons.git)
+        * [leo_backend-db v0.12.0](https://github.com/leo-project/leo_backend_db.git)
+        * [leo_object_storage v0.12.12](https://github.com/leo-project/leo_object_storage.git)
+        * [leo_mq v0.12.0](https://github.com/leo-project/leo_mq.git)
+        * [leo_ordning_reda v0.8.4](https://github.com/leo-project/leo_ordning_reda.git)
+        * [leo_redundant_manager v0.12.1](https://github.com/leo-project/leo_redundant_manager.git)
+        * [leo_s3_libs v0.12.0](https://github.com/leo-project/leo_s3_libs.git)
+        * [leo_statistics v0.10.6](https://github.com/leo-project/leo_statistics.git)
+        * [leo_logger v0.10.2](https://github.com/leo-project/leo_logger.git)
+        * [leo_gateway v0.12.6](https://github.com/leo-project/leo_gateway.git)
+        * [leo_manager v0.12.6](https://github.com/leo-project/leo_manager.git)
+        * [leo_storage v0.12.6](https://github.com/leo-project/leo_storage.git)
+        * [ecache v0.10.3](https://github.com/leo-project/ecache.git)
+        * [cherly v0.10.2](https://github.com/leo-project/cherly.git)
+    * others
+        * [bear](htts://github.com/boundary/bear.git)
+        * [bitcask](https://github.com/basho/bitcask.git)
+        * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
+        * [folsom](https://github.com/boundary/folsom.git)
+        * [jiffy](https://github.com/davisp/jiffy.git)
+        * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlang-lz4)
+
+
 0.12.4 (Nov 21, 2012)
 ---------------------
 
 * Improve performances
     * Storage Performance Tuning#4
         * Target libs: [leo_storage, leo_object_storage]
-        * Reduced using spawn/1 in replicator
+        * Reduced using spawn/1 in replicator #1
         * Used rpc:cast/4 for async-replication
 * Improve
     * Able to retrieve leofs-uesrs from manager-console
