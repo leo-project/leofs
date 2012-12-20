@@ -6,7 +6,7 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-for dir in `find deps/leo_* -maxdepth 0`
+for dir in `find deps/leo_* -maxdepth 0` deps/cherly deps/cowboy deps/ecache
 do
   cd $dir
   echo $dir
