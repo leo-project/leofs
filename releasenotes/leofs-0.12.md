@@ -25,6 +25,7 @@ Bugs Fixed
 * Storage:
     * Overwrite an object during rebalance
         * Always check the version(clock) of object
+    * Fix haystacks reopen correctly when failing compaction
 * Manager-Console
     * Crush get-endpoints when no-records
     * Crush get-users when no-records
@@ -35,11 +36,11 @@ Used Libraries
 
 * leo project
     * [leo_commons v0.12.6](https://github.com/leo-project/leo_commons.git)
-    * [leo_backend-db v0.12.1](https://github.com/leo-project/leo_backend_db.git)
-    * [leo_object_storage v0.12.15](https://github.com/leo-project/leo_object_storage.git)
-    * [leo_mq v0.12.1](https://github.com/leo-project/leo_mq.git)
+    * [leo_backend-db v0.12.2](https://github.com/leo-project/leo_backend_db.git)
+    * [leo_object_storage v0.12.16](https://github.com/leo-project/leo_object_storage.git)
+    * [leo_mq v0.12.2](https://github.com/leo-project/leo_mq.git)
     * [leo_ordning_reda v0.8.5](https://github.com/leo-project/leo_ordning_reda.git)
-    * [leo_redundant_manager v0.12.3](https://github.com/leo-project/leo_redundant_manager.git)
+    * [leo_redundant_manager v0.12.4](https://github.com/leo-project/leo_redundant_manager.git)
     * [leo_s3_libs v0.12.2](https://github.com/leo-project/leo_s3_libs.git)
     * [leo_statistics v0.10.6](https://github.com/leo-project/leo_statistics.git)
     * [leo_logger v0.10.3](https://github.com/leo-project/leo_logger.git)
