@@ -8,7 +8,8 @@ Features and Improvements for LeoFS
     * Storage Performance Tuning#6
         * Related libs: [leo_storage, leo_object_storage]
         * Reduced compaction-cost
-             * 2.5 times faster than v0.12.5
+             * Able to execution of parallel comaction
+                 * Get maximum performance by setting a appropriate number corresponding with number of cores
 * Improve
     * Gateway:
         * The optimal timeout according to file size set up.
