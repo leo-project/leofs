@@ -99,20 +99,22 @@ new(Id) ->
                   concurrent = Concurrent,
                   check_integrity = CI }}.
 
-keygen_global_uniq(Id, Concurrent, KeyGen) ->
+keygen_global_uniq(false, _Id, _Concurrent, KeyGen) ->
+    KeyGen();
+keygen_global_uniq(true, Id, Concurrent, KeyGen) ->
     Base = KeyGen(),
     Rem = Base rem Concurrent,
     Diff = Rem - Id,
     Base - Diff.
 
-run(get, KeyGen, _ValueGen, #state{id = Id, concurrent = Concurrent} = State) ->
-    Key = keygen_global_uniq(Id, Concurrent, KeyGen), 
+run(get, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent = Concurrent} = State) ->
+    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen), 
     {NextUrl, S2} = next_url(State),
     case do_get(url(NextUrl, Key, State#state.path_params)) of
         {not_found, _Url} ->
             {ok, S2};
         {ok, _Url, _Headers, Body} ->
-            case State#state.check_integrity of
+            case CI of
                 true ->
                     case ets:lookup(?ETS_BODY_MD5, Key) of
                         [{_Key, LocalMD5}|_] ->
@@ -131,14 +133,14 @@ run(get, KeyGen, _ValueGen, #state{id = Id, concurrent = Concurrent} = State) ->
     end;
 
 
-run(put, KeyGen, ValueGen, #state{id = Id, concurrent = Concurrent} = State) ->
-    Key = keygen_global_uniq(Id, Concurrent, KeyGen), 
+run(put, KeyGen, ValueGen, #state{check_integrity = CI, id = Id, concurrent = Concurrent} = State) ->
+    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen), 
     Val = ValueGen(),
     {NextUrl, S2} = next_url(State),
     Url = url(NextUrl, Key, State#state.path_params),
     case do_put(Url, [], Val) of
         ok ->
-            case State#state.check_integrity of
+            case CI of
                 true ->
                     LocalMD5 = erlang:md5(Val),
                     ets:insert(?ETS_BODY_MD5, {Key, LocalMD5});
@@ -150,14 +152,14 @@ run(put, KeyGen, ValueGen, #state{id = Id, concurrent = Concurrent} = State) ->
     end;
 
 
-run(delete, KeyGen, _ValueGen, #state{id = Id, concurrent = Concurrent} = State) ->
-    Key = keygen_global_uniq(Id, Concurrent, KeyGen), 
+run(delete, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent = Concurrent} = State) ->
+    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen), 
     {NextUrl, S2} = next_url(State),
     case do_delete(url(NextUrl, Key, State#state.path_params)) of
         {not_found, _Url} ->
             {ok, S2};
         {ok, _Url, _Headers} ->
-            case State#state.check_integrity of
+            case CI of
                 true ->
                     ets:delete(?ETS_BODY_MD5, Key);
                 false -> void
