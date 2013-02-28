@@ -90,7 +90,7 @@ new(Id) ->
             BaseUrlsIndex = random:uniform(tuple_size(BaseUrls))
     end,
     CI = basho_bench_config:get(
-                      check_integrity, false), %% should be false when doing benchmark
+           check_integrity, false), %% should be false when doing benchmark
     Concurrent = basho_bench_config:get(concurrent, 0),
     {ok, #state { base_urls = BaseUrls,
                   base_urls_index = BaseUrlsIndex,
@@ -108,7 +108,7 @@ keygen_global_uniq(true, Id, Concurrent, KeyGen) ->
     Base - Diff.
 
 run(get, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent = Concurrent} = State) ->
-    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen), 
+    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen),
     {NextUrl, S2} = next_url(State),
     case do_get(url(NextUrl, Key, State#state.path_params)) of
         {not_found, _Url} ->
@@ -134,7 +134,7 @@ run(get, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent = C
 
 
 run(put, KeyGen, ValueGen, #state{check_integrity = CI, id = Id, concurrent = Concurrent} = State) ->
-    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen), 
+    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen),
     Val = ValueGen(),
     {NextUrl, S2} = next_url(State),
     Url = url(NextUrl, Key, State#state.path_params),
@@ -153,7 +153,7 @@ run(put, KeyGen, ValueGen, #state{check_integrity = CI, id = Id, concurrent = Co
 
 
 run(delete, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent = Concurrent} = State) ->
-    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen), 
+    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen),
     {NextUrl, S2} = next_url(State),
     case do_delete(url(NextUrl, Key, State#state.path_params)) of
         {not_found, _Url} ->
