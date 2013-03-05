@@ -23,3 +23,6 @@
 
 ## Sets the maximum number of concurrent processes for this system
 +P 1048576
+
+## set up the node with the -hidden flag
+-hidden

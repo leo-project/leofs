@@ -21,3 +21,5 @@
 ## SNMP Config file
 -config {{platform_snmp_dir}}/{{snmp_conf_dir}}/leo_manager_snmp
 
+## set up the node with the -hidden flag
+-hidden
