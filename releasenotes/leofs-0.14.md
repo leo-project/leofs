@@ -7,7 +7,7 @@ Features and Improvements for LeoFS
 * Improved
     * Upgrade Cowboy from 0.6.2(foked/add patches) to 0.8.2(original)
         * Improved put/get large-object performance
-    * Supoort recovery of manager-status-monitor after occured network devide
+    * Support recovery of manager-status-monitor after network partition occured 
 
 Bugs Fixed
 -----------
