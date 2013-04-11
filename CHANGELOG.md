@@ -7,8 +7,8 @@ CHANGELOG
 * Improved
     * Gateway
         * Commonize request-handler for easily creating APIs
+        * Improve cache-controller which was replaced from ecache to leo_cache
         * Improve performance
-            * Chunked-objects are stored into the [ecache](https://github.com/leo-project/ecache)
             * Upgrade Ranch and Cowboy to latest version
     * Storage
         * Improved phased data-compaction
@@ -27,6 +27,7 @@ CHANGELOG
 
 * Used libraries
     * leo project
+        * [leo_cache v0.4.0](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.12.12](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.12.11](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.14.1](https://github.com/leo-project/leo_object_storage.git)
@@ -39,7 +40,6 @@ CHANGELOG
         * [leo_gateway v0.14.1](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.1](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.1](https://github.com/leo-project/leo_storage.git)
-        * [ecache v0.12.1](https://github.com/leo-project/ecache.git)
         * [cherly v0.12.5](https://github.com/leo-project/cherly.git)
     * others
         * [bear](htts://github.com/boundary/bear.git)
