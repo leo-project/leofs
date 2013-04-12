@@ -14,7 +14,7 @@ Features and Improvements for LeoFS
         * Improved phased data-compaction
             * To realize non-blocking data-compaction
                 * before: Making compaction per an "object-storage-file"
-                * after: Making compaction per some time unit
+                * after: Making compaction per some an object
     * Manager/Storage
         * Implemented ``recover-command`` in Manager
             * To realize:
@@ -64,7 +64,7 @@ Features and Improvements for LeoFS
 * Improved
     * Upgrade Cowboy from 0.6.2(foked/add patches) to 0.8.2(original)
         * Improved put/get large-object performance
-    * Support recovery of manager-status-monitor after network partition occured 
+    * Support recovery of manager-status-monitor after network partition occured
 
 Bugs Fixed
 -----------

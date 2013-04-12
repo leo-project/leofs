@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-0.14.1 (Apr 10, 2013)
+0.14.1 (Apr 12, 2013)
 =====================
 
 * Improved
@@ -14,7 +14,7 @@ CHANGELOG
         * Improved phased data-compaction
             * To realize non-blocking data-compaction
                 * before: Making compaction per an "object-storage-file"
-                * after: Making compaction per some time unit
+                * after: Making compaction per an object
     * Manager/Storage
         * Implemented ``recover-command`` in Manager
             * To realize:
