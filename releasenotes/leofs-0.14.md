@@ -33,7 +33,7 @@ Used Libraries
 ---------------
 
 * leo project
-    * [leo_cache v0.4.0](https://github.com/leo-project/leo_cache.git)
+    * [leo_cache v0.4.4](https://github.com/leo-project/leo_cache.git)
     * [leo_commons v0.12.12](https://github.com/leo-project/leo_commons.git)
     * [leo_backend-db v0.12.11](https://github.com/leo-project/leo_backend_db.git)
     * [leo_object_storage v0.14.1](https://github.com/leo-project/leo_object_storage.git)
@@ -46,9 +46,9 @@ Used Libraries
     * [leo_gateway v0.14.1](https://github.com/leo-project/leo_gateway.git)
     * [leo_manager v0.14.1](https://github.com/leo-project/leo_manager.git)
     * [leo_storage v0.14.1](https://github.com/leo-project/leo_storage.git)
-    * [cherly v0.12.5](https://github.com/leo-project/cherly.git)
+    * [cherly v0.12.7](https://github.com/leo-project/cherly.git)
+    * [dcerl v0.4.1](https://github.com/leo-project/dcerl.git)
 * others
-    * [bear](htts://github.com/boundary/bear.git)
     * [bitcask](https://github.com/basho/bitcask.git)
     * [cowboy v0.8.3](https://github.com/extend/cowboy.git)
     * [folsom](https://github.com/boundary/folsom.git)
@@ -93,7 +93,6 @@ Used Libraries
     * [ecache v0.10.15](https://github.com/leo-project/ecache.git)
     * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
 * others
-    * [bear](htts://github.com/boundary/bear.git)
     * [bitcask](https://github.com/basho/bitcask.git)
     * [cowboy v0.8.2](https://github.com/extend/cowboy.git)
     * [folsom](https://github.com/boundary/folsom.git)
@@ -139,7 +138,6 @@ Used Libraries
     * [ecache v0.10.14](https://github.com/leo-project/ecache.git)
     * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
 * others
-    * [bear](htts://github.com/boundary/bear.git)
     * [bitcask](https://github.com/basho/bitcask.git)
     * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
     * [folsom](https://github.com/boundary/folsom.git)
@@ -187,7 +185,6 @@ Used Libraries
     * [ecache v0.10.8](https://github.com/leo-project/ecache.git)
     * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
 * others
-    * [bear](htts://github.com/boundary/bear.git)
     * [bitcask](https://github.com/basho/bitcask.git)
     * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
     * [folsom](https://github.com/boundary/folsom.git)
