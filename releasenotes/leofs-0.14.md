@@ -1,3 +1,61 @@
+leofs-0.14.1
+============
+
+Features and Improvements for LeoFS
+-----------------------------------
+
+* Improved
+    * Gateway
+        * Commonize request-handler for easily creating APIs
+        * Improve cache-controller which was replaced from ecache to leo_cache
+        * Improve performance
+            * Upgrade Ranch and Cowboy to latest version
+    * Storage
+        * Improved phased data-compaction
+            * To realize non-blocking data-compaction
+                * before: Making compaction per an "object-storage-file"
+                * after: Making compaction per some an object
+    * Manager/Storage
+        * Implement judgment of precondition in rebalance-comamnd
+        * Implemented ``recover-command`` in Manager
+            * To realize:
+                * synchronize a file: ``recover file ${file-path}``
+                * recover a target-node files: ``recover node ${storage-node}``
+                * recover target-node RING: ``recover ring ${storage-node}``
+
+Bugs Fixed
+-----------
+
+* NOT worked ``s3cmd`` by degraded
+* Stored wrong file-path with REST-API by degraded
+
+Used Libraries
+---------------
+
+* leo project
+    * [leo_cache v0.4.4](https://github.com/leo-project/leo_cache.git)
+    * [leo_commons v0.12.12](https://github.com/leo-project/leo_commons.git)
+    * [leo_backend-db v0.12.11](https://github.com/leo-project/leo_backend_db.git)
+    * [leo_object_storage v0.14.1](https://github.com/leo-project/leo_object_storage.git)
+    * [leo_mq v0.12.12](https://github.com/leo-project/leo_mq.git)
+    * [leo_ordning_reda v0.8.11](https://github.com/leo-project/leo_ordning_reda.git)
+    * [leo_redundant_manager v0.12.19](https://github.com/leo-project/leo_redundant_manager.git)
+    * [leo_s3_libs v0.12.8](https://github.com/leo-project/leo_s3_libs.git)
+    * [leo_statistics v0.10.11](https://github.com/leo-project/leo_statistics.git)
+    * [leo_logger v0.10.8](https://github.com/leo-project/leo_logger.git)
+    * [leo_gateway v0.14.1](https://github.com/leo-project/leo_gateway.git)
+    * [leo_manager v0.14.1](https://github.com/leo-project/leo_manager.git)
+    * [leo_storage v0.14.1](https://github.com/leo-project/leo_storage.git)
+    * [cherly v0.12.7](https://github.com/leo-project/cherly.git)
+    * [dcerl v0.4.1](https://github.com/leo-project/dcerl.git)
+* others
+    * [bitcask](https://github.com/basho/bitcask.git)
+    * [cowboy v0.8.3](https://github.com/extend/cowboy.git)
+    * [folsom](https://github.com/boundary/folsom.git)
+    * [jiffy](https://github.com/davisp/jiffy.git)
+    * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
 leofs-0.14.0
 ============
 
@@ -7,7 +65,7 @@ Features and Improvements for LeoFS
 * Improved
     * Upgrade Cowboy from 0.6.2(foked/add patches) to 0.8.2(original)
         * Improved put/get large-object performance
-    * Support recovery of manager-status-monitor after network partition occured 
+    * Support recovery of manager-status-monitor after network partition occured
 
 Bugs Fixed
 -----------
@@ -35,7 +93,6 @@ Used Libraries
     * [ecache v0.10.15](https://github.com/leo-project/ecache.git)
     * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
 * others
-    * [bear](htts://github.com/boundary/bear.git)
     * [bitcask](https://github.com/basho/bitcask.git)
     * [cowboy v0.8.2](https://github.com/extend/cowboy.git)
     * [folsom](https://github.com/boundary/folsom.git)
@@ -81,7 +138,6 @@ Used Libraries
     * [ecache v0.10.14](https://github.com/leo-project/ecache.git)
     * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
 * others
-    * [bear](htts://github.com/boundary/bear.git)
     * [bitcask](https://github.com/basho/bitcask.git)
     * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
     * [folsom](https://github.com/boundary/folsom.git)
@@ -129,7 +185,6 @@ Used Libraries
     * [ecache v0.10.8](https://github.com/leo-project/ecache.git)
     * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
 * others
-    * [bear](htts://github.com/boundary/bear.git)
     * [bitcask](https://github.com/basho/bitcask.git)
     * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
     * [folsom](https://github.com/boundary/folsom.git)

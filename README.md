@@ -93,23 +93,32 @@ GOALs
 Milestones
 -----------
 
-* 0.10 (Aug 2012)
+* *DONE* - 0.10 (Aug 2012)
     * Increase compatibility S3-APIs#1
         * Authentication
         * Bucket-related
-* 0.12 (Oct 2012 - Jan 2013)
+* *DONE* - 0.12 (Oct 2012 - Jan 2013)
     * Increase compatibility S3-APIs#2
-        * Large Object Support (incl.Streaming/Multi-part/Range Requests)
+        * Large Object Support
     * Web-Console (Leo Tamer - Option)
         * Cluster manager/monitor
-        * Log Analysis/Search
-* 0.14 (Feb 2013 - Apr)
+* 0.14 (Feb 2013 - May)
     * Multi-layer Cache (Using SSD)
     * Job Scheduler on the Manager
-    * QoS System (LeoDenebola - Option)
-* Future works (2013)
-    * Increase compatibility S3-APIs#3
+    * API-related:
+        * Increase compatibility S3-APIs#3
+        * Support for OpenStack Swift-API
+    * QoS System Phase-1 (LeoDenebola - Option)
+    * Web-Console (Leo Tamer - Option)
+        * Log Analysis/Search
+* 1.0 (June 2013 - )
+    * Multi-Datacenter Data Replication
+    * OpenStack Integration    
+    * Increase compatibility S3-APIs#4
         * Objects Expiration into the bucket
         * Other bucket operations
-    * Multi-Datacenter for Geographical Optimization
+    * QoS System Phase-2 (LeoDenebola - Option)
+    * Web-Console (Leo Tamer - Option)
+        * QoS Integration
+        * Log Analysis/Search
 
