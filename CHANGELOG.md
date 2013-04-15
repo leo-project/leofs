@@ -16,6 +16,7 @@ CHANGELOG
                 * before: Making compaction per an "object-storage-file"
                 * after: Making compaction per an object
     * Manager/Storage
+        * Implement judgment of precondition in rebalance-comamnd
         * Implemented ``recover-command`` in Manager
             * To realize:
                 * synchronize a file: ``recover file ${file-path}``
