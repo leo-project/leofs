@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+0.14.1-1 (May 8, 2013)
+=======================
+
+* Improved
+    * Gateway
+        * Upgrade Ranch and Cowboy to latest version
+* Fix Bugs
+    * Gateway
+        * Reply empty response unintentionally when using some s3 clients
+            * "leo_gateway" stored a "0-byte length object" into the cache when put an large-object(over 5MB) from clients. So We supported to remove a registered object from the cache.
+
+
 0.14.1 (Apr 15, 2013)
 =====================
 
