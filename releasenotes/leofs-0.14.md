@@ -1,3 +1,21 @@
+leofs-0.14.1-1
+==============
+
+Features and Improvements for LeoFS
+-----------------------------------
+
+* Improved
+    * Gateway
+        * Upgrade Ranch and Cowboy to latest version
+
+Bugs Fixed
+-----------
+
+* Gateway
+    * Reply empty response unintentionally when using some s3 clients
+        * "leo_gateway" stored a "0-byte length object" into the cache when put an large-object(over 5MB) from clients. So We supported to remove a registered object from the cache.
+
+
 leofs-0.14.1
 ============
 
