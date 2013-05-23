@@ -30,30 +30,30 @@ release:
 	## manager-master
 	##
 	rm -rf rel/leo_manager/leo_manager/
-	mkdir -p package/leofs/manager_0
+	mkdir -p package/leo_manager_0
 	cp rel/leo_manager/vars/manager_master_vars.config rel/leo_manager/vars.config
 	(cd rel/leo_manager && ../../rebar generate)
-	cp -r rel/leo_manager/leo_manager/* package/leofs/manager_0/	
+	cp -r rel/leo_manager/leo_manager/* package/leo_manager_0/
 	##
 	## manager-slave
 	##
 	rm -rf rel/leo_manager/leo_manager/
-	mkdir -p package/leofs/manager_1
+	mkdir -p package/leo_manager_1
 	cp rel/leo_manager/vars/manager_slave_vars.config rel/leo_manager/vars.config
 	(cd rel/leo_manager && ../../rebar generate)
-	cp -r rel/leo_manager/leo_manager/* package/leofs/manager_1/
+	cp -r rel/leo_manager/leo_manager/* package/leo_manager_1/
 	##
 	## release_storage
 	##
 	rm -rf rel/leo_storage/leo_storage/
-	mkdir -p package/leofs/storage
+	mkdir -p package/leo_storage
 	(cd rel/leo_storage && ../../rebar generate)
-	cp -r rel/leo_storage/leo_storage/* package/leofs/storage/
+	cp -r rel/leo_storage/leo_storage/* package/leo_storage/
 	##
 	## release_gateway
 	##
 	rm -rf rel/leo_gateway/leo_gateway/
-	mkdir -p package/leofs/gateway
+	mkdir -p package/leo_gateway
 	(cd rel/leo_gateway && ../../rebar generate)
-	cp -r rel/leo_gateway/leo_gateway/* package/leofs/gateway/
+	cp -r rel/leo_gateway/leo_gateway/* package/leo_gateway/
 
