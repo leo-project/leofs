@@ -35,7 +35,7 @@ if [ $1 != "start" -a $1 != "stop" ]; then
 fi
 
 ## Stop processes
-package/leo_gateway/bin/leo_gateway stop
+package/leo_gateway_0/bin/leo_gateway stop
 package/leo_storage_0/bin/leo_storage stop
 package/leo_storage_1/bin/leo_storage stop
 package/leo_storage_2/bin/leo_storage stop
