@@ -25,7 +25,7 @@ generate:
 
 release:
 	@./rebar compile
-	rm -rf package/leofs
+	rm -rf package
 	##
 	## manager-master
 	##
