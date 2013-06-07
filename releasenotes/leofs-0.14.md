@@ -23,6 +23,7 @@ Features and Improvements for LeoFS
         * Modified the launch process
             * Able to retry connection with manager(s)
     * Manager
+        * Supported to Able to remove gateway-node from manager's console when the state of specified node is ‘stop’
         * Supported system-data backup/restore (mnesia)
         * Supported taking over manager(s) for affected hardware failure
         * Supported taking over storage-node when having attach/detach nodes in operation
