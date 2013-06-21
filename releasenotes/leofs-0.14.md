@@ -8,7 +8,7 @@ Features and Improvements for LeoFS
     * Improved redundant-manager's performance when retrieving redundancies by up to 20%
         * Changed method of retrieving redundancies from *ets* to worker-processes
     * Make a parameter of consumption of queue's message interval into the application config
-    * Support R16B01
+    * Replace obsolete functions regarding crypto:sha
 
 Bugs Fixed
 -----------
