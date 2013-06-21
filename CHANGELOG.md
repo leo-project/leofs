@@ -8,7 +8,7 @@ CHANGELOG
     * Improved redundant-manager's performance when retrieving redundancies by up to 20%
         * Changed method of retrieving redundancies from *ets* to worker-processes
     * Make a parameter of consumption of queue's message interval into the application config
-    * Replace obsolete functions regarding crypto:sha
+    * Replace obsolete functions *crypto:sha|md5* with *crypto:hash*
 
 * Fixed Bugs
     * Manager
@@ -16,7 +16,7 @@ CHANGELOG
     * Storage
         * The number of queue messages can be wrong value
             * Needed to call *bitcask:merge/1* after relaunch the storage process
-        * Compaction-function occured fail - "did not match data" when a target file is corrupted
+        * Compaction-function can fail - "did not match data" when a target file is corrupted
 
 * Used libraries
     * leo project
