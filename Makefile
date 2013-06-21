@@ -43,14 +43,14 @@ release:
 	(cd rel/leo_manager && ../../rebar generate)
 	cp -r rel/leo_manager/leo_manager/* package/leo_manager_1/
 	##
-	## release_storage
+	## storage
 	##
 	rm -rf rel/leo_storage/leo_storage/
 	mkdir -p package/leo_storage
 	(cd rel/leo_storage && ../../rebar generate)
 	cp -r rel/leo_storage/leo_storage/* package/leo_storage/
 	##
-	## release_gateway
+	## gateway
 	##
 	rm -rf rel/leo_gateway/leo_gateway/
 	mkdir -p package/leo_gateway
