@@ -34,7 +34,7 @@ Used Libraries
     * [leo_object_storage v0.14.4](https://github.com/leo-project/leo_object_storage.git)
     * [leo_ordning_reda v0.8.14](https://github.com/leo-project/leo_ordning_reda.git)
     * [leo_redundant_manager v1.0.1](https://github.com/leo-project/leo_redundant_manager.git)
-    * [leo_s3_libs v0.12.12](https://github.com/leo-project/leo_s3_libs.git)
+    * [leo_s3_libs v0.12.13](https://github.com/leo-project/leo_s3_libs.git)
     * [leo_statistics v0.14.3](https://github.com/leo-project/leo_statistics.git)
     * [leo_gateway v0.14.5](https://github.com/leo-project/leo_gateway.git)
     * [leo_manager v0.14.3](https://github.com/leo-project/leo_manager.git)
