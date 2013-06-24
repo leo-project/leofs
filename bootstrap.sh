@@ -24,11 +24,11 @@ echo "*** LeoFS - Start building test-environment ***"
 
 if [ $# -ne 1 ]; then
     echo "No command to run specified!"
-    echo "Usage: bootstrap start|stop"
+    echo "Usage: bootstrap build|start|stop"
     exit 1
 fi
 
-if [ $1 != "start" -a $1 != "stop" ]; then
+if [ $1 != "build" -a $1 != "start" -a $1 != "stop" ]; then
     echo "No command to run specified!"
     echo "Usage: bootstrap start|stop"
     exit 1
@@ -68,6 +68,9 @@ cp priv/test/vm-s1.config package/leo_storage_1/etc/vm.args
 cp priv/test/vm-s2.config package/leo_storage_2/etc/vm.args
 
 ## launch
+if [ $1 = "build" ]; then
+    exit 1
+fi
 ./package/leo_manager_0/bin/leo_manager start
 sleep 1
 ./package/leo_manager_1/bin/leo_manager start
