@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-leofs-0.14.5 (July 5, 2013)
+leofs-0.14.5 (July 8, 2013)
 ============================
 
 Features and Improvements for LeoFS
@@ -9,7 +9,8 @@ Features and Improvements for LeoFS
 
 * Bugs Fixed
     * Gateway
-        * Gateways may respond a HTTP response with a wrong MIME type(plain/text)
+        * Gateways may respond an HTTP response with a wrong MIME type as "plain/text" when requested an uppercase filename extension such as *.JPG and .PNG from clients
+        * Fixed an error handlings properly when processing a large file with disk cache
 
 Used Libraries
 ---------------

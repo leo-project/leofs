@@ -6,7 +6,8 @@ Features and Improvements for LeoFS
 
 * Bugs Fixed
     * Gateway
-        * Gateways may respond a HTTP response with a wrong MIME type(plain/text)
+        * Gateways may respond an HTTP response with a wrong MIME type as "plain/text" when requested an uppercase filename extension such as "*.JPG" and "*.PNG" from clients
+        * Fixed an error handlings properly when processing a large file with disk cache
 
 Used Libraries
 ---------------
