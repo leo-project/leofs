@@ -29,7 +29,7 @@ Used Libraries
     * [leo_s3_libs v0.12.14](https://github.com/leo-project/leo_s3_libs.git)
     * [leo_statistics v0.14.4](https://github.com/leo-project/leo_statistics.git)
     * [leo_gateway v0.14.10](https://github.com/leo-project/leo_gateway.git)
-    * [leo_manager v0.14.4](https://github.com/leo-project/leo_manager.git)
+    * [leo_manager v0.14.5](https://github.com/leo-project/leo_manager.git)
     * [leo_storage v0.14.4](https://github.com/leo-project/leo_storage.git)
 * others
     * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
