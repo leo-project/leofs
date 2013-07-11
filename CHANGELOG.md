@@ -5,7 +5,7 @@ leofs-0.14.6 (July 11, 2013)
 ============================
 
 * Improved
-    * Able to set the number of request per a process configurable
+    * Able to set the max number of requests allowed in a single keep-alive session
 
 * Bugs Fixed
     * Gateway
