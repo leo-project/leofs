@@ -1,3 +1,43 @@
+leofs-0.14.8
+==============
+
+Bugs Fixed
+-----------
+
+* Gateway
+    * Deletion failed with s3cmd in the case of not existed a targate file
+    * OOM with access-log output
+* Manager
+    * Start failed in the case of not reached the message from the Manager to storage-node(s)
+    * Not removed a member(storage-node) when its status was 'attached'
+
+Used Libraries
+---------------
+
+* leo project
+    * [leo_backend-db v0.12.17](https://github.com/leo-project/leo_backend_db.git)
+    * [leo_cache v0.4.11](https://github.com/leo-project/leo_cache.git)
+    * [leo_commons v0.14.4](https://github.com/leo-project/leo_commons.git)
+    * [leo_dcerl v0.2.3](https://github.com/leo-project/leo_dcerl.git)
+    * [leo_logger v0.12.2](https://github.com/leo-project/leo_logger.git)
+    * [leo_mcerl v0.2.5](https://github.com/leo-project/leo_mcerl.git)
+    * [leo_mq v0.12.18](https://github.com/leo-project/leo_mq.git)
+    * [leo_object_storage v0.14.5](https://github.com/leo-project/leo_object_storage.git)
+    * [leo_ordning_reda v0.8.15](https://github.com/leo-project/leo_ordning_reda.git)
+    * [leo_redundant_manager v1.0.2](https://github.com/leo-project/leo_redundant_manager.git)
+    * [leo_s3_libs v0.12.14](https://github.com/leo-project/leo_s3_libs.git)
+    * [leo_statistics v0.14.4](https://github.com/leo-project/leo_statistics.git)
+    * [leo_gateway v0.14.13](https://github.com/leo-project/leo_gateway.git)
+    * [leo_manager v0.14.8](https://github.com/leo-project/leo_manager.git)
+    * [leo_storage v0.14.6](https://github.com/leo-project/leo_storage.git)
+* others
+    * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
+    * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+    * [folsom](https://github.com/boundary/folsom.git)
+    * [jiffy](https://github.com/davisp/jiffy.git)
+    * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
 leofs-0.14.7
 ==============
 
