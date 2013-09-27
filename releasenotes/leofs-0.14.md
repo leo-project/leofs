@@ -6,6 +6,7 @@ Features and Improvements for LeoFS
 
 * Improved
     * Supported Erlang/OTP R16B02
+    * Increased performance of leo_redundant_manager
 
 Used Libraries
 ---------------

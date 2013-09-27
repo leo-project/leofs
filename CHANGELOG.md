@@ -6,6 +6,7 @@ CHANGELOG
 
 * Improved
     * Supported Erlang/OTP R16B02
+    * Increased performance of leo_redundant_manager
 
 * Used libraries
     * leo project
