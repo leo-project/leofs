@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+<!--
+Copyright 2012 Project FiFo / Heinz N. Gies
+-->
+
+<service_bundle type='manifest' name='leo_gateway'>
+  <service
+      name='network/leo_gateway'
+      type='service'
+      version='0.3.0'>
+    <create_default_instance enabled='false' />
+    <single_instance />
+    <dependency
+        name='net-loopback'
+        grouping='require_all'
+        restart_on='none'
+        type='service'>
+      <service_fmri value='svc:/network/loopback' />
+    </dependency>
+
+    <dependency
+        name='net-physical'
+        grouping='require_all'
+        restart_on='none'
+        type='service'>
+      <service_fmri value='svc:/network/physical' />
+    </dependency>
+
+    <dependency
+        name='fs'
+        grouping='require_all'
+        restart_on='none' type='service'>
+      <service_fmri value='svc:/system/filesystem/local'/>
+    </dependency>
+
+    <dependency
+        name='epmd'
+        grouping='require_all'
+        restart_on='none' type='service'>
+      <service_fmri value='svc:/pkgsrc/epmd:default'/>
+    </dependency>
+
+    <exec_method
+        type='method'
+        name='start'
+        exec='/opt/local/leo_gateway/bin/leo_gateway %m'
+        timeout_seconds='30'>
+      <method_context>
+        <method_credential user='leo_gateway' group='leo_gateway' />
+        <method_environment>
+          <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
+          <envvar name='HOME' value='/var/db/leo_gateway'/>
+          <!--envvar name='http_proxy' value='http://10.0.0.1'/-->
+        </method_environment>
+      </method_context>
+    </exec_method>
+
+    <exec_method
+        name='restart'
+        type='method'
+        exec='/opt/local/leo_gateway/bin/leo_gateway %m'
+        timeout_seconds='120'>
+      <method_context>
+        <method_credential user='leo_gateway' group='leo_gateway' />
+        <method_environment>
+          <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
+          <envvar name='HOME' value='/var/db/leo_gateway'/>
+          <!--envvar name='http_proxy' value='http://10.0.0.1'/-->
+        </method_environment>
+      </method_context>
+    </exec_method>
+
+    <exec_method
+        name='stop'
+        type='method'
+        exec='/opt/local/leo_gateway/bin/leo_gateway %m'
+        timeout_seconds='120'>
+      <method_context>
+        <method_credential user='leo_gateway' group='leo_gateway' />
+        <method_environment>
+          <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
+          <envvar name='HOME' value='/var/db/leo_gateway'/>
+          <!--envvar name='http_proxy' value='http://10.0.0.1'/-->
+        </method_environment>
+      </method_context>
+    </exec_method>
+
+    <template>
+      <common_name>
+        <loctext xml:lang='C'>
+          LeoFS gateway.
+        </loctext>
+      </common_name>
+    </template>
+  </service>
+</service_bundle>
