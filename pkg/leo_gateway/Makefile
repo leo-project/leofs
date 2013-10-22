@@ -3,7 +3,7 @@ COMPONENT_INTERNAL=leo_gateway
 COMPONENT=leo_gateway
 COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)
 
-.PHONY: build_info package package_list all
+.PHONY: build_info package package_list all clean 
 
 all: package
 
