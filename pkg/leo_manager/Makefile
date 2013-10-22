@@ -1,7 +1,7 @@
 VERSION=0.14.9
 COMPONENT_INTERNAL=leo_manager
 COMPONENT=leo_manager
-COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)_0
+COMPONENT_PATH=../../rel/$(COMPONENT_INTERNAL)/$(COMPONENT_INTERNAL)
 
 .PHONY: build_info package package_list all
 
