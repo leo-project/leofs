@@ -3,6 +3,7 @@
 USER=leofs
 GROUP=$USER
 COMPONENT=leo_gateway
+DIR=/opt/local/$COMPONENT
 
 case $2 in
     PRE-INSTALL)
@@ -50,5 +51,21 @@ case $2 in
             cp /opt/local/$COMPONENT/etc/app.config.example /opt/local/$COMPONENT/etc/app.config
             sed --in-place -e "s/127.0.0.1/${IP}/g" /opt/local/$COMPONENT/etc/app.config
         fi
+        echo "Checking for $DIR/bin/$COMPONENT.smartos"
+        if [ ! -f $DIR/bin/$COMPONENT.smartos ]
+        then
+            echo "Installing smartos binary"
+            cp  $DIR/share/$COMPONENT.smartos $DIR/bin/
+            cp  $DIR/share/$COMPONENT.smartos $DIR/bin/$COMPONENT
+        fi    
+
+        echo "Checking for $DIR/etc/app.config.smartos"
+        if [ ! -f $DIR/etc/app.config.smartos ]
+        then
+            echo "Installing smartos config"
+            cp  $DIR/share/app.config.smartos $DIR/etc/
+            cp  $DIR/etc/app.config.smartos $DIR/etc/app.config
+            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/app.config
+        fi    
         ;;
 esac

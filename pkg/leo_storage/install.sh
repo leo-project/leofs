@@ -3,6 +3,7 @@
 USER=leofs
 GROUP=$USER
 COMPONENT=leo_storage
+DIR=/opt/local/$COMPONENT
 
 case $2 in
     PRE-INSTALL)
@@ -36,19 +37,30 @@ case $2 in
             echo Service already existings ...
         else
             echo Importing service ...
-            svccfg import /opt/local/$COMPONENT/share/$COMPONENT.xml
+            svccfg import $DIR/share/$COMPONENT.xml
         fi
         echo Trying to guess configuration ...
         IP=`ifconfig net0 | grep inet | awk -e '{print $2}'`
-        if [ ! -f /opt/local/$COMPONENT/etc/vm.args ]
+        if [ ! -f $DIR/etc/vm.args ]
         then
-            cp /opt/local/$COMPONENT/etc/vm.args.example /opt/local/$COMPONENT/etc/vm.args
-            sed --in-place -e "s/127.0.0.1/${IP}/g" /opt/local/$COMPONENT/etc/vm.args
+            cp $DIR/etc/vm.args.example $DIR/etc/vm.args
+            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/vm.args
         fi
-        if [ ! -f /opt/local/$COMPONENT/etc/app.config ]
+        if [ ! -f $DIR/etc/app.config ]
         then
-            cp /opt/local/$COMPONENT/etc/app.config.example /opt/local/$COMPONENT/etc/app.config
-            sed --in-place -e "s/127.0.0.1/${IP}/g" /opt/local/$COMPONENT/etc/app.config
+            cp $DIR/etc/app.config.example $DIR/etc/app.config
+            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/app.config
         fi
+        cp  $DIR/share/$COMPONENT.smartos $DIR/bin/$COMPONENT
+        cp  $DIR/share/start.smartos $DIR/erts-*/bin/start
+
+        echo "Checking for $DIR/etc/app.config.smartos"
+        if [ ! -f $DIR/etc/app.config.smartos ]
+        then
+            echo "Installing smartos config"
+            cp  $DIR/share/app.config.smartos $DIR/etc/
+            cp  $DIR/etc/app.config.smartos $DIR/etc/app.config
+            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/app.config
+        fi    
         ;;
 esac
