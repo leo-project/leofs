@@ -50,6 +50,5 @@ case $2 in
             cp /opt/local/$COMPONENT/etc/app.config.example /opt/local/$COMPONENT/etc/app.config
             sed --in-place -e "s/127.0.0.1/${IP}/g" /opt/local/$COMPONENT/etc/app.config
         fi
-        cp /opt/local/$COMPONENT/bin/fifoadm /opt/local/sbin
         ;;
 esac
