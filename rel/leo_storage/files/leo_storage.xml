@@ -4,9 +4,9 @@
 Copyright 2012 Project FiFo / Heinz N. Gies
 -->
 
-<service_bundle type='manifest' name='leo_gateway'>
+<service_bundle type='manifest' name='leo_storage'>
   <service
-      name='leofs/gateway'
+      name='leofs/storage'
       type='service'
       version='0.3.0'>
     <create_default_instance enabled='false' />
@@ -44,13 +44,13 @@ Copyright 2012 Project FiFo / Heinz N. Gies
     <exec_method
         type='method'
         name='start'
-        exec='/opt/local/leo_gateway/bin/leo_gateway %m'
+        exec='/opt/local/leo_storage/bin/leo_storage %m'
         timeout_seconds='30'>
       <method_context>
         <method_credential user='leofs' group='leofs' />
         <method_environment>
           <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
-          <envvar name='HOME' value='/var/db/leo_gateway'/>
+          <envvar name='HOME' value='/var/db/leo_storage'/>
           <!--envvar name='http_proxy' value='http://10.0.0.1'/-->
         </method_environment>
       </method_context>
@@ -59,13 +59,13 @@ Copyright 2012 Project FiFo / Heinz N. Gies
     <exec_method
         name='restart'
         type='method'
-        exec='/opt/local/leo_gateway/bin/leo_gateway %m'
+        exec='/opt/local/leo_storage/bin/leo_storage %m'
         timeout_seconds='120'>
       <method_context>
         <method_credential user='leofs' group='leofs' />
         <method_environment>
           <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
-          <envvar name='HOME' value='/var/db/leo_gateway'/>
+          <envvar name='HOME' value='/var/db/leo_storage'/>
           <!--envvar name='http_proxy' value='http://10.0.0.1'/-->
         </method_environment>
       </method_context>
@@ -74,13 +74,13 @@ Copyright 2012 Project FiFo / Heinz N. Gies
     <exec_method
         name='stop'
         type='method'
-        exec='/opt/local/leo_gateway/bin/leo_gateway %m'
+        exec='/opt/local/leo_storage/bin/leo_storage %m'
         timeout_seconds='120'>
       <method_context>
         <method_credential user='leofs' group='leofs' />
         <method_environment>
           <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
-          <envvar name='HOME' value='/var/db/leo_gateway'/>
+          <envvar name='HOME' value='/var/db/leo_storage'/>
           <!--envvar name='http_proxy' value='http://10.0.0.1'/-->
         </method_environment>
       </method_context>
@@ -89,7 +89,7 @@ Copyright 2012 Project FiFo / Heinz N. Gies
     <template>
       <common_name>
         <loctext xml:lang='C'>
-          LeoFS gateway.
+          LeoFS storage.
         </loctext>
       </common_name>
     </template>
