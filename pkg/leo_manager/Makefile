@@ -1,15 +1,30 @@
 VERSION=0.14.9
 COMPONENT_INTERNAL=leo_manager
 COMPONENT=leo_manager
-COMPONENT_PATH=../../rel/$(COMPONENT_INTERNAL)/$(COMPONENT_INTERNAL)
+COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)_0
+DIR=../bootstrap/$(COMPONENT)
 
-.PHONY: build_info package package_list all
+.PHONY: build_info package package_list all bootstrap
 
 all: package
 
-package_list:
+bootstrap:
+	-rm -r $(DIR)
+	cp -r $(COMPONENT_PATH) $(DIR)
+	mkdir $(DIR)/share
+	cp files/$(COMPONENT) $(DIR)/bin/
+	cp files/$(COMPONENT).xml $(DIR)/share
+	cp files/start $(DIR)/erts-*/bin/start
+	cp files/app.config* $(DIR)/etc/
+	cp files/leo_manager_snmp.config $(DIR)/snmp/snmpa_manager_0/
+	cp files/leo_manager_snmp.config $(DIR)/snmp/snmpa_manager_1/
+	rm $(DIR)/etc/app.config
+	cp files/app.config.master $(DIR)/etc/app.config.example
+	mv $(DIR)/etc/vm.args $(DIR)/etc/vm.args.example
+
+package_list: bootstrap
 	cat pre_pkg > packlist
-	(cd $(COMPONENT_PATH); find * -type f | sort) >> packlist
+	(cd $(DIR); find * -type f | sort) >> packlist
 	cat post_pkg >> packlist
 
 build_info:
@@ -18,7 +33,8 @@ build_info:
 	echo "HOMEPAGE=http://www.leofs.org/" >>build-info
 
 clean:
+	-rm -r $(DIR)
 	-rm *.tgz build-info packlist
 
 package: package_list build_info
-	pkg_create -i install.sh -k deinstall.sh -D displayfile -B build-info -c comment -d description -f packlist -I /opt/local/$(COMPONENT) -p $(COMPONENT_PATH) -U $(COMPONENT)-$(VERSION)$(SUFFIX).tgz
+	pkg_create -i install.sh -k deinstall.sh -D displayfile -B build-info -c comment -d description -f packlist -I /opt/local/$(COMPONENT) -p $(DIR) -U $(COMPONENT)-$(VERSION)$(SUFFIX).tgz

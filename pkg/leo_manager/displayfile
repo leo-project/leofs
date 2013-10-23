@@ -2,5 +2,13 @@
 |                                                                              |
 | Write some nice information that comes in handy when you instal leo_manager. |
 |                                                                              |
+| The SmartOS packages don't distingush between the master and slave package,  |
+| so they ship with example configurations for both scenarios.                 |
+| This means, before you start the manager the first time place decide what    |
+| mode to run it in and either copy the .master or .slave app.config into      |
+| place and adjust it for your values.                                         |
+|                                                                              |
+| The files can be found in: /opt/local/leo_manager/etc                        |
+|                                                                              |
 `------------------------------------------------------------------------------'
 

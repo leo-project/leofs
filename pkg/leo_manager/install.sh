@@ -3,6 +3,7 @@
 USER=leofs
 GROUP=$USER
 COMPONENT=leo_manager
+DIR=/opt/local/$COMPONENT
 
 case $2 in
     PRE-INSTALL)
@@ -21,7 +22,7 @@ case $2 in
             useradd -g $GROUP -d /var/db/$COMPONENT -s /bin/false $USER
         fi
         echo Creating directories ...
-        mkdir -p /var/db/$COMPONENT
+        mkdir -p /var/db/$COMPONENT/snmp
         chown -R $USER:$GROUP /var/db/$COMPONENT
         mkdir -p /var/log/$COMPONENT/sasl
         chown -R $USER:$GROUP /var/log/$COMPONENT
@@ -36,19 +37,19 @@ case $2 in
             echo Service already existings ...
         else
             echo Importing service ...
-            svccfg import /opt/local/$COMPONENT/share/$COMPONENT.xml
+            svccfg import $DIR/share/$COMPONENT.xml
         fi
         echo Trying to guess configuration ...
         IP=`ifconfig net0 | grep inet | awk -e '{print $2}'`
-        if [ ! -f /opt/local/$COMPONENT/etc/vm.args ]
+        if [ ! -f $DIR/etc/vm.args ]
         then
-            cp /opt/local/$COMPONENT/etc/vm.args.example /opt/local/$COMPONENT/etc/vm.args
-            sed --in-place -e "s/127.0.0.1/${IP}/g" /opt/local/$COMPONENT/etc/vm.args
+            cp $DIR/etc/vm.args.example $DIR/etc/vm.args
+            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/vm.args
         fi
-        if [ ! -f /opt/local/$COMPONENT/etc/app.config ]
+        if [ ! -f $DIR/etc/app.config ]
         then
-            cp /opt/local/$COMPONENT/etc/app.config.example /opt/local/$COMPONENT/etc/app.config
-            sed --in-place -e "s/127.0.0.1/${IP}/g" /opt/local/$COMPONENT/etc/app.config
+            cp $DIR/etc/app.config.example $DIR/etc/app.config
+            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/app.config
         fi
         ;;
 esac

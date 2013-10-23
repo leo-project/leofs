@@ -9,6 +9,8 @@ deps:
 	@./rebar get-deps
 clean:
 	@./rebar clean
+	make -C pkg clean
+
 xref:
 	@./rebar xref
 eunit:
