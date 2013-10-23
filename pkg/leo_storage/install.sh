@@ -22,7 +22,7 @@ case $2 in
             useradd -g $GROUP -d /var/db/$COMPONENT -s /bin/false $USER
         fi
         echo Creating directories ...
-        mkdir -p /var/db/$COMPONENT
+        mkdir -p /var/db/$COMPONENT/snmp
         chown -R $USER:$GROUP /var/db/$COMPONENT
         mkdir -p /var/log/$COMPONENT/sasl
         chown -R $USER:$GROUP /var/log/$COMPONENT
@@ -51,18 +51,5 @@ case $2 in
             cp $DIR/etc/app.config.example $DIR/etc/app.config
             sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/app.config
         fi
-        cp  $DIR/share/$COMPONENT.smartos $DIR/bin/$COMPONENT
-        cp  $DIR/share/start.smartos $DIR/erts-*/bin/start
-
-        echo "Checking for $DIR/etc/app.config.smartos"
-        if [ ! -f $DIR/etc/app.config.smartos ]
-        then
-            echo "Installing smartos config"
-            cp  $DIR/share/app.config.smartos $DIR/etc/
-            cp  $DIR/etc/app.config.smartos $DIR/etc/app.config
-            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/app.config
-        fi    
-        echo "Ensuring ownership of snmp directory."
-        chown -R $USER:$GROUP $DIR/snmp
         ;;
 esac
