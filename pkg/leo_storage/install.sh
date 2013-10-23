@@ -19,9 +19,11 @@ case $2 in
             echo "User already exists, skipping creation."
         else
             echo Creating $USER user ...
-            useradd -g $GROUP -d /var/db/$COMPONENT -s /bin/false $USER
+            useradd -g $GROUP -d /var/db/leofs -s /bin/false $USER
         fi
         echo Creating directories ...
+        mkdir -p /var/db/leofs
+        chown -R $USER:$GROUP /var/db/leofs
         mkdir -p /var/db/$COMPONENT/snmp
         chown -R $USER:$GROUP /var/db/$COMPONENT
         mkdir -p /var/log/$COMPONENT/sasl
