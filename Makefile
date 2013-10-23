@@ -57,5 +57,5 @@ release:
 	(cd rel/leo_gateway && ../../rebar generate)
 	cp -r rel/leo_gateway/leo_gateway/* package/leo_gateway/
 
-pkgsrc: generate
+pkgsrc: release
 	make -C pkg

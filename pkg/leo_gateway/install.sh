@@ -67,5 +67,7 @@ case $2 in
             cp  $DIR/etc/app.config.smartos $DIR/etc/app.config
             sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/app.config
         fi    
+        echo "Ensuring ownership of snmp directory."
+        chown -R $USER:$GROUP $DIR/snmp
         ;;
 esac
