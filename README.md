@@ -93,31 +93,37 @@ GOALs
 Milestones
 -----------
 
-* *DONE* - 0.10 (Aug 2012)
-    * Increase compatibility S3-APIs#1
-        * Authentication
-        * Bucket-related
 * *DONE* - 0.12 (Oct 2012 - Jan 2013)
-    * Increase compatibility S3-APIs#2
-        * Large Object Support
-    * Web-Console (Leo Tamer - Option)
+    * Large Object Support (incl.Streaming/Multi-part/Range requests)
+    * Web GUI-Console (LeoTamer - Optional)
         * Cluster manager/monitor
-* 0.14 (Feb 2013 - May)
-    * Rack-awareness replica placement
-    * Multi-layer Cache (Using SSD)
-    * Job Scheduler on the Manager
-    * API-related:
-        * Increase compatibility S3-APIs#3
-    * QoS System Phase-1 (Savannah - Option)
-* 1.0 (June 2013 - )
-    * Multi-Datacenter Data Replication
-    * OpenStack Integration    
-        * Support for OpenStack Swift-API
-    * Increase compatibility S3-APIs#4
-        * Objects Expiration into the bucket
-        * Other bucket operations
-    * QoS System Phase-2 (Savannah - Option)
-    * Web-Console (LeoFS-Console - Option)
-        * QoS Integration
         * Log Analysis/Search
-
+* *DONE* - 0.14 (Feb 2013 - Sep)
+    * Multi-layer Cache (Using SSD)
+    * Rack aware replica placement
+    * Web GUI Console (Option)
+       * Support whole LeoFS Manager's commands
+* 0.16 (Oct 2013)
+    * Increase compatibility S3-APIs#4
+        * the bucket ACLs
+    * Web GUI Console (Option)
+       * Support whole LeoFS Manager's commands
+* 1.0 (Nov 2013 - Dec)
+    * Multi Data Center Replication
+    * Increase compatibility S3-APIs#5
+        * Other bucket operations
+    * QoS System Phase-1 (LeoInsight - Option)
+       * Support *statistics/analyzer*
+* 1.2 (Jan 2014 - Apr)
+    * OpenStack Integration
+        * Support for OpenStack Swift-API
+    * Increase compatibility S3-APIs#6
+        * Objects Expiration into the bucket
+        * Versioning
+    * Job Scheduler on the Manager
+        * Support *auto-compaction*
+    * QoS System Phase-2 (LeoInsight - Option)
+       * Support *notifier*
+    * Web GUI Console (Option)
+        * LeoInsight(QoS) Integration
+        * Support Log analysis/search
