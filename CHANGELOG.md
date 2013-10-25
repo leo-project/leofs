@@ -7,7 +7,6 @@ CHANGELOG
 * New Features
     * Gateway
         * Supported GET/PUT ACL a Bucket [S3-API]
-        * Supported Exists a Bucket [S3-API]
         * (Beta) Able to output access-logs to Elasticsearch in order to realize to access-log analysis with Kibana
     * Other
         * Implemented SmartOS packager (Contributed by Heinz N. Gies - [Project FiFo](http://project-fifo.net/))
