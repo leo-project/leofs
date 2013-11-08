@@ -1,4 +1,5 @@
-VERSION=0.16.0
+include ../../leofs.mk
+VERSION=$(LEOFS_VERSION)
 COMPONENT_INTERNAL=leo_storage
 COMPONENT=leo_storage
 COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)
