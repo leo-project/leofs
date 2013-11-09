@@ -47,7 +47,7 @@ Copyright 2012 Project FiFo / Heinz N. Gies
         exec='/opt/local/leo_storage/bin/leo_storage %m'
         timeout_seconds='30'>
       <method_context>
-        <method_credential user='leofs' group='leofs' />
+        <!--method_credential user='leofs' group='leofs' /-->
         <method_environment>
           <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
           <envvar name='HOME' value='/var/db/leo_storage'/>
@@ -62,7 +62,7 @@ Copyright 2012 Project FiFo / Heinz N. Gies
         exec='/opt/local/leo_storage/bin/leo_storage %m'
         timeout_seconds='120'>
       <method_context>
-        <method_credential user='leofs' group='leofs' />
+        <!--method_credential user='leofs' group='leofs' /-->
         <method_environment>
           <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
           <envvar name='HOME' value='/var/db/leo_storage'/>
@@ -77,7 +77,7 @@ Copyright 2012 Project FiFo / Heinz N. Gies
         exec='/opt/local/leo_storage/bin/leo_storage %m'
         timeout_seconds='120'>
       <method_context>
-        <method_credential user='leofs' group='leofs' />
+        <!--method_credential user='leofs' group='leofs' /-->
         <method_environment>
           <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
           <envvar name='HOME' value='/var/db/leo_storage'/>
