@@ -39,6 +39,7 @@ package/leo_gateway_0/bin/leo_gateway stop
 package/leo_storage_0/bin/leo_storage stop
 package/leo_storage_1/bin/leo_storage stop
 package/leo_storage_2/bin/leo_storage stop
+package/leo_storage_3/bin/leo_storage stop
 package/leo_manager_0/bin/leo_manager stop
 package/leo_manager_1/bin/leo_manager stop
 if [ $1 = "stop" ]; then
@@ -54,6 +55,7 @@ make release
 cp -r package/leo_storage package/leo_storage_0
 cp -r package/leo_storage package/leo_storage_1
 cp -r package/leo_storage package/leo_storage_2
+cp -r package/leo_storage package/leo_storage_3
 cp -r package/leo_gateway package/leo_gateway_0
 rm -rf package/leo_storage
 rm -rf package/leo_gateway
@@ -62,10 +64,12 @@ cp priv/test/app-m0.config package/leo_manager_0/etc/app.config
 cp priv/test/app-s0.config package/leo_storage_0/etc/app.config
 cp priv/test/app-s1.config package/leo_storage_1/etc/app.config
 cp priv/test/app-s2.config package/leo_storage_2/etc/app.config
+cp priv/test/app-s3.config package/leo_storage_3/etc/app.config
 
 cp priv/test/vm-s0.config package/leo_storage_0/etc/vm.args
 cp priv/test/vm-s1.config package/leo_storage_1/etc/vm.args
 cp priv/test/vm-s2.config package/leo_storage_2/etc/vm.args
+cp priv/test/vm-s3.config package/leo_storage_3/etc/vm.args
 
 ## launch
 if [ $1 = "build" ]; then
@@ -80,6 +84,8 @@ sleep 1
 ./package/leo_storage_1/bin/leo_storage start
 sleep 1
 ./package/leo_storage_2/bin/leo_storage start
+sleep 1
+./package/leo_storage_3/bin/leo_storage start
 
 echo ":::"
 echo "::: starting storages :::"
