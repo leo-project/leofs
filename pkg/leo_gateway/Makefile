@@ -1,4 +1,5 @@
-VERSION=0.14.9
+include ../../leofs.mk
+VERSION=$(LEOFS_VERSION)
 COMPONENT_INTERNAL=leo_gateway
 COMPONENT=leo_gateway
 COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)
@@ -17,8 +18,8 @@ bootstrap:
 	cp files/start $(DIR)/erts-*/bin/start
 	rm $(DIR)/etc/app.config
 	cp files/app.config $(DIR)/etc/app.config.example
-	cp files/leo_gateway_snmp.config.0 $(DIR)/snmp/snmpa_gateway_0/
-	cp files/leo_gateway_snmp.config.1 $(DIR)/snmp/snmpa_gateway_1/
+	cp files/leo_gateway_snmp.config.0 $(DIR)/snmp/snmpa_gateway_0/leo_gateway_snmp.config
+	cp files/leo_gateway_snmp.config.1 $(DIR)/snmp/snmpa_gateway_1/leo_gateway_snmp.config
 	mv $(DIR)/etc/vm.args $(DIR)/etc/vm.args.example
 
 package_list: bootstrap
