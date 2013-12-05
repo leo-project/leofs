@@ -75,6 +75,19 @@ NODETOOL_LITE="$ERTS_PATH/escript $ERTS_PATH/nodetool"
 # Setup remote shell command to control node
 REMSH="$ERTS_PATH/erl $REMSH_NAME_ARG $REMSH_REMSH_ARG $COOKIE_ARG"
 
+# Generate conf files - [app.config, vm.args]
+gen_config() {
+    rm -f $RUNNER_BASE_DIR/etc/app.*.config
+    rm -f $RUNNER_BASE_DIR/etc/vm.*.args
+    RES_CUTTLEFISH=`$RUNNER_BASE_DIR/../../cuttlefish -i $RUNNER_BASE_DIR/etc/leo_storage.schema -c $RUNNER_BASE_DIR/etc/leo_storage.conf -d $RUNNER_BASE_DIR/etc/`
+
+    APP_CONFIG=`find $RUNNER_BASE_DIR/etc -type f | grep app.*[0-9].config`
+    mv $APP_CONFIG $RUNNER_BASE_DIR/etc/app.config
+
+    VM_ARGS=`find $RUNNER_BASE_DIR/etc -type f | grep vm.*[0-9].args`
+    mv $VM_ARGS $RUNNER_BASE_DIR/etc/vm.args
+}
+
 # Check the first argument for instructions
 case "$1" in
     start)
@@ -86,12 +99,15 @@ case "$1" in
         fi
 
         # Sanity check the app.config file
-        RES=`$NODETOOL_LITE chkconfig $RUNNER_ETC_DIR/app.config`
-        if [ "$RES" != "ok" ]; then
-            echo "Error reading $RUNNER_ETC_DIR/app.config"
-            echo $RES
-            exit 1
-        fi
+        # RES=`$NODETOOL_LITE chkconfig $RUNNER_ETC_DIR/app.config`
+        # if [ "$RES" != "ok" ]; then
+        #     echo "Error reading $RUNNER_ETC_DIR/app.config"
+        #     echo $RES
+        #     exit 1
+        # fi
+
+        # Generate conf files - [app.config, vm.args]
+        gen_config
 
         HEART_COMMAND="$RUNNER_BASE_DIR/bin/$SCRIPT start"
         export HEART_COMMAND
@@ -190,6 +206,9 @@ case "$1" in
         # Dump environment info for logging purposes
         echo "Exec: $CMD"
         echo "Root: $ROOTDIR"
+
+        # Generate conf files - [app.config, vm.args]
+        gen_config
 
         # Log the startup
         logger -t "$SCRIPT[$$]" "Starting up"
