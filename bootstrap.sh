@@ -60,17 +60,7 @@ cp -r package/leo_gateway package/leo_gateway_0
 rm -rf package/leo_storage
 rm -rf package/leo_gateway
 
-cp priv/test/app-m0.config package/leo_manager_0/etc/app.config
-cp priv/test/app-s0.config package/leo_storage_0/etc/app.config
-cp priv/test/app-s1.config package/leo_storage_1/etc/app.config
-cp priv/test/app-s2.config package/leo_storage_2/etc/app.config
-cp priv/test/app-s3.config package/leo_storage_3/etc/app.config
-
-cp priv/test/vm-s0.config package/leo_storage_0/etc/vm.args
-cp priv/test/vm-s1.config package/leo_storage_1/etc/vm.args
-cp priv/test/vm-s2.config package/leo_storage_2/etc/vm.args
-cp priv/test/vm-s3.config package/leo_storage_3/etc/vm.args
-
+cp priv/test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
 cp priv/test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
 cp priv/test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
 cp priv/test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
