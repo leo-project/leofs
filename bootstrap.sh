@@ -71,6 +71,11 @@ cp priv/test/vm-s1.config package/leo_storage_1/etc/vm.args
 cp priv/test/vm-s2.config package/leo_storage_2/etc/vm.args
 cp priv/test/vm-s3.config package/leo_storage_3/etc/vm.args
 
+cp priv/test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
+cp priv/test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
+cp priv/test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
+cp priv/test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+
 ## launch
 if [ $1 = "build" ]; then
     exit 1
