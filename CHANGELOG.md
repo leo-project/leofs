@@ -1,6 +1,44 @@
 CHANGELOG
 =========
 
+0.16.8 (Dec 12, 2013)
+=====================
+
+* Improved
+  * [#109](https://github.com/leo-project/leofs/issues/109) Moved to "ini-file" configuration, which no longer use Erlang-specific syntax. Using [cuttlefish](https://github.com/basho/cuttlefish) to realize this function.
+  * [#110](https://github.com/leo-project/leofs/issues/110) Supported [erlcloud](https://github.com/gleber/erlcloud) for Erlang users
+  * [Supported Mac OS X](https://github.com/leo-project/libcutil/pull/2) which was contributed from Jeff Li
+* Fixed Bugs
+  * [#102](https://github.com/leo-project/leofs/issues/102) Happened timeout when uploading a large object
+  * [#108](https://github.com/leo-project/leofs/issues/108) Happened not relocation of object(s) when removing a node and executing rebalance then add same node
+  * [#111](https://github.com/leo-project/leofs/issues/111) Could not upload large size file
+  * Fixed that not migrated "Bucket Table"
+
+* Used libraries
+    * leo project
+        * [leo_backend-db v0.14.2](https://github.com/leo-project/leo_backend_db.git)
+        * [leo_cache v0.4.16](https://github.com/leo-project/leo_cache.git)
+        * [leo_commons v0.14.9](https://github.com/leo-project/leo_commons.git)
+        * [leo_dcerl v0.2.7](https://github.com/leo-project/leo_dcerl.git)
+        * [leo_logger v0.12.6](https://github.com/leo-project/leo_logger.git)
+        * [leo_mcerl v0.2.9](https://github.com/leo-project/leo_mcerl.git)
+        * [leo_mq v0.12.22](https://github.com/leo-project/leo_mq.git)
+        * [leo_object_storage v0.14.8](https://github.com/leo-project/leo_object_storage.git)
+        * [leo_ordning_reda v0.8.18](https://github.com/leo-project/leo_ordning_reda.git)
+        * [leo_redundant_manager v1.2.5](https://github.com/leo-project/leo_redundant_manager.git)
+        * [leo_s3_libs v0.12.24](https://github.com/leo-project/leo_s3_libs.git)
+        * [leo_statistics v0.14.7](https://github.com/leo-project/leo_statistics.git)
+        * [leo_gateway v0.16.8](https://github.com/leo-project/leo_gateway.git)
+        * [leo_manager v0.16.8](https://github.com/leo-project/leo_manager.git)
+        * [leo_storage v0.16.8](https://github.com/leo-project/leo_storage.git)
+    * others
+        * [bitcask v1.6.4](https://github.com/basho/bitcask.git)
+        * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+        * [folsom](https://github.com/boundary/folsom.git)
+        * [jiffy](https://github.com/davisp/jiffy.git)
+        * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
 0.16.5 (Nov 26, 2013)
 =====================
 
