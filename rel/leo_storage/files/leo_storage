@@ -30,18 +30,47 @@ ERTS_VSN=${START_ERL% *}
 APP_VSN=${START_ERL#* }
 
 # Use releases/VSN/vm.args if it exists otherwise use etc/vm.args
-if [ -e "$RUNNER_BASE_DIR/releases/$APP_VSN/vm.args" ]; then
-    VMARGS_PATH="$RUNNER_BASE_DIR/releases/$APP_VSN/vm.args"
-else
-    VMARGS_PATH="$RUNNER_ETC_DIR/vm.args"
-fi
+# if [ -e "$RUNNER_BASE_DIR/releases/$APP_VSN/vm.args" ]; then
+#     VMARGS_PATH="$RUNNER_BASE_DIR/releases/$APP_VSN/vm.args"
+# else
+#     VMARGS_PATH="$RUNNER_ETC_DIR/vm.args"
+# fi
+VMARGS_PATH="$RUNNER_ETC_DIR/vm.args"
 
 # Use releases/VSN/sys.config if it exists otherwise use etc/app.config
-if [ -e "$RUNNER_BASE_DIR/releases/$APP_VSN/sys.config" ]; then
-    CONFIG_PATH="$RUNNER_BASE_DIR/releases/$APP_VSN/sys.config"
-else
-    CONFIG_PATH="$RUNNER_ETC_DIR/app.config"
-fi
+# if [ -e "$RUNNER_BASE_DIR/releases/$APP_VSN/sys.config" ]; then
+#     CONFIG_PATH="$RUNNER_BASE_DIR/releases/$APP_VSN/sys.config"
+# else
+#     CONFIG_PATH="$RUNNER_ETC_DIR/app.config"
+# fi
+CONFIG_PATH="$RUNNER_ETC_DIR/app.config"
+
+
+#
+# Generate conf files - [app.config, vm.args]
+#
+gen_config() {
+    rm -f $RUNNER_BASE_DIR/etc/app.*.config
+    rm -f $RUNNER_BASE_DIR/etc/vm.*.args
+    RES_CUTTLEFISH=`$RUNNER_BASE_DIR/bin/cuttlefish -i $RUNNER_BASE_DIR/etc/leo_storage.schema -c $RUNNER_BASE_DIR/etc/leo_storage.conf -d $RUNNER_BASE_DIR/etc/`
+
+    APP_CONFIG=`find $RUNNER_BASE_DIR/etc -type f | grep app.*[0-9].config`
+    mv $APP_CONFIG $RUNNER_BASE_DIR/etc/app.config
+
+    VM_ARGS=`find $RUNNER_BASE_DIR/etc -type f | grep vm.*[0-9].args`
+    mv $VM_ARGS $RUNNER_BASE_DIR/etc/vm.args
+}
+case "$1" in
+    start)
+        gen_config
+        ;;
+    console)
+        gen_config
+        ;;
+    *)
+        ;;
+esac
+
 
 # Extract the target node name from node.args
 NAME_ARG=`egrep '^-s?name' $VMARGS_PATH`
@@ -93,6 +122,7 @@ case "$1" in
             exit 1
         fi
 
+        # Launch the application
         HEART_COMMAND="$RUNNER_BASE_DIR/bin/$SCRIPT start"
         export HEART_COMMAND
         mkdir -p $PIPE_DIR
