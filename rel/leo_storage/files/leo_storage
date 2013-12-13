@@ -52,12 +52,13 @@ CONFIG_PATH="$RUNNER_ETC_DIR/app.config"
 gen_config() {
     rm -f $RUNNER_BASE_DIR/etc/app.*.config
     rm -f $RUNNER_BASE_DIR/etc/vm.*.args
-    RES_CUTTLEFISH=`$RUNNER_BASE_DIR/bin/cuttlefish -i $RUNNER_BASE_DIR/etc/leo_storage.schema -c $RUNNER_BASE_DIR/etc/leo_storage.conf -d $RUNNER_BASE_DIR/etc/`
+    ERTS_PATH=$RUNNER_BASE_DIR/erts-$ERTS_VSN/bin
+    RES_CUTTLEFISH=`PATH=$ERTS_PATH:$PATH $RUNNER_BASE_DIR/bin/cuttlefish -i $RUNNER_BASE_DIR/etc/leo_storage.schema -c $RUNNER_BASE_DIR/etc/leo_storage.conf -d $RUNNER_BASE_DIR/etc/`
 
-    APP_CONFIG=`find $RUNNER_BASE_DIR/etc -type f | grep app.*[0-9].config`
+    APP_CONFIG=`find $RUNNER_BASE_DIR/etc/ -type f | grep app.*[0-9].config`
     mv $APP_CONFIG $RUNNER_BASE_DIR/etc/app.config
 
-    VM_ARGS=`find $RUNNER_BASE_DIR/etc -type f | grep vm.*[0-9].args`
+    VM_ARGS=`find $RUNNER_BASE_DIR/etc/ -type f | grep vm.*[0-9].args`
     mv $VM_ARGS $RUNNER_BASE_DIR/etc/vm.args
 }
 case "$1" in
