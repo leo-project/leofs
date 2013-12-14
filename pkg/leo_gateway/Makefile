@@ -16,11 +16,10 @@ bootstrap:
 	cp files/$(COMPONENT) $(DIR)/bin/
 	cp files/$(COMPONENT).xml $(DIR)/share
 	cp files/start $(DIR)/erts-*/bin/start
-	rm $(DIR)/etc/app.config
-	cp files/app.config $(DIR)/etc/app.config.example
+	rm $(DIR)/etc/leo_gateway.conf
+	cp files/leo_gateway.conf $(DIR)/etc/leo_gateway.conf.example
 	cp files/leo_gateway_snmp.config.0 $(DIR)/snmp/snmpa_gateway_0/leo_gateway_snmp.config
 	cp files/leo_gateway_snmp.config.1 $(DIR)/snmp/snmpa_gateway_1/leo_gateway_snmp.config
-	mv $(DIR)/etc/vm.args $(DIR)/etc/vm.args.example
 
 package_list: bootstrap
 	cat pre_pkg > packlist
