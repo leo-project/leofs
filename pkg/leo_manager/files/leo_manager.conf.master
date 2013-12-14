@@ -81,7 +81,7 @@ consistency.delete = 1
 ##     * Store the RING and the command histories
 ## --------------------------------------------------------------------
 ## Mnesia dir
-mnesia.dir = /var/db/leo_manager/work/mnesia/127.0.0.1
+mnesia.dir = /var/db/leo_manager/mnesia/127.0.0.1
 
 ## The write threshold for transaction log dumps
 ## as the number of writes to the transaction log
@@ -114,7 +114,7 @@ log.ring_dir = /var/log/leo_manager/ring
 ## MANAGER - Other Directories
 ## --------------------------------------------------------------------
 ## Directory of queue for monitoring "RING"
-queue_dir = /var/db/leo_manager/work/queue
+queue_dir = /var/db/leo_manager/queue
 
 ## Directory of SNMP agent configuration
 ## snmp_agent = ./snmp/snmpa_manager_0/LEO-MANAGER
