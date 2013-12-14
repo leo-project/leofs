@@ -5,3 +5,4 @@ rel/leo_gateway/leo_gateway/
 rel/leo_storage/leo_storage/
 package/
 
+rel/leo_manager/files/leo_manager.conf
