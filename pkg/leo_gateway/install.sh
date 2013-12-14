@@ -43,15 +43,10 @@ case $2 in
         fi
         echo Trying to guess configuration ...
         IP=`ifconfig net0 | grep inet | awk -e '{print $2}'`
-        if [ ! -f $DIR/etc/vm.args ]
+        if [ ! -f $DIR/etc/leo_gateway.conf ]
         then
-            cp $DIR/etc/vm.args.example $DIR/etc/vm.args
-            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/vm.args
-        fi
-        if [ ! -f $DIR/etc/app.config ]
-        then
-            cp $DIR/etc/app.config.example $DIR/etc/app.config
-            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/app.config
+            cp $DIR/etc/leo_gateway.conf.example $DIR/etc/leo_gateway.conf
+            sed --in-place -e "s/127.0.0.1/${IP}/g" $DIR/etc/leo_gateway.conf
         fi
         ;;
 esac

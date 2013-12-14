@@ -9,6 +9,7 @@ RUNNER_ETC_DIR=$RUNNER_BASE_DIR/etc
 RUNNER_LOG_DIR=/var/log/leo_storage
 # Note the trailing slash on $PIPE_DIR/
 PIPE_DIR=/tmp/leo_storage/
+CUTTLEFISH_DIR=/tmp/leo_storage/etc
 RUNNER_USER=
 
 # Make sure this script is running as the appropriate user
@@ -44,10 +45,17 @@ else
 fi
 
 # Extract the target node name from node.args
-NAME_ARG=`egrep '^-s?name' $VMARGS_PATH`
+# Extract the target node name from node.args
+NAME_ARG=`egrep '^\-name' $RUNNER_ETC_DIR/vm.args 2> /dev/null`
 if [ -z "$NAME_ARG" ]; then
-    echo "vm.args needs to have either -name or -sname parameter."
-    exit 1
+    NODENAME=`egrep '^[ \t]*nodename[ \t]*=[ \t]*' $RUNNER_ETC_DIR/leo_storage.conf 2> /dev/null | tail -n 1 | cut -d = -f 2`
+    if [ -z "$NODENAME" ]; then
+        echo "vm.args needs to have a -name parameter."
+        echo "  -sname is not supported."
+        exit 1
+    else
+        NAME_ARG="-name ${NODENAME# *}"
+    fi
 fi
 
 # Extract the name type and name from the NAME_ARG for REMSH
@@ -59,10 +67,15 @@ REMSH_NAME_ARG="$REMSH_TYPE remsh`date +%s`@`echo $REMSH_NAME | awk -F@ '{print 
 REMSH_REMSH_ARG="-remsh $REMSH_NAME"
 
 # Extract the target cookie
-COOKIE_ARG=`grep '^-setcookie' $VMARGS_PATH`
+COOKIE_ARG=`grep -e '-setcookie' $RUNNER_ETC_DIR/vm.args 2> /dev/null`
 if [ -z "$COOKIE_ARG" ]; then
-    echo "vm.args needs to have a -setcookie parameter."
-    exit 1
+    COOKIE=`egrep '^[ \t]*distributed_cookie[ \t]*=[ \t]*' $RUNNER_ETC_DIR/leo_storage.conf 2> /dev/null | cut -d = -f 2`
+    if [ -z "$COOKIE" ]; then
+        echo "vm.args needs to have a -setcookie parameter."
+        exit 1
+    else
+        COOKIE_ARG="-setcookie $COOKIE"
+    fi
 fi
 
 # Add ERTS bin dir to our path
@@ -85,17 +98,10 @@ case "$1" in
             exit 1
         fi
 
-        # Sanity check the app.config file
-        RES=`$NODETOOL_LITE chkconfig $RUNNER_ETC_DIR/app.config`
-        if [ "$RES" != "ok" ]; then
-            echo "Error reading $RUNNER_ETC_DIR/app.config"
-            echo $RES
-            exit 1
-        fi
-
         HEART_COMMAND="$RUNNER_BASE_DIR/bin/$SCRIPT start"
         export HEART_COMMAND
         mkdir -p $PIPE_DIR
+        mkdir -p $CUTTLEFISH_DIR
         shift # remove $1
         $ERTS_PATH/run_erl -daemon $PIPE_DIR $RUNNER_LOG_DIR "exec $RUNNER_BASE_DIR/bin/$SCRIPT console $@" 2>&1
         ;;
@@ -181,7 +187,14 @@ case "$1" in
         BINDIR=$ROOTDIR/erts-$ERTS_VSN/bin
         EMU=beam
         PROGNAME=`echo $0 | sed 's/.*\\///'`
-        CMD="$BINDIR/erlexec -boot $RUNNER_BASE_DIR/releases/$APP_VSN/$BOOTFILE -mode minimal -config $CONFIG_PATH -args_file $VMARGS_PATH -- ${1+"$@"}"
+        if CUTTLEFISH_CONFIG=$($ERTS_PATH/escript $RUNNER_BASE_DIR/bin/cuttlefish -e $RUNNER_ETC_DIR -d $CUTTLEFISH_DIR -s $RUNNER_ETC_DIR -c $RUNNER_ETC_DIR/leo_storage.conf)
+        then
+            CONFIG_FILES="$CUTTLEFISH_CONFIG"
+        else
+            echo "Cuttlefish failed! Oh no!: $CUTTLEFISH_CONFIG"
+            CONFIG_FILES="-config $RUNNER_ETC_DIR/app.config -args_file $RUNNER_ETC_DIR/vm.args"
+        fi
+        CMD="$BINDIR/erlexec -boot $RUNNER_BASE_DIR/releases/$APP_VSN/$BOOTFILE -embedded $CONFIG_FILES -- ${1+"$@"}"
         export EMU
         export ROOTDIR
         export BINDIR
