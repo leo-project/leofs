@@ -29,17 +29,18 @@ Feature
 Where to find more
 -------------------
 
-* Detail document is [here](http://www.leofs.org/docs/).
+* The detail documentation is [here](http://www.leofs.org/docs/).
 
 Quick Start
 -------------
 
-* Document is [here](http://www.leofs.org/docs/getting_started.html#quick-start)
-* Prepare
-  * "leofs" uses the "rebar" build system. Makefile so that simply running "make" at the top level should work.
-    * [rebar](https://github.com/basho/rebar)
-  * "leofs" requires [Erlang R15B03-1](http://www.erlang.org/download_release/16)
-* Build and Package
+* The documentation is [here](http://www.leofs.org/docs/getting_started.html#quick-start)
+* The packages are [here](http://www.leofs.org/#download_package)
+* Building leofs from source code:
+  * Prepare
+    * "leofs" uses the "rebar" build system. Makefile so that simply running "make" at the top level should work.
+    * "leofs" requires [Erlang R15B03-1](http://www.erlang.org/download_release/16) or Higher
+  * Build and Package
 
 ```text
 $ git clone https://github.com/leo-project/leofs.git
@@ -59,9 +60,9 @@ $ make release
 ##            gateway: leofs/package/leofs/storage/etc/app.config
 
 $ cd package/leofs
-$ manager_0/bin/leo_manager start
-$ manager_1/bin/leo_manager start
-$ storage/bin/leo_storage start
+$ leo_manager_0/bin/leo_manager start
+$ leo_manager_1/bin/leo_manager start
+$ leo_storage/bin/leo_storage start
 
 ## Need to operate on "LeoFS-Manager's Console" -
 ##     - Command: [START, STATUS]
@@ -72,11 +73,15 @@ $ gateway/bin/leo_gateway start
 ##     - Command: [STATUS]
 ````
 
-* Clients
-    * Connect LeoFS from [DragonDisk](http://www.dragondisk.com/)
-    * Connect LeoFS from [Client of Program Language](http://www.leofs.org/docs/s3_client.html)
-    * Connect LeoFS from [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
-
+* Support Clients
+    * [Program Languages](http://www.leofs.org/docs/s3_client.html)
+        * Java
+        * Ruby
+        * Python
+        * PHP
+    * [DragonDisk](http://www.dragondisk.com/)
+    * [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
+    * [s3cmd](http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd) 
 
 GOALs
 -------
@@ -108,13 +113,13 @@ Milestones
         * the bucket ACLs
     * Web GUI Console (Option)
        * Support whole LeoFS Manager's commands
-* 1.0 (Nov 2013 - Dec)
+* 1.0 (Nov 2013 - Feb 2014)
     * Multi Data Center Replication
     * Increase compatibility S3-APIs#5
         * Other bucket operations
     * QoS System Phase-1 (LeoInsight - Option)
        * Support *statistics/analyzer*
-* 1.2 (Jan 2014 - Apr)
+* 1.2 (Feb 2014 - May)
     * OpenStack Integration
         * Support for OpenStack Swift-API
     * Increase compatibility S3-APIs#6
