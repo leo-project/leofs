@@ -27,9 +27,7 @@ generate:
 
 release:
 	@./rebar compile
-	rm -rf package/leo_manager_*
-	rm -rf package/leo_storage_*
-	rm -rf package/leo_gateway_*
+	rm -rf package/leo_*
 	##
 	## manager-master
 	##
