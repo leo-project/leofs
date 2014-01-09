@@ -16,6 +16,7 @@ Bugs Fixed
 * [#108](https://github.com/leo-project/leofs/issues/108) Happened not relocation of object(s) when removing a node and executing rebalance then add same node
 * [#111](https://github.com/leo-project/leofs/issues/111) Could not upload large size file
 * Fixed that not migrated "Bucket Table"
+* Fixed that an exception of compaction happened rarely
 
 Used Libraries
 ---------------

@@ -27,7 +27,7 @@ generate:
 
 release:
 	@./rebar compile
-	rm -rf package
+	rm -rf package/leo_*
 	##
 	## manager-master
 	##

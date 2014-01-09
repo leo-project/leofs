@@ -47,7 +47,7 @@ if [ $1 = "stop" ]; then
 fi
 
 ## Generate packages
-rm -rf package/*
+rm -rf package/leo_*
 ./rebar compile
 make release
 
