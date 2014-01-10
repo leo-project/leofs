@@ -8,3 +8,4 @@ package/leo_storage*
 package/leo_gateway*
 
 rel/leo_manager/files/leo_manager.conf
+rel/leo_manager/files/leo_manager.schema
