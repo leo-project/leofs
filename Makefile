@@ -34,6 +34,7 @@ release:
 	rm -rf rel/leo_manager/leo_manager/
 	mkdir -p package/leo_manager_0
 	cp deps/leo_manager/priv/leo_manager_0.conf rel/leo_manager/files/leo_manager.conf
+	cp deps/leo_manager/priv/leo_manager_0.schema rel/leo_manager/files/leo_manager.schema
 	(cd rel/leo_manager && ../../rebar generate)
 	cp -r rel/leo_manager/leo_manager/* package/leo_manager_0/
 	##
@@ -42,6 +43,7 @@ release:
 	rm -rf rel/leo_manager/leo_manager/
 	mkdir -p package/leo_manager_1
 	cp deps/leo_manager/priv/leo_manager_1.conf rel/leo_manager/files/leo_manager.conf
+	cp deps/leo_manager/priv/leo_manager_1.schema rel/leo_manager/files/leo_manager.schema
 	(cd rel/leo_manager && ../../rebar generate)
 	cp -r rel/leo_manager/leo_manager/* package/leo_manager_1/
 	##
