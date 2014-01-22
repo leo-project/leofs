@@ -6,7 +6,7 @@ CHANGELOG
 
 * New Features
      * Implemented for Multi DC Replication
-         * Synchronize remote cluster(s) after joined each other
+         * Synchronize configuration and staus of remote cluster(s) after joined each other
          * Regularly check status of remote cluster(s)
          * Add the commands of Multi DC Replication in Manager
               * 'join-cluster' and 'remove-cluster'
