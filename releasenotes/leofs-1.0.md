@@ -1,4 +1,4 @@
-leofs-1.0.0-pre1
+leofs-1.0.0-pre2
 ================
 
 Features and Improvements for LeoFS
