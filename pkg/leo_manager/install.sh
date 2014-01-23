@@ -24,6 +24,8 @@ case $2 in
         echo Creating directories ...
         mkdir -p /var/db/leofs
         chown -R $USER:$GROUP /var/db/leofs
+        mkdir -p /var/db/$COMPONENT/mnesia
+        mkdir -p /var/db/$COMPONENT/work
         mkdir -p /var/db/$COMPONENT/snmp
         chown -R $USER:$GROUP /var/db/$COMPONENT
         mkdir -p /var/log/$COMPONENT/sasl

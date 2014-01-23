@@ -37,7 +37,7 @@ sasl.error_logger_mf_dir = /var/log/leo_manager/sasl
 ## MANAGER
 ## --------------------------------------------------------------------
 ## LeoFS version
-system_version = 1.0.0-pre1
+system_version = 1.0.0-pre2
 
 ## Mode of Manager: [master, slave]
 manager.mode = master
