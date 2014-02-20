@@ -1,6 +1,53 @@
 CHANGELOG
 =========
 
+1.0.0-pre3 (Feb 20, 2014)
+=========================
+
+* Improved
+    * `leo_manager` Able to plug functions in order to realize to build another manager
+    * `leo_redundant_manager` Improved the performance of the membership and the rebalance
+    * `leo_redundant_manager` Modified that restrict membership of a node, the state of which is not running
+    * `leo_statistics` Switch the function of statistics to [savanna_commons](https://github.com/leo-project/savanna_commons), which isan Erlang based metrics server.
+    * `leo_ordning_reda` Improved the function of object stacking
+    * `leo_ordning_reda` Improved efficiency of termination of a process
+
+* Fixed Bugs
+    * `leo_manager` [#116](https://github.com/leo-project/leofs/issues/116) Implement new sync mechanism in Manager, which is able to maintain hard consistency of the rings
+    * `libcutil (cache-lib)` [#123](https://github.com/leo-project/leofs/issues/123) Add `-fPIC` to CFLAGS
+    * `leo_manager`,`leo_storage`,`leo_gateway` [#131](https://github.com/leo-project/leofs/issues/131) Wrote the version number in the source of configurations 
+    * `leo_gateway` [#136](https://github.com/leo-project/leofs/issues/136) Support that move and copy a large object with S3-Client(s)
+    * `leo_object_storage` Fixed to handle invalid data blocks while doing compaction
+    * `leo_rpc` Fixed to close a tcp socket properly in any cases
+
+* Used libraries
+    * leo project
+        * [leo_backend-db v1.0.0](https://github.com/leo-project/leo_backend_db.git)
+        * [leo_cache v0.4.19](https://github.com/leo-project/leo_cache.git)
+        * [leo_commons v1.0.0](https://github.com/leo-project/leo_commons.git)
+        * [leo_dcerl v0.2.7](https://github.com/leo-project/leo_dcerl.git)
+        * [leo_logger v1.0.0](https://github.com/leo-project/leo_logger.git)
+        * [leo_mcerl v0.2.9](https://github.com/leo-project/leo_mcerl.git)
+        * [leo_mq v1.0.0](https://github.com/leo-project/leo_mq.git)
+        * [leo_object_storage v1.0.0](https://github.com/leo-project/leo_object_storage.git)
+        * [leo_ordning_reda v0.10.0](https://github.com/leo-project/leo_ordning_reda.git)
+        * [leo_pod v0.4.7](https://github.com/leo-project/leo_pod.git)
+        * [leo_redundant_manager v1.4.1](https://github.com/leo-project/leo_redundant_manager.git)
+        * [leo_rpc v0.8.0](https://github.com/leo-project/leo_rpc.git)
+        * [leo_s3_libs v0.12.28](https://github.com/leo-project/leo_s3_libs.git)
+        * [leo_statistics v1.0.0](https://github.com/leo-project/leo_statistics.git)
+        * [savanna_commons v0.4.2](https://github.com/leo-project/savanna_commons.git)
+        * [leo_gateway v1.0.0-pre3](https://github.com/leo-project/leo_gateway.git)
+        * [leo_manager v1.0.0-pre3](https://github.com/leo-project/leo_manager.git)
+        * [leo_storage v1.0.0-pre3](https://github.com/leo-project/leo_storage.git)
+    * others
+        * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
+        * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+        * [folsom v0.8.1](https://github.com/boundary/folsom.git)
+        * [jiffy v0.8.5](https://github.com/davisp/jiffy.git)
+        * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
 1.0.0-pre2 (Jan 22, 2014)
 =========================
 
