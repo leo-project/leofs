@@ -49,6 +49,7 @@ Used Libraries
 * others
     * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
     * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+    * [eleveldb v1.4.7](https://github.com/basho/eleveldb)
     * [folsom v0.8.1](https://github.com/boundary/folsom.git)
     * [jiffy v0.8.5](https://github.com/davisp/jiffy.git)
     * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
