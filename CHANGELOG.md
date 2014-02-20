@@ -19,6 +19,7 @@ CHANGELOG
     * `leo_gateway` [#136](https://github.com/leo-project/leofs/issues/136) Support that move and copy a large object with S3-Client(s)
     * `leo_object_storage` Fixed to handle invalid data blocks while doing compaction
     * `leo_rpc` Fixed to close a tcp socket properly in any cases
+    * `leo_gateway` [#140](https://github.com/leo-project/leofs/issues/140) Fixed to return 206 status when responding a partial body
 
 * Used libraries
     * leo project
