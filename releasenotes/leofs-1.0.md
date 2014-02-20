@@ -42,7 +42,7 @@ Used Libraries
     * [leo_rpc v0.8.0](https://github.com/leo-project/leo_rpc.git)
     * [leo_s3_libs v0.12.28](https://github.com/leo-project/leo_s3_libs.git)
     * [leo_statistics v1.0.0](https://github.com/leo-project/leo_statistics.git)
-    * [savanna_commons v0.4.2](https://github.com/leo-project/savanna_commons.git)
+    * [savanna_commons v0.4.3](https://github.com/leo-project/savanna_commons.git)
     * [leo_gateway v1.0.0-pre3](https://github.com/leo-project/leo_gateway.git)
     * [leo_manager v1.0.0-pre3](https://github.com/leo-project/leo_manager.git)
     * [leo_storage v1.0.0-pre3](https://github.com/leo-project/leo_storage.git)
