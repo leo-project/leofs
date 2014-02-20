@@ -249,6 +249,8 @@ do_delete(Url) ->
     case send_request(Url, [{'Authorization', gen_sig("DELETE", Url)}], delete, [], [{response_format, binary}]) of
         {ok, "404", _Headers, _Body} ->
             {not_found, Url};
+        {ok, "204", Headers, _Body} ->
+            {ok, Url, Headers};
         {ok, "200", Headers, _Body} ->
             {ok, Url, Headers};
         {ok, Code, _Headers, _Body} ->
