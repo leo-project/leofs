@@ -38,7 +38,7 @@ Quick Start
 * The packages are [here](http://www.leofs.org/#download_package)
 * Building leofs from source code:
   * Prepare
-    * "leofs" uses the "rebar" build system. Makefile so that simply running "make" at the top level should work.
+    * "leofs" uses [rebar](https://github.com/rebar/rebar) build system. Makefile so that simply running "make" at the top level should work.
     * "leofs" requires [Erlang R15B03-1](http://www.erlang.org/download_release/16) or Higher
   * Build and Package
 
@@ -81,7 +81,7 @@ $ gateway/bin/leo_gateway start
         * PHP
     * [DragonDisk](http://www.dragondisk.com/)
     * [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
-    * [s3cmd](http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd) 
+    * [s3cmd](http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd)
 
 GOALs
 -------
@@ -108,18 +108,18 @@ Milestones
     * Rack aware replica placement
     * Web GUI Console (Option)
        * Support whole LeoFS Manager's commands
-* 0.16 (Oct 2013)
+* *DONE* - 0.16 (Oct 2013)
     * Increase compatibility S3-APIs#4
         * the bucket ACLs
     * Web GUI Console (Option)
        * Support whole LeoFS Manager's commands
-* 1.0 (Nov 2013 - Feb 2014)
+* *On Going* - 1.0 (Nov 2013 - Apr 2014)
     * Multi Data Center Replication
     * Increase compatibility S3-APIs#5
         * Other bucket operations
     * QoS System Phase-1 (LeoInsight - Option)
        * Support *statistics/analyzer*
-* 1.2 (Feb 2014 - May)
+* 1.2 (May 2014 - Aug)
     * OpenStack Integration
         * Support for OpenStack Swift-API
     * Increase compatibility S3-APIs#6
