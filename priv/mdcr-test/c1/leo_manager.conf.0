@@ -64,7 +64,7 @@ system.cluster_id = leofs_1
 ##     * See: http://www.leofs.org/docs/configuration.html#the-consistency-level
 ## --------------------------------------------------------------------
 ## A number of replicas
-consistency.num_of_replicas = 1 
+consistency.num_of_replicas = 1
 
 ## A number of replicas needed for a successful WRITE operation
 consistency.write = 1
@@ -138,13 +138,19 @@ mnesia.dc_dump_limit = 40
 ## RPC
 ## --------------------------------------------------------------------
 ## RPC-Server's acceptors
-rpc.server.acceptors = 64
+rpc.server.acceptors = 128
 
 ## RPC-Server's listening port number
 rpc.server.listen_port = 13075
 
 ## RPC-Server's listening timeout
 rpc.server.listen_timeout = 5000
+
+## RPC-Client's size of connection pool
+rpc.client.connection_pool_size = 4
+
+## RPC-Client's size of connection buffer
+rpc.client.connection_buffer_size = 4
 
 
 ## --------------------------------------------------------------------
