@@ -1,6 +1,62 @@
 CHANGELOG
 =========
 
+1.0.0 (Apr 2, 2014)
+=========================
+
+* New features
+    * Multi datacenter replication (1st phase)
+        * Realized async-replication between clusters
+            * After stacked objects, receive the list of metadatas from a destination cluster, then compare them with local-cluster. Eventually, an inconsistent object is recovered.
+            * Provided easy operation of multi-datacenter replication with leo-manager's console
+            * After joined a new cluster, automatically synchronize objects between local-cluster and a remote-cluster
+        * Provided ``recover cluster`` which is able to fix inconsistency objects with remote-cluster
+    * [#139](https://github.com/leo-project/leofs/issues/139) Implemented the Bucket ACL
+
+* Improved
+    * ``leo_backend_db`` Bump bitcask to v1.6.7
+    * ``leo_object_storage`` Updated compaction, handling an object for the multi-dc replication
+    * ``leo_ordning_reda`` Updated handle-send interface for the multi-dc replication
+    * ``leo_rpc`` Improved to check-in pools into leo_pod
+
+* Fixed Bugs
+    * [#144](https://github.com/leo-project/leofs/issues/143) Failure occurred when running snmpwalk
+    * [#146](https://github.com/leo-project/leofs/issues/146) No retry when receiving a head request
+    * [#148](https://github.com/leo-project/leofs/issues/148) AWS-clients of PHP and Node.js could not copy object properly copied file became 0byte
+    * [#151](https://github.com/leo-project/leofs/issues/151) ``whereis-command`` had not been recorded on history table
+    * [#162](https://github.com/leo-project/leofs/issues/162) Able to get removed user on the manager-console
+    * [#163](https://github.com/leo-project/leofs/issues/163) ``update-acl`` and ``get-acl`` methods unexpected to display the permission messages
+
+* Used libraries
+    * leo project
+        * [leo_backend-db v1.0.2](https://github.com/leo-project/leo_backend_db.git)
+        * [leo_cache v0.4.20](https://github.com/leo-project/leo_cache.git)
+        * [leo_commons v1.0.1](https://github.com/leo-project/leo_commons.git)
+        * [leo_dcerl v0.2.7](https://github.com/leo-project/leo_dcerl.git)
+        * [leo_logger v1.0.1](https://github.com/leo-project/leo_logger.git)
+        * [leo_mcerl v0.2.9](https://github.com/leo-project/leo_mcerl.git)
+        * [leo_mq v1.0.2](https://github.com/leo-project/leo_mq.git)
+        * [leo_object_storage v1.0.1](https://github.com/leo-project/leo_object_storage.git)
+        * [leo_ordning_reda v0.10.2](https://github.com/leo-project/leo_ordning_reda.git)
+        * [leo_redundant_manager v1.8.0](https://github.com/leo-project/leo_redundant_manager.git)
+        * [leo_rpc v0.8.2](https://github.com/leo-project/leo_rpc.git)
+        * [leo_pod v0.4.8](https://github.com/leo-project/leo_pod.git)
+        * [leo_s3_libs v1.0.1](https://github.com/leo-project/leo_s3_libs.git)
+        * [leo_statistics v1.0.1](https://github.com/leo-project/leo_statistics.git)
+        * [savanna_agent v0.2.1](https://github.com/leo-project/savanna_agent.git)
+        * [savanna_commons v0.6.2](https://github.com/leo-project/savanna_commons.git)
+        * [APPLICATION]
+        * [leo_gateway v1.0.0](https://github.com/leo-project/leo_gateway.git)
+        * [leo_manager v1.0.0](https://github.com/leo-project/leo_manager.git)
+        * [leo_storage v1.0.0](https://github.com/leo-project/leo_storage.git)
+    * others
+        * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
+        * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+        * [folsom v0.8.1](https://github.com/boundary/folsom.git)
+        * [jiffy v0.8.5](https://github.com/davisp/jiffy.git)
+        * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
 1.0.0-pre3 (Feb 20, 2014)
 =========================
 
@@ -19,7 +75,7 @@ CHANGELOG
     * `libcutil (cache-lib)` [#123](https://github.com/leo-project/leofs/issues/123) Add `-fPIC` to CFLAGS
     * `leo_backend_db` [#129](https://github.com/leo-project/leofs/issues/129) Fixed to remove all files in a bucket when deleting it(only occured in case using leveldb as metadata storage)
     * `leo_gateway` [#130](https://github.com/leo-project/leofs/issues/130) Fixed wrong access log formats when operationg a large-object
-    * `leo_manager`,`leo_storage`,`leo_gateway` [#131](https://github.com/leo-project/leofs/issues/131) Wrote the version number in the source of configurations 
+    * `leo_manager`,`leo_storage`,`leo_gateway` [#131](https://github.com/leo-project/leofs/issues/131) Wrote the version number in the source of configurations
     * `leo_gateway` [#136](https://github.com/leo-project/leofs/issues/136) Support that move and copy a large object with S3-Client(s)
     * `leo_object_storage` Fixed to handle invalid data blocks while doing compaction
     * `leo_rpc` Fixed to close a tcp socket properly in any cases
