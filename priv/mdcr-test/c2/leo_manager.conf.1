@@ -1,7 +1,8 @@
 #======================================================================
-# LeoFS - Storage Configuration
+# LeoFS - Manager Configuration (SLAVE)
 #
-# See: http://www.leofs.org/docs/configuration.html#leofs-storage
+# See: http://www.leofs.org/docs/configuration.html#leofs-manager-master
+# See: http://www.leofs.org/docs/configuration.html#leofs-manager-slave
 #======================================================================
 ## --------------------------------------------------------------------
 ## SASL
@@ -33,74 +34,38 @@
 ## sasl.error_logger_mf_maxfiles = 5
 
 ## --------------------------------------------------------------------
-## Manager's Node(s)
+## MANAGER
 ## --------------------------------------------------------------------
-## Name of Manager node(s)
-managers = [manager_0@127.0.0.1, manager_1@127.0.0.1]
+## Partner of manager's alias
+manager.partner = manager_10@127.0.0.1
 
-## --------------------------------------------------------------------
-## STORAGE
-## --------------------------------------------------------------------
-## Object container
-obj_containers.path = [./avs]
-obj_containers.num_of_containers = [8]
+## Manager-console accepatable port number
+console.port.cui  = 10111
+console.port.json = 10121
 
-## e.g. Case of plural pathes
-## obj_containers.path = [/var/leofs/avs/1, /var/leofs/avs/2]
-## obj_containers.num_of_containers = [32, 64]
-
-
-## A number of virtual-nodes for the redundant-manager
-## num_of_vnodes = 168
+## Manager-console's number of acceptors
+console.acceptors.cui = 3
+console.acceptors.json = 16
 
 
 ## --------------------------------------------------------------------
-## STORAGE - MQ
+## MANAGER - Mnesia
+##     * Store the info storage-cluster and the info of gateway(s)
+##     * Store the RING and the command histories
 ## --------------------------------------------------------------------
-## A number of mq-server's processes
-mq.num_of_mq_procs = 8
+## Mnesia dir
+mnesia.dir = ./work/mnesia/127.0.0.1
 
-## MQ recover per_object
-mq.recover_per_object.num_of_batch_process = 1
-mq.recover_per_object.interval_min = 1
-mq.recover_per_object.interval_max = 1
+## The write threshold for transaction log dumps
+## as the number of writes to the transaction log
+mnesia.dump_log_write_threshold = 50000
 
-## MQ synchronize objects by vnode-id
-mq.sync_by_vnode_id.num_of_batch_process = 1
-mq.sync_by_vnode_id.interval_min = 8
-mq.sync_by_vnode_id.interval_max = 32
-
-## MQ rebalance objects
-mq.rebalance.num_of_batch_process = 1
-mq.rebalance.interval_min = 1
-mq.rebalance.interval_max = 1
-
-## MQ delete objects
-mq.delete_object.num_of_batch_process = 1
-mq.delete_object.interval_min = 1
-mq.delete_object.interval_max = 1
-
-## MQ recover a node's object
-mq.recovery_node.num_of_batch_process = 1
-mq.recovery_node.interval_min = 8
-mq.recovery_node.interval_max = 32
+## Controls how often disc_copies tables are dumped from memory
+mnesia.dc_dump_limit = 40
 
 
 ## --------------------------------------------------------------------
-## STORAGE - Replication/Recovery object(s)
-## --------------------------------------------------------------------
-## Rack-id for the rack-awareness replica placement
-## replication.rack_awareness.rack_id =
-
-## Size of stacked objects (bytes)
-## replication.recovery.size_of_stacked_objs = 67108864
-
-## Stacking timeout (msec)
-## replication.recovery.stacking_timeout = 5000
-
-
-## --------------------------------------------------------------------
-## STORAGE - Log
+## MANAGER - Log
 ## --------------------------------------------------------------------
 ## Log level: [0:debug, 1:info, 2:warn, 3:error]
 ## log.log_level = 1
@@ -119,52 +84,36 @@ mq.recovery_node.interval_max = 32
 
 
 ## --------------------------------------------------------------------
-## STORAGE - Other Directories
+## MANAGER - Other Directories
 ## --------------------------------------------------------------------
 ## Directory of queue for monitoring "RING"
-## queue_dir  = ./work/queue
+## queue_dir = ./work/queue
 
 ## Directory of SNMP agent configuration
-snmp_agent = ./snmp/snmpa_storage_0/LEO-STORAGE
-
-
-## --------------------------------------------------------------------
-## Other Libs
-## --------------------------------------------------------------------
-## MQ backend storage: [bitcask, leveldb]
-## leo_mq.backend_db = bitcask
-
-## Enable strict check between checksum of a metadata and checksum of an object
-## leo_object_storage.is_strict_check = false
-
-## Metadata Storage: [bitcask, leveldb]
-leo_object_storage.metadata_storage = leveldb
-
-## Send after interval
-## leo_ordning_reda.send_after_interval = 100
+snmp_agent = ./snmp/snmpa_manager_1/LEO-MANAGER
 
 
 ## --------------------------------------------------------------------
 ## RPC
 ## --------------------------------------------------------------------
 ## RPC-Server's acceptors
-rpc.server.acceptors = 16
+rpc.server.acceptors = 128
 
 ## RPC-Server's listening port number
-rpc.server.listen_port = 13077
+rpc.server.listen_port = 13096
 
 ## RPC-Server's listening timeout
-rpc.server.listen_timeout = 30000
+rpc.server.listen_timeout = 5000
 
 ## RPC-Client's size of connection pool
-rpc.client.connection_pool_size = 16
+rpc.client.connection_pool_size = 4
 
 ## RPC-Client's size of connection buffer
-rpc.client.connection_buffer_size = 16
+rpc.client.connection_buffer_size = 4
 
 
 ## --------------------------------------------------------------------
-## Profiling
+## Other Libs
 ## --------------------------------------------------------------------
 ## Enable profiler - leo_backend_db
 ## leo_backend_db.profile = false
@@ -175,17 +124,8 @@ rpc.client.connection_buffer_size = 16
 ## Enable profiler - leo_mq
 ## leo_mq.profile = false
 
-## Enable profiler - leo_object_storage
-## leo_object_storage.profile = false
-
-## Enable profiler - leo_ordning_reda
-## leo_ordning_reda.profile = false
-
 ## Enable profiler - leo_redundant_manager
 ## leo_redundant_manager.profile = false
-
-## Enable profiler - leo_rpc
-## leo_rpc.profile = false
 
 ## Enable profiler - leo_statistics
 ## leo_statistics.profile = false
@@ -194,12 +134,12 @@ rpc.client.connection_buffer_size = 16
 #======================================================================
 # For vm.args
 #======================================================================
-## Name of the leofs-storage node
-nodename = storage_0@127.0.0.1
+## Name of the leofs-gateway node
+nodename = manager_11@127.0.0.1
 
 ## Cookie for distributed node communication.  All nodes in the same cluster
 ## should use the same cookie or they will not be able to communicate.
-distributed_cookie = 401321b4
+distributed_cookie = leofs_c2
 
 ## Enable kernel poll
 erlang.kernel_poll = true
@@ -220,4 +160,4 @@ erlang.max_ets_tables = 256000
 process_limit = 1048576
 
 ## Path of SNMP-agent configuration
-snmp_conf = ./snmp/snmpa_storage_0/leo_storage_snmp
+snmp_conf = ./snmp/snmpa_manager_1/leo_manager_snmp

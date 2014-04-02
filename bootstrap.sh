@@ -61,6 +61,7 @@ rm -rf package/leo_storage
 rm -rf package/leo_gateway
 
 cp priv/test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
+cp priv/test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
 cp priv/test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
 cp priv/test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
 cp priv/test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
