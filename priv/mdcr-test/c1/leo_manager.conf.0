@@ -64,7 +64,7 @@ system.cluster_id = leofs_1
 ##     * See: http://www.leofs.org/docs/configuration.html#the-consistency-level
 ## --------------------------------------------------------------------
 ## A number of replicas
-consistency.num_of_replicas = 1
+consistency.num_of_replicas = 2
 
 ## A number of replicas needed for a successful WRITE operation
 consistency.write = 1

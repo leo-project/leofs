@@ -97,13 +97,19 @@ snmp_agent = ./snmp/snmpa_manager_1/LEO-MANAGER
 ## RPC
 ## --------------------------------------------------------------------
 ## RPC-Server's acceptors
-rpc.server.acceptors = 64
+rpc.server.acceptors = 128
 
 ## RPC-Server's listening port number
 rpc.server.listen_port = 13096
 
 ## RPC-Server's listening timeout
 rpc.server.listen_timeout = 5000
+
+## RPC-Client's size of connection pool
+rpc.client.connection_pool_size = 4
+
+## RPC-Client's size of connection buffer
+rpc.client.connection_buffer_size = 4
 
 
 ## --------------------------------------------------------------------
