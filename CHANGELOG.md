@@ -7,7 +7,7 @@ CHANGELOG
 * New features
     * Multi datacenter replication (1st phase)
         * Realized async-replication between clusters
-            * After stacked objects, receive the list of metadatas from a destination cluster, then compare them with local-cluster. Eventually, an inconsistent object is recovered.
+            * After sent stacked objects to a remote-cluster, receive the list of metadatas from a remote-cluster, then compare them with local-cluster. Eventually, an inconsistent object is recovered.
             * Provided easy operation of multi-datacenter replication with leo-manager's console
             * After joined a new cluster, automatically synchronize objects between local-cluster and a remote-cluster
         * Provided ``recover cluster`` which is able to fix inconsistency objects with remote-cluster
