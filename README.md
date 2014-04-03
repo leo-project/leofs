@@ -87,7 +87,7 @@ GOALs
 -------
 * LeoFS aims to provide the following advantages:
   * HIGH Cost Performance
-     * Fast - Over 200MB/sec into 10GE (READ)
+     * Fast - Over 10Gbps
      * A lower cost than other storage
      * Provide easy management and easy operation
   * HIGH Reliability
