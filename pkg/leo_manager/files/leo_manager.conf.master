@@ -73,6 +73,16 @@ consistency.delete = 1
 
 
 ## --------------------------------------------------------------------
+## MANAGER - Multi DataCenter Settings
+## --------------------------------------------------------------------
+## A number of replication targets
+## mdc_replication.max_targets = 2
+
+## A number of replicas a DC
+## mdc_replication.num_of_replicas_a_dc = 1
+
+
+## --------------------------------------------------------------------
 ## MANAGER - Mnesia
 ##     * Store the info storage-cluster and the info of gateway(s)
 ##     * Store the RING and the command histories
@@ -115,6 +125,25 @@ queue_dir = /var/db/leo_manager/queue
 
 ## Directory of SNMP agent configuration
 ## snmp_agent = ./snmp/snmpa_manager_0/LEO-MANAGER
+
+
+## --------------------------------------------------------------------
+## RPC
+## --------------------------------------------------------------------
+## RPC-Server's acceptors
+rpc.server.acceptors = 16
+
+## RPC-Server's listening port number
+rpc.server.listen_port = 13075
+
+## RPC-Server's listening timeout
+rpc.server.listen_timeout = 5000
+
+## RPC-Client's size of connection pool
+rpc.client.connection_pool_size = 16
+
+## RPC-Client's size of connection buffer
+rpc.client.connection_buffer_size = 16
 
 
 ## --------------------------------------------------------------------

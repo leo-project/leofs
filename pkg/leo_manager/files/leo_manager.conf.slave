@@ -118,6 +118,25 @@ snmp_agent = ./snmp/snmpa_manager_1/LEO-MANAGER
 
 
 ## --------------------------------------------------------------------
+## RPC
+## --------------------------------------------------------------------
+## RPC-Server's acceptors
+rpc.server.acceptors = 16
+
+## RPC-Server's listening port number
+rpc.server.listen_port = 13076
+
+## RPC-Server's listening timeout
+rpc.server.listen_timeout = 5000
+
+## RPC-Client's size of connection pool
+rpc.client.connection_pool_size = 16
+
+## RPC-Client's size of connection buffer
+rpc.client.connection_buffer_size = 16
+
+
+## --------------------------------------------------------------------
 ## Other Libs
 ## --------------------------------------------------------------------
 ## Enable profiler - leo_backend_db
