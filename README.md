@@ -4,29 +4,40 @@ Welcome to LeoFS
 Overview
 --------
 
-LeoFS is the Web shaped object storage system and S3 compatible storage.
+LeoFS is a Web shaped S3 compatible object storage system.
 
-Feature
+GOALs
+-------
+* LeoFS aims to provide the following advantages:
+  * HIGH Cost Performance
+     * Fast - Over 10Gbps
+     * A lower cost than other storage
+     * Provide easy management and easy operation
+  * HIGH Reliability
+     * Nine nines - Operating ratios is 99.9999999%
+  * High Scalability
+     * Build Huge-Cluster at low cost
+
+Features
 --------
 
 * One-Huge Storage
     * LeoFS is the Web shaped object storage system.
     * LeoFS is built to operate in highly distributed environments, such as the private cloud.
     * LeoFS has NO SPOF.
-    * LeoFS's cluster consists of a set of loosely connected nodes. So, They can be viewed as ONE-Huge Storage.
-    * LeoFS is made by modular-system. So, It realizes a lower cost of operations.
+    * LeoFS's cluster consists of a set of loosely connected nodes. So, they can be viewed as ONE-HUGE storage.
+    * LeoFS is made by modular-system. So, it realizes a lower cost of operations.
 * 3-HIGHs
-    * LeoFS is highly scalable, fault-tolerant Distributed File System for the Web.
+    * LeoFS is a highly scalable, fault-tolerant distributed file system for the Web.
     * Different than other DFS — LeoFS offers a number of unique benefits to users:
-       * HIGH cost performance
+       * HIGH Cost Performance
        * HIGH Reliability
        * HIGH Scalability
 * S3 Compatible
-    * LeoFS is Amazon S3 compatible storage system.
-    * Switch to LeoFS to decrease your cost from more expensive public-cloud solution.
+    * LeoFS is an Amazon S3 compatible storage system.
+    * Switch to LeoFS to decrease your cost from more expensive public-cloud solutions.
 
-
-Where to find more
+Further Reference
 -------------------
 
 * The detail documentation is [here](http://www.leofs.org/docs/).
@@ -40,7 +51,7 @@ Quick Start
   * Prepare
     * "leofs" uses [rebar](https://github.com/rebar/rebar) build system. Makefile so that simply running "make" at the top level should work.
     * "leofs" requires [Erlang R15B03-1](http://www.erlang.org/download_release/16) or Higher
-  * Build and Package
+  * Build and create "leofs" package
 
 ```text
 $ git clone https://github.com/leo-project/leofs.git
@@ -73,8 +84,8 @@ $ gateway/bin/leo_gateway start
 ##     - Command: [STATUS]
 ````
 
-* Support Clients
-    * [Program Languages](http://www.leofs.org/docs/s3_client.html)
+* Supported Clients
+    * [Programming Languages](http://www.leofs.org/docs/s3_client.html)
         * Java
         * Ruby
         * Python
@@ -82,18 +93,6 @@ $ gateway/bin/leo_gateway start
     * [DragonDisk](http://www.dragondisk.com/)
     * [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
     * [s3cmd](http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd)
-
-GOALs
--------
-* LeoFS aims to provide the following advantages:
-  * HIGH Cost Performance
-     * Fast - Over 10Gbps
-     * A lower cost than other storage
-     * Provide easy management and easy operation
-  * HIGH Reliability
-     * Nine nines - Operating ratios is 99.9999999%
-  * High Scalability
-     * Build Huge-Cluster at low cost
 
 Milestones
 -----------
