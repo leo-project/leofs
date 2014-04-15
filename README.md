@@ -1,41 +1,44 @@
-Welcome to LeoFS
-=================
+LeoFS - The Lion of Storage Systems
+===================================
 
-Overview
---------
+LeoFS is an open source Web shaped object storage system with high availability, high scalability and high cost performance ratio.
 
-LeoFS is a Web shaped S3 compatible object storage system.
+
+We are supporting the following things:
+
+* S3-API
+  * LeoFS is an Amazon S3 compatible storage system.
+  * Switch to LeoFS to decrease your cost from more expensive public-cloud solutions.
+* Large Object
+  * LeoFS can handle files with more than GB
+* Multi Data Center Replication
+  * LeoFS is a highly scalable, fault-tolerant distributed file system without SPOF.
+  * LeoFS's cluster can be viewed as ONE-HUGE storage. It consists of a set of loosely connected nodes.
+  * We can build a global scale storage system with easy operations
+
+To access LeoFS server, we can use the following clients.
+
+* [DragonDisk](http://www.dragondisk.com/)
+* [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
+* [s3cmd](http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd)
+* [Programming Languages](http://www.leofs.org/docs/s3_client.html)
+  * Java
+  * Ruby
+  * Python
+  * PHP
 
 GOALs
 -------
-* LeoFS aims to provide the following advantages:
+
+* LeoFS aims to provide all of 3-HIGHs as follow:
+  * HIGH Reliability
+     * Nine nines - Operating ratios is 99.9999999%
+  * High Scalability
+     * Build huge-cluster at low cost
   * HIGH Cost Performance
      * Fast - Over 10Gbps
      * A lower cost than other storage
      * Provide easy management and easy operation
-  * HIGH Reliability
-     * Nine nines - Operating ratios is 99.9999999%
-  * High Scalability
-     * Build Huge-Cluster at low cost
-
-Features
---------
-
-* One-Huge Storage
-    * LeoFS is the Web shaped object storage system.
-    * LeoFS is built to operate in highly distributed environments, such as the private cloud.
-    * LeoFS has NO SPOF.
-    * LeoFS's cluster consists of a set of loosely connected nodes. So, they can be viewed as ONE-HUGE storage.
-    * LeoFS is made by modular-system. So, it realizes a lower cost of operations.
-* 3-HIGHs
-    * LeoFS is a highly scalable, fault-tolerant distributed file system for the Web.
-    * Different than other DFS — LeoFS offers a number of unique benefits to users:
-       * HIGH Cost Performance
-       * HIGH Reliability
-       * HIGH Scalability
-* S3 Compatible
-    * LeoFS is an Amazon S3 compatible storage system.
-    * Switch to LeoFS to decrease your cost from more expensive public-cloud solutions.
 
 Further Reference
 -------------------
@@ -83,16 +86,6 @@ $ gateway/bin/leo_gateway start
 ## Confirm LeoFS's Status on "LeoFS-Manager's Console" -
 ##     - Command: [STATUS]
 ````
-
-* Supported Clients
-    * [Programming Languages](http://www.leofs.org/docs/s3_client.html)
-        * Java
-        * Ruby
-        * Python
-        * PHP
-    * [DragonDisk](http://www.dragondisk.com/)
-    * [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
-    * [s3cmd](http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd)
 
 Milestones
 -----------
