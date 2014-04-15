@@ -1,8 +1,7 @@
 LeoFS - The Lion of Storage Systems
 ===================================
 
-LeoFS is an open source Web shaped object storage system with high availability, high scalability and high cost performance ratio.
-
+LeoFS is a highly available, distributed, eventually consistent object/blob store. Organizations can use LeoFS to store lots of data efficiently, safely, and inexpensively.
 
 We are supporting the following things:
 
