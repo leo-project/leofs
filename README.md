@@ -48,14 +48,14 @@ Build LeoFS (For Developers)
 ----------------------------
 
 You can install LeoFS from the [packages](http://www.leofs.org/#download_package).
-We explain how to build LeoFS from source.
+Here, we explain how to build LeoFS from source.
 
 First, you have to install the following packages to build Erlang and LeoFS.
 
 ```text
-##[CentOS]
+## [CentOS]
 $ sudo yum install libuuid-devel cmake check check-devel
-##[Ubuntu]
+## [Ubuntu]
 $ sudo apt-get install build-essential libtool libncurses5-dev libssl-dev cmake check
 ```
 
@@ -126,17 +126,49 @@ Now, you can find the LeoFS package as follow.
 ```text
 $ ls package/                                                                                                                                                                                         (git)-[develop] 9:47:34
 leo_gateway/  leo_manager_0/  leo_manager_1/  leo_storage/  README.md
-
 ```
 
-We can start LeoFS with the following commands.
+Then, we can start and access LeoFS with the following commands.
 
 ```
 $ package/leo_manager_0/bin/leo_manager start
 $ package/leo_manager_1/bin/leo_manager start
 $ package/leo_storage/bin/leo_storage start
 $ package/leo_gateway/bin/leo_gateway start
+$ telnet localhost 10010                                                                                                                                                                             (git)-[develop] 10:10:03
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+status
+[System config]
+                System version : 1.0.0
+                    Cluster Id : leofs_1
+                         DC Id : dc_1
+                Total replicas : 1
+           # of successes of R : 1
+           # of successes of W : 1
+           # of successes of D : 1
+ # of DC-awareness replicas    : 0
+                     ring size : 2^128
+             Current ring hash : 941f20fc
+                Prev ring hash : 000000-1
+[Multi DC replication settings]
+         max # of joinable DCs : 2
+            # of replicas a DC : 1
+
+[Node(s) state]
+-------+--------------------------+--------------+----------------+----------------+----------------------------
+ type  |           node           |    state     |  current ring  |   prev ring    |          updated at         
+-------+--------------------------+--------------+----------------+----------------+----------------------------
+  S    | storage_0@127.0.0.1      | attached     |                |                | 2014-04-16 10:09:59 +0900
 ```
+
+Benchmarking
+------------
+
+You can benchmark LeoFS with [Basho Bench](https://github.com/basho/basho_bench).
+
+[Here](http://www.leofs.org/docs/benchmark.html) is a documentation to benchmark LeoFS.
 
 Milestones
 -----------
