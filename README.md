@@ -124,7 +124,7 @@ $ make release
 Now, you can find the LeoFS package as follow.
 
 ```text
-$ ls package/                                                                                                                                                                                         (git)-[develop] 9:47:34
+$ ls package/
 leo_gateway/  leo_manager_0/  leo_manager_1/  leo_storage/  README.md
 ```
 
@@ -135,7 +135,7 @@ $ package/leo_manager_0/bin/leo_manager start
 $ package/leo_manager_1/bin/leo_manager start
 $ package/leo_storage/bin/leo_storage start
 $ package/leo_gateway/bin/leo_gateway start
-$ telnet localhost 10010                                                                                                                                                                             (git)-[develop] 10:10:03
+$ telnet localhost 10010
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
