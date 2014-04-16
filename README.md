@@ -42,49 +42,145 @@ GOALs
 Further Reference
 -------------------
 
-* The detail documentation is [here](http://www.leofs.org/docs/).
+* Please visit [our website](http://www.leofs.org/docs/).
 
-Quick Start
--------------
+Build LeoFS (For Developers)
+----------------------------
 
-* The documentation is [here](http://www.leofs.org/docs/getting_started.html#quick-start)
-* The packages are [here](http://www.leofs.org/#download_package)
-* Building leofs from source code:
-  * Prepare
-    * "leofs" uses [rebar](https://github.com/rebar/rebar) build system. Makefile so that simply running "make" at the top level should work.
-    * "leofs" requires [Erlang R15B03-1](http://www.erlang.org/download_release/16) or Higher
-  * Build and create "leofs" package
+You can install LeoFS from the [packages](http://www.leofs.org/#download_package).
+Here, we explain how to build LeoFS from source.
+
+First, you have to install the following packages to build Erlang and LeoFS.
+
+```text
+## [CentOS]
+$ sudo yum install libuuid-devel cmake check check-devel
+## [Ubuntu]
+$ sudo apt-get install build-essential libtool libncurses5-dev libssl-dev cmake check
+```
+
+Then, install Erlang.
+
+```text
+##
+## 1. Install libatomic
+##
+$ wget http://www.hpl.hp.com/research/linux/atomic_ops/download/libatomic_ops-7.2d.tar.gz
+$ tar xzvf libatomic_ops-7.2d.tar.gz
+$ cd libatomic_ops-7.2d
+$ ./configure --prefix=/usr/local
+$ make
+$ sudo make install
+
+##
+## 2. Install Erlang (R16B03-1)
+##
+$ wget http://www.erlang.org/download/otp_src_R16B03-1.tar.gz
+$ tar xzf otp_src_R16B03-1.tar.gz
+$ cd otp_src_R16B03-1
+$ ./configure --prefix=/usr/local/erlang/R16B03-1 \
+              --enable-smp-support \
+              --enable-m64-build \
+              --enable-halfword-emulator \
+              --enable-kernel-poll \
+              --without-javac \
+              --disable-native-libs \
+              --disable-hipe \
+              --disable-sctp \
+              --enable-threads \
+              --with-libatomic_ops=/usr/local
+$ make
+$ sudo make install
+
+##
+## 3. Set PATH
+##
+$ vi ~/.profile
+    ## append the follows:
+    export ERL_HOME=/usr/local/erlang/R16B03-1
+    export PATH=$PATH:$ERL_HOME/bin
+
+$ source ~/.profile
+```
+
+Then, clone source of LeoFS and libraries from GitHub.
 
 ```text
 $ git clone https://github.com/leo-project/leofs.git
 $ cd leofs
-$ make
-$ make release
-````
+$ git checkout -b develop remotes/origin/develop
+$ ./rebar get-deps
+$ ./git_checkout.sh develop
+```
 
-* Modify Configuration File: [detail](http://www.leofs.org/docs/install.html#set-up-leofs-s-system-configuration-only-leofs-manager)
-* Operate on "Manager Console": [detail](http://www.leofs.org/docs/admin_guide.html#system-operation)
+Then, build LeoFS with the following commands.
 
 ```text
-## Need to modify configuration files -
-##     manager_master: leofs/package/leofs/manager_0/etc/app.config
-##      manager_slave: leofs/package/leofs/manager_1/etc/app.config
-##            storage: leofs/package/leofs/storage/etc/app.config
-##            gateway: leofs/package/leofs/storage/etc/app.config
+$ make clean
+$ make
+$ make release
+```
 
-$ cd package/leofs
-$ leo_manager_0/bin/leo_manager start
-$ leo_manager_1/bin/leo_manager start
-$ leo_storage/bin/leo_storage start
+Now, you can find the LeoFS package as follow.
 
-## Need to operate on "LeoFS-Manager's Console" -
-##     - Command: [START, STATUS]
+```text
+$ ls package/                                                                                                                                                                                         (git)-[develop] 9:47:34
+leo_gateway/  leo_manager_0/  leo_manager_1/  leo_storage/  README.md
+```
 
-$ gateway/bin/leo_gateway start
+Then, we can start and access LeoFS with the following commands.
 
-## Confirm LeoFS's Status on "LeoFS-Manager's Console" -
-##     - Command: [STATUS]
-````
+```
+$ package/leo_manager_0/bin/leo_manager start
+$ package/leo_manager_1/bin/leo_manager start
+$ package/leo_storage/bin/leo_storage start
+$ package/leo_gateway/bin/leo_gateway start
+$ telnet localhost 10010                                                                                                                                                                             (git)-[develop] 10:10:03
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+status
+[System config]
+                System version : 1.0.0
+                    Cluster Id : leofs_1
+                         DC Id : dc_1
+                Total replicas : 1
+           # of successes of R : 1
+           # of successes of W : 1
+           # of successes of D : 1
+ # of DC-awareness replicas    : 0
+                     ring size : 2^128
+             Current ring hash : 941f20fc
+                Prev ring hash : 000000-1
+[Multi DC replication settings]
+         max # of joinable DCs : 2
+            # of replicas a DC : 1
+
+[Node(s) state]
+-------+--------------------------+--------------+----------------+----------------+----------------------------
+ type  |           node           |    state     |  current ring  |   prev ring    |          updated at         
+-------+--------------------------+--------------+----------------+----------------+----------------------------
+  S    | storage_0@127.0.0.1      | attached     |                |                | 2014-04-16 10:09:59 +0900
+```
+
+Build a LeoFS Cluster
+---------------------
+
+You can easily build a LeoFS cluster.
+
+Please refer [here](http://www.leofs.org/docs/getting_started.html#quick-start-2-cluster).
+
+Configure LeoFS
+---------------
+
+About the configuration of LeoFS, please refer [here](http://www.leofs.org/docs/configuration.html).
+
+Benchmarking
+------------
+
+You can benchmark LeoFS with [Basho Bench](https://github.com/basho/basho_bench).
+
+[Here](http://www.leofs.org/docs/benchmark.html) is a documentation to benchmark LeoFS.
 
 Milestones
 -----------
