@@ -42,7 +42,7 @@ GOALs
 Further Reference
 -------------------
 
-* The detail documentation is [here](http://www.leofs.org/docs/).
+* Please visit [our website](http://www.leofs.org/docs/).
 
 Build LeoFS (For Developers)
 ----------------------------
@@ -162,6 +162,18 @@ status
 -------+--------------------------+--------------+----------------+----------------+----------------------------
   S    | storage_0@127.0.0.1      | attached     |                |                | 2014-04-16 10:09:59 +0900
 ```
+
+Build a LeoFS Cluster
+---------------------
+
+You can easily build a LeoFS cluster.
+
+Please refer [here](http://www.leofs.org/docs/getting_started.html#quick-start-2-cluster).
+
+Configure LeoFS
+---------------
+
+About the configuration of LeoFS, please refer [here](http://www.leofs.org/docs/configuration.html).
 
 Benchmarking
 ------------
