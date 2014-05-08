@@ -14,6 +14,7 @@ Features and Improvements for LeoFS
 Bugs Fixed
 -----------
 
+* [#187](https://github.com/leo-project/leofs/issues/187) ``leo_storage`` - Could not work the ``rebalance`` and ``recover`` command
 * [#186](https://github.com/leo-project/leofs/issues/186) ``leo_storage`` - Could not correctly finish the ``compaction`` command when exists large-objects
 * [#185](https://github.com/leo-project/leofs/issues/185) ``leo_manager`` - Failed to execute the ``delete-endpoint`` command
 * [#184](https://github.com/leo-project/leofs/issues/183) ``leo_manager`` - Failed to execute the ``update-acl`` command

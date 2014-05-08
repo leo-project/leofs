@@ -11,6 +11,7 @@ CHANGELOG
     * [#165](https://github.com/leo-project/leofs/issues/165) ``leo_manager`` - Could not modify ``cluster_id``, ``dc_id`` after leo_manger started
     * [#140](https://github.com/leo-project/leofs/issues/140) ``leo_gateway`` - Supported for ``s3gof3r`` as S3-Client
 * Fixed Bugs
+    * [#187](https://github.com/leo-project/leofs/issues/187) ``leo_storage`` - Could not work the ``rebalance`` and ``recover`` command
     * [#186](https://github.com/leo-project/leofs/issues/186) ``leo_storage`` - Could not correctly finish the ``compaction`` command when exists large-objects
     * [#185](https://github.com/leo-project/leofs/issues/185) ``leo_manager`` - Failed to execute the ``delete-endpoint`` command
     * [#184](https://github.com/leo-project/leofs/issues/183) ``leo_manager`` - Failed to execute the ``update-acl`` command
