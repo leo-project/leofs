@@ -44,10 +44,6 @@ main(Args) ->
             %% a "pong"
             io:format("pong\n");
         ["stop"] ->
-            %% [stop order]
-            timer:sleep(250),
-            catch rpc:call(TargetNode, leo_storage_sup, stop, [], 60000),
-            catch rpc:call(TargetNode, leo_logger_sup,  stop, [], 60000),
             io:format("~p\n", [rpc:call(TargetNode, init, stop, [], 60000)]);
         ["restart"] ->
             io:format("~p\n", [rpc:call(TargetNode, init, restart, [], 60000)]);
