@@ -1,3 +1,44 @@
+leofs-1.0.2
+===========
+
+Bugs Fixed
+-----------
+
+* [#189](https://github.com/leo-project/leofs/issues/189) Actual disk usage is different from the manager-console.
+* [#188](https://github.com/leo-project/leofs/issues/188) When existing large objects in a leo_storage, data loss of which happend with the compaction command.
+
+
+Used Libraries
+---------------
+* leo project
+    * [leo_backend-db v1.0.3](https://github.com/leo-project/leo_backend_db.git)
+    * [leo_cache v0.4.20](https://github.com/leo-project/leo_cache.git)
+    * [leo_commons v1.0.1](https://github.com/leo-project/leo_commons.git)
+    * [leo_dcerl v0.2.7](https://github.com/leo-project/leo_dcerl.git)
+    * [leo_logger v1.0.2](https://github.com/leo-project/leo_logger.git)
+    * [leo_mcerl v0.2.9](https://github.com/leo-project/leo_mcerl.git)
+    * [leo_mq v1.0.3](https://github.com/leo-project/leo_mq.git)
+    * [leo_object_storage v1.0.4](https://github.com/leo-project/leo_object_storage.git)
+    * [leo_ordning_reda v0.10.3](https://github.com/leo-project/leo_ordning_reda.git)
+    * [leo_redundant_manager v1.8.1](https://github.com/leo-project/leo_redundant_manager.git)
+    * [leo_rpc v0.8.3](https://github.com/leo-project/leo_rpc.git)
+    * [leo_pod v0.6.0](https://github.com/leo-project/leo_pod.git)
+    * [leo_s3_libs v1.0.1](https://github.com/leo-project/leo_s3_libs.git)
+    * [leo_statistics v1.0.x](https://github.com/leo-project/leo_statistics.git)
+    * [savanna_agent v0.2.2](https://github.com/leo-project/savanna_agent.git)
+    * [savanna_commons v0.6.3](https://github.com/leo-project/savanna_commons.git)
+    * [leo_gateway v1.0.2](https://github.com/leo-project/leo_gateway.git)
+    * [leo_manager v1.0.2](https://github.com/leo-project/leo_manager.git)
+    * [leo_storage v1.0.2](https://github.com/leo-project/leo_storage.git)
+* others
+    * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
+    * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+    * [eleveldb v1.4.7](https://github.com/basho/eleveldb.git)
+    * [folsom v0.8.1](https://github.com/boundary/folsom.git)
+    * [jiffy v0.8.5](https://github.com/davisp/jiffy.git)
+    * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
 leofs-1.0.1
 ===========
 
@@ -14,6 +55,7 @@ Features and Improvements for LeoFS
 Bugs Fixed
 -----------
 
+* Corrected termination of applications
 * [#187](https://github.com/leo-project/leofs/issues/187) ``leo_storage`` - Could not work the ``rebalance`` and ``recover`` command
 * [#186](https://github.com/leo-project/leofs/issues/186) ``leo_storage`` - Could not correctly finish the ``compaction`` command when exists large-objects
 * [#185](https://github.com/leo-project/leofs/issues/185) ``leo_manager`` - Failed to execute the ``delete-endpoint`` command
@@ -35,7 +77,7 @@ Used Libraries
     * [leo_logger v1.0.2](https://github.com/leo-project/leo_logger.git)
     * [leo_mcerl v0.2.9](https://github.com/leo-project/leo_mcerl.git)
     * [leo_mq v1.0.3](https://github.com/leo-project/leo_mq.git)
-    * [leo_object_storage v1.0.2](https://github.com/leo-project/leo_object_storage.git)
+    * [leo_object_storage v1.0.3](https://github.com/leo-project/leo_object_storage.git)
     * [leo_ordning_reda v0.10.3](https://github.com/leo-project/leo_ordning_reda.git)
     * [leo_redundant_manager v1.8.1](https://github.com/leo-project/leo_redundant_manager.git)
     * [leo_rpc v0.8.3](https://github.com/leo-project/leo_rpc.git)
@@ -49,8 +91,8 @@ Used Libraries
     * [leo_storage v1.0.1](https://github.com/leo-project/leo_storage.git)
 * others
     * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
-    * [eleveldb v1.4.7](https://github.com/basho/eleveldb.git)
     * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+    * [eleveldb v1.4.7](https://github.com/basho/eleveldb.git)
     * [folsom v0.8.1](https://github.com/boundary/folsom.git)
     * [jiffy v0.8.5](https://github.com/davisp/jiffy.git)
     * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
