@@ -15,16 +15,19 @@ We are supporting the following things:
   * LeoFS's cluster can be viewed as ONE-HUGE storage. It consists of a set of loosely connected nodes.
   * We can build a global scale storage system with easy operations
 
-To access LeoFS server, we can use the following clients.
+To access LeoFS server, we can use the following S3 clients.
 
 * [DragonDisk](http://www.dragondisk.com/)
 * [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
 * [s3cmd](http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd)
-* [Programming Languages](http://www.leofs.org/docs/s3_client.html)
-  * Java
-  * Ruby
-  * Python
-  * PHP
+
+We can also access LeoFS using S3 libraries of each programming language.
+We've prepared sample code for the following programming languages.
+
+* [Java](http://www.leofs.org/docs/s3_client.html#getting-started-with-java-aws-sdk)
+* [Ruby](http://www.leofs.org/docs/s3_client.html#getting-started-with-ruby-aws-sdk)
+* [Python](http://www.leofs.org/docs/s3_client.html#getting-started-with-python-boto)
+* [PHP](http://www.leofs.org/docs/s3_client.html#getting-started-with-php-aws-sdk)
 
 GOALs
 -------
