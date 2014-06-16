@@ -1,6 +1,8 @@
 LeoFS - The Lion of Storage Systems
 ===================================
 
+![LeoFS Logo](http://leo-project.net/leofs/assets/logos/leofs-logo-blk.svg "LeoFS")
+
 LeoFS is a highly available, distributed, eventually consistent object/blob store. Organizations can use LeoFS to store lots of data efficiently, safely, and inexpensively.
 
 We are supporting the following things:
