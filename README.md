@@ -1,7 +1,7 @@
 LeoFS - The Lion of Storage Systems
 ===================================
 
-![LeoFS Logo](http://leo-project.net/leofs/assets/logos/leofs-logo-blk.svg "LeoFS")
+![LeoFS Logo](http://leo-project.net/leofs/docs/_static/leofs-logo-small.png)
 
 LeoFS is a highly available, distributed, eventually consistent object/blob store. Organizations can use LeoFS to store lots of data efficiently, safely, and inexpensively.
 
@@ -47,17 +47,17 @@ GOALs
 Further Reference
 -------------------
 
-* Please visit [our website](http://www.leofs.org/docs/).
+* [LeoFS Documentation](http://leo-project.net/leofs/docs/).
 
 Build LeoFS (For Developers)
 ----------------------------
 
-You can install LeoFS from the [packages](http://www.leofs.org/#download_package).
+You can install LeoFS from the [packages](http://leo-project.net/leofs/download.html).
 Here, we explain how to build LeoFS from source.
 
 First, you have to install the following packages to build Erlang and LeoFS.
 
-```text
+```bash
 ## [CentOS]
 $ sudo yum install libuuid-devel cmake check check-devel
 ## [Ubuntu]
@@ -66,7 +66,7 @@ $ sudo apt-get install build-essential libtool libncurses5-dev libssl-dev cmake 
 
 Then, install Erlang.
 
-```text
+```bash
 ##
 ## 1. Install libatomic
 ##
@@ -110,7 +110,7 @@ $ source ~/.profile
 
 Then, clone source of LeoFS and libraries from GitHub.
 
-```text
+```bash
 $ git clone https://github.com/leo-project/leofs.git
 $ cd leofs
 $ git checkout -b develop remotes/origin/develop
@@ -120,7 +120,7 @@ $ ./git_checkout.sh develop
 
 Then, build LeoFS with the following commands.
 
-```text
+```bash
 $ make clean
 $ make
 $ make release
@@ -128,14 +128,14 @@ $ make release
 
 Now, you can find the LeoFS package as follow.
 
-```text
+```bash
 $ ls package/
 leo_gateway/  leo_manager_0/  leo_manager_1/  leo_storage/  README.md
 ```
 
 Then, we can start and access LeoFS with the following commands.
 
-```
+```bash
 $ package/leo_manager_0/bin/leo_manager start
 $ package/leo_manager_1/bin/leo_manager start
 $ package/leo_storage/bin/leo_storage start
@@ -190,16 +190,6 @@ You can benchmark LeoFS with [Basho Bench](https://github.com/basho/basho_bench)
 Milestones
 -----------
 
-* *DONE* - 0.12 (Oct 2012 - Jan 2013)
-    * Large Object Support (incl.Streaming/Multi-part/Range requests)
-    * Web GUI-Console (LeoTamer - Optional)
-        * Cluster manager/monitor
-        * Log Analysis/Search
-* *DONE* - 0.14 (Feb 2013 - Sep)
-    * Multi-layer Cache (Using SSD)
-    * Rack aware replica placement
-    * Web GUI Console (Option)
-       * Support whole LeoFS Manager's commands
 * *DONE* - 0.16 (Oct 2013)
     * Increase compatibility S3-APIs#4
         * the bucket ACLs
@@ -211,7 +201,7 @@ Milestones
         * Other bucket operations
     * QoS System Phase-1 (LeoInsight - Option)
        * Support *statistics/analyzer*
-* 1.2 (May 2014 - Aug)
+* 1.1/1.2 (May 2014 - Sept)
     * OpenStack Integration
         * Support for OpenStack Swift-API
     * Increase compatibility S3-APIs#6
