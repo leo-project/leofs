@@ -19,17 +19,17 @@ We are supporting the following things:
 
 To access LeoFS server, we can use the following S3 clients.
 
-* [DragonDisk](http://www.dragondisk.com/)
-* [S3FS-C](http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts)
-* [s3cmd](http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd)
+* <a target="_blank" href="http://www.dragondisk.com/">DragonDisk</a>
+* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts">S3FS-C</a>
+* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd">s3cmd</a>
 
 We can also access LeoFS using S3 libraries of each programming language.
 We've prepared sample code for the following programming languages.
 
-* [Java](http://www.leofs.org/docs/s3_client.html#getting-started-with-java-aws-sdk)
-* [Ruby](http://www.leofs.org/docs/s3_client.html#getting-started-with-ruby-aws-sdk)
-* [Python](http://www.leofs.org/docs/s3_client.html#getting-started-with-python-boto)
-* [PHP](http://www.leofs.org/docs/s3_client.html#getting-started-with-php-aws-sdk)
+* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-java-aws-sdk">Java</a>
+* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-ruby-aws-sdk">Ruby</a>
+* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-python-boto">Python</a>
+* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-php-aws-sdk">PHP</a>
 
 GOALs
 -------
@@ -47,12 +47,12 @@ GOALs
 Further Reference
 -------------------
 
-* [LeoFS Documentation](http://leo-project.net/leofs/docs/).
+* <a target="_blank" href="http://leo-project.net/leofs/docs/">LeoFS Documentation</a>.
 
 Build LeoFS (For Developers)
 ----------------------------
 
-You can install LeoFS from the [packages](http://leo-project.net/leofs/download.html).
+You can install LeoFS from the <a target="_blank" href="http://leo-project.net/leofs/download.html">packages</a>.
 Here, we explain how to build LeoFS from source.
 
 First, you have to install the following packages to build Erlang and LeoFS.
@@ -173,19 +173,19 @@ Build a LeoFS Cluster
 
 You can easily build a LeoFS cluster.
 
-Please refer [here](http://www.leofs.org/docs/getting_started.html#quick-start-2-cluster).
+Please refer <a target="_blank" href="http://www.leofs.org/docs/getting_started.html#quick-start-2-cluster">here</a>.
 
 Configure LeoFS
 ---------------
 
-About the configuration of LeoFS, please refer [here](http://www.leofs.org/docs/configuration.html).
+About the configuration of LeoFS, please refer <a target="_blank" href="http://www.leofs.org/docs/configuration.html">here</a>.
 
 Benchmarking
 ------------
 
-You can benchmark LeoFS with [Basho Bench](https://github.com/basho/basho_bench).
+You can benchmark LeoFS with <a target="_blank" href="https://github.com/basho/basho_bench">Basho Bench</a>.
 
-[Here](http://www.leofs.org/docs/benchmark.html) is a documentation to benchmark LeoFS.
+<a target="_blank" href="http://www.leofs.org/docs/benchmark.html">Here</a> is a documentation to benchmark LeoFS.
 
 Milestones
 -----------
