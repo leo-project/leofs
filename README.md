@@ -31,6 +31,15 @@ We've prepared sample code for the following programming languages.
 * <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-python-boto">Python</a>
 * <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-php-aws-sdk">PHP</a>
 
+
+Slide
+-------
+
+This presentation was given at Erlang User Conference 2014 in Stockholm on June 2014
+
+<iframe src="//www.slideshare.net/slideshow/embed_code/35673208" width="512" height="421" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px 1px 0; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://www.slideshare.net/rakutentech/scaling-and-high-performance-storage-system-leofs" title="Scaling and High Performance Storage System: LeoFS" target="_blank">Scaling and High Performance Storage System: LeoFS</a> </strong> from <strong><a href="http://www.slideshare.net/rakutentech" target="_blank">Rakuten, Inc</a></strong> </div>
+
+
 GOALs
 -------
 
