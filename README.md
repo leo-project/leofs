@@ -3,8 +3,8 @@ LeoFS - The Lion of Storage Systems
 
 ![LeoFS Logo](http://leo-project.net/leofs/docs/_static/leofs-logo-small.png)
 
-LeoFS is a highly available, distributed, eventually consistent object/blob store. Organizations can use LeoFS to store lots of data efficiently, safely, and inexpensively.
-You can adopt LeoFS as a solution if you need to hold and manage large amount of files that cannot handle a single storeage server.
+LeoFS is a highly available, distributed, eventually consistent object/blob store.
+If you are searching a storage system that is able to store huge amount and various kind of files such as photo, movie, log data and so on, LeoFS is suitable for that.
 
 LeoFS is supporting the following features:
 
