@@ -4,40 +4,26 @@ LeoFS - The Lion of Storage Systems
 ![LeoFS Logo](http://leo-project.net/leofs/docs/_static/leofs-logo-small.png)
 
 LeoFS is a highly available, distributed, eventually consistent object/blob store. Organizations can use LeoFS to store lots of data efficiently, safely, and inexpensively.
+You can adopt LeoFS as a solution if you need to hold and manage large amount of files that cannot handle a single storeage server.
 
-We are supporting the following things:
+LeoFS is supporting the following features:
 
-* S3-API
+* **S3-API Support**
   * LeoFS is an Amazon S3 compatible storage system.
   * Switch to LeoFS to decrease your cost from more expensive public-cloud solutions.
-* Large Object
+* **Large Object Support**
   * LeoFS can handle files with more than GB
-* Multi Data Center Replication
+* **Multi Data Center Replication**
   * LeoFS is a highly scalable, fault-tolerant distributed file system without SPOF.
   * LeoFS's cluster can be viewed as ONE-HUGE storage. It consists of a set of loosely connected nodes.
   * We can build a global scale storage system with easy operations
 
-To access LeoFS server, we can use the following S3 clients.
-
-* <a target="_blank" href="http://www.dragondisk.com/">DragonDisk</a>
-* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-s3fs-c-ubuntu-12-04-lts">S3FS-C</a>
-* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#connecting-to-leofs-using-s3cmd">s3cmd</a>
-
-We can also access LeoFS using S3 libraries of each programming language.
-We've prepared sample code for the following programming languages.
-
-* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-java-aws-sdk">Java</a>
-* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-ruby-aws-sdk">Ruby</a>
-* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-python-boto">Python</a>
-* <a target="_blank" href="http://www.leofs.org/docs/s3_client.html#getting-started-with-php-aws-sdk">PHP</a>
-
+We can access LeoFS server using <a target="_blank" href="http://www.leofs.org/docs/s3_client.html">S3 clients and S3 client libries of each programming language</a>.
 
 Slide
 -------
 
 The presentation - <a href="https://www.slideshare.net/rakutentech/scaling-and-high-performance-storage-system-leofs" title="Scaling and High Performance Storage System: LeoFS" target="_blank">Scaling and High Performance Storage System: LeoFS</a>  was given at Erlang User Conference 2014 in Stockholm on June 2014
-
-
 
 GOALs
 -------
