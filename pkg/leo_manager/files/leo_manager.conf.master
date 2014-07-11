@@ -68,17 +68,17 @@ consistency.read = 1
 ## A number of replicas needed for a successful DELETE operation
 consistency.delete = 1
 
-## A number of rack-aware replicas
+## A number of replicas in other racks
 ## consistency.rack_aware_replicas = 0
 
 
 ## --------------------------------------------------------------------
 ## MANAGER - Multi DataCenter Settings
 ## --------------------------------------------------------------------
-## A number of replication targets
+## A max number of clusters that the manager can connect
 ## mdc_replication.max_targets = 2
 
-## A number of replicas a DC
+## A number of replicas in each other DC
 ## mdc_replication.num_of_replicas_a_dc = 1
 
 

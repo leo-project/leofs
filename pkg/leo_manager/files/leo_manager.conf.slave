@@ -68,7 +68,7 @@ console.acceptors.json = 16
 ## A number of replicas needed for a successful DELETE operation
 ## consistency.delete = 1
 
-## A number of rack-aware replicas
+## A number of replicas in other racks
 ## consistency.rack_aware_replicas = 0
 
 
