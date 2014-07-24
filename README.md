@@ -208,3 +208,8 @@ Milestones
     * Web GUI Console (Option)
         * LeoInsight(QoS) Integration
         * Support Log analysis/search
+
+
+## Sponsors
+
+LeoProject/LeoFS is sponsored by [Rakuten, Inc.](http://global.rakuten.com/corp/) and [Rakuten Institute of Technology](http://rit.rakuten.co.jp/).
