@@ -5,8 +5,8 @@ all: deps compile
 compile:
 	# workaround to build with nfs_impl branch
 	(cd deps/erpcgen/;make)
-	./deps/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] deps/leo_gateway/src/leo_gateway_nfs_proto3.x
-	./deps/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] deps/leo_gateway/src/leo_gateway_nfs_mount3.x
+	./deps/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] deps/leo_gateway/src/leo_nfs_proto3.x
+	./deps/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] deps/leo_gateway/src/leo_nfs_mount3.x
 	cp -r ./deps/erpcgen/rpc_server ./deps/
 	@./rebar compile
 
