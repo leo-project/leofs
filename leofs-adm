@@ -30,6 +30,9 @@ PORT=10010
 STORAGE_NODE="<storage-node>"
 GATEWAY_NODE="<gateway-node>"
 FILE_PATH="<file-path>"
+USER_ID="<user-id>"
+ACCESS_KEY_ID="<access-key-id>"
+ENDPOINT="<endpoint>"
 WHITESPACE="          "
 BAR="|"
 
@@ -342,7 +345,7 @@ usage_update_managers() {
 }
 
 usage_dump_ring() {
-    USAGE="dump-ring <manager-node>|<storage-node>|<gateway-node>"
+    USAGE="dump-ring (<manager-node>|$STORAGE_NODE|$GATEWAY_NODE)"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -356,7 +359,7 @@ usage_dump_ring() {
 }
 
 usage_create_user() {
-    USAGE="create-user <user-id> <password>"
+    USAGE="create-user $USER_ID <password>"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -370,7 +373,7 @@ usage_create_user() {
 }
 
 usage_delete_user() {
-    USAGE="delete-user <user-id>"
+    USAGE="delete-user $USER_ID"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -398,7 +401,7 @@ usage_get_users() {
 }
 
 usage_update_user_role() {
-    USAGE="update-user-role <user-id> <role-id>"
+    USAGE="update-user-role $USER_ID <role-id>"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -412,7 +415,7 @@ usage_update_user_role() {
 }
 
 usage_update_user_password() {
-    USAGE="update-user-password <user-id> <password>"
+    USAGE="update-user-password $USER_ID <password>"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -426,7 +429,7 @@ usage_update_user_password() {
 }
 
 usage_add_endpoint() {
-    USAGE="add-endpoint <endpoint>"
+    USAGE="add-endpoint $ENDPOINT"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -440,7 +443,7 @@ usage_add_endpoint() {
 }
 
 usage_set_endpoint() {
-    USAGE="set-endpoint <endpoint>"
+    USAGE="set-endpoint $ENDPOINT"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -454,7 +457,7 @@ usage_set_endpoint() {
 }
 
 usage_delete_endpoint() {
-    USAGE="delete-endpoint <endpoint>"
+    USAGE="delete-endpoint $ENDPOINT"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -482,7 +485,7 @@ usage_get_endpoints() {
 }
 
 usage_add_bucket() {
-    USAGE="add-bucket <bucket> <access-key-id>"
+    USAGE="add-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -496,7 +499,7 @@ usage_add_bucket() {
 }
 
 usage_delete_bucket() {
-    USAGE="delete-bucket <bucket> <access-key-id>"
+    USAGE="delete-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -510,7 +513,7 @@ usage_delete_bucket() {
 }
 
 usage_get_bucket() {
-    USAGE="delete-bucket <access-key-id>"
+    USAGE="delete-bucket $ACCESS_KEY_ID"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -552,7 +555,7 @@ usage_chown_bucket() {
 }
 
 usage_update_acl() {
-    USAGE="update-acl <bucket> <access-key-id> private|public-read|public-read-write"
+    USAGE="update-acl <bucket> $ACCESS_KEY_ID (private | public-read | public-read-write)"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
