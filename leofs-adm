@@ -793,7 +793,7 @@ case "$1" in
                     exit 1
                     ;;
                 *)
-                    send_command "$@"
+                    send_command "recover file $2"
             esac
         else
             usage_recover_file
@@ -807,7 +807,7 @@ case "$1" in
                     exit 1
                     ;;
                 *)
-                    send_command "$@"
+                    send_command "recover node $2"
             esac
         else
             usage_recover_node
@@ -821,7 +821,7 @@ case "$1" in
                     exit 1
                     ;;
                 *)
-                    send_command "$@"
+                    send_command "recover ring $2"
             esac
         else
             usage_recover_ring
@@ -835,7 +835,7 @@ case "$1" in
                     exit 1
                     ;;
                 *)
-                    send_command "$@"
+                    send_command "recover cluster $2"
             esac
         else
             usage_recover_cluster
@@ -847,9 +847,9 @@ case "$1" in
     ##
     compact-start)
         if [ $# -eq 3 ]; then
-            send_command "$@"
+            send_command "compact start $2 $3"
         elif [ $# -eq 4 ]; then
-            send_command "$@"
+            send_command "compact start $2 $3 $4"
         else
             usage_compact_start
             exit 1
@@ -863,7 +863,7 @@ case "$1" in
                     exit 1
                     ;;
                 *)
-                    send_command "$@"
+                    send_command "compact suspend $2"
             esac
         else
             usage_compact_suspend
@@ -877,7 +877,7 @@ case "$1" in
                     exit 1
                     ;;
                 *)
-                    send_command "$@"
+                    send_command "compact resume " $2
             esac
         else
             usage_compact_resume
@@ -891,7 +891,7 @@ case "$1" in
                     exit 1
                     ;;
                 *)
-                    send_command "$@"
+                    send_command "compact status " $2
             esac
         else
             usage_compact_status
@@ -917,7 +917,7 @@ case "$1" in
     ##
     purge-cache)
         if [ $# -eq 3 ]; then
-            send_command "$@"
+            send_command "purge $2 $3"
         else
             usage_purge_cache
         fi
@@ -930,7 +930,7 @@ case "$1" in
                     exit 1
                     ;;
                 *)
-                    send_command "$@"
+                    send_command "remove $2"
             esac
         else
             usage_remove_gateway
