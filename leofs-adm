@@ -289,7 +289,7 @@ usage_purge_cache() {
 }
 
 usage_remove_gateway() {
-    USAGE="remove_gateway $GATEWAY_NODE"
+    USAGE="remove-gateway $GATEWAY_NODE"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
