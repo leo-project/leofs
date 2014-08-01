@@ -442,20 +442,6 @@ usage_add_endpoint() {
     esac
 }
 
-usage_set_endpoint() {
-    USAGE="set-endpoint $ENDPOINT"
-    case "$1" in
-        min)
-            echo "$WHITESPACE $USAGE $BAR"
-            ;;
-        *)
-            echo "Description:"
-            echo "  - "
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-    esac
-}
-
 usage_delete_endpoint() {
     USAGE="delete-endpoint $ENDPOINT"
     case "$1" in
@@ -652,7 +638,6 @@ usage() {
     usage_update_user_password min
     echo ""
     usage_add_endpoint min
-    usage_set_endpoint min
     usage_delete_endpoint min
     usage_get_endpoints min
     echo ""
@@ -1050,20 +1035,6 @@ case "$1" in
             esac
         else
             usage_add_endpoint
-        fi
-        ;;
-    set-endpoint)
-        if [ $# -eq 2 ]; then
-            case "$2" in
-                --help)
-                    usage_set_endpoint
-                    exit 1
-                    ;;
-                *)
-                    send_command "$@"
-            esac
-        else
-            usage_set_endpoint
         fi
         ;;
     delete-endpoint)
