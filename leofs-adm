@@ -275,7 +275,7 @@ usage_du() {
 }
 
 usage_purge_cache() {
-    USAGE="purge-cache $GATEWAY_NODE $FILE_PATH"
+    USAGE="purge-cache $FILE_PATH"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -901,8 +901,8 @@ case "$1" in
     ## GATEWAY
     ##
     purge-cache)
-        if [ $# -eq 3 ]; then
-            send_command "purge $2 $3"
+        if [ $# -eq 2 ]; then
+            send_command "purge $2"
         else
             usage_purge_cache
         fi
