@@ -499,7 +499,7 @@ usage_delete_bucket() {
 }
 
 usage_get_bucket() {
-    USAGE="delete-bucket $ACCESS_KEY_ID"
+    USAGE="get-bucket $ACCESS_KEY_ID"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -513,7 +513,7 @@ usage_get_bucket() {
 }
 
 usage_get_buckets() {
-    USAGE="delete-buckets"
+    USAGE="get-buckets"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
