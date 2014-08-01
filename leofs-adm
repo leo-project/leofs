@@ -303,7 +303,7 @@ usage_remove_gateway() {
 }
 
 usage_backup_mnesia() {
-    USAGE="backup-mnesia <backup-dir>"
+    USAGE="backup-mnesia <backup-filepath>"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
@@ -317,7 +317,7 @@ usage_backup_mnesia() {
 }
 
 usage_restore_mnesia() {
-    USAGE="restore-mnesia <backup-dir>"
+    USAGE="restore-mnesia <backup-filepath>"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
