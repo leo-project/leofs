@@ -185,7 +185,7 @@ usage_recover_ring() {
             ;;
         *)
             echo "Description:"
-            echo "  - "
+            echo "  - Recover rings of the specified node"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
     esac
@@ -199,7 +199,7 @@ usage_recover_cluster() {
             ;;
         *)
             echo "Description:"
-            echo "  - "
+            echo "  - Recover all inconsistent objects in the specified cluster"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
     esac
