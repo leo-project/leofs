@@ -49,7 +49,7 @@ usage_status() {
         *)
             echo "Description:"
             echo "  - Retrieve status of every node"
-            echo "  - Retrieve status of a specified node"
+            echo "  - Retrieve status of the specified node"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
     esac
@@ -484,7 +484,7 @@ usage_add_bucket() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Create a new bucket"
+            echo "  - Create the new bucket"
     esac
 }
 
