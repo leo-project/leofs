@@ -43,10 +43,25 @@ Further Reference
 
 * <a target="_blank" href="http://leo-project.net/leofs/docs/">LeoFS Documentation</a>.
 
+
+Build LeoFS with LeoFS Packages
+-------------------------------
+
+LeoFS packages were already provided on the Web. You're able to easily install LeoFS on your environments.
+
+* LeoProject
+    * <a target="_blank" href="http://leo-project.net/leofs/download.html">CentOS-6.x</a>
+    * <a target="_blank" href="http://leo-project.net/leofs/download.html">Ubuntu-12.10, 13.10 and 14.04</a>
+* Community
+    * <a target="_blank" href="http://www.freshports.org/databases/leofs">FreeBSD</a>
+
+There is the installation manual, which is <a target="_blank" href="http://leo-project.net/leofs/docs/getting_started.html">here</a>.
+
+
 Build LeoFS (For Developers)
 ----------------------------
 
-You can install LeoFS from the <a target="_blank" href="http://leo-project.net/leofs/download.html">packages</a>.
+You're able to install LeoFS from the <a target="_blank" href="http://leo-project.net/leofs/download.html">packages</a>.
 Here, we explain how to build LeoFS from source.
 
 First, you have to install the following packages to build Erlang and LeoFS.
