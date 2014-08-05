@@ -47,7 +47,7 @@ Further Reference
 Build LeoFS with LeoFS Packages
 -------------------------------
 
-LeoFS packages were already provided on the Web. You're able to easily install LeoFS on your environments.
+LeoFS packages have been already provided on the Web. You're able to easily install LeoFS on your environments.
 
 * LeoProject
     * <a target="_blank" href="http://leo-project.net/leofs/download.html">CentOS-6.x</a>
@@ -55,13 +55,12 @@ LeoFS packages were already provided on the Web. You're able to easily install L
 * Community
     * <a target="_blank" href="http://www.freshports.org/databases/leofs">FreeBSD</a>
 
-There is the installation manual, which is <a target="_blank" href="http://leo-project.net/leofs/docs/getting_started.html">here</a>.
+<a target="_blank" href="http://leo-project.net/leofs/docs/getting_started.html">Here</a> is the installation manual.
 
 
-Build LeoFS (For Developers)
-----------------------------
+Build LeoFS From Source (For Developers)
+----------------------------------------
 
-You're able to install LeoFS from the <a target="_blank" href="http://leo-project.net/leofs/download.html">packages</a>.
 Here, we explain how to build LeoFS from source.
 
 First, you have to install the following packages to build Erlang and LeoFS.
