@@ -57,7 +57,7 @@ usage_status() {
     USAGE="status [<node>]"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE"
             ;;
         *)
             echo "Usage:"
@@ -72,7 +72,7 @@ usage_whereis() {
     USAGE="whereis $FILE_PATH"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -86,7 +86,7 @@ usage_detach() {
     USAGE="detach $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -100,7 +100,7 @@ usage_suspend() {
     USAGE="suspend $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -116,7 +116,7 @@ usage_resume() {
     USAGE="resume $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -130,7 +130,7 @@ usage_start() {
     USAGE="start"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -144,7 +144,7 @@ usage_rebalance() {
     USAGE="rebalance"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -166,7 +166,7 @@ usage_recover_file() {
     USAGE="recover-file $FILE_PATH"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -180,7 +180,7 @@ usage_recover_node() {
     USAGE="recover-node $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -194,7 +194,7 @@ usage_recover_ring() {
     USAGE="recover-ring $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -208,7 +208,7 @@ usage_recover_cluster() {
     USAGE="recover-cluster <cluster-id>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -222,7 +222,7 @@ usage_compact_start() {
     USAGE="compact-start <node> (all | <num-of-targets>) [<number-of-compaction-procs>]"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -238,7 +238,7 @@ usage_compact_suspend() {
     USAGE="compact-suspend $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -252,7 +252,7 @@ usage_compact_resume() {
     USAGE="compact-resume $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -266,7 +266,7 @@ usage_compact_status() {
     USAGE="compact-status $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -280,7 +280,7 @@ usage_du() {
     USAGE="du $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -294,7 +294,7 @@ usage_purge_cache() {
     USAGE="purge-cache $FILE_PATH"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -308,7 +308,7 @@ usage_remove_gateway() {
     USAGE="remove-gateway $GATEWAY_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -322,7 +322,7 @@ usage_backup_mnesia() {
     USAGE="backup-mnesia <backup-filepath>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -336,7 +336,7 @@ usage_restore_mnesia() {
     USAGE="restore-mnesia <backup-filepath>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -350,7 +350,7 @@ usage_update_managers() {
     USAGE="update-managers <manager-master> <manager-slave>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -364,7 +364,7 @@ usage_dump_ring() {
     USAGE="dump-ring (<manager-node>|$STORAGE_NODE|$GATEWAY_NODE)"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -378,7 +378,7 @@ usage_create_user() {
     USAGE="create-user $USER_ID <password>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -393,7 +393,7 @@ usage_delete_user() {
     USAGE="delete-user $USER_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -407,7 +407,7 @@ usage_get_users() {
     USAGE="get-users"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -421,7 +421,7 @@ usage_update_user_role() {
     USAGE="update-user-role $USER_ID <role-id>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -438,7 +438,7 @@ usage_update_user_password() {
     USAGE="update-user-password $USER_ID <password>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -452,7 +452,7 @@ usage_add_endpoint() {
     USAGE="add-endpoint $ENDPOINT"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -466,7 +466,7 @@ usage_delete_endpoint() {
     USAGE="delete-endpoint $ENDPOINT"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -480,7 +480,7 @@ usage_get_endpoints() {
     USAGE="get-endpoints"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -494,7 +494,7 @@ usage_add_bucket() {
     USAGE="add-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -508,7 +508,7 @@ usage_delete_bucket() {
     USAGE="delete-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -522,7 +522,7 @@ usage_get_bucket() {
     USAGE="get-bucket $ACCESS_KEY_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -536,7 +536,7 @@ usage_get_buckets() {
     USAGE="get-buckets"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -550,7 +550,7 @@ usage_chown_bucket() {
     USAGE="chown-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -564,7 +564,7 @@ usage_update_acl() {
     USAGE="update-acl <bucket> $ACCESS_KEY_ID (private | public-read | public-read-write)"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -582,7 +582,7 @@ usage_join_cluster() {
     USAGE="join-cluster <remote-manager-master> <remote-manager-slave>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -596,7 +596,7 @@ usage_remove_cluster() {
     USAGE="remove-cluster <remote-manager-master> <remote-manager-slave>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE $BAR"
+            echo "$WHITESPACE $USAGE "
             ;;
         *)
             echo "Usage:"
@@ -625,43 +625,46 @@ usage_cluster_status() {
 ## Usage of the script
 ##
 usage() {
-    echo "Usage: ${bold}$SCRIPT${normal} {"
-    echo "    ${UNDERLINE}General Commands:${NONE}"
-    echo "$WHITESPACE version $BAR"
+    echo "usage: ${bold}$SCRIPT${normal} [--help]"
+    echo "                 <command> <args>"
+    echo ""
+    echo "  LeoFS commands are:"
+    echo "      ${UNDERLINE}General Commands:${NONE}"
+    echo "$WHITESPACE version"
     usage_status min
     usage_whereis min
     echo ""
-    echo "    ${UNDERLINE}Storage Operation:${NONE}"
+    echo "      ${UNDERLINE}Storage Operation:${NONE}"
     usage_detach min
     usage_suspend min
     usage_resume min
     usage_start min
     usage_rebalance min
     echo ""
-    echo "    ${UNDERLINE}Recover Commands:${NONE}"
+    echo "      ${UNDERLINE}Recover Commands:${NONE}"
     usage_recover_file min
     usage_recover_node min
     usage_recover_ring min
     usage_recover_cluster min
     echo ""
-    echo "    ${UNDERLINE}Compaction Commands:${NONE}"
+    echo "      ${UNDERLINE}Compaction Commands:${NONE}"
     usage_compact_start min
     usage_compact_suspend min
     usage_compact_resume min
     usage_compact_status min
     usage_du min
     echo ""
-    echo "    ${UNDERLINE}Gateway Operation:${NONE}"
+    echo "      ${UNDERLINE}Gateway Operation:${NONE}"
     usage_purge_cache min
     usage_remove_gateway min
     echo ""
-    echo "    ${UNDERLINE}Manager Maintenance:${NONE}"
+    echo "      ${UNDERLINE}Manager Maintenance:${NONE}"
     usage_backup_mnesia min
     usage_restore_mnesia min
     usage_update_managers min
     usage_dump_ring min
     echo ""
-    echo "    ${UNDERLINE}S3-related Commands:${NONE}"
+    echo "      ${UNDERLINE}S3-related Commands:${NONE}"
     usage_create_user min
     usage_delete_user min
     usage_get_users min
@@ -679,11 +682,11 @@ usage() {
     usage_chown_bucket min
     usage_update_acl min
     echo ""
-    echo "    ${UNDERLINE}Multi Data Center Operation:${NONE}"
+    echo "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
     usage_join_cluster min
     usage_remove_cluster min
     usage_cluster_status min
-    echo "       }"
+    echo ""
 }
 
 
