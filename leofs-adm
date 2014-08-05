@@ -135,7 +135,8 @@ usage_rebalance() {
             ;;
         *)
             echo "Description:"
-            echo "  - "
+            echo "  - Commit detached and attached nodes to join the cluster AND "
+            echo "  - Rebalance objects in the cluster based on the updated cluster topology"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
     esac
