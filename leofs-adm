@@ -171,7 +171,7 @@ usage_recover_node() {
             ;;
         *)
             echo "Description:"
-            echo "  - "
+            echo "  - Recover all inconsistent objects in the specified node"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
     esac
