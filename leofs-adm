@@ -47,11 +47,11 @@ usage_status() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
             echo "Description:"
             echo "  - Retrieve status of every node"
             echo "  - Retrieve status of the specified node"
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
     esac
 }
 
@@ -62,10 +62,10 @@ usage_whereis() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - Retrieve an assigned object by the file-path"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve an assigned object by the file-path"
     esac
 }
 
@@ -76,10 +76,10 @@ usage_detach() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  -  Remove the storage node in the storage cluster"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  -  Remove the storage node in the storage cluster"
     esac
 }
 
@@ -90,12 +90,12 @@ usage_suspend() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
             echo "Description:"
             echo "  -  Suspend the storage node"
             echo "  -  While suspending, it rejects any requests"
             echo "  -  This command does NOT detach the node from the storage cluster"
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
     esac
 }
 
@@ -106,10 +106,10 @@ usage_resume() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  -  Resume the storage node"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  -  Resume the storage node"
     esac
 }
 
@@ -120,10 +120,10 @@ usage_start() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - Launch the storage cluster"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Launch the storage cluster"
     esac
 }
 
@@ -134,11 +134,11 @@ usage_rebalance() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
             echo "Description:"
             echo "  - Commit detached and attached nodes to join the cluster AND "
             echo "  - Rebalance objects in the cluster based on the updated cluster topology"
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
     esac
 }
 
@@ -156,10 +156,10 @@ usage_recover_file() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - Recover an inconsistent object specified by the file-path"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Recover an inconsistent object specified by the file-path"
     esac
 }
 
@@ -170,10 +170,10 @@ usage_recover_node() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - Recover all inconsistent objects in the specified node"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Recover all inconsistent objects in the specified node"
     esac
 }
 
@@ -184,10 +184,10 @@ usage_recover_ring() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - Recover rings of the specified node"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Recover rings of the specified node"
     esac
 }
 
@@ -198,10 +198,10 @@ usage_recover_cluster() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - Recover all inconsistent objects in the specified cluster"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Recover all inconsistent objects in the specified cluster"
     esac
 }
 
@@ -212,10 +212,10 @@ usage_compact_start() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -226,10 +226,10 @@ usage_compact_suspend() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -240,10 +240,10 @@ usage_compact_resume() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -254,10 +254,10 @@ usage_compact_status() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -268,10 +268,10 @@ usage_du() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -282,10 +282,10 @@ usage_purge_cache() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -296,10 +296,10 @@ usage_remove_gateway() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -310,10 +310,10 @@ usage_backup_mnesia() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -324,10 +324,10 @@ usage_restore_mnesia() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -338,10 +338,10 @@ usage_update_managers() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -352,10 +352,10 @@ usage_dump_ring() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -570,10 +570,10 @@ usage_join_cluster() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -584,10 +584,10 @@ usage_remove_cluster() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
@@ -598,10 +598,10 @@ usage_cluster_status() {
             echo "$WHITESPACE $USAGE"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
     esac
 }
 
