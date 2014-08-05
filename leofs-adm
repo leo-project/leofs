@@ -46,7 +46,7 @@ FILE_PATH="<file-path>"
 USER_ID="<user-id>"
 ACCESS_KEY_ID="<access-key-id>"
 ENDPOINT="<endpoint>"
-WHITESPACE="          "
+WHITESPACE="         "
 BAR="|"
 
 
