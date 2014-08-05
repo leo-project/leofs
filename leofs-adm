@@ -63,7 +63,7 @@ usage_whereis() {
             ;;
         *)
             echo "Description:"
-            echo "  - Retrieve assigned nodes by the file-path"
+            echo "  - Retrieve an assigned object by the file-path"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
     esac
