@@ -49,7 +49,7 @@ usage_status() {
         *)
             echo "Description:"
             echo "  - Retrieve status of every node"
-            echo "  - Retrieve status of a specified node"
+            echo "  - Retrieve status of the specified node"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
     esac
@@ -92,7 +92,7 @@ usage_suspend() {
         *)
             echo "Description:"
             echo "  -  Suspend the storage node"
-            echo "  -  While suspending, it rejects a request"
+            echo "  -  While suspending, it rejects any requests"
             echo "  -  This command does NOT detach the node from the storage cluster"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
@@ -365,10 +365,11 @@ usage_create_user() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Register the new user"
+            echo "  - Generate an S3 key pair (AccessKeyID and SecretAccessKey)"
     esac
 }
 
@@ -379,10 +380,10 @@ usage_delete_user() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Remove the user"
     esac
 }
 
@@ -393,10 +394,10 @@ usage_get_users() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve the list of users"
     esac
 }
 
@@ -407,10 +408,13 @@ usage_update_user_role() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Update the user's role"
+            echo "  - Currently, we are supporting two kinds of roles"
+            echo "    - 1: General user"
+            echo "    - 9: Administrator"
     esac
 }
 
@@ -421,10 +425,10 @@ usage_update_user_password() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Update the user's password"
     esac
 }
 
@@ -435,10 +439,10 @@ usage_add_endpoint() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Register the new endpoint"
     esac
 }
 
@@ -449,10 +453,10 @@ usage_delete_endpoint() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Remove the endpoint"
     esac
 }
 
@@ -463,10 +467,10 @@ usage_get_endpoints() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve the list of endpoints"
     esac
 }
 
@@ -477,10 +481,10 @@ usage_add_bucket() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Create the new bucket"
     esac
 }
 
@@ -491,10 +495,10 @@ usage_delete_bucket() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Remove the bucket and all files stored in the bucket"
     esac
 }
 
@@ -505,10 +509,10 @@ usage_get_bucket() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve the list of the buckets owned by the specified user"
     esac
 }
 
@@ -519,24 +523,24 @@ usage_get_buckets() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve the list of the buckets registered"
     esac
 }
 
 usage_chown_bucket() {
-    USAGE="chown-bucket <bucket> <new-access-key-id>"
+    USAGE="chown-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Change the owner of the bucket"
     esac
 }
 
@@ -547,10 +551,14 @@ usage_update_acl() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - "
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Update the ACL (Access Control List) for the bucket"
+            echo "  - Available ACL list"
+            echo "    - private (default) : No one except the owner has access rights."
+            echo "    - public-read       : All users have READ access."
+            echo "    - public-read-write : All users have READ and WRITE access."
     esac
 }
 
