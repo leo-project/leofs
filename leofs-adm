@@ -300,7 +300,7 @@ usage_purge_cache() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Remove the cache from each gatewau"
+            echo "  - Remove the cache from each gateway"
     esac
 }
 
