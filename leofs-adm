@@ -365,11 +365,11 @@ usage_create_user() {
             echo "$WHITESPACE $USAGE $BAR"
             ;;
         *)
-            echo "Description:"
-            echo "  - Register the new user to LeoFS's manager DB"
-            echo "  - Generate an S3 key pair (AccessKeyID and SecretAccessKey)"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Register a new user to LeoFS's manager DB"
+            echo "  - Generate an S3 key pair (AccessKeyID and SecretAccessKey)"
     esac
 }
 
@@ -484,7 +484,7 @@ usage_add_bucket() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Create the new bucket"
+            echo "  - Create a new bucket"
     esac
 }
 
