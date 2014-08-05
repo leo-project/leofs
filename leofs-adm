@@ -368,7 +368,7 @@ usage_create_user() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Register a new user to LeoFS's manager DB"
+            echo "  - Register the new user"
             echo "  - Generate an S3 key pair (AccessKeyID and SecretAccessKey)"
     esac
 }
@@ -383,7 +383,7 @@ usage_delete_user() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Remove the user from the LeoFS's manager DB"
+            echo "  - Remove the user"
     esac
 }
 
@@ -397,7 +397,7 @@ usage_get_users() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Retrieve the list of users from the LeoFS's manager DB"
+            echo "  - Retrieve the list of users"
     esac
 }
 
@@ -442,7 +442,7 @@ usage_add_endpoint() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Register a new endpoint to the LeoFS's manager DB"
+            echo "  - Register the new endpoint"
     esac
 }
 
@@ -456,7 +456,7 @@ usage_delete_endpoint() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Remove the endpoint from the LeoFS's manager DB"
+            echo "  - Remove the endpoint"
     esac
 }
 
@@ -470,7 +470,7 @@ usage_get_endpoints() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Retrieve the list of endpoints from the LeoFS's manager DB"
+            echo "  - Retrieve the list of endpoints"
     esac
 }
 
