@@ -61,7 +61,7 @@ LeoFS packages have been already provided on the Web. You're able to easily inst
 Build LeoFS From Source (For Developers)
 ----------------------------------------
 
-Here, we explain how to build LeoFS from source.
+Here, we explain how to build LeoFS from source code.
 
 First, you have to install the following packages to build Erlang and LeoFS.
 
