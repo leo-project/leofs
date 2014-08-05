@@ -92,7 +92,7 @@ usage_suspend() {
         *)
             echo "Description:"
             echo "  -  Suspend the storage node"
-            echo "  -  While suspending, it rejects a request"
+            echo "  -  While suspending, it rejects any requests"
             echo "  -  This command does NOT detach the node from the storage cluster"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
