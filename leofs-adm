@@ -412,7 +412,7 @@ usage_update_user_role() {
             echo "  $SCRIPT $USAGE"
             echo "Description:"
             echo "  - Update the user's role"
-            echo "  - Currently, there are two kinds of roles"
+            echo "  - Currently, we are supporting two kinds of roles"
             echo "    - 1: General user"
             echo "    - 9: Administrator"
     esac
