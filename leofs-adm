@@ -157,7 +157,7 @@ usage_recover_file() {
             ;;
         *)
             echo "Description:"
-            echo "  - "
+            echo "  - Recover an inconsistent object specified by the file-path"
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
     esac
