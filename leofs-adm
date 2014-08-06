@@ -63,7 +63,7 @@ usage_status() {
             echo "Usage:"
             echo "  $SCRIPT $USAGE"
             echo "Description:"
-            echo "  - Retrieve status of every node"
+            echo "  - Retrieve status of every node (default)"
             echo "  - Retrieve status of the specified node"
     esac
 }
@@ -230,7 +230,7 @@ usage_compact_start() {
             echo "Description:"
             echo "  - Execute to remove unnecessary objects from the node"
             echo "    - num-of-targets: It controls the number of containers in parallel"
-            echo "    - number-of-compaction-procs: It controls to execute the compaction procs in parallel"
+            echo "    - number-of-compaction-procs: It controls the number of procs to execute the compaction in parallel"
     esac
 }
 
