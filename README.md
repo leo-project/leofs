@@ -141,18 +141,14 @@ $ ls package/
 leo_gateway/  leo_manager_0/  leo_manager_1/  leo_storage/  README.md
 ```
 
-Then, we can start and access LeoFS with the following commands.
+Then, we can start and access LeoFS with the following commands. Also, you're able to easily operate LeoFS with [leofs-adm](https://github.com/leo-project/leofs/blob/master/leofs-adm) script.
 
 ```bash
 $ package/leo_manager_0/bin/leo_manager start
 $ package/leo_manager_1/bin/leo_manager start
 $ package/leo_storage/bin/leo_storage start
 $ package/leo_gateway/bin/leo_gateway start
-$ telnet localhost 10010
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is '^]'.
-status
+$ ./leofs-adm status
 [System config]
                 System version : 1.0.0
                     Cluster Id : leofs_1
@@ -174,6 +170,34 @@ status
  type  |           node           |    state     |  current ring  |   prev ring    |          updated at
 -------+--------------------------+--------------+----------------+----------------+----------------------------
   S    | storage_0@127.0.0.1      | attached     |                |                | 2014-04-16 10:09:59 +0900
+
+$ ./leofs-adm start
+OK
+
+$ ./leofs-adm status
+[System config]
+                System version : 1.0.0
+                    Cluster Id : leofs_1
+                         DC Id : dc_1
+                Total replicas : 1
+           # of successes of R : 1
+           # of successes of W : 1
+           # of successes of D : 1
+ # of DC-awareness replicas    : 0
+                     ring size : 2^128
+             Current ring hash : 941f20fc
+                Prev ring hash : 941f20fc
+[Multi DC replication settings]
+         max # of joinable DCs : 2
+            # of replicas a DC : 1
+
+[Node(s) state]
+-------+--------------------------+--------------+----------------+----------------+----------------------------
+ type  |           node           |    state     |  current ring  |   prev ring    |          updated at
+-------+--------------------------+--------------+----------------+----------------+----------------------------
+  S    | storage_0@127.0.0.1      | running      | 941f20fc       | 941f20fc       | 2014-04-16 10:09:59 +0900
+  G    | gateway_0@127.0.0.1      | running      | 941f20fc       | 941f20fc       | 2014-04-16 10:09:59 +0900
+
 ```
 
 Build a LeoFS Cluster
@@ -198,30 +222,29 @@ You can benchmark LeoFS with <a target="_blank" href="https://github.com/basho/b
 Milestones
 -----------
 
-* *DONE* - 0.16 (Oct 2013)
-    * Increase compatibility S3-APIs#4
-        * the bucket ACLs
-    * Web GUI Console (Option)
-       * Support whole LeoFS Manager's commands
-* *On Going* - 1.0 (Nov 2013 - Apr 2014)
+* *DONE* - 1.0 (Nov 2013 - May 2014)
     * Multi Data Center Replication
     * Increase compatibility S3-APIs#5
         * Other bucket operations
+* *On Going* - 1.1
+    * NFS Support (Alpha)
     * QoS System Phase-1 (LeoInsight - Option)
        * Support *statistics/analyzer*
-* 1.1/1.2 (May 2014 - Sept)
-    * OpenStack Integration
-        * Support for OpenStack Swift-API
-    * Increase compatibility S3-APIs#6
-        * Objects Expiration into the bucket
-        * Versioning
-    * Job Scheduler on the Manager
-        * Support *auto-compaction*
+    * Improve Web GUI Console (Option)
+        * LeoInsight(QoS) Integration
+* 1.2
+    * NFS Support (Beta)
+    * Support *auto-compaction*
     * QoS System Phase-2 (LeoInsight - Option)
        * Support *notifier*
-    * Web GUI Console (Option)
+    * Improve compatibility S3-APIs#6
+        * Objects Expiration into the bucket
+        * Versioning
+    * Improve Web GUI Console (Option)
         * LeoInsight(QoS) Integration
         * Support Log analysis/search
+    * OpenStack Integration
+        * Support for OpenStack Swift-API
 
 
 ## Sponsors
