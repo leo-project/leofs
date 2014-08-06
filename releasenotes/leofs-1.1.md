@@ -8,7 +8,8 @@ Features and Improvements for LeoFS
     * Implement [NFS Support](http://leo-project.net/leofs/docs/configuration_5.html) as one of LeoFS protocols, which is the alpha version.
         * We have checked this mechanism with *CentOS 6.5* and *Ubuntu Server 14.04 LTS* but we're goinng to investigate other OS such as *FreeBSD* and *SmartOS*.
         * **NOTE:** Changed [the configuration of the protocol](https://github.com/leo-project/leo_gateway/blob/develop/priv/leo_gateway.conf#L46) from ``http.handler`` to ``protocol``
-    * Published [leofs-adm](https://github.com/leo-project/leofs/blob/master/leofs-adm), which performs operations for administrator.
+    * The  [leofs-adm](https://github.com/leo-project/leofs/blob/master/leofs-adm) script
+        * This command makes administrative operations of LeoFS very easy.
 * Improved
     * Refactored all libraries and applications using *dialyzer*
 
