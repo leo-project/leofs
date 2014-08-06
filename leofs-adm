@@ -1169,7 +1169,7 @@ case "$1" in
         fi
         ;;
     *)
-        usage
+        usage | less -r
         exit 1
         ;;
 esac
