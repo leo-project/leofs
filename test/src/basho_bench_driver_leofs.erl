@@ -34,6 +34,8 @@
                  path_params,        % Params to append on the path
                  id,                 % Job ID passed through new/1 minus 1 -> 0... concurrent
                  concurrent,         % Number of Job Processed
+                 value_source,       % source for a value generator
+                 value_size_groups,  % size groups for a value generator
                  check_integrity}).  % Params to test data integrity
 
 -define(S3_ACC_KEY,      "05236").
@@ -91,10 +93,14 @@ new(Id) ->
     end,
     CI = basho_bench_config:get(
            check_integrity, false), %% should be false when doing benchmark
+    VSG = basho_bench_config:get(
+           value_size_groups, [{1, 4096, 8192},{1, 16384, 32768}]),
     Concurrent = basho_bench_config:get(concurrent, 0),
     {ok, #state { base_urls = BaseUrls,
                   base_urls_index = BaseUrlsIndex,
                   path_params = Params,
+                  value_source = init_source(),
+                  value_size_groups = size_group_load_config(VSG, []),
                   id = Id - 1,
                   concurrent = Concurrent,
                   check_integrity = CI }}.
@@ -132,10 +138,27 @@ run(get, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent = C
             {error, Reason, S2}
     end;
 
+run(test, _KeyGen, _ValueGen, #state{value_source = VS,
+                                     value_size_groups = VSG} = State) ->
+    {Group, _Val} = value_gen_with_size_groups(VS, VSG),
+    C = case erlang:get({size_groups_counter, Group}) of
+        undefined -> 0;
+        Else -> Else
+    end,
+    erlang:put({size_groups_counter, Group}, C + 1),
+    case C rem 10000 of
+        0 -> io:format(user, "[debug] group:~p counter:~p~n", [Group, C]);
+        _ -> void
+    end,
+    {ok, State};
 
-run(put, KeyGen, ValueGen, #state{check_integrity = CI, id = Id, concurrent = Concurrent} = State) ->
+run(put, KeyGen, _ValueGen, #state{check_integrity = CI,
+                                   value_source = VS,
+                                   value_size_groups = VSG, 
+                                   id = Id,
+                                   concurrent = Concurrent} = State) ->
     Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen),
-    Val = ValueGen(),
+    {_, Val} = value_gen_with_size_groups(VS, VSG),
     {NextUrl, S2} = next_url(State),
     Url = url(NextUrl, Key, State#state.path_params),
     case do_put(Url, [], Val) of
@@ -169,7 +192,39 @@ run(delete, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent 
             {error, Reason, S2}
     end.
 
+%% original value generator which can specify percentage per a size group
+size_group_load_config([], Acc) ->
+    lists:flatten(Acc);
+size_group_load_config([{Weight, Min, Max}|Rest], Acc) ->
+    List = lists:duplicate(Weight, {Min, Max}),
+    size_group_load_config(Rest, [List|Acc]).
 
+init_source() ->
+    SourceSz = basho_bench_config:get(?VAL_GEN_SRC_SIZE, 1048576),
+    {?VAL_GEN_SRC_SIZE, SourceSz, crypto:rand_bytes(SourceSz)}.
+
+data_block({SourceCfg, SourceSz, Source}, BlockSize) ->
+    case SourceSz - BlockSize > 0 of
+        true ->
+            Offset = random:uniform(SourceSz - BlockSize),
+            <<_:Offset/bytes, Slice:BlockSize/bytes, _Rest/binary>> = Source,
+            Slice;
+        false ->
+            ?WARN("~p is too small ~p < ~p\n",
+                  [SourceCfg, SourceSz, BlockSize]),
+            Source
+    end.
+
+value_gen_with_size_groups(ValueSource, SizeGroups) ->
+    Len = length(SizeGroups),
+    Nth = random:uniform(Len),
+    {Min, Max} = lists:nth(Nth, SizeGroups),
+    Size = case Max > Min of
+        true -> random:uniform(Max - Min) + Min - 1;
+        false -> Max
+    end,
+    {Nth, data_block(ValueSource, Size)}.
+   
 %% ====================================================================
 %% Internal functions
 %% ====================================================================
@@ -367,5 +422,4 @@ should_retry(_)                          -> false.
 normalize_error(Method, {'EXIT', {timeout, _}})  -> {error, {Method, timeout}};
 normalize_error(Method, {'EXIT', Reason})        -> {error, {Method, 'EXIT', Reason}};
 normalize_error(Method, {error, Reason})         -> {error, {Method, Reason}}.
-
 

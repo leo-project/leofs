@@ -1,0 +1,1175 @@
+#!/bin/sh
+# -*- tab-width:4;indent-tabs-mode:nil -*-
+# ex: ts=4 sw=4 et
+#======================================================================
+#
+# LeoFS
+#
+# Copyright (c) 2012-2014 Rakuten, Inc.
+#
+# This file is provided to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file
+# except in compliance with the License.  You may obtain
+# a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#======================================================================
+
+bold=`tput bold`
+normal=`tput sgr0`
+
+NONE='\033[00m'
+RED='\033[01;31m'
+GREEN='\033[01;32m'
+YELLOW='\033[01;33m'
+PURPLE='\033[01;35m'
+CYAN='\033[01;36m'
+WHITE='\033[01;37m'
+BOLD='\033[1m'
+UNDERLINE='\033[4m'
+
+SCRIPT=`basename $0`
+IP="127.0.0.1"
+PORT=10010
+
+STORAGE_NODE="<storage-node>"
+GATEWAY_NODE="<gateway-node>"
+FILE_PATH="<file-path>"
+USER_ID="<user-id>"
+ACCESS_KEY_ID="<access-key-id>"
+ENDPOINT="<endpoint>"
+WHITESPACE="         "
+BAR="|"
+
+
+##
+## Usage of each command
+##
+usage_status() {
+    USAGE="status [<node>]"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE"
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve status of every node (default)"
+            echo "  - Retrieve status of the specified node"
+    esac
+}
+
+usage_whereis() {
+    USAGE="whereis $FILE_PATH"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve an assigned object by the file-path"
+    esac
+}
+
+usage_detach() {
+    USAGE="detach $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  -  Remove the storage node in the storage cluster"
+    esac
+}
+
+usage_suspend() {
+    USAGE="suspend $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  -  Suspend the storage node"
+            echo "  -  While suspending, it rejects any requests"
+            echo "  -  This command does NOT detach the node from the storage cluster"
+    esac
+}
+
+usage_resume() {
+    USAGE="resume $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  -  Resume the storage node"
+    esac
+}
+
+usage_start() {
+    USAGE="start"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Launch the storage cluster"
+    esac
+}
+
+usage_rebalance() {
+    USAGE="rebalance"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Commit detached and attached nodes to join the cluster AND "
+            echo "  - Rebalance objects in the cluster based on the updated cluster topology"
+    esac
+}
+
+usage_commit() {
+    echo "Description:"
+    echo "  - "
+    echo "Usage:"
+    echo "  $SCRIPT commit"
+}
+
+usage_recover_file() {
+    USAGE="recover-file $FILE_PATH"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Recover an inconsistent object specified by the file-path"
+    esac
+}
+
+usage_recover_node() {
+    USAGE="recover-node $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Recover all inconsistent objects in the specified node"
+    esac
+}
+
+usage_recover_ring() {
+    USAGE="recover-ring $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Recover rings of the specified node"
+    esac
+}
+
+usage_recover_cluster() {
+    USAGE="recover-cluster <cluster-id>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Recover all inconsistent objects in the specified cluster"
+    esac
+}
+
+usage_compact_start() {
+    USAGE="compact-start <node> (all | <num-of-targets>) [<number-of-compaction-procs>]"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Execute to remove unnecessary objects from the node"
+            echo "    - num-of-targets: It controls the number of containers in parallel"
+            echo "    - number-of-compaction-procs: It controls the number of procs to execute the compaction in parallel"
+    esac
+}
+
+usage_compact_suspend() {
+    USAGE="compact-suspend $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Suspend to execute the compaction"
+    esac
+}
+
+usage_compact_resume() {
+    USAGE="compact-resume $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Resume to execute the compaction"
+    esac
+}
+
+usage_compact_status() {
+    USAGE="compact-status $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - See the current compaction status"
+    esac
+}
+
+usage_du() {
+    USAGE="du [detail] $STORAGE_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Summarize disk usage of the node"
+            echo "  - Display disk usage of the every AVS file if detail specified"
+    esac
+}
+
+usage_purge_cache() {
+    USAGE="purge-cache $FILE_PATH"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Remove the cache from each gateway"
+    esac
+}
+
+usage_remove_gateway() {
+    USAGE="remove-gateway $GATEWAY_NODE"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Remove the gateway node, which is already stopped"
+    esac
+}
+
+usage_backup_mnesia() {
+    USAGE="backup-mnesia <backup-filepath>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Copy LeoFS's manager data to the filepath"
+    esac
+}
+
+usage_restore_mnesia() {
+    USAGE="restore-mnesia <backup-filepath>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Restore LeoFS's manager data from the backup file"
+    esac
+}
+
+usage_update_managers() {
+    USAGE="update-managers <manager-master> <manager-slave>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - "
+    esac
+}
+
+usage_dump_ring() {
+    USAGE="dump-ring (<manager-node>|$STORAGE_NODE|$GATEWAY_NODE)"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Dump the ring data to the local disk"
+    esac
+}
+
+usage_create_user() {
+    USAGE="create-user $USER_ID <password>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Register the new user"
+            echo "  - Generate an S3 key pair (AccessKeyID and SecretAccessKey)"
+    esac
+}
+
+usage_delete_user() {
+    USAGE="delete-user $USER_ID"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Remove the user"
+    esac
+}
+
+usage_get_users() {
+    USAGE="get-users"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve the list of users"
+    esac
+}
+
+usage_update_user_role() {
+    USAGE="update-user-role $USER_ID <role-id>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Update the user's role"
+            echo "  - Currently, we are supporting two kinds of roles"
+            echo "    - 1: General user"
+            echo "    - 9: Administrator"
+    esac
+}
+
+usage_update_user_password() {
+    USAGE="update-user-password $USER_ID <password>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Update the user's password"
+    esac
+}
+
+usage_add_endpoint() {
+    USAGE="add-endpoint $ENDPOINT"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Register the new endpoint"
+    esac
+}
+
+usage_delete_endpoint() {
+    USAGE="delete-endpoint $ENDPOINT"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Remove the endpoint"
+    esac
+}
+
+usage_get_endpoints() {
+    USAGE="get-endpoints"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve the list of endpoints"
+    esac
+}
+
+usage_add_bucket() {
+    USAGE="add-bucket <bucket> $ACCESS_KEY_ID"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Create the new bucket"
+    esac
+}
+
+usage_delete_bucket() {
+    USAGE="delete-bucket <bucket> $ACCESS_KEY_ID"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Remove the bucket and all files stored in the bucket"
+    esac
+}
+
+usage_get_bucket() {
+    USAGE="get-bucket $ACCESS_KEY_ID"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve the list of the buckets owned by the specified user"
+    esac
+}
+
+usage_get_buckets() {
+    USAGE="get-buckets"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Retrieve the list of the buckets registered"
+    esac
+}
+
+usage_chown_bucket() {
+    USAGE="chown-bucket <bucket> $ACCESS_KEY_ID"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Change the owner of the bucket"
+    esac
+}
+
+usage_update_acl() {
+    USAGE="update-acl <bucket> $ACCESS_KEY_ID (private | public-read | public-read-write)"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Update the ACL (Access Control List) for the bucket"
+            echo "  - Available ACL list"
+            echo "    - private (default) : No one except the owner has access rights."
+            echo "    - public-read       : All users have READ access."
+            echo "    - public-read-write : All users have READ and WRITE access."
+    esac
+}
+
+usage_join_cluster() {
+    USAGE="join-cluster <remote-manager-master> <remote-manager-slave>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Begin to communicate between the local cluster and the remote cluster"
+    esac
+}
+
+usage_remove_cluster() {
+    USAGE="remove-cluster <remote-manager-master> <remote-manager-slave>"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE "
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - Terminate to communicate between the local cluster and the remote cluster"
+    esac
+}
+
+usage_cluster_status() {
+    USAGE="cluster-status"
+    case "$1" in
+        min)
+            echo "$WHITESPACE $USAGE"
+            ;;
+        *)
+            echo "Usage:"
+            echo "  $SCRIPT $USAGE"
+            echo "Description:"
+            echo "  - See the state of cluster(s)"
+    esac
+}
+
+
+##
+## Usage of the script
+##
+usage() {
+    echo "usage: ${bold}$SCRIPT${normal} [--help]"
+    echo "                 <command> <args>"
+    echo ""
+    echo "  LeoFS commands are:"
+    echo "      ${UNDERLINE}General Commands:${NONE}"
+    echo "$WHITESPACE version"
+    usage_status min
+    usage_whereis min
+    echo ""
+    echo "      ${UNDERLINE}Storage Operation:${NONE}"
+    usage_detach min
+    usage_suspend min
+    usage_resume min
+    usage_start min
+    usage_rebalance min
+    echo ""
+    echo "      ${UNDERLINE}Recover Commands:${NONE}"
+    usage_recover_file min
+    usage_recover_node min
+    usage_recover_ring min
+    usage_recover_cluster min
+    echo ""
+    echo "      ${UNDERLINE}Compaction Commands:${NONE}"
+    usage_compact_start min
+    usage_compact_suspend min
+    usage_compact_resume min
+    usage_compact_status min
+    usage_du min
+    echo ""
+    echo "      ${UNDERLINE}Gateway Operation:${NONE}"
+    usage_purge_cache min
+    usage_remove_gateway min
+    echo ""
+    echo "      ${UNDERLINE}Manager Maintenance:${NONE}"
+    usage_backup_mnesia min
+    usage_restore_mnesia min
+    usage_update_managers min
+    usage_dump_ring min
+    echo ""
+    echo "      ${UNDERLINE}S3-related Commands:${NONE}"
+    usage_create_user min
+    usage_delete_user min
+    usage_get_users min
+    usage_update_user_role min
+    usage_update_user_password min
+    echo ""
+    usage_add_endpoint min
+    usage_delete_endpoint min
+    usage_get_endpoints min
+    echo ""
+    usage_add_bucket min
+    usage_delete_bucket min
+    usage_get_bucket min
+    usage_get_buckets min
+    usage_chown_bucket min
+    usage_update_acl min
+    echo ""
+    echo "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
+    usage_join_cluster min
+    usage_remove_cluster min
+    usage_cluster_status min
+    echo ""
+}
+
+
+## Send a command to local manager
+send_command() {
+    echo "$@" | nc -C $IP $PORT
+}
+
+
+case "$1" in
+    version)
+        if [ $# -ne 1 ]; then
+            echo "Usage: $SCRIPT version"
+            exit 1
+        fi
+        send_command "$@"
+        ;;
+    status)
+        if [ $# -eq 1 ]; then
+            send_command "$@"
+        elif [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_status
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_status
+        fi
+        ;;
+    whereis)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_whereis
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_whereis
+        fi
+        ;;
+
+    ##
+    ## STORAGE OPERATION
+    ##
+    detach)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_detach
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_detach
+        fi
+        ;;
+    suspend)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_suspend
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_suspend
+        fi
+        ;;
+    resume)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_resume
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_resume
+        fi
+        ;;
+    start)
+        if [ $# -ne 1 ]; then
+            usage_start
+            exit 1
+        fi
+        send_command "$@"
+        ;;
+    rebalance)
+        if [ $# -ne 1 ]; then
+            usage_rebalance
+            exit 1
+        fi
+        send_command "$@"
+        ;;
+    commit)
+        if [ $# -ne 1 ]; then
+            usage_commit
+            exit 1
+        fi
+        send_command "$@"
+        ;;
+
+    ##
+    ## RECOVER
+    ##
+    recover-file)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_recover_file
+                    exit 1
+                    ;;
+                *)
+                    send_command "recover file $2"
+            esac
+        else
+            usage_recover_file
+        fi
+        ;;
+    recover-node)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_recover_node
+                    exit 1
+                    ;;
+                *)
+                    send_command "recover node $2"
+            esac
+        else
+            usage_recover_node
+        fi
+        ;;
+    recover-ring)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_recover_ring
+                    exit 1
+                    ;;
+                *)
+                    send_command "recover ring $2"
+            esac
+        else
+            usage_recover_ring
+        fi
+        ;;
+    recover-cluster)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_recover_cluster
+                    exit 1
+                    ;;
+                *)
+                    send_command "recover cluster $2"
+            esac
+        else
+            usage_recover_cluster
+        fi
+        ;;
+
+    ##
+    ## COMPACTION
+    ##
+    compact-start)
+        if [ $# -eq 3 ]; then
+            send_command "compact start $2 $3"
+        elif [ $# -eq 4 ]; then
+            send_command "compact start $2 $3 $4"
+        else
+            usage_compact_start
+            exit 1
+        fi
+        ;;
+    compact-suspend)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_compact_suspend
+                    exit 1
+                    ;;
+                *)
+                    send_command "compact suspend $2"
+            esac
+        else
+            usage_compact_suspend
+        fi
+        ;;
+    compact-resume)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_compact_resume
+                    exit 1
+                    ;;
+                *)
+                    send_command "compact resume " $2
+            esac
+        else
+            usage_compact_resume
+        fi
+        ;;
+    compact-status)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_compact_status
+                    exit 1
+                    ;;
+                *)
+                    send_command "compact status " $2
+            esac
+        else
+            usage_compact_status
+        fi
+        ;;
+    du)
+        if [ $# -ge 2 ]; then
+            case "$2" in
+                --help)
+                    usage_du
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_du
+        fi
+        ;;
+
+    ##
+    ## GATEWAY
+    ##
+    purge-cache)
+        if [ $# -eq 2 ]; then
+            send_command "purge $2"
+        else
+            usage_purge_cache
+        fi
+        ;;
+    remove-gateway)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_remove_gateway
+                    exit 1
+                    ;;
+                *)
+                    send_command "remove $2"
+            esac
+        else
+            usage_remove_gateway
+        fi
+        ;;
+
+    ##
+    ## MNESIA Maintenance
+    ##
+    backup-mnesia)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_backup_mnesia
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_backup_mnesia
+        fi
+        ;;
+    restore-mnesia)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_restore_mnesia
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_restore_mnesia
+        fi
+        ;;
+
+    ##
+    ## MANAGER
+    ##
+    update-managers)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_update_managers
+        fi
+        ;;
+    dump-ring)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_dump_ring
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_dump_ring
+        fi
+        ;;
+    ##
+    ## S3-related
+    ##
+    create-user)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_create_user
+        fi
+        ;;
+    delete-user)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_delete_user
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_delete_user
+        fi
+        ;;
+    get-users)
+        if [ $# -eq 1 ]; then
+            send_command "$@"
+        else
+            usage_get_users
+        fi
+        ;;
+    update-user-role)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_update_user_role
+        fi
+        ;;
+    update-user-password)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_update_user_password
+        fi
+        ;;
+    add-endpoint)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_add_endpoint
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_add_endpoint
+        fi
+        ;;
+    delete-endpoint)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_delete_endpoint
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_delete_endpoint
+        fi
+        ;;
+    get-endpoints)
+        if [ $# -eq 1 ]; then
+            send_command "$@"
+        else
+            usage_get_endpoints
+        fi
+        ;;
+    add-bucket)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_add_bucket
+        fi
+        ;;
+    delete-bucket)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_delete_bucket
+        fi
+        ;;
+    get-bucket)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_get_bucket
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_get_bucket
+        fi
+        ;;
+    get-buckets)
+        if [ $# -eq 1 ]; then
+            send_command "$@"
+        else
+            usage_get_buckets
+        fi
+        ;;
+    chown-bucket)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_chown_bucket
+        fi
+        ;;
+    update-acl)
+        if [ $# -eq 4 ]; then
+            send_command "$@"
+        else
+            usage_update_acl
+        fi
+        ;;
+
+    ##
+    ## MDC-Replication
+    ##
+    join-cluster)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_join_cluster
+        fi
+        ;;
+    remove-cluster)
+        if [ $# -eq 3 ]; then
+            send_command "$@"
+        else
+            usage_remove_cluster
+        fi
+        ;;
+    cluster-status)
+        if [ $# -eq 1 ]; then
+            send_command "$@"
+        else
+            usage_cluster_status
+        fi
+        ;;
+    *)
+        usage | less -r
+        exit 1
+        ;;
+esac
