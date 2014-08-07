@@ -49,6 +49,15 @@ ENDPOINT="<endpoint>"
 WHITESPACE="         "
 BAR="|"
 
+OS=`uname -o`
+NC_ARGS=""
+case $OS in
+    FreeBSD)
+        NC_ARGS=""
+        ;;
+    *)
+        NC_ARGS="-C"
+esac
 
 ##
 ## Usage of each command
@@ -693,7 +702,7 @@ usage() {
 
 ## Send a command to local manager
 send_command() {
-    echo "$@" | nc -C $IP $PORT
+    echo "$@" | nc $NC_ARGS $IP $PORT
 }
 
 
