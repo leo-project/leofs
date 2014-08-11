@@ -49,7 +49,7 @@ ENDPOINT="<endpoint>"
 WHITESPACE="         "
 BAR="|"
 
-OS=`uname -o`
+OS=`uname -s`
 NC_ARGS=""
 case $OS in
     FreeBSD)
