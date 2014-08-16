@@ -37,8 +37,13 @@ BOLD='\033[1m'
 UNDERLINE='\033[4m'
 
 SCRIPT=`basename $0`
-IP="127.0.0.1"
-PORT=10010
+
+: ${LEOFS_ADM_CFG=$HOME/.${SCRIPT}rc}
+
+test -r "${LEOFS_ADM_CFG}" && . "${LEOFS_ADM_CFG}"
+
+: ${LEOFS_ADM_HOST=127.0.0.1}
+: ${LEOFS_ADM_PORT=10010}
 
 STORAGE_NODE="<storage-node>"
 GATEWAY_NODE="<gateway-node>"
@@ -641,7 +646,7 @@ usage_cluster_status() {
 ##
 usage() {
     echo -e "usage: ${bold}$SCRIPT${normal} [--help]"
-    echo -e "                 <command> <args>"
+    echo -e "       ${bold}$SCRIPT${normal} [-h <host>] [-p <port>] <command> <args>"
     echo -e ""
     echo -e "  LeoFS commands are:"
     echo -e "      ${UNDERLINE}General Commands:${NONE}"
@@ -707,9 +712,28 @@ usage() {
 
 ## Send a command to local manager
 send_command() {
-    echo "$@" | nc $NC_ARGS $IP $PORT
+    echo "$@" | nc $NC_ARGS $LEOFS_ADM_HOST $LEOFS_ADM_PORT
 }
 
+while test -n "$1"; do
+    case "$1" in
+        --help)
+            usage | less -r
+            exit 0
+            ;;
+        -h)
+            LEOFS_ADM_HOST="$2"
+            shift
+            ;;
+        -p)
+            LEOFS_ADM_PORT="$2"
+            shift
+            ;;
+        *)
+            break
+    esac
+    shift
+done
 
 case "$1" in
     version)
