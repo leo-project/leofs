@@ -53,7 +53,12 @@ OS=`uname -s`
 NC_ARGS=""
 case $OS in
     FreeBSD)
-        NC_ARGS=""
+        # Use -N flag (shutdown(2) after EOF on the input) if available
+        if nc -h 2>&1 | grep -q 'usage: nc \[[^]]*N'; then
+            NC_ARGS="-N"
+        else
+            NC_ARGS=""
+        fi
         ;;
     *)
         NC_ARGS="-C"
