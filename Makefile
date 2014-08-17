@@ -27,6 +27,8 @@ generate:
 release:
 	@./rebar compile
 	rm -rf package/leo_*
+	cp README.md package/
+	cp leofs-adm package/
 	##
 	## manager-master
 	##
