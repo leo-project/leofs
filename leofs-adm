@@ -27,12 +27,6 @@ bold=`tput bold`
 normal=`tput sgr0`
 
 NONE='\033[00m'
-RED='\033[01;31m'
-GREEN='\033[01;32m'
-YELLOW='\033[01;33m'
-PURPLE='\033[01;35m'
-CYAN='\033[01;36m'
-WHITE='\033[01;37m'
 BOLD='\033[1m'
 UNDERLINE='\033[4m'
 
@@ -54,6 +48,10 @@ ENDPOINT="<endpoint>"
 WHITESPACE="         "
 BAR="|"
 
+
+##
+## Set the netcat command's arguments
+##
 OS=`uname -s`
 NC_ARGS=""
 case $OS in
@@ -69,6 +67,20 @@ case $OS in
         NC_ARGS="-C"
 esac
 
+
+##
+## Output text
+##
+output() {
+    case $OS in
+        FreeBSD)
+            echo -e "$1"
+            ;;
+        *)
+            echo "$1"
+    esac
+}
+
 ##
 ## Usage of each command
 ##
@@ -76,14 +88,14 @@ usage_status() {
     USAGE="status [<node>]"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE"
+            output "$WHITESPACE $USAGE"
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Retrieve status of every node (default)"
-            echo "  - Retrieve status of the specified node"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Retrieve status of every node (default)"
+            output "  - Retrieve status of the specified node"
     esac
 }
 
@@ -91,13 +103,13 @@ usage_whereis() {
     USAGE="whereis $FILE_PATH"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Retrieve an assigned object by the file-path"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Retrieve an assigned object by the file-path"
     esac
 }
 
@@ -105,13 +117,13 @@ usage_detach() {
     USAGE="detach $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  -  Remove the storage node in the storage cluster"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  -  Remove the storage node in the storage cluster"
     esac
 }
 
@@ -119,15 +131,15 @@ usage_suspend() {
     USAGE="suspend $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  -  Suspend the storage node"
-            echo "  -  While suspending, it rejects any requests"
-            echo "  -  This command does NOT detach the node from the storage cluster"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  -  Suspend the storage node"
+            output "  -  While suspending, it rejects any requests"
+            output "  -  This command does NOT detach the node from the storage cluster"
     esac
 }
 
@@ -135,13 +147,13 @@ usage_resume() {
     USAGE="resume $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  -  Resume the storage node"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  -  Resume the storage node"
     esac
 }
 
@@ -149,13 +161,13 @@ usage_start() {
     USAGE="start"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Launch the storage cluster"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Launch the storage cluster"
     esac
 }
 
@@ -163,35 +175,35 @@ usage_rebalance() {
     USAGE="rebalance"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Commit detached and attached nodes to join the cluster AND "
-            echo "  - Rebalance objects in the cluster based on the updated cluster topology"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Commit detached and attached nodes to join the cluster AND "
+            output "  - Rebalance objects in the cluster based on the updated cluster topology"
     esac
 }
 
 usage_commit() {
-    echo "Description:"
-    echo "  - "
-    echo "Usage:"
-    echo "  $SCRIPT commit"
+    output "Description:"
+    output "  - "
+    output "Usage:"
+    output "  $SCRIPT commit"
 }
 
 usage_recover_file() {
     USAGE="recover-file $FILE_PATH"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Recover an inconsistent object specified by the file-path"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Recover an inconsistent object specified by the file-path"
     esac
 }
 
@@ -199,13 +211,13 @@ usage_recover_node() {
     USAGE="recover-node $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Recover all inconsistent objects in the specified node"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Recover all inconsistent objects in the specified node"
     esac
 }
 
@@ -213,13 +225,13 @@ usage_recover_ring() {
     USAGE="recover-ring $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Recover rings of the specified node"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Recover rings of the specified node"
     esac
 }
 
@@ -227,13 +239,13 @@ usage_recover_cluster() {
     USAGE="recover-cluster <cluster-id>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Recover all inconsistent objects in the specified cluster"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Recover all inconsistent objects in the specified cluster"
     esac
 }
 
@@ -241,15 +253,15 @@ usage_compact_start() {
     USAGE="compact-start <node> (all | <num-of-targets>) [<number-of-compaction-procs>]"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Execute to remove unnecessary objects from the node"
-            echo "    - num-of-targets: It controls the number of containers in parallel"
-            echo "    - number-of-compaction-procs: It controls the number of procs to execute the compaction in parallel"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Remove unnecessary objects from the node"
+            output "    - num-of-targets: It controls the number of containers in parallel"
+            output "    - number-of-compaction-procs: It controls the number of procs to execute the compaction in parallel"
     esac
 }
 
@@ -257,13 +269,13 @@ usage_compact_suspend() {
     USAGE="compact-suspend $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Suspend to execute the compaction"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Suspend the compaction"
     esac
 }
 
@@ -271,13 +283,13 @@ usage_compact_resume() {
     USAGE="compact-resume $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Resume to execute the compaction"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Resume the compaction"
     esac
 }
 
@@ -285,13 +297,13 @@ usage_compact_status() {
     USAGE="compact-status $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - See the current compaction status"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - See the current compaction status"
     esac
 }
 
@@ -299,14 +311,14 @@ usage_du() {
     USAGE="du [detail] $STORAGE_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Summarize disk usage of the node"
-            echo "  - Display disk usage of the every AVS file if detail specified"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Summarize disk usage of the node"
+            output "  - Display disk usage of the every AVS file if detail specified"
     esac
 }
 
@@ -314,13 +326,13 @@ usage_purge_cache() {
     USAGE="purge-cache $FILE_PATH"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Remove the cache from each gateway"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Remove the cache from each gateway"
     esac
 }
 
@@ -328,13 +340,13 @@ usage_remove_gateway() {
     USAGE="remove-gateway $GATEWAY_NODE"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Remove the gateway node, which is already stopped"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Remove the gateway node, which is already stopped"
     esac
 }
 
@@ -342,13 +354,13 @@ usage_backup_mnesia() {
     USAGE="backup-mnesia <backup-filepath>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Copy LeoFS's manager data to the filepath"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Copy LeoFS's manager data to the filepath"
     esac
 }
 
@@ -356,13 +368,13 @@ usage_restore_mnesia() {
     USAGE="restore-mnesia <backup-filepath>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Restore LeoFS's manager data from the backup file"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Restore LeoFS's manager data from the backup file"
     esac
 }
 
@@ -370,13 +382,14 @@ usage_update_managers() {
     USAGE="update-managers <manager-master> <manager-slave>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - "
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Update LeoFS Manager nodes"
+            output "  - Destribute the new LeoFS Manager nodes to LeoFS Storage and Gateway"
     esac
 }
 
@@ -384,13 +397,13 @@ usage_dump_ring() {
     USAGE="dump-ring (<manager-node>|$STORAGE_NODE|$GATEWAY_NODE)"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Dump the ring data to the local disk"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Dump the ring data to the local disk"
     esac
 }
 
@@ -398,14 +411,14 @@ usage_create_user() {
     USAGE="create-user $USER_ID <password>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Register the new user"
-            echo "  - Generate an S3 key pair (AccessKeyID and SecretAccessKey)"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Register the new user"
+            output "  - Generate an S3 key pair (AccessKeyID and SecretAccessKey)"
     esac
 }
 
@@ -413,13 +426,13 @@ usage_delete_user() {
     USAGE="delete-user $USER_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Remove the user"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Remove the user"
     esac
 }
 
@@ -427,13 +440,13 @@ usage_get_users() {
     USAGE="get-users"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Retrieve the list of users"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Retrieve the list of users"
     esac
 }
 
@@ -441,16 +454,16 @@ usage_update_user_role() {
     USAGE="update-user-role $USER_ID <role-id>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Update the user's role"
-            echo "  - Currently, we are supporting two kinds of roles"
-            echo "    - 1: General user"
-            echo "    - 9: Administrator"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Update the user's role"
+            output "  - Currently, we are supporting two kinds of roles"
+            output "    - 1: General user"
+            output "    - 9: Administrator"
     esac
 }
 
@@ -458,13 +471,13 @@ usage_update_user_password() {
     USAGE="update-user-password $USER_ID <password>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Update the user's password"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Update the user's password"
     esac
 }
 
@@ -472,13 +485,13 @@ usage_add_endpoint() {
     USAGE="add-endpoint $ENDPOINT"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Register the new endpoint"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Register the new endpoint"
     esac
 }
 
@@ -486,13 +499,13 @@ usage_delete_endpoint() {
     USAGE="delete-endpoint $ENDPOINT"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Remove the endpoint"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Remove the endpoint"
     esac
 }
 
@@ -500,13 +513,13 @@ usage_get_endpoints() {
     USAGE="get-endpoints"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Retrieve the list of endpoints"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Retrieve the list of endpoints"
     esac
 }
 
@@ -514,13 +527,13 @@ usage_add_bucket() {
     USAGE="add-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Create the new bucket"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Create the new bucket"
     esac
 }
 
@@ -528,13 +541,13 @@ usage_delete_bucket() {
     USAGE="delete-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Remove the bucket and all files stored in the bucket"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Remove the bucket and all files stored in the bucket"
     esac
 }
 
@@ -542,13 +555,13 @@ usage_get_bucket() {
     USAGE="get-bucket $ACCESS_KEY_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Retrieve the list of the buckets owned by the specified user"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Retrieve the list of the buckets owned by the specified user"
     esac
 }
 
@@ -556,13 +569,13 @@ usage_get_buckets() {
     USAGE="get-buckets"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Retrieve the list of the buckets registered"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Retrieve the list of the buckets registered"
     esac
 }
 
@@ -570,13 +583,13 @@ usage_chown_bucket() {
     USAGE="chown-bucket <bucket> $ACCESS_KEY_ID"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Change the owner of the bucket"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Change the owner of the bucket"
     esac
 }
 
@@ -584,17 +597,17 @@ usage_update_acl() {
     USAGE="update-acl <bucket> $ACCESS_KEY_ID (private | public-read | public-read-write)"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Update the ACL (Access Control List) for the bucket"
-            echo "  - Available ACL list"
-            echo "    - private (default) : No one except the owner has access rights."
-            echo "    - public-read       : All users have READ access."
-            echo "    - public-read-write : All users have READ and WRITE access."
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Update the ACL (Access Control List) for the bucket"
+            output "  - Available ACL list"
+            output "    - private (default) : No one except the owner has access rights."
+            output "    - public-read       : All users have READ access."
+            output "    - public-read-write : All users have READ and WRITE access."
     esac
 }
 
@@ -602,13 +615,13 @@ usage_join_cluster() {
     USAGE="join-cluster <remote-manager-master> <remote-manager-slave>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Begin to communicate between the local cluster and the remote cluster"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Begin to communicate between the local cluster and the remote cluster"
     esac
 }
 
@@ -616,13 +629,13 @@ usage_remove_cluster() {
     USAGE="remove-cluster <remote-manager-master> <remote-manager-slave>"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE "
+            output "$WHITESPACE $USAGE "
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - Terminate to communicate between the local cluster and the remote cluster"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Terminate to communicate between the local cluster and the remote cluster"
     esac
 }
 
@@ -630,13 +643,13 @@ usage_cluster_status() {
     USAGE="cluster-status"
     case "$1" in
         min)
-            echo "$WHITESPACE $USAGE"
+            output "$WHITESPACE $USAGE"
             ;;
         *)
-            echo "Usage:"
-            echo "  $SCRIPT $USAGE"
-            echo "Description:"
-            echo "  - See the state of cluster(s)"
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - See the state of cluster(s)"
     esac
 }
 
@@ -645,68 +658,68 @@ usage_cluster_status() {
 ## Usage of the script
 ##
 usage() {
-    echo -e "usage: ${bold}$SCRIPT${normal} [--help]"
-    echo -e "       ${bold}$SCRIPT${normal} [-h <host>] [-p <port>] <command> <args>"
-    echo -e ""
-    echo -e "  LeoFS commands are:"
-    echo -e "      ${UNDERLINE}General Commands:${NONE}"
-    echo -e "$WHITESPACE version"
+    output "usage: ${bold}$SCRIPT${normal} [--help]"
+    output "       ${bold}$SCRIPT${normal} [-h <host>] [-p <port>] <command> <args>"
+    output ""
+    output "  LeoFS commands are:"
+    output "      ${UNDERLINE}General Commands:${NONE}"
+    output "$WHITESPACE version"
     usage_status min
     usage_whereis min
-    echo -e ""
-    echo -e "      ${UNDERLINE}Storage Operation:${NONE}"
+    output ""
+    output "      ${UNDERLINE}Storage Operation:${NONE}"
     usage_detach min
     usage_suspend min
     usage_resume min
     usage_start min
     usage_rebalance min
-    echo -e ""
-    echo -e "      ${UNDERLINE}Recover Commands:${NONE}"
+    output ""
+    output "      ${UNDERLINE}Recover Commands:${NONE}"
     usage_recover_file min
     usage_recover_node min
     usage_recover_ring min
     usage_recover_cluster min
-    echo -e ""
-    echo -e "      ${UNDERLINE}Compaction Commands:${NONE}"
+    output ""
+    output "      ${UNDERLINE}Compaction Commands:${NONE}"
     usage_compact_start min
     usage_compact_suspend min
     usage_compact_resume min
     usage_compact_status min
     usage_du min
-    echo -e ""
-    echo -e "      ${UNDERLINE}Gateway Operation:${NONE}"
+    output ""
+    output "      ${UNDERLINE}Gateway Operation:${NONE}"
     usage_purge_cache min
     usage_remove_gateway min
-    echo -e ""
-    echo -e "      ${UNDERLINE}Manager Maintenance:${NONE}"
+    output ""
+    output "      ${UNDERLINE}Manager Maintenance:${NONE}"
     usage_backup_mnesia min
     usage_restore_mnesia min
     usage_update_managers min
     usage_dump_ring min
-    echo -e ""
-    echo -e "      ${UNDERLINE}S3-related Commands:${NONE}"
+    output ""
+    output "      ${UNDERLINE}S3-related Commands:${NONE}"
     usage_create_user min
     usage_delete_user min
     usage_get_users min
     usage_update_user_role min
     usage_update_user_password min
-    echo -e ""
+    output ""
     usage_add_endpoint min
     usage_delete_endpoint min
     usage_get_endpoints min
-    echo -e ""
+    output ""
     usage_add_bucket min
     usage_delete_bucket min
     usage_get_bucket min
     usage_get_buckets min
     usage_chown_bucket min
     usage_update_acl min
-    echo -e ""
-    echo -e "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
+    output ""
+    output "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
     usage_join_cluster min
     usage_remove_cluster min
     usage_cluster_status min
-    echo -e ""
+    output ""
 }
 
 
