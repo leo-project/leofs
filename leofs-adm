@@ -37,8 +37,13 @@ BOLD='\033[1m'
 UNDERLINE='\033[4m'
 
 SCRIPT=`basename $0`
-IP="127.0.0.1"
-PORT=10010
+
+: ${LEOFS_ADM_CFG=$HOME/.${SCRIPT}rc}
+
+test -r "${LEOFS_ADM_CFG}" && . "${LEOFS_ADM_CFG}"
+
+: ${LEOFS_ADM_HOST=127.0.0.1}
+: ${LEOFS_ADM_PORT=10010}
 
 STORAGE_NODE="<storage-node>"
 GATEWAY_NODE="<gateway-node>"
@@ -53,7 +58,12 @@ OS=`uname -s`
 NC_ARGS=""
 case $OS in
     FreeBSD)
-        NC_ARGS=""
+        # Use -N flag (shutdown(2) after EOF on the input) if available
+        if nc -h 2>&1 | grep -q 'usage: nc \[[^]]*N'; then
+            NC_ARGS="-N"
+        else
+            NC_ARGS=""
+        fi
         ;;
     *)
         NC_ARGS="-C"
@@ -635,76 +645,95 @@ usage_cluster_status() {
 ## Usage of the script
 ##
 usage() {
-    echo "usage: ${bold}$SCRIPT${normal} [--help]"
-    echo "                 <command> <args>"
-    echo ""
-    echo "  LeoFS commands are:"
-    echo "      ${UNDERLINE}General Commands:${NONE}"
-    echo "$WHITESPACE version"
+    echo -e "usage: ${bold}$SCRIPT${normal} [--help]"
+    echo -e "       ${bold}$SCRIPT${normal} [-h <host>] [-p <port>] <command> <args>"
+    echo -e ""
+    echo -e "  LeoFS commands are:"
+    echo -e "      ${UNDERLINE}General Commands:${NONE}"
+    echo -e "$WHITESPACE version"
     usage_status min
     usage_whereis min
-    echo ""
-    echo "      ${UNDERLINE}Storage Operation:${NONE}"
+    echo -e ""
+    echo -e "      ${UNDERLINE}Storage Operation:${NONE}"
     usage_detach min
     usage_suspend min
     usage_resume min
     usage_start min
     usage_rebalance min
-    echo ""
-    echo "      ${UNDERLINE}Recover Commands:${NONE}"
+    echo -e ""
+    echo -e "      ${UNDERLINE}Recover Commands:${NONE}"
     usage_recover_file min
     usage_recover_node min
     usage_recover_ring min
     usage_recover_cluster min
-    echo ""
-    echo "      ${UNDERLINE}Compaction Commands:${NONE}"
+    echo -e ""
+    echo -e "      ${UNDERLINE}Compaction Commands:${NONE}"
     usage_compact_start min
     usage_compact_suspend min
     usage_compact_resume min
     usage_compact_status min
     usage_du min
-    echo ""
-    echo "      ${UNDERLINE}Gateway Operation:${NONE}"
+    echo -e ""
+    echo -e "      ${UNDERLINE}Gateway Operation:${NONE}"
     usage_purge_cache min
     usage_remove_gateway min
-    echo ""
-    echo "      ${UNDERLINE}Manager Maintenance:${NONE}"
+    echo -e ""
+    echo -e "      ${UNDERLINE}Manager Maintenance:${NONE}"
     usage_backup_mnesia min
     usage_restore_mnesia min
     usage_update_managers min
     usage_dump_ring min
-    echo ""
-    echo "      ${UNDERLINE}S3-related Commands:${NONE}"
+    echo -e ""
+    echo -e "      ${UNDERLINE}S3-related Commands:${NONE}"
     usage_create_user min
     usage_delete_user min
     usage_get_users min
     usage_update_user_role min
     usage_update_user_password min
-    echo ""
+    echo -e ""
     usage_add_endpoint min
     usage_delete_endpoint min
     usage_get_endpoints min
-    echo ""
+    echo -e ""
     usage_add_bucket min
     usage_delete_bucket min
     usage_get_bucket min
     usage_get_buckets min
     usage_chown_bucket min
     usage_update_acl min
-    echo ""
-    echo "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
+    echo -e ""
+    echo -e "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
     usage_join_cluster min
     usage_remove_cluster min
     usage_cluster_status min
-    echo ""
+    echo -e ""
 }
 
 
 ## Send a command to local manager
 send_command() {
-    echo "$@" | nc $NC_ARGS $IP $PORT
+    echo "$@" | nc $NC_ARGS $LEOFS_ADM_HOST $LEOFS_ADM_PORT
 }
 
+while test -n "$1"; do
+    case "$1" in
+        --help)
+            usage | less -r
+            exit 0
+            ;;
+        -h)
+            LEOFS_ADM_HOST="$2"
+            shift
+            ;;
+        -p)
+            LEOFS_ADM_PORT="$2"
+            shift
+            ;;
+        *)
+            break
+    esac
+    shift
+done
 
 case "$1" in
     version)
