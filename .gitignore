@@ -3,9 +3,7 @@ deps/
 rel/leo_manager/leo_manager/
 rel/leo_gateway/leo_gateway/
 rel/leo_storage/leo_storage/
-package/leo_manager*
-package/leo_storage*
-package/leo_gateway*
+package/
 
 rel/leo_manager/files/leo_manager.conf
 rel/leo_manager/files/leo_manager.schema
