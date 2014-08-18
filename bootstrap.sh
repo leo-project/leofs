@@ -3,7 +3,7 @@
 #
 # LeoFS
 #
-# Copyright (c) 2012-2013 Rakuten, Inc.
+# Copyright (c) 2012-2014 Rakuten, Inc.
 #
 # This file is provided to you under the Apache License,
 # Version 2.0 (the "License"); you may not use this file
@@ -34,7 +34,7 @@ if [ $1 != "build" -a $1 != "start" -a $1 != "stop" ]; then
     exit 1
 fi
 
-## Stop processes
+## Stop the processes
 package/leo_gateway_0/bin/leo_gateway stop
 package/leo_storage_0/bin/leo_storage stop
 package/leo_storage_1/bin/leo_storage stop
@@ -46,12 +46,12 @@ if [ $1 = "stop" ]; then
     exit 1
 fi
 
-## Generate packages
+## Generate the packages
 rm -rf package/leo_*
 ./rebar compile
 make release
 
-## Copy storage-files
+## Copy the storage-files
 cp -r package/leo_storage package/leo_storage_0
 cp -r package/leo_storage package/leo_storage_1
 cp -r package/leo_storage package/leo_storage_2
@@ -67,7 +67,7 @@ cp priv/test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
 cp priv/test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
 cp priv/test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
 
-## launch
+## Launch the applications 
 if [ $1 = "build" ]; then
     exit 1
 fi
@@ -84,14 +84,14 @@ sleep 1
 ./package/leo_storage_3/bin/leo_storage start
 
 echo ":::"
-echo "::: starting storages :::"
+echo "::: Starting the storages :::"
 echo ":::"
 
 sleep 30
 ./package/leo_gateway_0/bin/leo_gateway start
 
-echo start | nc -C 127.0.0.1 10010
+./leofs-adm start
 sleep 1
-echo status | nc -C 127.0.0.1 10010
+./leofs-adm status
 
 echo "*** leofs - Finished :) ***"
