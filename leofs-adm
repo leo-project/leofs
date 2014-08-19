@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # -*- tab-width:4;indent-tabs-mode:nil -*-
 # ex: ts=4 sw=4 et
 #======================================================================
@@ -72,13 +72,7 @@ esac
 ## Output text
 ##
 output() {
-    case $OS in
-        FreeBSD)
-            echo -e "$1"
-            ;;
-        *)
-            echo "$1"
-    esac
+    echo -e "$1"
 }
 
 ##
