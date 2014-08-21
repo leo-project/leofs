@@ -1,6 +1,57 @@
 CHANGELOG
 =========
 
+1.1.1 (Aug 21, 2014)
+=========================
+
+* Improved
+    * [leofs-adm](https://github.com/leo-project/leofs/blob/master/leofs-adm)
+        * Supported FreeBSD
+        * Able to set *host* and *port* of the Manager node
+    * The compaction mechanism
+        * Added *raw-file-path* in collapsed-object-log during executing data-compaction
+* Fixed Bugs
+    * [#219](https://github.com/leo-project/leofs/issues/219) ``leo_gateway`` ``leo_s3_libs`` - Access Denied error when putting a file to a bucket with the same name
+    * [#222](https://github.com/leo-project/leofs/issues/222) ``leo_gateway`` - Discard unnecessary object with the compaction after failure of storing a large object
+    * [#223](https://github.com/leo-project/leofs/issues/223) ``leo_object_storage`` - Not match checksum of an large-object-parent after executed the rebalance command and the recover-node command
+    * ``leo_manager`` - Manager node could not modify Gateway node's ring-hash.
+        * The issue appeared v1.1.0.
+    * ``leo_object_storage`` - The compaction command might fail when an object container has broken objects at its head
+        * It's absolutely rare case
+    * ``leo_redundant_manager`` - Manager could not generate RING when taking over objects from a detach-node to a attach-node (a new node)
+* Used libraries
+    * leo project
+        * [leo_backend-db v1.0.8](https://github.com/leo-project/leo_backend_db.git)
+        * [leo_cache v0.4.23](https://github.com/leo-project/leo_cache.git)
+        * [leo_commons v1.0.4](https://github.com/leo-project/leo_commons.git)
+        * [leo_dcerl v0.2.10](https://github.com/leo-project/leo_dcerl.git)
+        * [leo_logger v1.0.4](https://github.com/leo-project/leo_logger.git)
+        * [leo_mcerl v0.4.0](https://github.com/leo-project/leo_mcerl.git)
+        * [leo_mq v1.0.8](https://github.com/leo-project/leo_mq.git)
+        * [leo_object_storage v1.1.2](https://github.com/leo-project/leo_object_storage.git)
+        * [leo_ordning_reda v0.10.5](https://github.com/leo-project/leo_ordning_reda.git)
+        * [leo_redundant_manager v1.8.6](https://github.com/leo-project/leo_redundant_manager.git)
+        * [leo_rpc v0.8.8](https://github.com/leo-project/leo_rpc.git)
+        * [leo_pod v0.6.2](https://github.com/leo-project/leo_pod.git)
+        * [leo_s3_libs v1.1.1](https://github.com/leo-project/leo_s3_libs.git)
+        * [leo_statistics v1.0.5](https://github.com/leo-project/leo_statistics.git)
+        * [savanna_agent v0.4.2](https://github.com/leo-project/savanna_agent.git)
+        * [savanna_commons v0.8.4](https://github.com/leo-project/savanna_commons.git)
+        * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen.git)
+        * [nfs_rpc_server v0.2.2](https://github.com/leo-project/nfs_rpc_server.git)
+        * [leo_gateway v1.1.1](https://github.com/leo-project/leo_gateway.git)
+        * [leo_manager v1.1.1](https://github.com/leo-project/leo_manager.git)
+        * [leo_storage v1.1.1](https://github.com/leo-project/leo_storage.git)
+    * others
+        * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
+        * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+        * [cowlib v0.6.2](https://github.com/extend/cowboy.git)
+        * [eleveldb v1.4.10](https://github.com/basho/eleveldb.git)
+        * [folsom v0.8.1](https://github.com/boundary/folsom.git)
+        * [jiffy v0.8.5](https://github.com/davisp/jiffy.git)
+        * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
 1.1.0 (Aug 6, 2014)
 =========================
 
@@ -13,11 +64,11 @@ CHANGELOG
 * Improved
     * Refactored all libraries and applications using *dialyzer*
 * Fixed Bugs
-    * ``leo_manager`` [#142](https://github.com/leo-project/leofs/issues/142) Unknown Behavior - Could not retrieve RING
-    * ``leo_gateway`` [#193](https://github.com/leo-project/leofs/issues/193) PUT with REPLACE could leave a source file
-    * ``leo_storage`` [#199](https://github.com/leo-project/leofs/issues/199) An object in a sub directory (2 layer and over) could not be removed with DragonDisk
-    * ``leo_object_storage`` [#207](https://github.com/leo-project/leofs/issues/207) Compaction may fail when an AVS is corrupted
-    * ``leo_object_storage`` [#208](https://github.com/leo-project/leofs/issues/208) Compaction may leave stale objects which size are larger than the chunk size
+    * [#142](https://github.com/leo-project/leofs/issues/142) ``leo_manager`` - Unknown Behavior - Could not retrieve RING
+    * [#193](https://github.com/leo-project/leofs/issues/193) ``leo_gateway`` - PUT with REPLACE could leave a source file
+    * [#199](https://github.com/leo-project/leofs/issues/199) ``leo_storage`` - An object in a sub directory (2 layer and over) could not be removed with DragonDisk
+    * [#207](https://github.com/leo-project/leofs/issues/207) ``leo_object_storage`` - Compaction may fail when an AVS is corrupted
+    * [#208](https://github.com/leo-project/leofs/issues/208) ``leo_object_storage`` - Compaction may leave stale objects which size are larger than the chunk size
     * ``leo-storage`` Multi data center replication may fail without notifying errors under a narrow bandwidth and very high-load.
 
 * Used libraries
@@ -57,8 +108,8 @@ CHANGELOG
 =========================
 
 * Fixed Bugs
-    * [#189](https://github.com/leo-project/leofs/issues/189) Actual disk usage is different from the manager-console.
-    * [#188](https://github.com/leo-project/leofs/issues/188) When existing large objects in a leo_storage, data loss of which happend with the compaction command.
+    * [#189](https://github.com/leo-project/leofs/issues/189) ``leo_object_storage`` - Actual disk usage is different from the manager-console.
+    * [#188](https://github.com/leo-project/leofs/issues/188) ``leo_object_storage`` - When existing large objects in a leo_storage, data loss of which happend with the compaction command.
 * Used libraries
     * leo project
         * [leo_backend-db v1.0.3](https://github.com/leo-project/leo_backend_db.git)
@@ -156,12 +207,12 @@ CHANGELOG
     * ``leo_ordning_reda`` Updated handle-send interface for the multi-dc replication
     * ``leo_rpc`` Improved to check-in pools into leo_pod
 * Fixed Bugs
-    * [#144](https://github.com/leo-project/leofs/issues/143) Failure occurred when running snmpwalk
-    * [#146](https://github.com/leo-project/leofs/issues/146) No retry when receiving a head request
-    * [#148](https://github.com/leo-project/leofs/issues/148) AWS-clients of PHP and Node.js could not copy object properly copied file became 0byte
-    * [#151](https://github.com/leo-project/leofs/issues/151) ``whereis-command`` had not been recorded on history table
-    * [#162](https://github.com/leo-project/leofs/issues/162) Able to get removed user on the manager-console
-    * [#163](https://github.com/leo-project/leofs/issues/163) ``update-acl`` and ``get-acl`` methods unexpected to display the permission messages
+    * [#144](https://github.com/leo-project/leofs/issues/143) - Failure occurred when running snmpwalk
+    * [#146](https://github.com/leo-project/leofs/issues/146) - No retry when receiving a head request
+    * [#148](https://github.com/leo-project/leofs/issues/148) - AWS-clients of PHP and Node.js could not copy object properly copied file became 0byte
+    * [#151](https://github.com/leo-project/leofs/issues/151) - ``whereis-command`` had not been recorded on history table
+    * [#162](https://github.com/leo-project/leofs/issues/162) - Able to get removed user on the manager-console
+    * [#163](https://github.com/leo-project/leofs/issues/163) - ``update-acl`` and ``get-acl`` methods unexpected to display the permission messages
 * Used libraries
     * leo project
         * [leo_backend-db v1.0.2](https://github.com/leo-project/leo_backend_db.git)
