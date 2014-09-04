@@ -1,3 +1,58 @@
+leofs-1.1.2
+===========
+
+Features and Improvements for LeoFS
+-----------------------------------
+
+* Improved
+    * ``leo_object_storage`` - Improved the compaction mechanism
+        * It absolutely minimized time required for lock of a storage during data-compaction
+
+Bugs Fixed
+-----------
+
+* [#225](https://github.com/leo-project/leofs/issues/225) ``leo_manager`` - The history command may cause VM to crash
+        * We've provided the [tools/vacuum_history](https://github.com/leo-project/leofs_utils/tree/develop/tools/vacuum_history)
+* [#229](https://github.com/leo-project/leofs/issues/229) ``leo_gateway`` - Can't upload file name with space or other character got 403 forbidden
+* [#230](https://github.com/leo-project/leofs/issues/230) ``leo_gateway`` - COPY request fail when the source path include urlencoded characters
+* [#234](https://github.com/leo-project/leofs/issues/234) ``leo_gateway`` - Unexpected error may occur when responding 403/404
+* [#235](https://github.com/leo-project/leofs/issues/235) ``leo_storage`` - MDC replication could cause VM to crash (in narrow band width network - 100Mbps)
+
+Used Libraries
+---------------
+
+* leo project
+    * [leo_backend-db v1.1.1](https://github.com/leo-project/leo_backend_db.git)
+    * [leo_cache v0.4.24](https://github.com/leo-project/leo_cache.git)
+    * [leo_commons v1.0.5](https://github.com/leo-project/leo_commons.git)
+    * [leo_dcerl v0.2.10](https://github.com/leo-project/leo_dcerl.git)
+    * [leo_logger v1.0.5](https://github.com/leo-project/leo_logger.git)
+    * [leo_mcerl v0.4.0](https://github.com/leo-project/leo_mcerl.git)
+    * [leo_mq v1.0.9](https://github.com/leo-project/leo_mq.git)
+    * [leo_object_storage v1.1.3](https://github.com/leo-project/leo_object_storage.git)
+    * [leo_ordning_reda v0.10.8](https://github.com/leo-project/leo_ordning_reda.git)
+    * [leo_redundant_manager v1.8.7](https://github.com/leo-project/leo_redundant_manager.git)
+    * [leo_rpc v0.8.9](https://github.com/leo-project/leo_rpc.git)
+    * [leo_pod v0.6.2](https://github.com/leo-project/leo_pod.git)
+    * [leo_s3_libs v1.1.2](https://github.com/leo-project/leo_s3_libs.git)
+    * [leo_statistics v1.0.6](https://github.com/leo-project/leo_statistics.git)
+    * [savanna_agent v0.4.3](https://github.com/leo-project/savanna_agent.git)
+    * [savanna_commons v0.8.5](https://github.com/leo-project/savanna_commons.git)
+    * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen.git)
+    * [nfs_rpc_server v0.2.2](https://github.com/leo-project/nfs_rpc_server.git)
+    * [leo_gateway v1.1.2](https://github.com/leo-project/leo_gateway.git)
+    * [leo_manager v1.1.2](https://github.com/leo-project/leo_manager.git)
+    * [leo_storage v1.1.2](https://github.com/leo-project/leo_storage.git)
+* others
+    * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
+    * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
+    * [cowlib v0.6.2](https://github.com/extend/cowboy.git)
+    * [eleveldb v1.4.10](https://github.com/basho/eleveldb.git)
+    * [folsom v0.8.1](https://github.com/boundary/folsom.git)
+    * [jiffy v0.8.5](https://github.com/davisp/jiffy.git)
+    * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/er
+
+
 leofs-1.1.1
 ===========
 

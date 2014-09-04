@@ -50,6 +50,8 @@ console.port.json = 10020
 console.acceptors.cui = 3
 console.acceptors.json = 16
 
+## # of histories to display at once
+console.histories.num_of_display = 200
 
 ## --------------------------------------------------------------------
 ## MANAGER - Consistency Level

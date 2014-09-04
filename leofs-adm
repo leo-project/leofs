@@ -720,6 +720,10 @@ usage() {
 ## Send a command to local manager
 send_command() {
     echo "$@" | nc $NC_ARGS $LEOFS_ADM_HOST $LEOFS_ADM_PORT
+    if [ $? -ne 0 ]; then
+        echo "Error: couldn't connect to leo_manager"
+        exit 1
+    fi
 }
 
 while test -n "$1"; do
