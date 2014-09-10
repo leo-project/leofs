@@ -721,7 +721,7 @@ usage() {
 send_command() {
     echo "$@" | nc $NC_ARGS $LEOFS_ADM_HOST $LEOFS_ADM_PORT
     if [ $? -ne 0 ]; then
-        echo "Error: couldn't connect to leo_manager"
+        echo "Error: couldn't connect to LeoFS Manager"
         exit 1
     fi
 }
