@@ -151,6 +151,20 @@ usage_resume() {
     esac
 }
 
+usage_rollback() {
+    USAGE="rollback $STORAGE_NODE"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  -  Rollback state of the storage node from detach to running"
+    esac
+}
+
 usage_start() {
     USAGE="start"
     case "$1" in
@@ -665,6 +679,7 @@ usage() {
     usage_detach min
     usage_suspend min
     usage_resume min
+    usage_rollback min
     usage_start min
     usage_rebalance min
     output ""
@@ -721,7 +736,7 @@ usage() {
 send_command() {
     echo "$@" | nc $NC_ARGS $LEOFS_ADM_HOST $LEOFS_ADM_PORT
     if [ $? -ne 0 ]; then
-        echo "Error: couldn't connect to leo_manager"
+        echo "Error: couldn't connect to LeoFS Manager"
         exit 1
     fi
 }
@@ -828,6 +843,20 @@ case "$1" in
             esac
         else
             usage_resume
+        fi
+        ;;
+    rollback)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_rollback
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_rollback
         fi
         ;;
     start)
