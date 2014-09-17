@@ -63,6 +63,9 @@ case $OS in
             NC_ARGS=""
         fi
         ;;
+    SunOS)
+        NC_ARGS=""
+        ;;
     *)
         NC_ARGS="-C"
 esac
