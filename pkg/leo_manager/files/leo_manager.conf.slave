@@ -1,8 +1,8 @@
-#======================================================================
-# LeoFS - Manager Configuration
-#
-# See: http://www.leofs.org/docs/configuration.html#leofs-manager-master
-# See: http://www.leofs.org/docs/configuration.html#leofs-manager-slave
+##======================================================================
+## LeoFS - Manager Configuration (SLAVE)
+##
+## See: http://www.leofs.org/docs/configuration.html#leofs-manager-master
+## See: http://www.leofs.org/docs/configuration.html#leofs-manager-slave
 #======================================================================
 ## --------------------------------------------------------------------
 ## SASL
@@ -43,8 +43,8 @@ manager.mode = slave
 manager.partner = manager_0@127.0.0.1
 
 ## Manager-console accepatable port number
-console.port.cui  = 10011
-console.port.json = 10021
+console.port.cui  = 10010
+console.port.json = 10020
 
 ## Manager-console's number of acceptors
 console.acceptors.cui = 3
@@ -53,6 +53,15 @@ console.acceptors.json = 16
 ## # of histories to display at once
 console.histories.num_of_display = 200
 
+## --------------------------------------------------------------------
+## MANAGER - System
+##     * Only set its configurations to **Manager-master**
+## --------------------------------------------------------------------
+## DC Id
+system.dc_id = dc_1
+
+## Cluster Id
+system.cluster_id = leofs_1
 
 ## --------------------------------------------------------------------
 ## MANAGER - Consistency Level
@@ -60,19 +69,29 @@ console.histories.num_of_display = 200
 ##     * See: http://www.leofs.org/docs/configuration.html#the-consistency-level
 ## --------------------------------------------------------------------
 ## A number of replicas
-## consistency.num_of_replicas = 1
+consistency.num_of_replicas = 1
 
 ## A number of replicas needed for a successful WRITE operation
-## consistency.write = 1
+consistency.write = 1
 
 ## A number of replicas needed for a successful READ operation
-## consistency.read = 1
+consistency.read = 1
 
 ## A number of replicas needed for a successful DELETE operation
-## consistency.delete = 1
+consistency.delete = 1
 
-## A number of replicas in other racks
-## consistency.rack_aware_replicas = 0
+## A number of rack-aware replicas
+consistency.rack_aware_replicas = 0
+
+
+## --------------------------------------------------------------------
+## MANAGER - Multi DataCenter Settings
+## --------------------------------------------------------------------
+## A number of replication targets
+## mdc_replication.max_targets = 2
+
+## A number of replicas a DC
+## mdc_replication.num_of_replicas_a_dc = 1
 
 
 ## --------------------------------------------------------------------
@@ -81,7 +100,7 @@ console.histories.num_of_display = 200
 ##     * Store the RING and the command histories
 ## --------------------------------------------------------------------
 ## Mnesia dir
-mnesia.dir = ./mnesia/127.0.0.1
+mnesia.dir = /var/db/leo_manager/mnesia/127.0.0.1
 
 ## The write threshold for transaction log dumps
 ## as the number of writes to the transaction log
@@ -127,7 +146,7 @@ snmp_agent = ./snmp/snmpa_manager_1/LEO-MANAGER
 rpc.server.acceptors = 16
 
 ## RPC-Server's listening port number
-rpc.server.listen_port = 13076
+rpc.server.listen_port = 13075
 
 ## RPC-Server's listening timeout
 rpc.server.listen_timeout = 5000

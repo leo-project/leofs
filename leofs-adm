@@ -63,6 +63,9 @@ case $OS in
             NC_ARGS=""
         fi
         ;;
+    SunOS)
+        NC_ARGS=""
+        ;;
     *)
         NC_ARGS="-C"
 esac
@@ -312,6 +315,48 @@ usage_compact_status() {
             output "  $SCRIPT $USAGE"
             output "Description:"
             output "  - See the current compaction status"
+    esac
+}
+
+usage_diagnose_start() {
+    USAGE="diagnose-start <node>"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Diagnose data of the storage-node"
+    esac
+}
+
+usage_diagnose_suspend() {
+    USAGE="diagnose-suspend $STORAGE_NODE"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Suspend the data-diagnosis"
+    esac
+}
+
+usage_diagnose_resume() {
+    USAGE="diagnose-resume $STORAGE_NODE"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Resume the data-diagnosis"
     esac
 }
 
@@ -980,6 +1025,49 @@ case "$1" in
             esac
         else
             usage_compact_resume
+        fi
+        ;;
+
+    diagnose-start)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_diagnose_start
+                    exit 1
+                    ;;
+                *)
+                    send_command "diagnose-data $2"
+            esac
+        else
+            usage_diagnose_start
+        fi
+        ;;
+    compact-suspend)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_diagnose_suspend
+                    exit 1
+                    ;;
+                *)
+                    send_command "compact suspend $2"
+            esac
+        else
+            usage_diagnose_suspend
+        fi
+        ;;
+    diagnose-resume)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_diagnose_resume
+                    exit 1
+                    ;;
+                *)
+                    send_command "compact resume " $2
+            esac
+        else
+            usage_diagnose_resume
         fi
         ;;
     compact-status)
