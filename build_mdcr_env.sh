@@ -22,60 +22,7 @@
 #======================================================================
 echo "*** LeoFS - Start building mdcr test-environment ***"
 
-## Generate packages
-rm -rf package/leo_*
-rm -rf package/c1/leo_*
-rm -rf package/c2/leo_*
-mkdir package/c1
-mkdir package/c2
-make release
-
-## Copy storage-files
-cp -r package/leo_manager_* package/c1/
-cp -r package/leo_storage package/c1/leo_storage_0
-cp -r package/leo_storage package/c1/leo_storage_1
-cp -r package/leo_storage package/c1/leo_storage_2
-cp -r package/leo_gateway package/c1/leo_gateway_0
-
-cp -r package/leo_manager_* package/c2/
-cp -r package/leo_storage package/c2/leo_storage_0
-cp -r package/leo_storage package/c2/leo_storage_1
-cp -r package/leo_storage package/c2/leo_storage_2
-cp -r package/leo_gateway package/c2/leo_gateway_0
-rm -rf package/leo_manager_*
-rm -rf package/leo_storage
-rm -rf package/leo_gateway
-
-
-cp priv/mdcr-test/c1/leo_manager.conf.0 package/c1/leo_manager_0/etc/leo_manager.conf
-cp priv/mdcr-test/c1/leo_manager.conf.1 package/c1/leo_manager_1/etc/leo_manager.conf
-cp priv/mdcr-test/c1/leo_storage_0.conf package/c1/leo_storage_0/etc/leo_storage.conf
-cp priv/mdcr-test/c1/leo_storage_1.conf package/c1/leo_storage_1/etc/leo_storage.conf
-cp priv/mdcr-test/c1/leo_storage_2.conf package/c1/leo_storage_2/etc/leo_storage.conf
-cp priv/mdcr-test/c1/leo_gateway.conf   package/c1/leo_gateway_0/etc/leo_gateway.conf
-
-cp priv/mdcr-test/c2/leo_manager.conf.0 package/c2/leo_manager_0/etc/leo_manager.conf
-cp priv/mdcr-test/c2/leo_manager.conf.1 package/c2/leo_manager_1/etc/leo_manager.conf
-cp priv/mdcr-test/c2/leo_storage_0.conf package/c2/leo_storage_0/etc/leo_storage.conf
-cp priv/mdcr-test/c2/leo_storage_1.conf package/c2/leo_storage_1/etc/leo_storage.conf
-cp priv/mdcr-test/c2/leo_storage_2.conf package/c2/leo_storage_2/etc/leo_storage.conf
-cp priv/mdcr-test/c2/leo_gateway.conf   package/c2/leo_gateway_0/etc/leo_gateway.conf
-
-
-## launch-C1
-./package/c1/leo_manager_0/bin/leo_manager start
-./package/c1/leo_manager_1/bin/leo_manager start
-./package/c1/leo_storage_0/bin/leo_storage start
-./package/c1/leo_storage_1/bin/leo_storage start
-./package/c1/leo_storage_2/bin/leo_storage start
-./package/c1/leo_gateway_0/bin/leo_gateway start
-
-## launch-C2
-./package/c2/leo_manager_0/bin/leo_manager start
-./package/c2/leo_manager_1/bin/leo_manager start
-./package/c2/leo_storage_0/bin/leo_storage start
-./package/c2/leo_storage_1/bin/leo_storage start
-./package/c2/leo_storage_2/bin/leo_storage start
-./package/c2/leo_gateway_0/bin/leo_gateway start
+./mdcr.sh deploy
+./mdcr.sh start
 
 echo "*** leofs - Finished :) ***"
