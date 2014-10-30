@@ -145,9 +145,20 @@ deploy()
 #-------------------------------------------------------------------------------
 rc()
 {
-    local cmd="$1"      ; shift
-    local clusters="$1" ; shift || :
-    local nodes="$1"    ; shift || :
+    local cmd clusters nodes
+    # ugly hack for ubuntu
+    if [ "$#" -ne "0" ]
+    then
+        cmd="$1"; shift
+    fi
+    if [ "$#" -ne "0" ]
+    then
+        clusters="$1"; shift
+    fi
+    if [ "$#" -ne "0" ]
+    then
+        nodes="$1"; shift
+    fi
     local i c n rc status
 
     if [ -z "${clusters}" ]
