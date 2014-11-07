@@ -8,8 +8,8 @@ Features and Improvements for LeoFS
     * Watchdog mechnism was implemented, which is called [leo_watchdog](https://github.com/leo-project/leo_watchdog)
         * Target resources: [cpu, io, disk]
         * Status: Beta
-        * Requirements: CentOS-6.5 later, Ubuntu-14.04 later
-        * Furure plan: Support FreeBSD, SmartOS with v1.2.1
+        * Requirements: CentOS-6.5 later and Ubuntu-13.10/14.04 later
+        * Furure plan: Support FreeBSD and SmartOS with v1.2.1
 * Improved
     * [#121](https://github.com/leo-project/leofs/issues/121) Tool to migrate metadata dbs from bitcask to leveldb
     * [#166](https://github.com/leo-project/leofs/issues/166) ``leo_rpc`` ``leo_storage`` Multi DC replication messages could lost
@@ -18,6 +18,7 @@ Features and Improvements for LeoFS
     * [#255](https://github.com/leo-project/leofs/issues/255) ``leo_gateway`` Make a PUT request in parallel when handling a large object
     * [#256](https://github.com/leo-project/leofs/issues/256) ``leo_gateway`` Upgrade [Cowboy 1.0.0](https://github.com/ninenines/cowboy)
     * [#260](https://github.com/leo-project/leofs/issues/260) ``leo_gateway`` Make a MOVE request in parallel when handling a large object
+    * ``leo_storage`` ``leo_mq`` Implemented to be able to operate a mq server of a storage internal
 
 Bugs Fixed
 -----------
