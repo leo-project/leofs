@@ -706,6 +706,50 @@ usage_cluster_status() {
     esac
 }
 
+usage_mq_stats() {
+    USAGE="mq-stats $STORAGE_NODE"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE"
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - See the status of message queues used in LeoFS"
+    esac
+}
+
+usage_mq_suspend() {
+    USAGE="mq-suspend $STORAGE_NODE <mq-id>"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE"
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  -  Suspend a process consuming a message queue"
+            output "  -  Active message queues only can be suspended"
+            output "  -  While suspending, no messages are consumed"
+            output "  -  Please use this command only if the target node is too busy"
+    esac
+}
+
+usage_mq_resume() {
+    USAGE="mq-resume $STORAGE_NODE <mq-id>"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE"
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  -  Resume a process consuming a message queue"
+    esac
+}
 
 ##
 ## Usage of the script
@@ -727,6 +771,9 @@ usage() {
     usage_rollback min
     usage_start min
     usage_rebalance min
+    usage_mq_stats min
+    usage_mq_suspend min
+    usage_mq_resume min
     output ""
     output "      ${UNDERLINE}Recover Commands:${NONE}"
     usage_recover_file min
@@ -924,6 +971,34 @@ case "$1" in
             exit 1
         fi
         send_command "$@"
+        ;;
+    mq-stats)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_mq_stats
+                    exit 1
+                    ;;
+                *)
+                    send_command "mq-stats $2"
+            esac
+        else
+            usage_mq_stats
+        fi
+        ;;
+    mq-suspend)
+        if [ $# -eq 3 ]; then
+            send_command "mq-suspend $2 $3"
+        else
+            usage_mq_suspend
+        fi
+        ;;
+    mq-resume)
+        if [ $# -eq 3 ]; then
+            send_command "mq-resume $2 $3"
+        else
+            usage_mq_resume
+        fi
         ;;
 
     ##
