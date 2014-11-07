@@ -8,19 +8,20 @@ Features and Improvements for LeoFS
     * Watchdog mechnism was implemented, which is called [leo_watchdog](https://github.com/leo-project/leo_watchdog)
         * Target resources: [cpu, io, disk]
         * Status: Beta
-
+        * Requirements: CentOS-6.5 later, Ubuntu-14.04 later
+        * Furure plan: Support FreeBSD, SmartOS with v1.2.1
 * Improved
     * [#121](https://github.com/leo-project/leofs/issues/121) Tool to migrate metadata dbs from bitcask to leveldb
     * [#166](https://github.com/leo-project/leofs/issues/166) ``leo_rpc`` ``leo_storage`` Multi DC replication messages could lost
     * [#202](https://github.com/leo-project/leofs/issues/202) ``leo_gateway`` Make timeout configurable
     * [#239](https://github.com/leo-project/leofs/issues/239) ``leo_gateway`` Add custom HTTP header for CDN integration
+    * [#255](https://github.com/leo-project/leofs/issues/255) ``leo_gateway`` Make a PUT request in parallel when handling a large object
     * [#256](https://github.com/leo-project/leofs/issues/256) ``leo_gateway`` Upgrade [Cowboy 1.0.0](https://github.com/ninenines/cowboy)
+    * [#260](https://github.com/leo-project/leofs/issues/260) ``leo_gateway`` Make a MOVE request in parallel when handling a large object
 
 Bugs Fixed
 -----------
 
-* [#255](https://github.com/leo-project/leofs/issues/255) ``leo_gateway`` Make a PUT request in parallel when handling a large object
-* [#260](https://github.com/leo-project/leofs/issues/260) ``leo_gateway`` Make a MOVE request in parallel when handling a large object
 * [#262](https://github.com/leo-project/leofs/issues/262) ``leo_gateway`` ``leo_storage`` Improve RPC in order to be able to handle huge traffic with large size objects
 * [#263](https://github.com/leo-project/leofs/issues/263) ``leo_gateway`` Wrong error code when creating a bucket that already exists
 * [#265](https://github.com/leo-project/leofs/issues/265) ``leo_object_storage`` Some succeeded updates might be ignored silently while executing compaction
@@ -42,7 +43,7 @@ Used Libraries
     * [leo_redundant_manager 1.9.1](https://github.com/leo-project/leo_redundant_manager.git)
     * [leo_rpc v0.8.10](https://github.com/leo-project/leo_rpc.git)
     * [leo_pod v0.6.2](https://github.com/leo-project/leo_pod.git)
-    * [leo_s3_libs v1.1.3](https://github.com/leo-project/leo_s3_libs.git)
+    * [leo_s3_libs v1.1.4](https://github.com/leo-project/leo_s3_libs.git)
     * [leo_statistics v1.0.7](https://github.com/leo-project/leo_statistics.git)
     * [leo_watchdog v0.4.1](https://github.com/leo-project/leo_watchdog.git)
     * [savanna_agent v0.4.4](https://github.com/leo-project/savanna_agent.git)
