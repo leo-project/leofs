@@ -1,6 +1,53 @@
 CHANGELOG
 =========
 
+1.2.3 (Jan 20, 2015)
+====================
+
+* Improvements
+    * [#285](https://github.com/leo-project/leofs/issues/285) ``leo_storage`` Implemented "cluster-watchdog" in order to keep best condition of a cluster
+    * [#286](https://github.com/leo-project/leofs/issues/286) ``leo_storage`` Unified name of configuration items for the mq and the compaction
+* Fixed Bugs
+    * [#288](https://github.com/leo-project/leofs/issues/288) ``leo_manager`` Fixed wrong mix/max values when issueing [the status &lt;storage-node&gt; command](http://leo-project.net/leofs/docs/admin_guide/admin_guide_2.html#status-command) with ``leofs-adm command``
+    * [#290](https://github.com/leo-project/leofs/issues/290) [the du detail &lt;storage-node&gt; command](http://leo-project.net/leofs/docs/admin_guide/admin_guide_5.html#du-detail) with ``leofs-adm command`` had broken 1.2.2
+    * [#292](https://github.com/leo-project/leofs/issues/292) ``leo_storage`` [proc_lib:start_link](http://erlang.org/doc/man/proc_lib.html#spawn_link-1) must be used instead of [erlang:spawn](http://erlang.org/doc/man/erlang.html#spawn-1)
+    * [#293](https://github.com/leo-project/leofs/issues/293) Fixed that remain objects after finished data-compaction, situation of which is combination auto-compaction and deletion of a bucket
+* Used libraries
+    * leo project
+        * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db.git)
+        * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache.git)
+        * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons.git)
+        * [leo_dcerl v0.2.11](https://github.com/leo-project/leo_dcerl.git)
+        * [leo_logger v1.1.4](https://github.com/leo-project/leo_logger.git)
+        * [leo_mcerl v0.4.1](https://github.com/leo-project/leo_mcerl.git)
+        * [leo_mq v1.3.3](https://github.com/leo-project/leo_mq.git)
+        * [leo_object_storage v1.2.2](https://github.com/leo-project/leo_object_storage.git)
+        * [leo_ordning_reda v0.10.9](https://github.com/leo-project/leo_ordning_reda.git)
+        * [leo_redundant_manager 1.9.5](https://github.com/leo-project/leo_redundant_manager.git)
+        * [leo_rpc v0.8.10](https://github.com/leo-project/leo_rpc.git)
+        * [leo_pod v0.6.2](https://github.com/leo-project/leo_pod.git)
+        * [leo_s3_libs v1.1.5](https://github.com/leo-project/leo_s3_libs.git)
+        * [leo_statistics v1.0.8](https://github.com/leo-project/leo_statistics.git)
+        * [leo_watchdog v0.6.1](https://github.com/leo-project/leo_watchdog.git)
+        * [savanna_agent v0.4.4](https://github.com/leo-project/savanna_agent.git)
+        * [savanna_commons v0.8.6](https://github.com/leo-project/savanna_commons.git)
+        * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen.git)
+        * [nfs_rpc_server v0.2.2](https://github.com/leo-project/nfs_rpc_server.git)
+        * [leo_gateway v1.2.3](https://github.com/leo-project/leo_gateway.git)
+        * [leo_manager v1.2.3](https://github.com/leo-project/leo_manager.git)
+        * [leo_storage v1.2.3](https://github.com/leo-project/leo_storage.git)
+    * others
+        * [bitcask v1.7.1](https://github.com/leo-project/bitcask.git)
+        * [cowboy v1.0.0](https://github.com/extend/cowboy.git)
+        * [cowlib v1.0.0](https://github.com/extend/cowboy.git)
+        * [elarm v0.3.0](https://github.com/leo-project/elarm.git)
+        * [eleveldb v1.4.10](https://github.com/basho/eleveldb.git)
+        * [folsom v0.8.1](https://github.com/boundary/folsom.git)
+        * [jiffy v0.8.5](https://github.com/davisp/jiffy.git)
+        * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
+
 1.2.2 (Dec 17, 2014)
 ====================
 
