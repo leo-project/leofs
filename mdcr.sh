@@ -35,8 +35,8 @@ usage()
     echo "  ./mdcr.sh adm c2 start"                                          >&2
     echo "  ./mdcr.sh adm c1 status"                                         >&2
     echo "  ./mdcr.sh adm c1 join-cluster \\"                                >&2
-    echo "      manager_0@127.0.0.1:13095 \\"                                >&2
-    echo "      manager_0@127.0.0.1:13096"                                   >&2
+    echo "      manager_10@127.0.0.1:13095 \\"                               >&2
+    echo "      manager_11@127.0.0.1:13096"                                  >&2
     echo "  ./mdcr.sh adm c1 cluster-status"                                 >&2
     echo "  ./mdcr.sh ping c1 manager_0"                                     >&2
     echo "  ./mdcr.sh rmsh c1 manager_1"                                     >&2
