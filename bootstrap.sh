@@ -22,15 +22,21 @@
 #======================================================================
 echo "*** LeoFS - Start building test-environment ***"
 
-if [ $# -ne 1 ]; then
+if [ $# -ne 2 ]; then
     echo "No command to run specified!"
-    echo "Usage: bootstrap build|start|stop"
+    echo "Usage: bootstrap build|start|stop integration-test|watchdog-test"
     exit 1
 fi
 
 if [ $1 != "build" -a $1 != "start" -a $1 != "stop" ]; then
     echo "No command to run specified!"
-    echo "Usage: bootstrap start|stop"
+    echo "Usage: bootstrap build|start|stop integration-test|watchdog-test"
+    exit 1
+fi
+
+if [ $2 != "integration-test" -a $2 != "watchdog-test" ]; then
+    echo "No command to run specified!"
+    echo "Usage: bootstrap build|start|stop integration-test|watchdog-test"
     exit 1
 fi
 
@@ -60,15 +66,27 @@ cp -r package/leo_gateway package/leo_gateway_0
 rm -rf package/leo_storage
 rm -rf package/leo_gateway
 
-cp priv/test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
-cp priv/test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
-cp priv/test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
-cp priv/test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
-cp priv/test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
-cp priv/test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+if [ $2 = "integration-test" ]; then
+    cp priv/integration-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
+    cp priv/integration-test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
+    cp priv/integration-test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
+    cp priv/integration-test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
+    cp priv/integration-test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
+    cp priv/integration-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+else
+    cp priv/watchdog-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
+    cp priv/watchdog-test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
+    cp priv/watchdog-test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
+    cp priv/watchdog-test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
+    cp priv/watchdog-test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
+    cp priv/watchdog-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+fi
 
-## Launch the applications 
+## Launch the applications
 if [ $1 = "build" ]; then
+    echo ""
+    echo "*** leofs - Finished :) ***"
+    echo ""
     exit 1
 fi
 ./package/leo_manager_0/bin/leo_manager start
@@ -86,7 +104,6 @@ sleep 1
 echo ":::"
 echo "::: Starting the storages :::"
 echo ":::"
-
 sleep 30
 ./package/leo_gateway_0/bin/leo_gateway start
 

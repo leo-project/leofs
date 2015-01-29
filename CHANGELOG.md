@@ -1,6 +1,51 @@
 CHANGELOG
 =========
 
+1.2.5 (Jan 29, 2015)
+====================
+
+* New Features
+    * Started to provide LeoFS integration test tool - [leofs_test](https://github.com/leo-project/leofs_test2)
+        * We're able to easily check LeoFS with it whether latest LeoFS has issues or not before getting installed LeoFS in your dev/staging/production environment(s).
+* Fixed Bugs
+    * [#299](https://github.com/leo-project/leofs/issues/299) ``leo_redundant_manager`` Inconsistent ring of a resumed storage-node which is timing issue
+    * [#301](https://github.com/leo-project/leofs/issues/301) ``leo_storage`` Replication messages could be lost in some edge cases
+    * ``leo_storage`` Fix the read-and-repair mechanism. Some inconsistent data could not recover with it.
+* Used libraries
+    * leo project
+        * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.4)
+        * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache/releases/tag/0.6.0)
+        * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons/releases/tag/1.1.0)
+        * [leo_dcerl v0.2.11](https://github.com/leo-project/leo_dcerl/releases/tag/0.2.11)
+        * [leo_logger v1.1.4](https://github.com/leo-project/leo_logger/releases/tag/1.1.4)
+        * [leo_mcerl v0.4.1](https://github.com/leo-project/leo_mcerl/releases/tag/0.4.1)
+        * [leo_mq v1.3.3](https://github.com/leo-project/leo_mq/releases/tag/1.3.3)
+        * [leo_object_storage v1.2.3](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.3)
+        * [leo_ordning_reda v0.10.9](https://github.com/leo-project/leo_ordning_reda/releases/tag/0.10.9)
+        * [leo_redundant_manager 1.9.6](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.6)
+        * [leo_rpc v0.8.10](https://github.com/leo-project/leo_rpc/releases/tag/0.8.10)
+        * [leo_pod v0.6.2](https://github.com/leo-project/leo_pod/releases/tag/0.6.2)
+        * [leo_s3_libs v1.1.5](https://github.com/leo-project/leo_s3_libs/releases/tag/1.1.5)
+        * [leo_statistics v1.0.8](https://github.com/leo-project/leo_statistics/releases/tag/1.0.8)
+        * [leo_watchdog v0.6.2](https://github.com/leo-project/leo_watchdog/releases/tag/0.6.2)
+        * [savanna_agent v0.4.4](https://github.com/leo-project/savanna_agentreleases/tag/0.4.4)
+        * [savanna_commons v0.8.6](https://github.com/leo-project/savanna_commons/releases/tag/0.8.6)
+        * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
+        * [nfs_rpc_server v0.2.2](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.2)
+        * [leo_gateway v1.2.5](https://github.com/leo-project/leo_gateway/releases/tag/1.2.5)
+        * [leo_manager v1.2.5](https://github.com/leo-project/leo_manager/releases/tag/1.2.5)
+        * [leo_storage v1.2.5](https://github.com/leo-project/leo_storage/releases/tag/1.2.5)
+    * others
+        * [bitcask v1.7.1](https://github.com/leo-project/bitcask/releases/tag/1.7.1)
+        * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+        * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+        * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+        * [eleveldb v1.4.10](https://github.com/basho/eleveldb/releases/tag/1.4.10)
+        * [folsom v0.8.1](https://github.com/boundary/folsom/releases/tag/0.8.1)
+        * [jiffy v0.8.5](https://github.com/davisp/jiffy/releases/tag/0.2.2)
+        * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+
+
 1.2.4 (Jan 23, 2015)
 ====================
 

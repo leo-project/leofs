@@ -8,9 +8,12 @@ If you are searching a storage system that is able to store huge amount and vari
 
 LeoFS is supporting the following features:
 
-* **S3-API Support**
-  * LeoFS is an Amazon S3 compatible storage system.
-  * Switch to LeoFS to decrease your cost from more expensive public-cloud solutions.
+* **Multi Protocol**
+  * **S3-API Support**
+      * LeoFS is an Amazon S3 compatible storage system.
+      * Switch to LeoFS to decrease your cost from more expensive public-cloud solutions.
+  * **NFS Support**
+      * NFS support was provided from LeoFS v1.1, the current status of which is beta.
 * **Large Object Support**
   * LeoFS can handle files with more than GB
 * **Multi Data Center Replication**
@@ -50,8 +53,9 @@ Build LeoFS with LeoFS Packages
 LeoFS packages have been already provided on the Web. You're able to easily install LeoFS on your environments.
 
 * LeoProject
+    * <a target="_blank" href="http://leo-project.net/leofs/download.html">CentOS-7.0</a>
     * <a target="_blank" href="http://leo-project.net/leofs/download.html">CentOS-6.x</a>
-    * <a target="_blank" href="http://leo-project.net/leofs/download.html">Ubuntu-12.10, 13.10 and 14.04</a>
+    * <a target="_blank" href="http://leo-project.net/leofs/download.html">13.10 and 14.04</a>
 * Community
     * <a target="_blank" href="http://www.freshports.org/databases/leofs">FreeBSD</a>
 
@@ -86,12 +90,12 @@ $ make
 $ sudo make install
 
 ##
-## 2. Install Erlang (R16B03-1)
+## 2. Install Erlang (17.4)
 ##
-$ wget http://www.erlang.org/download/otp_src_R16B03-1.tar.gz
-$ tar xzf otp_src_R16B03-1.tar.gz
-$ cd otp_src_R16B03-1
-$ ./configure --prefix=/usr/local/erlang/R16B03-1 \
+$ wget http://www.erlang.org/download/otp_src_17.4.tar.gz
+$ tar xzf otp_src_17.4.tar.gz
+$ cd otp_src_17.4
+$ ./configure --prefix=/usr/local/erlang/17.4 \
               --enable-smp-support \
               --enable-m64-build \
               --enable-halfword-emulator \
@@ -110,7 +114,7 @@ $ sudo make install
 ##
 $ vi ~/.profile
     ## append the follows:
-    export ERL_HOME=/usr/local/erlang/R16B03-1
+    export ERL_HOME=/usr/local/erlang/17.4
     export PATH=$PATH:$ERL_HOME/bin
 
 $ source ~/.profile
@@ -219,32 +223,39 @@ You can benchmark LeoFS with <a target="_blank" href="https://github.com/basho/b
 
 <a target="_blank" href="http://www.leofs.org/docs/benchmark.html">Here</a> is a documentation to benchmark LeoFS.
 
+
+Integration Test
+----------------
+
+We're able to easily check LeoFS with <a target="_blank" href="https://github.com/leo-project/leofs_test2">leofs_test</a> whether LeoFS has issues or not before getting installed LeoFS in your dev/staging/production environment(s).
+
+
 Milestones
 -----------
 
-* *DONE* - 1.0 (Nov 2013 - May 2014)
+* *DONE* - v1.0 (Nov 2013 - May 2014)
     * Multi Data Center Replication
     * Increase compatibility S3-APIs#5
         * Other bucket operations
-* *On Going* - 1.1
+* *DONE* - v1.1
     * NFS Support (Alpha)
-    * QoS System Phase-1 (LeoInsight - Option)
-       * Support *statistics/analyzer*
     * Improve Web GUI Console (Option)
-        * LeoInsight(QoS) Integration
-* 1.2
-    * NFS Support (Beta)
-    * Support *auto-compaction*
-    * QoS System Phase-2 (LeoInsight - Option)
-       * Support *notifier*
+* *DONE* - v1.2
+    * NFS Support (Beta-1)
+    * Watchdog
+    * Auto-compaction
+* *On Going* - v1.4
+    * NFS Support (Beta-2)
+    * Improve performance of the list objects
+    * Improve Web GUI Console (Option)
     * Improve compatibility S3-APIs#6
         * Objects Expiration into the bucket
         * Versioning
-    * Improve Web GUI Console (Option)
-        * LeoInsight(QoS) Integration
-        * Support Log analysis/search
-    * OpenStack Integration
-        * Support for OpenStack Swift-API
+* v2.0
+    * NFS Support (for Production)
+    * QoS Support (Option)
+    * Erasure Conding
+    * Improve compatibility S3-APIs#7
 
 
 ## Sponsors
