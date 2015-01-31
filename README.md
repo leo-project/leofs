@@ -254,7 +254,7 @@ Milestones
 * v2.0
     * NFS Support (for Production)
     * QoS Support (Option)
-    * Erasure Conding
+    * Erasure Coding
     * Improve compatibility S3-APIs#7
 
 
