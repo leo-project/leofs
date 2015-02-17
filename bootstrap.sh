@@ -73,6 +73,7 @@ if [ $2 = "integration-test" ]; then
     cp priv/integration-test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
     cp priv/integration-test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
     cp priv/integration-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+    cp priv/integration-test/app-g0.conf package/leo_gateway_0/etc/leo_gateway.conf
 else
     cp priv/watchdog-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
     cp priv/watchdog-test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
