@@ -59,6 +59,8 @@ release:
 	mkdir -p package/leo_gateway
 	(cd rel/leo_gateway && ../../rebar generate)
 	cp -r rel/leo_gateway/leo_gateway/* package/leo_gateway/
+	cp README.md package/
+	cp leofs-adm package/
 
 pkgsrc: release
 	make -C pkg
