@@ -35,7 +35,7 @@ CHANGELOG
         * [savanna_agent v0.4.5](https://github.com/leo-project/savanna_agentreleases/tag/0.4.5)
         * [savanna_commons v0.8.7](https://github.com/leo-project/savanna_commons/releases/tag/0.8.7)
         * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
-        * [nfs_rpc_server v0.2.2](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.2)
+        * [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
         * [leo_gateway v1.2.7](https://github.com/leo-project/leo_gateway/releases/tag/1.2.7)
         * [leo_manager v1.2.7](https://github.com/leo-project/leo_manager/releases/tag/1.2.7)
         * [leo_storage v1.2.7](https://github.com/leo-project/leo_storage/releases/tag/1.2.7)
