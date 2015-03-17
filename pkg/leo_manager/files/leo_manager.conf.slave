@@ -1,9 +1,8 @@
 ##======================================================================
 ## LeoFS - Manager Configuration (SLAVE)
 ##
-## See: http://www.leofs.org/docs/configuration.html#leofs-manager-master
-## See: http://www.leofs.org/docs/configuration.html#leofs-manager-slave
-#======================================================================
+## See: http://leo-project.net/leofs/docs/configuration/configuration_1.html
+##======================================================================
 ## --------------------------------------------------------------------
 ## SASL
 ## --------------------------------------------------------------------
@@ -36,9 +35,6 @@ sasl.error_logger_mf_dir = /var/log/leo_manager/sasl
 ## --------------------------------------------------------------------
 ## MANAGER
 ## --------------------------------------------------------------------
-## Mode of Manager: [master, slave]
-manager.mode = slave
-
 ## Partner of manager's alias
 manager.partner = manager_0@127.0.0.1
 
@@ -52,47 +48,6 @@ console.acceptors.json = 16
 
 ## # of histories to display at once
 console.histories.num_of_display = 200
-
-## --------------------------------------------------------------------
-## MANAGER - System
-##     * Only set its configurations to **Manager-master**
-## --------------------------------------------------------------------
-## DC Id
-system.dc_id = dc_1
-
-## Cluster Id
-system.cluster_id = leofs_1
-
-## --------------------------------------------------------------------
-## MANAGER - Consistency Level
-##     * Only set its configurations to **Manager-master**
-##     * See: http://www.leofs.org/docs/configuration.html#the-consistency-level
-## --------------------------------------------------------------------
-## A number of replicas
-consistency.num_of_replicas = 1
-
-## A number of replicas needed for a successful WRITE operation
-consistency.write = 1
-
-## A number of replicas needed for a successful READ operation
-consistency.read = 1
-
-## A number of replicas needed for a successful DELETE operation
-consistency.delete = 1
-
-## A number of rack-aware replicas
-consistency.rack_aware_replicas = 0
-
-
-## --------------------------------------------------------------------
-## MANAGER - Multi DataCenter Settings
-## --------------------------------------------------------------------
-## A number of replication targets
-## mdc_replication.max_targets = 2
-
-## A number of replicas a DC
-## mdc_replication.num_of_replicas_a_dc = 1
-
 
 ## --------------------------------------------------------------------
 ## MANAGER - Mnesia
@@ -177,9 +132,9 @@ rpc.client.connection_buffer_size = 16
 ## leo_statistics.profile = false
 
 
-#======================================================================
-# For vm.args
-#======================================================================
+##======================================================================
+## For vm.args
+##======================================================================
 ## Name of the leofs-gateway node
 nodename = manager_1@127.0.0.1
 
