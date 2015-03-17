@@ -9,6 +9,7 @@ STAGE_DIR=$(BASE)
 PKG_CATEGORY=leofs
 PKG_HOMEPAGE=http://www.leofs.org/
 DEPS="erlang>=16.1.2"
+TARGET_DIR=/opt/local
 
 include ../../deps/fifo_utils/priv/pkg.mk
 
