@@ -14,10 +14,10 @@ clean_storage:
 	make -C leo_storage clean
 
 leo_manager:
-	make -C leo_manager
+	make -C leo_manager package
 
 leo_gateway:
-	make -C leo_gateway
+	make -C leo_gateway package
 
 leo_storage:
-	make -C leo_storage
+	make -C leo_storage package

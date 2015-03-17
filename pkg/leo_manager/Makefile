@@ -5,12 +5,20 @@ COMPONENT=leo_manager
 COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)_0
 BASE=../bootstrap/$(COMPONENT)
 DIR=../bootstrap/$(COMPONENT)/$(COMPONENT)
+STAGE_DIR=$(BASE)
+PKG_CATEGORY=leofs
+PKG_HOMEPAGE=http://www.leofs.org/
+DEPS="erlang>=16.1.2"
+
+include ../../deps/fifo_utils/priv/pkg.mk
 
 .PHONY: build_info package package_list all bootstrap
 
 all: package
 
-bootstrap:
+package: prepare $(FILE).tgz
+
+prepare:
 	-rm -r $(DIR)
 	mkdir -p $(BASE)
 	cp -r $(COMPONENT_PATH) $(DIR)
@@ -26,19 +34,6 @@ bootstrap:
 	rm $(DIR)/etc/leo_manager.conf
 	cp files/leo_manager.conf.master $(DIR)/etc/leo_manager.conf.example
 
-package_list: bootstrap
-	cat pre_pkg > packlist
-	(cd $(BASE); find * -type f | sort) >> packlist
-	cat post_pkg >> packlist
-
-build_info:
-	pkg_info -X pkg_install | egrep '^(MACHINE_ARCH|OPSYS|OS_VERSION|PKGTOOLS_VERSION)' >build-info
-	echo "CATEGORIES=leofs" >>build-info
-	echo "HOMEPAGE=http://www.leofs.org/" >>build-info
-
-clean:
+clean: clean-pkg
 	-rm -r $(DIR)
-	-rm *.tgz build-info packlist
-
-package: package_list build_info
-	pkg_create -i install.sh -k deinstall.sh -D displayfile -B build-info -c comment -d description -f packlist -I /opt/local/ -p $(BASE) -U $(COMPONENT)-$(VERSION)$(SUFFIX).tgz
+	-rm *.tgz
