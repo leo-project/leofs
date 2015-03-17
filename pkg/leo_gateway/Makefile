@@ -4,7 +4,7 @@ COMPONENT_INTERNAL=leo_gateway
 COMPONENT=leo_gateway
 COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)
 DIR=../bootstrap/$(COMPONENT)
-STAGE_DIR=$(BASE)
+STAGE_DIR=$(DIR)
 PKG_CATEGORY=leofs
 PKG_HOMEPAGE=http://www.leofs.org/
 DEPS="erlang>=16.1.2"
