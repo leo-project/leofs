@@ -10,13 +10,13 @@ PKG_CATEGORY=leofs
 PKG_HOMEPAGE=http://www.leofs.org/
 DEPS="erlang>=16.1.2"
 
-
 include ../../deps/fifo_utils/priv/pkg.mk
-
 
 .PHONY: build_info package package_list all bootstrap
 
 all: package
+
+package: prepare $(FILE).tgz
 
 prepare:
 	-rm -r $(DIR)
@@ -34,10 +34,6 @@ prepare:
 	rm $(DIR)/etc/leo_manager.conf
 	cp files/leo_manager.conf.master $(DIR)/etc/leo_manager.conf.example
 
-package: prepare $(FILE).tgz
-
 clean: clean-pkg
 	-rm -r $(DIR)
 	-rm *.tgz
-
-package: prepare $(FILE).tgz
