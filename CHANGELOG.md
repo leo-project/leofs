@@ -60,7 +60,7 @@ CHANGELOG
 
 
 1.2.7 (Mar 6, 2015)
-<====================
+====================
 
 * Improvements
     * [#320](https://github.com/leo-project/leofs/issues/320) ``leo_mq`` Can take too much time to get started consuming messages in a MQ
