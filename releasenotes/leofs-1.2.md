@@ -1,3 +1,67 @@
+1.2.8
+=====
+
+Features and Improvements for LeoFS
+-----------------------------------
+
+* Improvements
+    * [#347](https://github.com/leo-project/leofs/issues/347) Delete Multiple Objects method of S3 API support
+    * Implemented the mq-stats command for JSON format
+
+Bugs Fixed
+-----------
+
+* Multi Data Center related issues
+    * [#329](https://github.com/leo-project/leofs/issues/329) ``mdc-replication`` Wrong cluster-status when executing the command on a remote-cluster's manager
+    * [#343](https://github.com/leo-project/leofs/issues/343) ``leo_storage`` ``mdc`` Replication messages coudn't be consumed at all
+    * [#345](https://github.com/leo-project/leofs/issues/345) ``leo_storage`` ``mdc`` Replication DELETE messages coudn't be consumed properly when the target objects already have been compacted
+* Othe issues
+    * [#141](https://github.com/leo-project/leofs/issues/141) ``leo_rpc``Performance degradation due to leaking tcp connections
+    * [#328](https://github.com/leo-project/leofs/issues/328) ``leo_gateway`` Cannot stop gateway with leo_gateway script
+        * [#340](https://github.com/leo-project/leofs/issues/340) ``leo_gateway`` leo_gateway can't stop (kill -0) properly on OSX
+    * [#333](https://github.com/leo-project/leofs/issues/333) ``leo_storage`` "case_clause" could happen when the target object was already deleted
+    * [#344](https://github.com/leo-project/leofs/issues/344) ``leo_storage`` Refactor leo_storage_handler_object to reduce complexity
+    * [#348](https://github.com/leo-project/leofs/issues/348) ``leo_gateway`` Files uploaded with its name including urlencoded chars stored improper name
+    * [#349](https://github.com/leo-project/leofs/issues/349) ``leo_gateway`` Get object with range header returns empty(wrong) content
+
+Used Libraries
+---------------
+
+* leo project
+    * [leo_backend-db v1.1.6](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.6)
+    * [leo_cache v0.6.3](https://github.com/leo-project/leo_cache/releases/tag/0.6.3)
+    * [leo_commons v1.1.1](https://github.com/leo-project/leo_commons/releases/tag/1.1.1)
+    * [leo_dcerl v0.2.12](https://github.com/leo-project/leo_dcerl/releases/tag/0.2.12)
+    * [leo_logger v1.1.5](https://github.com/leo-project/leo_logger/releases/tag/1.1.5)
+    * [leo_mcerl v0.4.1](https://github.com/leo-project/leo_mcerl/releases/tag/0.4.1)
+    * [leo_mq v1.3.6](https://github.com/leo-project/leo_mq/releases/tag/1.3.6)
+    * [leo_object_storage v1.2.5](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.5)
+    * [leo_ordning_reda v1.0.0](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.0.0)
+    * [leo_redundant_manager 1.9.10](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.10)
+    * [leo_rpc v0.10.1](https://github.com/leo-project/leo_rpc/releases/tag/0.10.1)
+    * [leo_pod v0.6.3](https://github.com/leo-project/leo_pod/releases/tag/0.6.3)
+    * [leo_s3_libs v1.1.7](https://github.com/leo-project/leo_s3_libs/releases/tag/1.1.7)
+    * [leo_statistics v1.1.2](https://github.com/leo-project/leo_statistics/releases/tag/1.1.2)
+    * [leo_watchdog v0.6.4](https://github.com/leo-project/leo_watchdog/releases/tag/0.6.4)
+    * [savanna_agent v0.4.6](https://github.com/leo-project/savanna_agent/releases/tag/0.4.6)
+    * [savanna_commons v0.8.9](https://github.com/leo-project/savanna_commons/releases/tag/0.8.9)
+    * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
+    * [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
+    * [leo_gateway v1.2.8](https://github.com/leo-project/leo_gateway/releases/tag/1.2.8)
+    * [leo_manager v1.2.8](https://github.com/leo-project/leo_manager/releases/tag/1.2.8)
+    * [leo_storage v1.2.8](https://github.com/leo-project/leo_storage/releases/tag/1.2.8)
+* others
+    * [bitcask v1.7.1](https://github.com/leo-project/bitcask/releases/tag/1.7.1)
+    * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+    * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+    * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+    * [eleveldb v1.4.10](https://github.com/basho/eleveldb/releases/tag/1.4.10)
+    * [folsom v0.8.1](https://github.com/boundary/folsom/releases/tag/0.8.1)
+    * [jiffy v0.13.3](https://github.com/davisp/jiffy/releases/tag/0.13.3)
+    * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+    * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
 1.2.7
 =====
 
