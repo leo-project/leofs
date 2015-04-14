@@ -15,14 +15,16 @@ Bugs Fixed
     * [#329](https://github.com/leo-project/leofs/issues/329) ``mdc-replication`` Wrong cluster-status when executing the command on a remote-cluster's manager
     * [#343](https://github.com/leo-project/leofs/issues/343) ``leo_storage`` ``mdc`` Replication messages coudn't be consumed at all
     * [#345](https://github.com/leo-project/leofs/issues/345) ``leo_storage`` ``mdc`` Replication DELETE messages coudn't be consumed properly when the target objects already have been compacted
-* Othe issues
-    * [#141](https://github.com/leo-project/leofs/issues/141) ``leo_rpc``Performance degradation due to leaking tcp connections
-    * [#328](https://github.com/leo-project/leofs/issues/328) ``leo_gateway`` Cannot stop gateway with leo_gateway script
-        * [#340](https://github.com/leo-project/leofs/issues/340) ``leo_gateway`` leo_gateway can't stop (kill -0) properly on OSX
+* Storage related issues
     * [#333](https://github.com/leo-project/leofs/issues/333) ``leo_storage`` "case_clause" could happen when the target object was already deleted
     * [#344](https://github.com/leo-project/leofs/issues/344) ``leo_storage`` Refactor leo_storage_handler_object to reduce complexity
+* Gateway related issues
+    * [#328](https://github.com/leo-project/leofs/issues/328) ``leo_gateway`` Cannot stop gateway with leo_gateway script
+        * [#340](https://github.com/leo-project/leofs/issues/340) ``leo_gateway`` leo_gateway can't stop (kill -0) properly on OSX
     * [#348](https://github.com/leo-project/leofs/issues/348) ``leo_gateway`` Files uploaded with its name including urlencoded chars stored improper name
     * [#349](https://github.com/leo-project/leofs/issues/349) ``leo_gateway`` Get object with range header returns empty(wrong) content
+* Othe issues
+    * [#141](https://github.com/leo-project/leofs/issues/141) ``leo_rpc``Performance degradation due to leaking tcp connections
 
 Used Libraries
 ---------------
