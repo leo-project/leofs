@@ -1,3 +1,62 @@
+1.2.9
+=====
+
+Features and Improvements for LeoFS
+-----------------------------------
+
+* Improvements
+    * [#354](https://github.com/leo-project/leofs/issues/354) ``leo_gateway`` ``leo_storage`` Exit when the number of retries reached a certain time
+    * [#356](https://github.com/leo-project/leofs/issues/356) ``leo_object_storage`` Logging slow I/O operations
+    * [#358](https://github.com/leo-project/leofs/issues/358) ``leo_watchdog`` ``leo_manager`` Dynamically change configuration
+    * [#360](https://github.com/leo-project/leofs/issues/360) ``leo_gateway`` Replace erlang:now with os:timestamp
+
+Bugs Fixed
+-----------
+
+* Improve performance of recover-node and rebalance processing
+    * [#359](https://github.com/leo-project/leofs/issues/359) ``leo_mq`` ``leo_storage`` CPU can be bottleneck in case doing rebalance/recover
+    * [#362](https://github.com/leo-project/leofs/issues/362) ``leo_backend_db`` leo_backend_db_bitcask:first function can use cpu more than necessary
+    * [Benchmark LeoFS v1.2.9 w/recover-node, watchdog and auto-compaction](https://github.com/leo-project/notes/tree/master/leofs/benchmark/leofs/recover_with_front/20150515_recover_node_1.2.9)
+* [#361](https://github.com/leo-project/leofs/issues/361) ``leo_statistics`` ``leo_storage`` ``leo_gateway`` ``leo_manager`` All Leo's servers can start normally even if starting statistics related erlang processes failed
+
+Used Libraries
+---------------
+
+* leo project
+    * [leo_backend-db v1.1.7](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.7)
+    * [leo_cache v0.6.3](https://github.com/leo-project/leo_cache/releases/tag/0.6.3)
+    * [leo_commons v1.1.1](https://github.com/leo-project/leo_commons/releases/tag/1.1.1)
+    * [leo_dcerl v0.2.12](https://github.com/leo-project/leo_dcerl/releases/tag/0.2.12)
+    * [leo_logger v1.1.5](https://github.com/leo-project/leo_logger/releases/tag/1.1.5)
+    * [leo_mcerl v0.4.1](https://github.com/leo-project/leo_mcerl/releases/tag/0.4.1)
+    * [leo_mq v1.3.8](https://github.com/leo-project/leo_mq/releases/tag/1.3.8)
+    * [leo_object_storage v1.2.6](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.6)
+    * [leo_ordning_reda v1.0.0](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.0.0)
+    * [leo_redundant_manager 1.9.12](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.12)
+    * [leo_rpc v0.10.1](https://github.com/leo-project/leo_rpc/releases/tag/0.10.1)
+    * [leo_pod v0.6.3](https://github.com/leo-project/leo_pod/releases/tag/0.6.3)
+    * [leo_s3_libs v1.1.7](https://github.com/leo-project/leo_s3_libs/releases/tag/1.1.7)
+    * [leo_statistics v1.1.3](https://github.com/leo-project/leo_statistics/releases/tag/1.1.3)
+    * [leo_watchdog v0.8.0](https://github.com/leo-project/leo_watchdog/releases/tag/0.8.0)
+    * [savanna_agent v0.4.6](https://github.com/leo-project/savanna_agent/releases/tag/0.4.6)
+    * [savanna_commons v0.8.9](https://github.com/leo-project/savanna_commons/releases/tag/0.8.9)
+    * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
+    * [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
+    * [leo_gateway v1.2.8](https://github.com/leo-project/leo_gateway/releases/tag/1.2.9)
+    * [leo_manager v1.2.8](https://github.com/leo-project/leo_manager/releases/tag/1.2.9)
+    * [leo_storage v1.2.8](https://github.com/leo-project/leo_storage/releases/tag/1.2.9)
+* others
+    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+    * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+    * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+    * [eleveldb v1.4.10](https://github.com/basho/eleveldb/releases/tag/1.4.10)
+    * [folsom v0.8.1](https://github.com/boundary/folsom/releases/tag/0.8.1)
+    * [jiffy v0.13.3](https://github.com/davisp/jiffy/releases/tag/0.13.3)
+    * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
+    * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
 1.2.8
 =====
 
