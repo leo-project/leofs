@@ -22,7 +22,7 @@ package: prepare $(FILE).tgz
 prepare:
 	-rm -r $(DIR)
 	mkdir -p $(BASE)
-	cp -r $(COMPONENT_PATH) $(DIR)/$(COMPONENT)
+	cp -r $(COMPONENT_PATH) $(DIR)
 	mkdir -p $(DIR)/share
 	mkdir -p $(BASE)/sbin
 	cp ../../leofs-adm $(BASE)/sbin

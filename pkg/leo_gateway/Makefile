@@ -19,7 +19,7 @@ package: prepare $(FILE).tgz
 
 prepare:
 	-rm -r $(DIR)
-	cp -r $(COMPONENT_PATH) $(DIR)/$(COMPONENT)
+	cp -r $(COMPONENT_PATH) $(DIR)
 	mkdir $(DIR)/share
 	cp files/$(COMPONENT) $(DIR)/bin/
 	cp files/$(COMPONENT).xml $(DIR)/share
