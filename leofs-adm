@@ -218,6 +218,21 @@ usage_recover_file() {
     esac
 }
 
+usage_recover_dir() {
+    USAGE="recover-dir"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Since: LeoFS v.1.4.0"
+            output "Description:"
+            output "  - Recover/Rebuild every directory's metadata for the matadata-layer"
+    esac
+}
+
 usage_recover_node() {
     USAGE="recover-node $STORAGE_NODE"
     case "$1" in
@@ -1048,6 +1063,14 @@ case "$1" in
             esac
         else
             usage_recover_file
+        fi
+        ;;
+    recover-dir)
+        if [ $# -eq 1 ]; then
+            send_command "recover dir"
+            exit 1
+        else
+            usage_recover_dir
         fi
         ;;
     recover-node)
