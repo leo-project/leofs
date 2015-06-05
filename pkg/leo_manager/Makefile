@@ -18,14 +18,15 @@ all: package
 package: prepare $(FILE).tgz
 
 prepare:
-	cp ../../leofs-adm $(STAGE_DIR)/sbin
+	-rm -r $(DIR)
 	cp -r $(COMPONENT_PATH) $(DIR)
+	mkdir $(DIR)/share
+	cp files/$(COMPONENT).xml $(DIR)/share
 	cp files/start $(DIR)/erts-*/bin/start
-	cp files/leo_manager.conf* $(DIR)/etc/
-	cp files/leo_manager_snmp.config $(DIR)/snmp/snmpa_manager_0/
-	cp files/leo_manager_snmp.config $(DIR)/snmp/snmpa_manager_1/
 	rm $(DIR)/etc/leo_manager.conf
 	cp files/leo_manager.conf.master $(DIR)/etc/leo_manager.conf.example
+	cp files/leo_manager_snmp.config $(DIR)/snmp/snmpa_manager_0/
+	cp files/leo_manager_snmp.config $(DIR)/snmp/snmpa_manager_1/
 
 clean: clean-pkg
 	-rm $(STAGE_DIR)/sbin/leofs-adm
