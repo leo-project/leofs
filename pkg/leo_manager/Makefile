@@ -20,8 +20,8 @@ package: prepare $(FILE).tgz
 prepare:
 	-rm -r $(DIR)
 	cp -r $(COMPONENT_PATH) $(DIR)
-	mkdir $(DIR)/share $(DIR)/sbin
-	cp ../../leofs-adm $(DIR)/sbin
+	mkdir $(DIR)/share $(STAGE_DIR)/sbin
+	cp ../../leofs-adm $(STAGE_DIR)/sbin
 	cp files/$(COMPONENT).xml $(DIR)/share
 	cp files/start $(DIR)/erts-*/bin/start
 	rm $(DIR)/etc/leo_manager.conf
