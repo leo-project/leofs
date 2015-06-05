@@ -186,6 +186,32 @@ case "$1" in
         fi
         ;;
 
+    dump-mnesia-data)
+        ## Dump mnesia-data to a textfile
+        if [ $# -eq 2 ]; then
+            $NODETOOL rpc mnesia dump_to_textfile "$2"
+        else
+            echo "Usage: leo_manager dump-mnesia-data <absolute-path>"
+        fi
+
+        ES=$?
+        if [ "$ES" -ne 0 ]; then
+            exit $ES
+        fi
+        ;;
+    load-mnesia-data)
+        ## Load mnesia-data from the textfile
+        if [ $# -eq 2 ]; then
+            $NODETOOL rpc mnesia load_textfile "$2"
+        else
+            echo "Usage: leo_manager load-mnesia-data <absolute-path>"
+        fi
+
+        ES=$?
+        if [ "$ES" -ne 0 ]; then
+            exit $ES
+        fi
+        ;;
     attach)
         # Make sure a node IS running
         RES=`$NODETOOL ping`
