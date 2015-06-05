@@ -20,7 +20,7 @@ package: prepare $(FILE).tgz
 prepare:
 	-rm -r $(DIR)
 	cp -r $(COMPONENT_PATH) $(DIR)
-	mkdir $(DIR)/share $(STAGE_DIR)/sbin
+	mkdir $(DIR)/share
 	cp ../../leofs-adm $(STAGE_DIR)/sbin
 	cp files/$(COMPONENT).xml $(DIR)/share
 	cp files/start $(DIR)/erts-*/bin/start
