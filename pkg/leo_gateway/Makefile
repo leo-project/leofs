@@ -3,8 +3,7 @@ VERSION=$(LEOFS_VERSION)
 COMPONENT_INTERNAL=leo_gateway
 COMPONENT=leo_gateway
 COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)
-DIR=../bootstrap/$(COMPONENT)
-STAGE_DIR=$(DIR)
+DIR=$(STAGE_DIR)/$(COMPONENT)
 PKG_CATEGORY=leofs
 PKG_HOMEPAGE=http://www.leofs.org/
 DEPS="erlang>=16.1.2"
@@ -21,7 +20,6 @@ prepare:
 	-rm -r $(DIR)
 	cp -r $(COMPONENT_PATH) $(DIR)
 	mkdir $(DIR)/share
-	cp files/$(COMPONENT) $(DIR)/bin/
 	cp files/$(COMPONENT).xml $(DIR)/share
 	cp files/start $(DIR)/erts-*/bin/start
 	rm $(DIR)/etc/leo_gateway.conf
@@ -30,5 +28,6 @@ prepare:
 	cp files/leo_gateway_snmp.config.1 $(DIR)/snmp/snmpa_gateway_1/leo_gateway_snmp.config
 
 clean: clean-pkg
+	-rm $(STAGE_DIR)/sbin/leofs-adm
 	-rm -r $(DIR)
 	-rm *.tgz

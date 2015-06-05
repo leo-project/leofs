@@ -5,7 +5,7 @@
 #
 # LeoFS
 #
-# Copyright (c) 2012-2014 Rakuten, Inc.
+# Copyright (c) 2012-2015 Rakuten, Inc.
 #
 # This file is provided to you under the Apache License,
 # Version 2.0 (the "License"); you may not use this file
@@ -460,6 +460,35 @@ usage_dump_ring() {
     esac
 }
 
+usage_update_property() {
+    USAGE="update-property <node> <property-name> <property-value>"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "  Examples:"
+            output "      leofs-adm update-property <node> watchdog.cpu_enabled <boolean>"
+            output "      leofs-adm update-property <node> watchdog.cpu_raised_error_times <integer>"
+            output "      leofs-adm update-property <node> watchdog.cpu_interval <integer>"
+            output "      leofs-adm update-property <node> watchdog.cpu_threshold_load_avg <float>"
+            output "      leofs-adm update-property <node> watchdog.cpu_threshold_util <integer>"
+            output "      leofs-adm update-property <node> watchdog.disk_enabled <boolean>"
+            output "      leofs-adm update-property <node> watchdog.disk_raised_error_times <integer>"
+            output "      leofs-adm update-property <node> watchdog.disk_interval <integer>"
+            output "      leofs-adm update-property <node> watchdog.disk_threshold_use <integer>"
+            output "      leofs-adm update-property <node> watchdog.disk_threshold_util <integer>"
+            output "      leofs-adm update-property <node> watchdog.disk_threshold_rkb <integer>"
+            output "      leofs-adm update-property <node> watchdog.disk_threshold_wkb <integer>"
+            output "      leofs-adm update-property <node> watchdog.cluster_enabled <boolean>"
+            output "      leofs-adm update-property <node> watchdog.cluster_interval <integer>"
+            output "Description:"
+            output "  - Modify a property of the watchdog"
+    esac
+}
+
 usage_create_user() {
     USAGE="create-user $USER_ID [<password>]"
     case "$1" in
@@ -797,6 +826,9 @@ usage() {
     usage_restore_mnesia min
     usage_update_managers min
     usage_dump_ring min
+    output ""
+    output "      ${UNDERLINE}Watchdog Operation:${NONE}"
+    usage_update_property min
     output ""
     output "      ${UNDERLINE}S3-related Commands:${NONE}"
     usage_create_user min
@@ -1255,6 +1287,18 @@ case "$1" in
             usage_dump_ring
         fi
         ;;
+
+    ##
+    ## Watchdog Operation
+    ##
+    update-property)
+        if [ $# -eq 4 ]; then
+            send_command "$@"
+        else
+            usage_update_property
+        fi
+        ;;
+
     ##
     ## S3-related
     ##
