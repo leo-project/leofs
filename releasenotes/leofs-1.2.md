@@ -5,12 +5,13 @@ Features and Improvements for LeoFS
 -----------------------------------
 
 *  [#377](https://github.com/leo-project/leofs/issues/377) ``leo_gateway`` Support logging bucket operation
+*  ``leofs-adm`` Added ``diagnose-start`` command
 
 Bugs Fixed
 -----------
 
 *  Retrieves range of an object
-    *  [#376](https://github.com/leo-project/leofs/issues/376) ``leo_gateway`` Cannot get an object with range
+    *  [#376](https://github.com/leo-project/leofs/issues/376) ``leo_gateway`` Could not get an object with range
     *  [#382](https://github.com/leo-project/leofs/issues/382) ``leo_storage`` Incorrect handling of range get the first byte
 * Leo Storage
     *  [#365](https://github.com/leo-project/leofs/issues/365) ``leo_storage`` ``auto-compaction`` Each storage node's data-compaction happened at almost same time
