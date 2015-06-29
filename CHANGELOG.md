@@ -13,11 +13,11 @@ CHANGELOG
         *  [#382](https://github.com/leo-project/leofs/issues/382) ``leo_storage`` Incorrect handling of range get the first byte
     * Leo Storage
         *  [#365](https://github.com/leo-project/leofs/issues/365) ``leo_storage`` ``auto-compaction`` Each storage node's data-compaction happened at almost same time
-        *  [#378](https://github.com/leo-project/leofs/issues/378) ``leo_object_storage`` file:pread/3 could return {ok, Data} which size less than the Number argument
+        *  [#378](https://github.com/leo-project/leofs/issues/378) ``leo_object_storage`` file:pread/3 could return {ok, Data} which size less than the number argument
         *  [#379](https://github.com/leo-project/leofs/issues/379) ``leo_storage`` ``leo_mq`` Decreased a performance of read and write operation during rebalance/recover-node
         *  [#383](https://github.com/leo-project/leofs/issues/383) ``leo_object_storage`` The result of du could be wrong
         *  [#385](https://github.com/leo-project/leofs/issues/385) ``leo_object_storage`` Found incorrect some data-blocks during the data-compaction
-        *  [#387](https://github.com/leo-project/leofs/issues/387) ``leo_ordning_reda`` Close operation should be executed when unexpected terminating
+        *  [#387](https://github.com/leo-project/leofs/issues/387) ``leo_ordning_reda`` Close-operation should be executed when unexpected terminating
         *  Revised [leo_storage's configuration](https://github.com/leo-project/leo_storage/blob/master/priv/leo_storage.conf):
             *  Removed configurations to reduce administration costs and ``leo_storage`` calcurates each min-value and step-value
                 *  compaction.waiting_time_min
@@ -29,7 +29,7 @@ CHANGELOG
                 *  mq.interval_between_batch_procs_min
                 *  mq.interval_between_batch_procs_step
     * Leo Gateway
-        *  [#171](https://github.com/leo-project/leofs/issues/171) ``leo_gateway`` PHP Client's headObject method was not working
+        *  [#171](https://github.com/leo-project/leofs/issues/171) ``leo_gateway`` PHP client's headObject was not working
         *  [#384](https://github.com/leo-project/leofs/issues/384) ``leo_gateway`` Some access logs have been not recorded
     * Leo Manager
         *  [#371](https://github.com/leo-project/leofs/issues/371) ``leo_manager`` ``leo_statistics`` Could NOT migrate from v1.0.x to 1.2
