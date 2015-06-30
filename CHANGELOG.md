@@ -1,8 +1,76 @@
 CHANGELOG
 =========
 
+1.2.11 (June 30, 2015)
+======================
+
+* Improvements
+    *  [#377](https://github.com/leo-project/leofs/issues/377) ``leo_gateway`` Supported logging bucket operation
+    *  ``leofs-adm`` Added ``diagnose-start`` command
+* Fixed Bugs
+    *  Retrieves range of an object
+        *  [#376](https://github.com/leo-project/leofs/issues/376) ``leo_gateway`` Could not get an object with range
+        *  [#382](https://github.com/leo-project/leofs/issues/382) ``leo_storage`` Incorrect handling of range get the first byte
+    * Leo Storage
+        *  [#365](https://github.com/leo-project/leofs/issues/365) ``leo_storage`` ``auto-compaction`` Each storage node's data-compaction happened at almost same time
+        *  [#378](https://github.com/leo-project/leofs/issues/378) ``leo_object_storage`` file:pread/3 could return {ok, Data} which size less than the number argument
+        *  [#379](https://github.com/leo-project/leofs/issues/379) ``leo_storage`` ``leo_mq`` Decreased a performance of read and write operation during rebalance/recover-node
+        *  [#383](https://github.com/leo-project/leofs/issues/383) ``leo_object_storage`` The result of du could be wrong
+        *  [#385](https://github.com/leo-project/leofs/issues/385) ``leo_object_storage`` Found incorrect some data-blocks during the data-compaction
+        *  [#387](https://github.com/leo-project/leofs/issues/387) ``leo_ordning_reda`` Close-operation should be executed when unexpected terminating
+        *  Revised [leo_storage's configuration](https://github.com/leo-project/leo_storage/blob/master/priv/leo_storage.conf):
+            *  Removed configurations to reduce administration costs and ``leo_storage`` calcurates each min-value and step-value
+                *  compaction.waiting_time_min
+                *  compaction.waiting_time_step
+                *  compaction.batch_procs_min
+                *  compaction.batch_procs_step
+                *  mq.num_of_batch_process_min
+                *  mq.num_of_batch_process_step
+                *  mq.interval_between_batch_procs_min
+                *  mq.interval_between_batch_procs_step
+    * Leo Gateway
+        *  [#171](https://github.com/leo-project/leofs/issues/171) ``leo_gateway`` PHP client's headObject was not working
+        *  [#384](https://github.com/leo-project/leofs/issues/384) ``leo_gateway`` Some access logs have been not recorded
+    * Leo Manager
+        *  [#371](https://github.com/leo-project/leofs/issues/371) ``leo_manager`` ``leo_statistics`` Could NOT migrate from v1.0.x to 1.2
+* Used libraries
+    * leo project
+        * [leo_backend-db v1.1.9](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.9)
+        * [leo_cache v0.6.5](https://github.com/leo-project/leo_cache/releases/tag/0.6.5)
+        * [leo_commons v1.1.2](https://github.com/leo-project/leo_commons/releases/tag/1.1.2)
+        * [leo_dcerl v0.4.0](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.0)
+        * [leo_logger v1.1.6](https://github.com/leo-project/leo_logger/releases/tag/1.1.6)
+        * [leo_mcerl v0.6.0](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.0)
+        * [leo_mq v1.3.11](https://github.com/leo-project/leo_mq/releases/tag/1.3.11)
+        * [leo_object_storage v1.2.8](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.8)
+        * [leo_ordning_reda v1.1.0](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.1.0)
+        * [leo_redundant_manager 1.9.15](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.15)
+        * [leo_rpc v0.10.2](https://github.com/leo-project/leo_rpc/releases/tag/0.10.2)
+        * [leo_pod v0.6.4](https://github.com/leo-project/leo_pod/releases/tag/0.6.4)
+        * [leo_s3_libs v1.1.8](https://github.com/leo-project/leo_s3_libs/releases/tag/1.1.8)
+        * [leo_statistics v1.1.6](https://github.com/leo-project/leo_statistics/releases/tag/1.1.6)
+        * [leo_watchdog v0.10.1](https://github.com/leo-project/leo_watchdog/releases/tag/0.10.1)
+        * [savanna_agent v0.4.9](https://github.com/leo-project/savanna_agent/releases/tag/0.4.9)
+        * [savanna_commons v0.8.12](https://github.com/leo-project/savanna_commons/releases/tag/0.8.12)
+        * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
+        * [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
+        * [leo_gateway v1.2.11](https://github.com/leo-project/leo_gateway/releases/tag/1.2.11)
+        * [leo_manager v1.2.11](https://github.com/leo-project/leo_manager/releases/tag/1.2.11)
+        * [leo_storage v1.2.11](https://github.com/leo-project/leo_storage/releases/tag/1.2.11)
+    * others
+        * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+        * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0)
+        * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+        * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+        * [eleveldb v2.1.1](https://github.com/basho/eleveldb/releases/tag/2.1.1)
+        * [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
+        * [jiffy v0.13.3](https://github.com/davisp/jiffy/releases/tag/0.13.3)
+        * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2)
+        * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
 1.2.10 (May 22, 2015)
-====================
+=====================
 
 * Fixed Bugs
     * [#366](https://github.com/leo-project/leofs/issues/366) ``leo_storage`` Cannot migrate old one to LeoFS v1.2.9
