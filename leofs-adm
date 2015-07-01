@@ -830,6 +830,7 @@ usage() {
     usage_compact_suspend min
     usage_compact_resume min
     usage_compact_status min
+    usage_diagnose_start min
     usage_du min
     output ""
     output "      ${UNDERLINE}Gateway Operation:${NONE}"
