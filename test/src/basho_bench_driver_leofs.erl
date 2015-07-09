@@ -144,6 +144,31 @@ run(get, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent = C
             {error, Reason, S2}
     end;
 
+run(getv4, KeyGen, _ValueGen, #state{check_integrity = CI, id = Id, concurrent = Concurrent} = State) ->
+    Key = keygen_global_uniq(CI, Id, Concurrent, KeyGen),
+    {NextUrl, S2} = next_url(State),
+    case do_get_v4(url(NextUrl, Key, State#state.path_params)) of
+        {not_found, _Url} ->
+            {ok, S2};
+        {ok, _Url, _Headers, Body} ->
+            case CI of
+                true ->
+                    case ets:lookup(?ETS_BODY_MD5, Key) of
+                        [{_Key, LocalMD5}|_] ->
+                            RemoteMD5 = erlang:md5(Body),
+                            case RemoteMD5 =:= LocalMD5 of
+                                true -> {ok, S2};
+                                false -> {error, checksum_error, S2}
+                            end;
+                        _ -> {ok, S2}
+                    end;
+                false -> {ok, S2}
+            end;
+        {error, Reason} ->
+            io:format("~p~n",[Reason]),
+            {error, Reason, S2}
+    end;
+
 run(test, _KeyGen, _ValueGen, #state{value_source = VS,
                                      value_size_groups = VSG} = State) ->
     {Group, _Val} = value_gen_with_size_groups(VS, VSG),
@@ -191,6 +216,12 @@ run(putv4, KeyGen, _ValueGen, #state{check_integrity = CI,
     Url = url(NextUrl, Key, State#state.path_params),
     case do_put_v4(Url, [], Val, <<"dummy">>) of
         ok ->
+            case CI of
+                true ->
+                    LocalMD5 = erlang:md5(Val),
+                    ets:insert(?ETS_BODY_MD5, {Key, LocalMD5});
+                false -> void
+            end,
             {ok, S2};
         {error, Reason} ->
             {error, Reason, S2}
@@ -209,6 +240,12 @@ run(putv4chunk, KeyGen, _ValueGen, #state{check_integrity = CI,
     Url = url(NextUrl, Key, State#state.path_params),
     case do_put_v4_chunk(Url, [], Val, AWSChunkSize, AWSChunkNoHash) of
         ok ->
+            case CI of
+                true ->
+                    LocalMD5 = erlang:md5(Val),
+                    ets:insert(?ETS_BODY_MD5, {Key, LocalMD5});
+                false -> void
+            end,
             {ok, S2};
         {error, Reason} ->
             {error, Reason, S2}
@@ -284,6 +321,25 @@ next_url(State) ->
 url(BaseUrl, Key, Params) ->
     BaseUrl#url { path = lists:concat([BaseUrl#url.path, '/', Key, Params]) }.
 
+do_get_v4(Url) ->
+    ValSHA256 = leo_hex:binary_to_hexbin(crypto:hash(sha256, <<>>)),
+    {_, _, _, Auth} = gen_sig_v4("GET", Url, ValSHA256),
+    Headers_2 = [
+                 {"x-amz-content-sha256", ValSHA256},
+                 {"x-amz-date", "20130524T000000Z"},
+                 {"content-type", ?S3_CONTENT_TYPE},
+                 {"authorization", Auth}
+                ],
+    case send_request(Url, Headers_2, get, [], [{response_format, binary}]) of
+        {ok, "404", _Headers, _Body} ->
+            {not_found, Url};
+        {ok, "200", Headers, Body} ->
+            {ok, Url, Headers, Body};
+        {ok, Code, _Headers, _Body} ->
+            {error, {http_error, Code}};
+        {error, Reason} ->
+            {error, Reason}
+    end.
 
 do_get(Url) ->
     case send_request(Url, [], get, [], [{response_format, binary}]) of
