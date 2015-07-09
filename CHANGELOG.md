@@ -7,7 +7,7 @@ CHANGELOG
 * Improvemens
     * Able to use ``compact-suspend`` comamnd when the auto-compaction is enabled
 * Fixed Bugs
-    * [#390](https://github.com/leo-project/leofs/issues/390) ``leo_object_storage`` unexpected 500 error when getting a zero size object not cached
+    * [#390](https://github.com/leo-project/leofs/issues/390) ``leo_object_storage`` Unexpected 500 error when getting a zero size object not cached
     * [#393](https://github.com/leo-project/leofs/issues/393) ``leo_object_storage`` Compaction can be slow because of the watchdog communication
     * [#395](https://github.com/leo-project/leofs/issues/395) ``leo_gateway`` ``s3tests.functional.test_s3:test_bucket_list_maxkeys_zero`` failed
     * [#396](https://github.com/leo-project/leofs/issues/396) ``leo_storage`` Auto Compaction tend to be executed on the same node
