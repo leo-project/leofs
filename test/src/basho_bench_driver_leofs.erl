@@ -391,9 +391,11 @@ send_request(Url, Headers, Method, Body, Options) ->
 send_request(_Url, _Headers, _Method, _Body, _Options, 0) ->
     {error, max_retries};
 send_request(Url, Headers, Method, Body, Options, Count) ->
+    Date = httpd_util:rfc1123_date(),
+    Headers2 = [{'Date', Date}|Headers],
     Pid = connect(Url),
     case catch(ibrowse_http_client:send_req(
-                 Pid, Url, Headers, Method, Body, Options,
+                 Pid, Url, Headers2, Method, Body, Options,
                  basho_bench_config:get(http_raw_request_timeout, 5000))) of
 
         {ok, Status, RespHeaders, RespBody} ->
@@ -405,7 +407,7 @@ send_request(Url, Headers, Method, Body, Options, Count) ->
             disconnect(Url),
             case should_retry(Error) of
                 true ->
-                    send_request(Url, Headers, Method, Body, Options, Count-1);
+                    send_request(Url, Headers2, Method, Body, Options, Count-1);
 
                 false ->
                     normalize_error(Method, Error)
