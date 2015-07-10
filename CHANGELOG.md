@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-1.2.12 (July 9, 2015)
+1.2.12 (July 10, 2015)
 ======================
 
 * Improvemens
@@ -11,6 +11,7 @@ CHANGELOG
     * [#393](https://github.com/leo-project/leofs/issues/393) ``leo_object_storage`` Compaction can be slow because of the watchdog communication
     * [#395](https://github.com/leo-project/leofs/issues/395) ``leo_gateway`` ``s3tests.functional.test_s3:test_bucket_list_maxkeys_zero`` failed
     * [#396](https://github.com/leo-project/leofs/issues/396) ``leo_storage`` Auto Compaction tend to be executed on the same node
+    * [#398](https://github.com/leo-project/leofs/issues/398) ``leo_object_storage`` Compaction may stop unintentionally under heavy load
 
 * Used libraries
     * leo project
@@ -38,7 +39,7 @@ CHANGELOG
         * [leo_storage v1.2.12](https://github.com/leo-project/leo_storage/releases/tag/1.2.12)
     * others
         * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
-        * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0)
+        * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
         * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
         * [eleveldb v2.1.1](https://github.com/basho/eleveldb/releases/tag/2.1.1)
