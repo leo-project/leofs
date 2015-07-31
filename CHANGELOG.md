@@ -2,34 +2,69 @@
 
 ## 1.4.0-pre.1 (July 31, 2015)
 
-* New Features
-    * AWS-Signature-v4 Support
-        * Reference: [Authenticating Requests (AWS Signature Version 4)](http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
-* Improvemens
-    * Improved LeoFS's NFS performance
-        * Retrieving list objects - *the ls and tree comand*
-        * Copying objects
-        * How to set up LeoFS's NFS feature - [LeoFS with NFS](http://leo-project.net/leofs/docs/configuration/configuration_6.html)
-        * Implemented LeoFS directory in [LeoStorage](https://github.com/leo-project/leo_storage) without degrading LeoStorage performance
-            * [Configuration](https://github.com/leo-project/leo_storage/blob/1.4.0-pre.1/priv/leo_storage.conf#L68-L75):
-                * LeoFS Directory DB's directory: ``directory.db_path``
-                * LeoFS Directory DB's container buffer: ``directory.cont_buffer_size``
-                * LeoFS Directory DB's container expiration time: ``directory.cont_expiration_time``
-    * [#283](https://github.com/leo-project/leofs/issues/283) ``leo_s3_libs`` Authenticating requests(AWS Signature version4) to be implemented
-    * [#373](https://github.com/leo-project/leofs/issues/373) ``S3-API`` ``AWS-Signature-v4`` ``leo_gateway`` ``leo_s3_libs`` Support aws-sdk-go
-    * [#375](https://github.com/leo-project/leofs/issues/375) ``NFS`` Reduce unnecessary round trips between nfs client and leo_gateway
-    * [#400](https://github.com/leo-project/leofs/issues/400) ``all`` Use erlang:(max|min) if possible
-    * [#403](https://github.com/leo-project/leofs/issues/403) ``s3-tests`` Increase s3-tests coverage
-* Fixed Bugs
-    * [#370](https://github.com/leo-project/leofs/issues/370) ``s3-api`` ``leo_manager`` ``leo_gateway`` Return wrong http response when handling an invalid bucket format
-    * [#372](https://github.com/leo-project/leofs/issues/372) ``s3-api`` ``leo_gateway`` Return wrong http response when handling an invalid maxkeys parameter
-    * [#374](https://github.com/leo-project/leofs/issues/374) ``s3-api`` ``leo_gateway`` Return wrong http response when handling an invalid http headers
-    * [#381](https://github.com/leo-project/leofs/issues/381) ``leo_gateway`` Does not respond to "List Multipart Uploads" Operation
-    * [#401](https://github.com/leo-project/leofs/issues/401) ``leo_storage`` 500 error can occur under heavy load with N=1
-    * [#405](https://github.com/leo-project/leofs/issues/405) ``leo_object_storage`` Crashing ``leo_object_storage_server`` causes a corresponding leo_backend_db_server inaccessible
-    * [#406](https://github.com/leo-project/leofs/issues/406) ``leo_mq`` Crashing ``leo_mq_publisher`` causes a corresponding leo_backend_db_server inaccessible
-    * [#407](https://github.com/leo-project/leofs/issues/407) ``leo_ordning_reda`` ``add_container`` and ``remove_container`` can get into race condition
-* Used libraries
+### New Features
+* AWS-Signature-v4 Support
+    * Reference: [Authenticating Requests (AWS Signature Version 4)](http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
+
+### Improvemens
+* Improved LeoFS's NFS performance
+    * Implemented LeoFS directory in [LeoStorage](https://github.com/leo-project/leo_storage) without degrading LeoStorage performance
+        * [Configuration](https://github.com/leo-project/leo_storage/blob/1.4.0-pre.1/priv/leo_storage.conf#L68-L75):
+            * LeoFS Directory DB's directory: ``directory.db_path``
+            * LeoFS Directory DB's container buffer: ``directory.cont_buffer_size``
+            * LeoFS Directory DB's container expiration time: ``directory.cont_expiration_time``
+    * Retrieving list objects - *the ls and tree comand*
+    * Copying objects
+
+* [#283](https://github.com/leo-project/leofs/issues/283) ``leo_s3_libs`` Authenticating requests(AWS Signature version4) to be implemented
+* [#373](https://github.com/leo-project/leofs/issues/373) ``S3-API`` ``AWS-Signature-v4`` ``leo_gateway`` ``leo_s3_libs`` Support aws-sdk-go
+* [#375](https://github.com/leo-project/leofs/issues/375) ``NFS`` Reduce unnecessary round trips between nfs client and leo_gateway
+* [#400](https://github.com/leo-project/leofs/issues/400) ``all`` Use erlang:(max|min) if possible
+* [#403](https://github.com/leo-project/leofs/issues/403) ``s3-tests`` Increase s3-tests coverage
+
+### Fixed Bugs
+* [#370](https://github.com/leo-project/leofs/issues/370) ``s3-api`` ``leo_manager`` ``leo_gateway`` Return wrong http response when handling an invalid bucket format
+* [#372](https://github.com/leo-project/leofs/issues/372) ``s3-api`` ``leo_gateway`` Return wrong http response when handling an invalid maxkeys parameter
+* [#374](https://github.com/leo-project/leofs/issues/374) ``s3-api`` ``leo_gateway`` Return wrong http response when handling an invalid http headers
+* [#401](https://github.com/leo-project/leofs/issues/401) ``leo_storage`` 500 error can occur under heavy load with N=1
+* [#405](https://github.com/leo-project/leofs/issues/405) ``leo_object_storage`` Crashing ``leo_object_storage_server`` causes a corresponding leo_backend_db_server inaccessible
+* [#406](https://github.com/leo-project/leofs/issues/406) ``leo_mq`` Crashing ``leo_mq_publisher`` causes a corresponding leo_backend_db_server inaccessible
+* [#407](https://github.com/leo-project/leofs/issues/407) ``leo_ordning_reda`` ``add_container`` and ``remove_container`` can get into race condition
+
+### How to install LeoFS v1.4.0-pre.1
+#### Install LeoFS dependent Libs
+##### Install required libraries using yum (CentOS 6.x/7.x)
+```bash
+$ sudo yum install gcc gcc-c++ glibc-devel make ncurses-devel openssl-devel autoconf \
+                   libuuid-devel cmake check check-devel
+
+## For LeoStorage's dependant lib - autoconf-2.69 and automake-1.13.4
+$ cd <workspace>
+$ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+$ tar xvfvz autoconf-2.69.tar.gz
+$ cd autoconf-2.69
+$ ./configure && make && sudo make install
+
+$ wget http://ftp.gnu.org/gnu/automake/automake-1.13.4.tar.gz
+$ tar xzf automake-1.13.4.tar.gz
+$ cd automake-1.13.4
+$ ./configure && make && sudo make install
+```
+
+##### Install required libraries using apt-get (Ubuntu Server 14.04 LTS or higher)
+```bash
+$ sudo apt-get install build-essential libtool libncurses5-dev libssl-dev cmake check automake autoconf
+```
+
+#### Build LeoFS
+```bash
+$ git clone https://github.com/leo-project/leofs.git
+$ cd leofs
+$ git checkout refs/tags/1.4.0-pre.1
+$ make
+```
+
+### Used libraries
     * leo project
         * [leo_backend-db v1.1.11](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.11)
         * [leo_cache v0.6.7](https://github.com/leo-project/leo_cache/releases/tag/0.6.7)

@@ -7,15 +7,13 @@
         * Reference: [Authenticating Requests (AWS Signature Version 4)](http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
 * Improvemens
     * Improved LeoFS's NFS performance
-        * Retrieving list objects - *the ls and tree comand*
-        * Copying objects
-        * How to set up LeoFS's NFS feature:
-            * [LeoFS with NFS](http://leo-project.net/leofs/docs/configuration/configuration_6.html)
         * Implemented LeoFS directory in [LeoStorage](https://github.com/leo-project/leo_storage) without degrading LeoStorage performance
-            * [LeoFS directory's configuration](https://github.com/leo-project/leo_storage/blob/1.4.0-pre.1/priv/leo_storage.conf#L68-L75):
+            * [Configuration](https://github.com/leo-project/leo_storage/blob/1.4.0-pre.1/priv/leo_storage.conf#L68-L75):
                 * LeoFS Directory DB's directory: ``directory.db_path``
                 * LeoFS Directory DB's container buffer: ``directory.cont_buffer_size``
                 * LeoFS Directory DB's container expiration time: ``directory.cont_expiration_time``
+        * Retrieving list objects - *the ls and tree comand*
+        * Copying objects
     * [#283](https://github.com/leo-project/leofs/issues/283) ``leo_s3_libs`` Authenticating requests(AWS Signature version4) to be implemented
     * [#373](https://github.com/leo-project/leofs/issues/373) ``S3-API`` ``AWS-Signature-v4`` ``leo_gateway`` ``leo_s3_libs`` Support aws-sdk-go
     * [#375](https://github.com/leo-project/leofs/issues/375) ``NFS`` Reduce unnecessary round trips between nfs client and leo_gateway
@@ -27,7 +25,6 @@
 * [#370](https://github.com/leo-project/leofs/issues/370) ``s3-api`` ``leo_manager`` ``leo_gateway`` Return wrong http response when handling an invalid bucket format
 * [#372](https://github.com/leo-project/leofs/issues/372) ``s3-api`` ``leo_gateway`` Return wrong http response when handling an invalid maxkeys parameter
 * [#374](https://github.com/leo-project/leofs/issues/374) ``s3-api`` ``leo_gateway`` Return wrong http response when handling an invalid http headers
-* [#381](https://github.com/leo-project/leofs/issues/381) ``leo_gateway`` Does not respond to "List Multipart Uploads" Operation
 * [#401](https://github.com/leo-project/leofs/issues/401) ``leo_storage`` 500 error can occur under heavy load with N=1
 * [#405](https://github.com/leo-project/leofs/issues/405) ``leo_object_storage`` Crashing ``leo_object_storage_server`` causes a corresponding leo_backend_db_server inaccessible
 * [#406](https://github.com/leo-project/leofs/issues/406) ``leo_mq`` Crashing ``leo_mq_publisher`` causes a corresponding leo_backend_db_server inaccessible
