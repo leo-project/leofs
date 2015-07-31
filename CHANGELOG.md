@@ -1,57 +1,70 @@
-CHANGELOG
-=========
+# CHANGELOG
 
-1.4.0-pre1 (July 23, 2015)
-==========================
+## 1.4.0-pre.1 (July 31, 2015)
 
+* New Features
+    * AWS-Signature-v4 Support
+        * Reference: [Authenticating Requests (AWS Signature Version 4)](http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
 * Improvemens
+    * Improved LeoFS's NFS performance
+        * Retrieving list objects - *the ls and tree comand*
+        * Copying objects
+        * How to set up LeoFS's NFS feature - [LeoFS with NFS](http://leo-project.net/leofs/docs/configuration/configuration_6.html)
+        * Implemented LeoFS directory in [LeoStorage](https://github.com/leo-project/leo_storage) without degrading LeoStorage performance
+            * [Configuration](https://github.com/leo-project/leo_storage/blob/1.4.0-pre.1/priv/leo_storage.conf#L68-L75):
+                * LeoFS Directory DB's directory: ``directory.db_path``
+                * LeoFS Directory DB's container buffer: ``directory.cont_buffer_size``
+                * LeoFS Directory DB's container expiration time: ``directory.cont_expiration_time``
     * [#283](https://github.com/leo-project/leofs/issues/283) ``leo_s3_libs`` Authenticating requests(AWS Signature version4) to be implemented
+    * [#373](https://github.com/leo-project/leofs/issues/373) ``S3-API`` ``AWS-Signature-v4`` ``leo_gateway`` ``leo_s3_libs`` Support aws-sdk-go
     * [#375](https://github.com/leo-project/leofs/issues/375) ``NFS`` Reduce unnecessary round trips between nfs client and leo_gateway
     * [#400](https://github.com/leo-project/leofs/issues/400) ``all`` Use erlang:(max|min) if possible
+    * [#403](https://github.com/leo-project/leofs/issues/403) ``s3-tests`` Increase s3-tests coverage
 * Fixed Bugs
     * [#370](https://github.com/leo-project/leofs/issues/370) ``s3-api`` ``leo_manager`` ``leo_gateway`` Return wrong http response when handling an invalid bucket format
     * [#372](https://github.com/leo-project/leofs/issues/372) ``s3-api`` ``leo_gateway`` Return wrong http response when handling an invalid maxkeys parameter
     * [#374](https://github.com/leo-project/leofs/issues/374) ``s3-api`` ``leo_gateway`` Return wrong http response when handling an invalid http headers
     * [#381](https://github.com/leo-project/leofs/issues/381) ``leo_gateway`` Does not respond to "List Multipart Uploads" Operation
     * [#401](https://github.com/leo-project/leofs/issues/401) ``leo_storage`` 500 error can occur under heavy load with N=1
+    * [#405](https://github.com/leo-project/leofs/issues/405) ``leo_object_storage`` Crashing ``leo_object_storage_server`` causes a corresponding leo_backend_db_server inaccessible
+    * [#406](https://github.com/leo-project/leofs/issues/406) ``leo_mq`` Crashing ``leo_mq_publisher`` causes a corresponding leo_backend_db_server inaccessible
+    * [#407](https://github.com/leo-project/leofs/issues/407) ``leo_ordning_reda`` ``add_container`` and ``remove_container`` can get into race condition
 * Used libraries
     * leo project
-        * [leo_backend-db v1.1.10](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.10)
-        * [leo_cache v0.6.6](https://github.com/leo-project/leo_cache/releases/tag/0.6.6)
-        * [leo_commons v1.1.3](https://github.com/leo-project/leo_commons/releases/tag/1.1.3)
+        * [leo_backend-db v1.1.11](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.11)
+        * [leo_cache v0.6.7](https://github.com/leo-project/leo_cache/releases/tag/0.6.7)
+        * [leo_commons v1.1.4](https://github.com/leo-project/leo_commons/releases/tag/1.1.4)
         * [leo_dcerl v0.4.0](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.0)
-        * [leo_logger v1.1.6](https://github.com/leo-project/leo_logger/releases/tag/1.1.6)
-        * [leo_mcerl v0.6.1](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.1)
-        * [leo_mq v1.3.12](https://github.com/leo-project/leo_mq/releases/tag/1.3.12)
-        * [leo_object_storage v1.4.0](https://github.com/leo-project/leo_object_storage/releases/tag/1.4.0)
-        * [leo_ordning_reda v1.1.1](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.1.1)
-        * [leo_redundant_manager 1.9.16](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.16)
-        * [leo_rpc v0.10.4](https://github.com/leo-project/leo_rpc/releases/tag/0.10.4)
-        * [leo_pod v0.6.6](https://github.com/leo-project/leo_pod/releases/tag/0.6.6)
-        * [leo_s3_libs v1.2.0](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.0)
-        * [leo_statistics v1.1.7](https://github.com/leo-project/leo_statistics/releases/tag/1.1.7)
-        * [leo_watchdog v0.10.3](https://github.com/leo-project/leo_watchdog/releases/tag/0.10.3)
-        * [savanna_agent v0.4.10](https://github.com/leo-project/savanna_agent/releases/tag/0.4.10)
-        * [savanna_commons v0.8.13](https://github.com/leo-project/savanna_commons/releases/tag/0.8.13)
+        * [leo_logger v1.1.10](https://github.com/leo-project/leo_logger/releases/tag/1.1.10)
+        * [leo_mcerl v0.6.0](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.0)
+        * [leo_mq v1.3.14](https://github.com/leo-project/leo_mq/releases/tag/1.3.14)
+        * [leo_object_storage v1.3.0](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.0)
+        * [leo_ordning_reda v1.1.2](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.1.2)
+        * [leo_redundant_manager 1.9.17](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.17)
+        * [leo_rpc v0.10.5](https://github.com/leo-project/leo_rpc/releases/tag/0.10.5)
+        * [leo_pod v0.6.4](https://github.com/leo-project/leo_pod/releases/tag/0.6.4)
+        * [leo_s3_libs v1.2.1](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.1)
+        * [leo_statistics v1.1.8](https://github.com/leo-project/leo_statistics/releases/tag/1.1.8)
+        * [leo_watchdog v0.10.4](https://github.com/leo-project/leo_watchdog/releases/tag/0.10.2)
+        * [savanna_agent v0.4.11](https://github.com/leo-project/savanna_agent/releases/tag/0.4.11)
+        * [savanna_commons v0.8.14](https://github.com/leo-project/savanna_commons/releases/tag/0.8.14)
         * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
         * [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
-        * [leo_gateway v1.4.0-pre1](https://github.com/leo-project/leo_gateway/releases/tag/1.4.0-pre1)
-        * [leo_manager v1.4.0-pre1](https://github.com/leo-project/leo_manager/releases/tag/1.4.0-pre1)
-        * [leo_storage v1.4.0-pre1](https://github.com/leo-project/leo_storage/releases/tag/1.4.0-pre1)
+        * [leo_gateway v1.4.0-pre1](https://github.com/leo-project/leo_gateway/releases/tag/1.4.0-pre.1)
+        * [leo_manager v1.4.0-pre1](https://github.com/leo-project/leo_manager/releases/tag/1.4.0-pre.1)
+        * [leo_storage v1.4.0-pre1](https://github.com/leo-project/leo_storage/releases/tag/1.4.0-pre.1)
     * others
         * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
-        * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
+        * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
         * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
-        * [eleveldb v2.1.2](https://github.com/basho/eleveldb/releases/tag/2.1.2)
+        * [eleveldb v2.1.1](https://github.com/basho/eleveldb/releases/tag/2.1.1)
         * [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
         * [jiffy v0.13.3](https://github.com/davisp/jiffy/releases/tag/0.13.3)
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2)
         * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
-
-1.2.12 (July 10, 2015)
-======================
+## 1.2.12 (July 10, 2015)
 
 * Improvemens
     * Able to use ``compact-suspend`` comamnd when the auto-compaction is enabled
@@ -98,8 +111,7 @@ CHANGELOG
         * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.11 (June 30, 2015)
-======================
+## 1.2.11 (June 30, 2015)
 
 * Improvements
     *  [#377](https://github.com/leo-project/leofs/issues/377) ``leo_gateway`` Supported logging bucket operation
@@ -166,8 +178,7 @@ CHANGELOG
         * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.10 (May 22, 2015)
-=====================
+## 1.2.10 (May 22, 2015)
 
 * Fixed Bugs
     * [#366](https://github.com/leo-project/leofs/issues/366) ``leo_storage`` Cannot migrate old one to LeoFS v1.2.9
@@ -210,8 +221,7 @@ CHANGELOG
         * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.9 (May 15, 2015)
-====================
+## 1.2.9 (May 15, 2015)
 
 * Improvements
     * [#354](https://github.com/leo-project/leofs/issues/354) ``leo_gateway`` ``leo_storage`` Exit when the number of retries reached a certain time
@@ -262,8 +272,7 @@ CHANGELOG
         * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.8 (Apr 14, 2015)
-====================
+## 1.2.8 (Apr 14, 2015)
 
 * Improvements
     * [#347](https://github.com/leo-project/leofs/issues/347) Delete Multiple Objects method of S3 API support
@@ -320,8 +329,7 @@ CHANGELOG
         * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.7 (Mar 6, 2015)
-====================
+## 1.2.7 (Mar 6, 2015)
 
 * Improvements
     * [#320](https://github.com/leo-project/leofs/issues/320) ``leo_mq`` Can take too much time to get started consuming messages in a MQ
@@ -370,8 +378,7 @@ CHANGELOG
         * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.6 (Feb 20, 2015)
-====================
+## 1.2.6 (Feb 20, 2015)
 
 * Improvements
     * [#296](https://github.com/leo-project/leofs/issues/296) ``leo_commons`` Replace leo_hashtable with Erlang built-in function
@@ -421,8 +428,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.5 (Jan 29, 2015)
-====================
+## 1.2.5 (Jan 29, 2015)
 
 * New Features
     * Started to provide LeoFS integration test tool - [leofs_test](https://github.com/leo-project/leofs_test2)
@@ -466,8 +472,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.4 (Jan 23, 2015)
-====================
+## 1.2.4 (Jan 23, 2015)
 
 * Fixed Bugs
     * [#297](https://github.com/leo-project/leofs/issues/297) ``leo_object_storage`` Could NOT handle delete requests which made by the MQ mechanism at LeoFS v1.2.3
@@ -507,8 +512,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.3 (Jan 20, 2015)
-====================
+## 1.2.3 (Jan 20, 2015)
 
 * Improvements
     * [#285](https://github.com/leo-project/leofs/issues/285) ``leo_storage`` Implemented "cluster-watchdog" in order to keep best condition of a cluster
@@ -554,8 +558,7 @@ And also, load of a primary of storage-node became high by this issue.
 
 
 
-1.2.2 (Dec 17, 2014)
-====================
+## 1.2.2 (Dec 17, 2014)
 
 * New Features
     * [#117](https://github.com/leo-project/leofs/issues/117) ``leo_storage`` Implemented the auto-compaction mechanism
@@ -710,8 +713,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.1 (Nov 11, 2014)
-====================
+## 1.2.1 (Nov 11, 2014)
 
 * Improvements
     * Supported [LeoCenter](https://github.com/leo-project/leo_center) for LeoFS v1.2
@@ -753,8 +755,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.0 (Nov 7, 2014)
-====================
+## 1.2.0 (Nov 7, 2014)
 
 * New Features
     * Watchdog mechnism has been implemented, which is called [leo_watchdog](https://github.com/leo-project/leo_watchdog)
@@ -813,8 +814,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.1.5 (Oct 15, 2014)
-====================
+## 1.1.5 (Oct 15, 2014)
 
 * Improvements
     * [#253](https://github.com/leo-project/leofs/issues/253) ``leo_manager`` Inform administrators via a log if the number of replica is changed
@@ -854,8 +854,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.1.4 (Oct 3, 2014)
-====================
+## 1.1.4 (Oct 3, 2014)
 
 * Improvements
     * Strictly checked routing-table between manager-node and other nodes
@@ -898,8 +897,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.1.3 (Sep 12, 2014)
-====================
+## 1.1.3 (Sep 12, 2014)
 
 * Improved
     * Implement the "rollback" command, which is able to rollback state of a storage node from 'detach' to 'running'
@@ -943,8 +941,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.1.2 (Sep 4, 2014)
-===================
+## 1.1.2 (Sep 4, 2014)
 
 * Improved
     * ``leo_object_storage`` - Improved the compaction mechanism
@@ -989,8 +986,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.1.1 (Aug 21, 2014)
-=========================
+## 1.1.1 (Aug 21, 2014)
 
 * Improved
     * [leofs-adm](https://github.com/leo-project/leofs/blob/master/leofs-adm)
@@ -1040,8 +1036,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.1.0 (Aug 6, 2014)
-=========================
+## 1.1.0 (Aug 6, 2014)
 
 * New Features
     * Implement [NFS Support](http://leo-project.net/leofs/docs/configuration_5.html) as one of LeoFS protocols, which is the alpha version.
@@ -1092,8 +1087,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.0.2 (May 9, 2014)
-=========================
+## 1.0.2 (May 9, 2014)
 
 * Fixed Bugs
     * [#189](https://github.com/leo-project/leofs/issues/189) ``leo_object_storage`` - Actual disk usage is different from the manager-console.
@@ -1128,8 +1122,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.0.1 (May 8, 2014)
-=========================
+## 1.0.1 (May 8, 2014)
 
 * Improved
     * [#183](https://github.com/leo-project/leofs/issues/183) ``leo_storage`` - Replication messages could be sent between storage nodes more than necessary
@@ -1178,8 +1171,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.0.0 (Apr 2, 2014)
-=========================
+## 1.0.0 (Apr 2, 2014)
 
 * New features
     * Multi datacenter replication (1st phase)
@@ -1231,8 +1223,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.0.0-pre3 (Feb 20, 2014)
-=========================
+## 1.0.0-pre3 (Feb 20, 2014)
 
 * Improved
     * `leo_manager` Able to plug functions in order to realize to build another manager
@@ -1282,8 +1273,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.0.0-pre2 (Jan 22, 2014)
-=========================
+## 1.0.0-pre2 (Jan 22, 2014)
 
 * New Features
      * Implemented for Multi DC Replication
@@ -1325,8 +1315,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.0.0-pre1 (Dec 27, 2013)
-=========================
+## 1.0.0-pre1 (Dec 27, 2013)
 
 * Improved
    * Revised the replicator and the read-repairer for the multi data center replicaion
@@ -1363,8 +1352,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.16.8 (Dec 12, 2013)
-=====================
+## 0.16.8 (Dec 12, 2013)
 
 * Improved
   * [#109](https://github.com/leo-project/leofs/issues/109) Moved to "ini-file" configuration, which no longer use Erlang-specific syntax. Using [cuttlefish](https://github.com/basho/cuttlefish) to realize this function.
@@ -1401,8 +1389,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.16.5 (Nov 26, 2013)
-=====================
+## 0.16.5 (Nov 26, 2013)
 
 * Improved
    * S3-API related
@@ -1450,8 +1437,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.16.0 (Oct 25, 2013)
-=====================
+## 0.16.0 (Oct 25, 2013)
 
 * New Features
     * Gateway
@@ -1488,8 +1474,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.9 (Sep 27, 2013)
-=====================
+## 0.14.9 (Sep 27, 2013)
 
 * Improved
     * Supported Erlang/OTP R16B02
@@ -1521,8 +1506,7 @@ And also, load of a primary of storage-node became high by this issue.
 
 
 
-0.14.8 (Sep 12, 2013)
-=====================
+## 0.14.8 (Sep 12, 2013)
 
 * Bugs Fixed
     * Gateway
@@ -1557,8 +1541,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.7 (Aug 23, 2013)
-=====================
+## 0.14.7 (Aug 23, 2013)
 
 * Improved
     * Gateway
@@ -1589,8 +1572,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.6 (July 11, 2013)
-======================
+## 0.14.6 (July 11, 2013)
 
 * Improved
     * Able to set the max number of requests allowed in a single keep-alive session
@@ -1626,8 +1608,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.5 (July 8, 2013)
-=====================
+## 0.14.5 (July 8, 2013)
 
 * Bugs Fixed
     * Gateway
@@ -1659,8 +1640,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.4 (June 28, 2013)
-=======================
+## 0.14.4 (June 28, 2013)
 
 * Improved
     * Supported [Erlang/OTP R16B01](http://www.erlang.org/news/54)
@@ -1692,8 +1672,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.3 (June 21, 2013)
-=======================
+## 0.14.3 (June 21, 2013)
 
 * Improved
     * Improved redundant-manager's performance when retrieving redundancies by up to 20%
@@ -1734,8 +1713,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.2 (June 7, 2013)
-=======================
+## 0.14.2 (June 7, 2013)
 
 * New Features
     * Supported rack-awareness replica placement
@@ -1791,8 +1769,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.1-1 (May 8, 2013)
-=======================
+## 0.14.1-1 (May 8, 2013)
 
 * Improved
     * Gateway
@@ -1803,8 +1780,7 @@ And also, load of a primary of storage-node became high by this issue.
             * "leo_gateway" stored a "0-byte length object" into the cache when put an large-object(over 5MB) from clients. So We supported to remove a registered object from the cache.
 
 
-0.14.1 (Apr 15, 2013)
-=====================
+## 0.14.1 (Apr 15, 2013)
 
 * Improved
     * Gateway
@@ -1853,8 +1829,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.0 (Mar 20, 2013)
-=====================
+## 0.14.0 (Mar 20, 2013)
 
 * Improved
     * Upgrade Cowboy from 0.6.2(foked/add patches) to 0.8.2(original)
@@ -1890,8 +1865,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.14.0-RC2 (Mar 14, 2013)
-========================
+## 0.14.0-RC2 (Mar 14, 2013)
 
 * Improved
     * Improved cache-mechanism (Gateway)
@@ -1926,8 +1900,8 @@ And also, load of a primary of storage-node became high by this issue.
         * [jiffy](https://github.com/davisp/jiffy.git)
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
-0.14.0-RC1 (Mar 5, 2013)
-========================
+
+##0.14.0-RC1 (Mar 5, 2013)
 
 * Improved
     * Improved cache-mechanism (Gateway)
@@ -1966,8 +1940,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-0.12.7 (Dec 26, 2012)
----------------------
+## 0.12.7 (Dec 26, 2012)
 
 * Improve performances
     * Storage Performance Tuning#6
@@ -2017,8 +1990,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlang-lz4)
 
 
-0.12.5 (Dec 7, 2012)
----------------------
+## 0.12.5 (Dec 7, 2012)
 
 * Improve performances
     * Storage Performance Tuning#5
@@ -2061,8 +2033,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlang-lz4)
 
 
-0.12.4 (Nov 21, 2012)
----------------------
+## 0.12.4 (Nov 21, 2012)
 
 * Improve performances
     * Storage Performance Tuning#4
@@ -2100,8 +2071,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlang-lz4)
 
 
-0.12.3 (Nov 9, 2012)
---------------------
+## 0.12.3 (Nov 9, 2012)
 
 * Improve performances
     * Storage Performance Tuning#3
@@ -2142,8 +2112,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlang-lz4)
 
 
-0.12.2 (Nov 2, 2012)
---------------------
+## 0.12.2 (Nov 2, 2012)
 
 * Improve performances
     * Storage Performance Tuning#2
@@ -2180,8 +2149,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlang-lz4)
 
 
-0.12.1  (Oct 25, 2012)
-----------------------
+## 0.12.1  (Oct 25, 2012)
 
 * Improve performances
     * Storage Performance Tuning#1
@@ -2221,8 +2189,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [lz4 v0.1.1](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlang-lz4)
 
 
-0.12.0 (Oct 20, 2012)
-----------------------
+## 0.12.0 (Oct 20, 2012)
 
 * New feature - Large Object Support
     * Handled from a few bytes an object to a few GB an object
@@ -2265,8 +2232,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [snappy](https://github.com/fdmanana/snappy-erlang-nif.git)
 
 
-0.10.2 (Sep 25, 2012)
-----------------------
+## 0.10.2 (Sep 25, 2012)
 
 * Improve performances
     * NOT used "proplists:get_value" function
@@ -2297,8 +2263,7 @@ And also, load of a primary of storage-node became high by this issue.
         * When using cowboy can send bad values(not iodata)
 
 
-0.10.1 (Sep 12, 2012)
----------------------
+## 0.10.1 (Sep 12, 2012)
 
 * Improve leo_hex performances
     * "binary_to_hex" function
@@ -2317,8 +2282,7 @@ And also, load of a primary of storage-node became high by this issue.
     * A handling error in S3-libs
 
 
-0.10.0 (Aug 30, 2012)
----------------------
+## 0.10.0 (Aug 30, 2012)
 
 * Improve S3-API's compatibility
     * Add S3-authentication
@@ -2339,8 +2303,7 @@ And also, load of a primary of storage-node became high by this issue.
     * Re-register procs into the Manager's monitor
 
 
-0.9.1 (Jul 13, 2012)
---------------------
+## 0.9.1 (Jul 13, 2012)
 
 * Remove "apps" directory in leofs - Modified "reltool.config"
 * Fix 'shadow vars'
@@ -2348,7 +2311,6 @@ And also, load of a primary of storage-node became high by this issue.
 * Improve - In order to be able to extend "LeoFS's Object Container's file format".
 
 
-0.9.0  (Jul 4, 2012)
---------------------
+## 0.9.0  (Jul 4, 2012)
 
 * Initial release
