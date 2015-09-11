@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+1.2.14 (September 11, 2015)
+===========================
+
+* Fixed Bugs
+    * [#416](https://github.com/leo-project/leofs/issues/416) ``leo_manager`` ``leo_redundant_manager`` Cannot execute the rebalance command with manual operaiton
+        * It was happened while one manager-node downed
+    * [#417](https://github.com/leo-project/leofs/issues/417) ``leo_manager`` ``leo_redundant_manager`` It possible of inconsistent status of a storage-node between leo_redundant_manager and leo_manager
+    * [#418](https://github.com/leo-project/leofs/issues/418) ``leo_manager`` leo_manager slave can't restart when detach was executed while the slave was down
+
+
 1.2.12 (July 10, 2015)
 ======================
 
