@@ -18,13 +18,13 @@ all: package
 package: prepare $(FILE).tgz
 
 prepare:
-	-rm -r $(DIR)
+	-rm -r $(DIR) || true
 	cp -r $(COMPONENT_PATH) $(DIR)
 	mkdir $(DIR)/share
 	cp ../../leofs-adm $(STAGE_DIR)/sbin
 	cp files/$(COMPONENT).xml $(DIR)/share
 	cp files/start $(DIR)/erts-*/bin/start
-	rm $(DIR)/etc/leo_manager.conf
+	rm $(DIR)/etc/leo_manager.conf || true
 	cp files/leo_manager.conf.master $(DIR)/etc/leo_manager.conf.example
 	cp files/leo_manager_snmp.config $(DIR)/snmp/snmpa_manager_0/
 	cp files/leo_manager_snmp.config $(DIR)/snmp/snmpa_manager_1/
