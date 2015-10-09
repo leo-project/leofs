@@ -3,11 +3,9 @@
 all: deps compile
 
 compile:
-	make patch
 	@./rebar compile
 deps:
 	@./rebar get-deps
-	make patch
 clean:
 	@./rebar clean
 	make -C pkg clean
@@ -16,9 +14,6 @@ xref:
 	@./rebar xref
 eunit:
 	@./rebar eunit
-
-patch:
-	(cd deps/leo_commons/ && git checkout refs/tags/1.1.4)
 
 generate:
 	rm -rf rel/leo_manager/leo_manager/
