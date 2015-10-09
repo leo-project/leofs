@@ -1,7 +1,8 @@
-LeoFS - The Lion of Storage Systems
-===================================
+# LeoFS - The Lion of Storage Systems
 
 ![LeoFS Logo](http://leo-project.net/leofs/docs/_static/leofs-logo-small.png)
+
+## Overview
 
 LeoFS is a highly available, distributed, eventually consistent object/blob store.
 If you are searching a storage system that is able to store huge amount and various kind of files such as photo, movie, log data and so on, LeoFS is suitable for that.
@@ -21,15 +22,26 @@ LeoFS is supporting the following features:
   * LeoFS's cluster can be viewed as ONE-HUGE storage. It consists of a set of loosely connected nodes.
   * We can build a global scale storage system with easy operations
 
+## Architecture
+
+![leofs-architecture-1](http://leo-project.net/leofs/docs/_images/leofs-architecture.0012.jpg)
+
+LeoFS consists of 3 applications - [LeoFS Storage](https://github.com/leo-project/leo_storage), [LeoFS Gateway](https://github.com/leo-project/leo_gateway) and [LeoFS Manager](https://github.com/leo-project/leo_manager) which depend on Erlang.
+
+[LeoFS Gateway](https://github.com/leo-project/leo_gateway) handles http-request and http-response from any clients when using REST-API OR S3-API. Also, it is already built in the object-cache mechanism (memory and disk cache).
+
+[LeoFS Storage](https://github.com/leo-project/leo_storage) handles GET, PUT and DELETE objects as well as metadata. Also, it has replicator, recoverer and queueing mechanism in order to keep running a storage node and realise eventual consistency.
+
+[LeoFS Manager](https://github.com/leo-project/leo_manager) always monitors LeoFS Gateway and LeoFS Storage nodes. The main monitoring status are Node status and RING’s checksum in order to realise to keep high availability and keep data consistency.
+
 We can access LeoFS server using <a target="_blank" href="http://www.leofs.org/docs/s3_client.html">S3 clients and S3 client libries of each programming language</a>.
 
-Slide
--------
+
+## Slide
 
 The presentation - <a href="https://www.slideshare.net/rakutentech/scaling-and-high-performance-storage-system-leofs" title="Scaling and High Performance Storage System: LeoFS" target="_blank">Scaling and High Performance Storage System: LeoFS</a>  was given at Erlang User Conference 2014 in Stockholm on June 2014
 
-GOALs
--------
+## GOALs
 
 * LeoFS aims to provide all of 3-HIGHs as follow:
   * HIGH Reliability
@@ -41,14 +53,12 @@ GOALs
      * A lower cost than other storage
      * Provide easy management and easy operation
 
-Further Reference
--------------------
+## Further Reference
 
 * <a target="_blank" href="http://leo-project.net/leofs/docs/">LeoFS Documentation</a>.
 
 
-Build LeoFS with LeoFS Packages
--------------------------------
+## Build LeoFS with LeoFS Packages
 
 LeoFS packages have been already provided on the Web. You're able to easily install LeoFS on your environments.
 
@@ -62,8 +72,7 @@ LeoFS packages have been already provided on the Web. You're able to easily inst
 <a target="_blank" href="http://leo-project.net/leofs/docs/getting_started.html">Here</a> is the installation manual.
 
 
-Build LeoFS From Source (For Developers)
-----------------------------------------
+## Build LeoFS From Source (For Developers)
 
 Here, we explain how to build LeoFS from source code.
 
@@ -204,60 +213,58 @@ $ ./leofs-adm status
 
 ```
 
-Build a LeoFS Cluster
----------------------
+## Build a LeoFS Cluster
 
 You can easily build a LeoFS cluster.
 
 Please refer <a target="_blank" href="http://www.leofs.org/docs/getting_started.html#quick-start-2-cluster">here</a>.
 
-Configure LeoFS
----------------
+## Configure LeoFS
 
 About the configuration of LeoFS, please refer <a target="_blank" href="http://www.leofs.org/docs/configuration.html">here</a>.
 
-Benchmarking
-------------
+## Benchmarking
 
 You can benchmark LeoFS with <a target="_blank" href="https://github.com/basho/basho_bench">Basho Bench</a>.
 
 <a target="_blank" href="http://www.leofs.org/docs/benchmark.html">Here</a> is a documentation to benchmark LeoFS.
 
 
-Integration Test
-----------------
+## Integration Test
 
 We're able to easily check LeoFS with <a target="_blank" href="https://github.com/leo-project/leofs_test2">leofs_test</a> whether LeoFS has issues or not before getting installed LeoFS in your dev/staging/production environment(s).
 
 
-Milestones
------------
+## Milestones
 
 * *DONE* - v1.0 (Nov 2013 - May 2014)
     * Multi Data Center Replication
     * Increase compatibility S3-APIs#5
         * Other bucket operations
 * *DONE* - v1.1
-    * NFS Support (Alpha)
+    * NFS Support *(alpha)*
     * Improve Web GUI Console (Option)
 * *DONE* - v1.2
-    * NFS Support (Beta-1)
+    * NFS Support *(beta)*
     * Watchdog
     * Auto-compaction
 * *On Going* - v1.4
-    * NFS Support (Beta-2)
-    * Improve performance of the list objects
-    * Improve Web GUI Console (Option)
+    * NFS Support *(stable)*
+        * Improve performance of the list objects
+        * NFS lock-option support
+    * Erasure Code
+    * Improve Web GUI console *(option)*
     * Improve compatibility S3-APIs#6
-        * Objects Expiration into the bucket
+        * AWS Signature v4 support
+        * Objects Expiration into a bucket
         * Versioning
 * v2.0
-    * NFS Support (for Production)
-    * QoS Support (Option)
+    * NFS Support
+    * QoS Support *(Option)*
     * Erasure Coding
     * Improve compatibility S3-APIs#7
 
 
 ## Sponsors
 
-LeoProject/LeoFS is sponsored by [Rakuten, Inc.](http://global.rakuten.com/corp/) and [Rakuten Institute of Technology](http://rit.rakuten.co.jp/).
+LeoProject/LeoFS is sponsored by [Rakuten, Inc.](http://global.rakuten.com/corp/) and supported by [Rakuten Institute of Technology](http://rit.rakuten.co.jp/).
