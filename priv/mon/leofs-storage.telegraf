@@ -93,10 +93,8 @@
 
 # Read metrics from a LeoFS Server via SNMP
 [leofs]
-	# An array of URI to gather stats about LeoFS.
-	# Specify an ip or hostname with port. ie 127.0.0.1:4020
-	#
-	# If no servers are specified, then 127.0.0.1 is used as the host and 4020 as the port.
+	# An array of URI to gather stats about LeoFS via SNMP:
+	# * LeoFS SNMPA Setup: <http://leo-project.net/leofs/docs/configuration/configuration_4.html>
 	servers = ["127.0.0.1:4010"]
 
 # Read metrics about memory usage

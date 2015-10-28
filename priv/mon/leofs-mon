@@ -1,0 +1,131 @@
+#!/bin/sh
+# -*- tab-width:4;indent-tabs-mode:nil -*-
+# ex: ts=4 sw=4 et
+#======================================================================
+#
+# LeoFS
+#
+# Copyright (c) 2012-2015 Rakuten, Inc.
+#
+# This file is provided to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file
+# except in compliance with the License.  You may obtain
+# a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#======================================================================
+bold=`tput bold`
+normal=`tput sgr0`
+
+SCRIPT=`basename $0`
+NONE='\033[00m'
+BOLD='\033[1m'
+UNDERLINE='\033[4m'
+
+OS=`uname -s`
+
+##
+## Output text
+##
+output() {
+    case $OS in
+        FreeBSD)
+            echo -e "$1"
+            ;;
+        SunOS)
+            echo -e "$1"
+            ;;
+        *)
+            echo "$1"
+    esac
+}
+
+##
+## Usage of the script
+##
+usage() {
+    output "usage: ${bold}$SCRIPT${normal} [--help]"
+    output "       ${bold}$SCRIPT${normal} -h <hostname> -n <leo_node_name> -k <kind_of_node>"
+    output ""
+    output "       * <kind_of_node>: [storage | gateway | manager]"
+    output ""
+}
+
+##
+## Generate a configuration file
+##
+if [ $# -lt 3 ]; then
+    usage
+    exit 1
+fi
+
+while test -n "$1"; do
+    case "$1" in
+        --help)
+            usage | less -r
+            exit 0
+            ;;
+        -h)
+            GEN_CONF_HOST="$2"
+            shift
+            ;;
+        -n)
+            GEN_CONF_NODE="$2"
+            shift
+            ;;
+        -k)
+            GEN_CONF_KIND="$2"
+            shift
+            ;;
+        *)
+            break
+    esac
+    shift
+done
+
+if test "${GEN_CONF_HOST}" = ""; then
+    usage
+    exit 1
+fi
+if test "${GEN_CONF_NODE}" = ""; then
+    usage
+    exit 1
+fi
+if test "${GEN_CONF_KIND}" = ""; then
+    usage
+    exit 1
+fi
+
+GEN_CONF_NODE_1=`echo "$GEN_CONF_NODE" | sed s/@/_at_/g`
+FILENAME_GRAFANA="${GEN_CONF_NODE_1}.grafana"
+FILENAME_TELEGRAF="${GEN_CONF_NODE_1}.telegraf"
+
+case $GEN_CONF_KIND in
+    storage)
+        # sed -e "s/<TITLE>/${GEN_CONF_NODE} Dashboard/g" ./leofs-storage.grafana > $FILENAME_GRAFANA
+        # sed -e "s/<LEO-NODE-NAME>/${GEN_CONF_NODE}/g" ./leofs-storage.grafana > $FILENAME_GRAFANA
+        cat ./leofs-storage.grafana | \
+            sed -e "s/<LEO-NODE-NAME>/${GEN_CONF_NODE}/g" \
+                -e "s/<TITLE>/${GEN_CONF_NODE} Dashboard/g"\
+                -e "s/<HOSTNAME>/${GEN_CONF_HOST}/g"\
+                > $FILENAME_GRAFANA
+        echo "DONE: ${FILENAME_GRAFANA}"
+        ;;
+    gateway)
+        echo "TODO: Generating conf files for Leo's Gateway"
+        ;;
+    manager)
+        echo "TODO: Generating conf files for Leo's Manaager"
+        ;;
+    *)
+        usage
+        exit 1
+esac
