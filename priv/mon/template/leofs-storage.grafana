@@ -1,5 +1,5 @@
 {
-  "id": 1,
+  "id": 2,
   "title": "<TITLE>",
   "originalTitle": "<TITLE>",
   "tags": [
@@ -12,125 +12,124 @@
   "sharedCrosshair": false,
   "rows": [
     {
-      "title": "New row",
-      "height": "250px",
-      "editable": true,
       "collapse": false,
+      "editable": true,
+      "height": "250px",
       "panels": [
         {
-          "title": "CPU Load AVG (OS)",
-          "error": false,
-          "span": 6,
-          "editable": true,
-          "type": "graph",
-          "id": 13,
+          "aliasColors": {},
+          "bars": false,
           "datasource": null,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 13,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
           "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "system_load1",
+              "query": "SELECT mean(value) FROM \"system_load1\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "system_load5",
+              "query": "SELECT mean(value) FROM \"system_load5\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "system_load15",
+              "query": "SELECT mean(value) FROM \"system_load15\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "CPU Load AVG (OS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
           "x-axis": true,
           "y-axis": true,
           "y_formats": [
             "short",
             "short"
-          ],
-          "grid": {
-            "leftLogBase": 1,
-            "leftMax": null,
-            "rightMax": null,
-            "leftMin": null,
-            "rightMin": null,
-            "rightLogBase": 1,
-            "threshold1": null,
-            "threshold2": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "lines": true,
-          "fill": 1,
-          "linewidth": 2,
-          "points": true,
-          "pointradius": 2,
-          "bars": false,
-          "stack": false,
-          "percentage": false,
-          "legend": {
-            "show": true,
-            "values": false,
-            "min": false,
-            "max": false,
-            "current": false,
-            "total": false,
-            "avg": false
-          },
-          "nullPointMode": "connected",
-          "steppedLine": false,
-          "tooltip": {
-            "value_type": "cumulative",
-            "shared": true
-          },
-          "timeFrom": null,
-          "timeShift": null,
-          "targets": [
-            {
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=",
-                  "value": "<HOSTNAME>"
-                }
-              ],
-              "groupByTags": [],
-              "fields": [
-                {
-                  "name": "value",
-                  "func": "mean"
-                }
-              ],
-              "measurement": "system_load1",
-              "query": "SELECT mean(value) FROM \"system_load1\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)"
-            },
-            {
-              "target": "",
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=",
-                  "value": "<HOSTNAME>"
-                }
-              ],
-              "groupByTags": [],
-              "fields": [
-                {
-                  "name": "value",
-                  "func": "mean"
-                }
-              ],
-              "measurement": "system_load5",
-              "query": "SELECT mean(value) FROM \"system_load5\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)"
-            },
-            {
-              "target": "",
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=",
-                  "value": "<HOSTNAME>"
-                }
-              ],
-              "groupByTags": [],
-              "fields": [
-                {
-                  "name": "value",
-                  "func": "mean"
-                }
-              ],
-              "measurement": "system_load15",
-              "query": "SELECT mean(value) FROM \"system_load15\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)"
-            }
-          ],
-          "aliasColors": {},
-          "seriesOverrides": [],
-          "links": [],
-          "transparent": true
+          ]
         },
         {
           "aliasColors": {},
@@ -291,7 +290,8 @@
             "percent"
           ]
         }
-      ]
+      ],
+      "title": "New row"
     },
     {
       "collapse": false,
@@ -380,7 +380,15 @@
               "target": ""
             },
             {
-              "target": "",
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "swap_used",
+              "query": "SELECT mean(value) FROM \"swap_used\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "host",
@@ -388,15 +396,7 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "groupByTags": [],
-              "fields": [
-                {
-                  "name": "value",
-                  "func": "mean"
-                }
-              ],
-              "measurement": "swap_used",
-              "query": "SELECT mean(value) FROM \"swap_used\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)"
+              "target": ""
             }
           ],
           "timeFrom": null,
@@ -459,7 +459,15 @@
           "steppedLine": false,
           "targets": [
             {
-              "target": "",
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_total_memory_usage",
+              "query": "SELECT mean(value) FROM \"leofs_total_memory_usage\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -467,15 +475,7 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "groupByTags": [],
-              "fields": [
-                {
-                  "name": "value",
-                  "func": "mean"
-                }
-              ],
-              "measurement": "leofs_total_memory_usage",
-              "query": "SELECT mean(value) FROM \"leofs_total_memory_usage\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)"
+              "target": ""
             },
             {
               "fields": [
@@ -486,7 +486,7 @@
               ],
               "groupByTags": [],
               "measurement": "leofs_allocated_memory",
-              "query": "SELECT mean(value) FROM \"leofs_allocated_memory\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT mean(value) FROM \"leofs_allocated_memory\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -504,7 +504,7 @@
               ],
               "groupByTags": [],
               "measurement": "leofs_used_allocated_memory",
-              "query": "SELECT mean(value) FROM \"leofs_used_allocated_memory\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT mean(value) FROM \"leofs_used_allocated_memory\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -523,7 +523,7 @@
               ],
               "groupByTags": [],
               "measurement": "leofs_ets_memory_usage",
-              "query": "SELECT mean(value) FROM \"leofs_ets_memory_usage\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT mean(value) FROM \"leofs_ets_memory_usage\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -542,7 +542,7 @@
               ],
               "groupByTags": [],
               "measurement": "leofs_system_memory_usage",
-              "query": "SELECT mean(value) FROM \"leofs_system_memory_usage\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT mean(value) FROM \"leofs_system_memory_usage\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -857,7 +857,7 @@
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_processes",
-              "query": "SELECT mean(value) FROM \"leofs_num_of_processes\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT mean(value) FROM \"leofs_num_of_processes\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -875,7 +875,7 @@
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_processes_5min",
-              "query": "SELECT mean(value) FROM \"leofs_num_of_processes_5min\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT mean(value) FROM \"leofs_num_of_processes_5min\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -947,13 +947,13 @@
             {
               "fields": [
                 {
-                  "func": "sum",
+                  "func": "distinct",
                   "name": "value"
                 }
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_replication_messages",
-              "query": "SELECT sum(value) FROM \"leofs_num_of_replication_messages\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_replication_messages\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -965,13 +965,13 @@
             {
               "fields": [
                 {
-                  "func": "sum",
+                  "func": "distinct",
                   "name": "value"
                 }
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_sync-vnode_messages",
-              "query": "SELECT sum(value) FROM \"leofs_num_of_sync-vnode_messages\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_sync-vnode_messages\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -984,13 +984,13 @@
             {
               "fields": [
                 {
-                  "func": "sum",
+                  "func": "distinct",
                   "name": "value"
                 }
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_rebalance_messages",
-              "query": "SELECT sum(value) FROM \"leofs_num_of_rebalance_messages\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_rebalance_messages\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -1008,6 +1008,7 @@
             "shared": true,
             "value_type": "cumulative"
           },
+          "transparent": true,
           "type": "graph",
           "x-axis": true,
           "y-axis": true,
@@ -1070,13 +1071,13 @@
             {
               "fields": [
                 {
-                  "func": "sum",
+                  "func": "distinct",
                   "name": "value"
                 }
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_active_objects",
-              "query": "SELECT sum(value) FROM \"leofs_num_of_active_objects\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_active_objects\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -1088,13 +1089,13 @@
             {
               "fields": [
                 {
-                  "func": "sum",
+                  "func": "distinct",
                   "name": "value"
                 }
               ],
               "groupByTags": [],
               "measurement": "leofs_total_objects",
-              "query": "SELECT sum(value) FROM \"leofs_total_objects\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT distinct(value) FROM \"leofs_total_objects\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -1132,10 +1133,10 @@
           "grid": {
             "leftLogBase": 1,
             "leftMax": null,
-            "leftMin": null,
+            "leftMin": 0,
             "rightLogBase": 1,
             "rightMax": null,
-            "rightMin": null,
+            "rightMin": 0,
             "threshold1": null,
             "threshold1Color": "rgba(216, 200, 27, 0.27)",
             "threshold2": null,
@@ -1167,13 +1168,13 @@
             {
               "fields": [
                 {
-                  "func": "sum",
+                  "func": "distinct",
                   "name": "value"
                 }
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_writes",
-              "query": "SELECT sum(value) FROM \"leofs_num_of_writes\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_writes\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -1185,13 +1186,13 @@
             {
               "fields": [
                 {
-                  "func": "sum",
+                  "func": "distinct",
                   "name": "value"
                 }
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_reads",
-              "query": "SELECT sum(value) FROM \"leofs_num_of_reads\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_reads\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -1204,13 +1205,13 @@
             {
               "fields": [
                 {
-                  "func": "sum",
+                  "func": "distinct",
                   "name": "value"
                 }
               ],
               "groupByTags": [],
               "measurement": "leofs_num_of_deletes",
-              "query": "SELECT sum(value) FROM \"leofs_num_of_deletes\" WHERE \"node\" = 'storage_0@127.0.0.1' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_deletes\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
               "tags": [
                 {
                   "key": "node",
@@ -1286,6 +1287,6 @@
   },
   "refresh": "30s",
   "schemaVersion": 6,
-  "version": 20,
+  "version": 2,
   "links": []
 }

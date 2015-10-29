@@ -53,7 +53,7 @@
 	# The full HTTP endpoint URL for your InfluxDB instance
 	# Multiple urls can be specified for InfluxDB cluster support. Server to
 	# write to will be randomly chosen each interval.
-	urls = ["http://localhost:8086"] # required.
+	urls = ["http://<INFLUXDB_IP>:<INFLUXDB_PORT>"] # required.
 
 	# The target database for metrics. This database must already exist
 	database = "leofs" # required.
@@ -95,7 +95,7 @@
 [leofs]
 	# An array of URI to gather stats about LeoFS via SNMP:
 	# * LeoFS SNMPA Setup: <http://leo-project.net/leofs/docs/configuration/configuration_4.html>
-	servers = ["127.0.0.1:4010"]
+	servers = ["<SNMP_IP>:<SNMP_PORT>"]
 
 # Read metrics about memory usage
 [mem]

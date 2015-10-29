@@ -95,15 +95,18 @@ sudo yum localinstall telegraf-0.1.9-1.x86_64.rpm
 * password: **&lt;influxdb-leofs-password&gt;** - default:``root``
 
 
-### Generate a configuration file of Grafana with [leo-mon](https://github.com/leo-project/leofs/tree/develop/priv/mon/leo-mon)
+### Generate a configuration file of Grafana with [leofs-mon](https://github.com/leo-project/leofs/tree/develop/priv/mon/leofs-mon)
 
-#### leo-mon's usage
+#### leofs-mon's usage
 ```bash
 $ leofs-mon --help
 usage: leofs-mon [--help]
        leofs-mon -h <hostname> -n <leo_node_name> -k <kind_of_node>
+                 [-snmp_ip <snmp-ip>] [-snmp_port <snmp-port>]
+                 [-influx_ip <influxdb-ip>] [-influx_port <influxdb-port>]
 
-       * <kind_of_node>: [storage | gateway | manager]
+       description of the parameters:
+         * <kind_of_node>: [storage | gateway | manager]
 ```
 
 #### Generate configuration files

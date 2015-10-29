@@ -26,10 +26,6 @@ bold=`tput bold`
 normal=`tput sgr0`
 
 SCRIPT=`basename $0`
-NONE='\033[00m'
-BOLD='\033[1m'
-UNDERLINE='\033[4m'
-
 OS=`uname -s`
 
 ##
@@ -54,8 +50,11 @@ output() {
 usage() {
     output "usage: ${bold}$SCRIPT${normal} [--help]"
     output "       ${bold}$SCRIPT${normal} -h <hostname> -n <leo_node_name> -k <kind_of_node>"
+    output "                 [-snmp_ip <snmp-ip>] [-snmp_port <snmp-port>]"
+    output "                 [-influx_ip <influxdb-ip>] [-influx_port <influxdb-port>]"
     output ""
-    output "       * <kind_of_node>: [storage | gateway | manager]"
+    output "       ${bold}description of the parameters:${normal}"
+    output "         * <kind_of_node>: [storage | gateway | manager]"
     output ""
 }
 
@@ -66,6 +65,11 @@ if [ $# -lt 3 ]; then
     usage
     exit 1
 fi
+
+SNMP_IP="127.0.0.1"
+SNMP_PORT=4010
+INFLUXDB_IP="localhost"
+INFLUXDB_PORT=8086
 
 while test -n "$1"; do
     case "$1" in
@@ -83,6 +87,22 @@ while test -n "$1"; do
             ;;
         -k)
             GEN_CONF_KIND="$2"
+            shift
+            ;;
+        -snmp_ip)
+            SNMP_IP="$2"
+            shift
+            ;;
+        -snmp_port)
+            SNMP_PORT="$2"
+            shift
+            ;;
+        -influx_ip)
+            INFLUXDB_IP="$2"
+            shift
+            ;;
+        -influx_port)
+            INFLUXDB_PORT="$2"
             shift
             ;;
         *)
@@ -110,22 +130,34 @@ FILENAME_TELEGRAF="${GEN_CONF_NODE_1}.telegraf"
 
 case $GEN_CONF_KIND in
     storage)
-        # sed -e "s/<TITLE>/${GEN_CONF_NODE} Dashboard/g" ./leofs-storage.grafana > $FILENAME_GRAFANA
-        # sed -e "s/<LEO-NODE-NAME>/${GEN_CONF_NODE}/g" ./leofs-storage.grafana > $FILENAME_GRAFANA
-        cat ./leofs-storage.grafana | \
-            sed -e "s/<LEO-NODE-NAME>/${GEN_CONF_NODE}/g" \
-                -e "s/<TITLE>/${GEN_CONF_NODE} Dashboard/g"\
-                -e "s/<HOSTNAME>/${GEN_CONF_HOST}/g"\
-                > $FILENAME_GRAFANA
-        echo "DONE: ${FILENAME_GRAFANA}"
+        TEMPLATE_GRAFANA="template/leofs-storage.grafana"
+        TEMPLATE_TELEGRAF="template/leofs-storage.telegraf"
         ;;
     gateway)
-        echo "TODO: Generating conf files for Leo's Gateway"
+        TEMPLATE_GRAFANA="template/leofs-gateway.grafana"
+        TEMPLATE_TELEGRAF="template/leofs-gateway.telegraf"
         ;;
     manager)
-        echo "TODO: Generating conf files for Leo's Manaager"
+        TEMPLATE_GRAFANA="template/leofs-manager.grafana"
+        TEMPLATE_TELEGRAF="template/leofs-manager.telegraf"
         ;;
     *)
         usage
         exit 1
 esac
+
+cat $TEMPLATE_GRAFANA | \
+    sed -e "s/<TITLE>/${GEN_CONF_NODE} Dashboard/g"\
+        -e "s/<LEO-NODE-NAME>/${GEN_CONF_NODE}/g" \
+        -e "s/<HOSTNAME>/${GEN_CONF_HOST}/g"\
+        > $FILENAME_GRAFANA
+
+cat $TEMPLATE_TELEGRAF | \
+    sed -e "s/<SNMP_IP>/${SNMP_IP}/g" \
+        -e "s/<SNMP_PORT>/${SNMP_PORT}/g"\
+        -e "s/<INFLUXDB_IP>/${INFLUXDB_IP}/g" \
+        -e "s/<INFLUXDB_PORT>/${INFLUXDB_PORT}/g"\
+        > $FILENAME_TELEGRAF
+echo "DONE:"
+echo "  - ${FILENAME_GRAFANA}"
+echo "  - ${FILENAME_TELEGRAF}"
