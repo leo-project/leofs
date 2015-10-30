@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 MAINTAINER Jun Takizawa <fire@jun-t.com>
-ENV LEOFS_VER=1.2.8 PATH=/usr/local/erlang/17.4/bin:$PATH
+ENV LEOFS_VER=1.2.16 PATH=/usr/local/erlang/17.5/bin:$PATH
 WORKDIR /docker
 RUN apt-get -y update && \
     apt-get -y upgrade && \
@@ -8,17 +8,17 @@ RUN apt-get -y update && \
     useradd -d /home/leofs -m -s /bin/bash leofs && \
     echo leofs:leofs | chpasswd;echo 'leofs ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
     wget http://www.ivmaisoft.com/_bin/atomic_ops/libatomic_ops-7.4.2.tar.gz && \
-    wget http://www.erlang.org/download/otp_src_17.4.tar.gz && \
+    wget http://www.erlang.org/download/otp_src_17.5.tar.gz && \
     tar xvfz libatomic_ops-7.4.2.tar.gz && \
     cd libatomic_ops-7.4.2 && \
     ./configure --prefix=/usr/local && \
     make && \
     make install && \
     cd .. && \
-    tar xvfz otp_src_17.4.tar.gz && \
-    cd otp_src_17.4 && \
+    tar xvfz otp_src_17.5.tar.gz && \
+    cd otp_src_17.5 && \
     ./configure \
-    --prefix=/usr/local/erlang/17.4 \
+    --prefix=/usr/local/erlang/17.5 \
     --enable-smp-support \
     --enable-m64-build \
     --enable-halfword-emulator \
@@ -41,7 +41,7 @@ RUN apt-get -y update && \
     cp -r package/* /usr/local/leofs && \
     cp leofs-adm /usr/local/bin && \
     cd .. && \
-    rm -rf otp_src_17.4* libatomic_ops-7.4.2* leofs && \
+    rm -rf otp_src_17.5* libatomic_ops-7.4.2* leofs && \
     touch /usr/local/leofs/bin/start_leofs.sh && \
     chmod 755 /usr/local/leofs/bin/start_leofs.sh && \
     echo '#!/usr/bin/env sh' >> /usr/local/leofs/bin/start_leofs.sh && \
