@@ -65,7 +65,7 @@ LeoFS packages have been already provided on the Web. You're able to easily inst
 * LeoProject
     * <a target="_blank" href="http://leo-project.net/leofs/download.html">CentOS-7.0</a>
     * <a target="_blank" href="http://leo-project.net/leofs/download.html">CentOS-6.x</a>
-    * <a target="_blank" href="http://leo-project.net/leofs/download.html">13.10 and 14.04</a>
+    * <a target="_blank" href="http://leo-project.net/leofs/download.html">14.04 and later</a>
 * Community
     * <a target="_blank" href="http://www.freshports.org/databases/leofs">FreeBSD</a>
 
@@ -99,12 +99,12 @@ $ make
 $ sudo make install
 
 ##
-## 2. Install Erlang (17.4)
+## 2. Install Erlang (17.5)
 ##
-$ wget http://www.erlang.org/download/otp_src_17.4.tar.gz
-$ tar xzf otp_src_17.4.tar.gz
-$ cd otp_src_17.4
-$ ./configure --prefix=/usr/local/erlang/17.4 \
+$ wget http://www.erlang.org/download/otp_src_17.5.tar.gz
+$ tar xzf otp_src_17.5.tar.gz
+$ cd otp_src_17.5
+$ ./configure --prefix=/usr/local/erlang/17.5 \
               --enable-smp-support \
               --enable-m64-build \
               --enable-halfword-emulator \
@@ -123,7 +123,7 @@ $ sudo make install
 ##
 $ vi ~/.profile
     ## append the follows:
-    export ERL_HOME=/usr/local/erlang/17.4
+    export ERL_HOME=/usr/local/erlang/17.5
     export PATH=$PATH:$ERL_HOME/bin
 
 $ source ~/.profile
@@ -162,54 +162,78 @@ $ package/leo_manager_1/bin/leo_manager start
 $ package/leo_storage/bin/leo_storage start
 $ package/leo_gateway/bin/leo_gateway start
 $ ./leofs-adm status
-[System config]
-                System version : 1.0.0
-                    Cluster Id : leofs_1
-                         DC Id : dc_1
-                Total replicas : 1
-           # of successes of R : 1
-           # of successes of W : 1
-           # of successes of D : 1
- # of DC-awareness replicas    : 0
-                     ring size : 2^128
-             Current ring hash : 941f20fc
-                Prev ring hash : 000000-1
-[Multi DC replication settings]
-         max # of joinable DCs : 2
-            # of replicas a DC : 1
+ [System Confiuration]
+-----------------------------------+----------
+ Item                              | Value
+-----------------------------------+----------
+ Basic/Consistency level
+-----------------------------------+----------
+                    system version | 1.2.16
+                        cluster Id | leofs_1
+                             DC Id | dc_1
+                    Total replicas | 2
+          number of successes of R | 1
+          number of successes of W | 1
+          number of successes of D | 1
+ number of rack-awareness replicas | 0
+                         ring size | 2^128
+-----------------------------------+----------
+ Multi DC replication settings
+-----------------------------------+----------
+        max number of joinable DCs | 2
+           number of replicas a DC | 1
+-----------------------------------+----------
+ Manager RING hash
+-----------------------------------+----------
+                 current ring-hash | 3923d007
+                previous ring-hash | 3923d007
+-----------------------------------+----------
 
-[Node(s) state]
+ [State of Node(s)]
 -------+--------------------------+--------------+----------------+----------------+----------------------------
  type  |           node           |    state     |  current ring  |   prev ring    |          updated at
 -------+--------------------------+--------------+----------------+----------------+----------------------------
-  S    | storage_0@127.0.0.1      | attached     |                |                | 2014-04-16 10:09:59 +0900
+  S    | storage_0@127.0.0.1      | running      | 3923d007       | 3923d007       | 2015-10-30 09:44:11 +0900
+-------+--------------------------+--------------+----------------+----------------+----------------------------
 
 $ ./leofs-adm start
 OK
 
 $ ./leofs-adm status
-[System config]
-                System version : 1.0.0
-                    Cluster Id : leofs_1
-                         DC Id : dc_1
-                Total replicas : 1
-           # of successes of R : 1
-           # of successes of W : 1
-           # of successes of D : 1
- # of DC-awareness replicas    : 0
-                     ring size : 2^128
-             Current ring hash : 941f20fc
-                Prev ring hash : 941f20fc
-[Multi DC replication settings]
-         max # of joinable DCs : 2
-            # of replicas a DC : 1
+-----------------------------------+----------
+ Item                              | Value
+-----------------------------------+----------
+ Basic/Consistency level
+-----------------------------------+----------
+                    system version | 1.2.16
+                        cluster Id | leofs_1
+                             DC Id | dc_1
+                    Total replicas | 2
+          number of successes of R | 1
+          number of successes of W | 1
+          number of successes of D | 1
+ number of rack-awareness replicas | 0
+                         ring size | 2^128
+-----------------------------------+----------
+ Multi DC replication settings
+-----------------------------------+----------
+        max number of joinable DCs | 2
+           number of replicas a DC | 1
+-----------------------------------+----------
+ Manager RING hash
+-----------------------------------+----------
+                 current ring-hash | 3923d007
+                previous ring-hash | 3923d007
+-----------------------------------+----------
 
-[Node(s) state]
+ [State of Node(s)]
 -------+--------------------------+--------------+----------------+----------------+----------------------------
  type  |           node           |    state     |  current ring  |   prev ring    |          updated at
 -------+--------------------------+--------------+----------------+----------------+----------------------------
-  S    | storage_0@127.0.0.1      | running      | 941f20fc       | 941f20fc       | 2014-04-16 10:09:59 +0900
-  G    | gateway_0@127.0.0.1      | running      | 941f20fc       | 941f20fc       | 2014-04-16 10:09:59 +0900
+  S    | storage_0@127.0.0.1      | running      | 3923d007       | 3923d007       | 2015-10-30 09:44:11 +0900
+  G    | gateway_0@127.0.0.1      | running      | 3923d007       | 3923d007       | 2015-10-30 09:45:27 +0900
+-------+--------------------------+--------------+----------------+----------------+----------------------------
+
 
 ```
 
