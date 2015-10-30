@@ -75,8 +75,8 @@ $ sudo dpkg -i telegraf_0.1.9_amd64.deb
 
 #### For CentOS/RHEL
 ```bash
-wget https://s3.amazonaws.com/get.influxdb.org/telegraf/telegraf-0.1.9-1.x86_64.rpm
-sudo yum localinstall telegraf-0.1.9-1.x86_64.rpm
+$ wget https://s3.amazonaws.com/get.influxdb.org/telegraf/telegraf-0.1.9-1.x86_64.rpm
+$ sudo yum localinstall telegraf-0.1.9-1.x86_64.rpm
 ```
 
 ### Setup data-source on Grafana
@@ -112,7 +112,9 @@ usage: leofs-mon [--help]
 #### Generate configuration files
 ```bash
 $ leofs-mon -h hostname -n storage_0@127.0.0.1 -k storage
-DONE: storage_0_at_127.0.0.1.grafana
+DONE:
+  - storage_0_at_127.0.0.1.grafana
+  - storage_0_at_127.0.0.1.telegraf
 ```
 
 ### Run telegraf-agent for monitoring Leo’s Storage after a monitoring target was started
