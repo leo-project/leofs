@@ -208,7 +208,7 @@ $ ./leofs-adm status
                     system version | 1.2.16
                         cluster Id | leofs_1
                              DC Id | dc_1
-                    Total replicas | 2
+                    Total replicas | 1
           number of successes of R | 1
           number of successes of W | 1
           number of successes of D | 1
