@@ -1,13 +1,98 @@
-1.2.12
-======
+# 1.2.16
+## Bugs Fixed
 
-Features and Improvements for LeoFS
------------------------------------
+* [#422](https://github.com/leo-project/leofs/issues/422) ``leo_storage`` A LeoStorage node crashed due to executing consecutive the "ls" command
+* [#423](https://github.com/leo-project/leofs/issues/423)``v1.2.11-`` ``leo_watchdog`` Did not clear combination of for errors - "cpu_util" and "load_avg_1m"
+
+## Used Libraries
+
+* leo project
+    * [leo_backend-db v1.1.13](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.13)
+    * [leo_cache v0.6.5](https://github.com/leo-project/leo_cache/releases/tag/0.6.5)
+    * [leo_commons v1.1.5](https://github.com/leo-project/leo_commons/releases/tag/1.1.4)
+    * [leo_dcerl v0.4.0](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.0)
+    * [leo_logger v1.1.11](https://github.com/leo-project/leo_logger/releases/tag/1.1.11)
+    * [leo_mcerl v0.6.0](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.0)
+    * [leo_mq v1.3.16](https://github.com/leo-project/leo_mq/releases/tag/1.3.16)
+    * [leo_object_storage v1.2.10](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.10)
+    * [leo_ordning_reda v1.1.3](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.1.3)
+    * [leo_redundant_manager 1.9.19](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.19)
+    * [leo_rpc v0.10.6](https://github.com/leo-project/leo_rpc/releases/tag/0.10.6)
+    * [leo_pod v0.6.6](https://github.com/leo-project/leo_pod/releases/tag/0.6.6)
+    * [leo_s3_libs v1.1.9](https://github.com/leo-project/leo_s3_libs/releases/tag/1.1.9)
+    * [leo_statistics v1.1.9](https://github.com/leo-project/leo_statistics/releases/tag/1.1.9)
+    * [leo_watchdog v0.12.0](https://github.com/leo-project/leo_watchdog/releases/tag/0.12.0)
+    * [savanna_agent v0.4.12](https://github.com/leo-project/savanna_agent/releases/tag/0.4.12)
+    * [savanna_commons v0.8.15](https://github.com/leo-project/savanna_commons/releases/tag/0.8.15)
+    * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
+    * [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
+    * [leo_gateway v1.2.16](https://github.com/leo-project/leo_gateway/releases/tag/1.2.16)
+    * [leo_manager v1.2.16](https://github.com/leo-project/leo_manager/releases/tag/1.2.16)
+    * [leo_storage v1.2.16](https://github.com/leo-project/leo_storage/releases/tag/1.2.16)
+* others
+    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
+    * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+    * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+    * [eleveldb v2.1.1](https://github.com/basho/eleveldb/releases/tag/2.1.1)
+    * [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
+    * [jiffy v0.13.3](https://github.com/davisp/jiffy/releases/tag/0.13.3)
+    * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2)
+    * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
+# 1.2.14
+## Bugs Fixed
+
+* [#416](https://github.com/leo-project/leofs/issues/416) ``leo_manager`` ``leo_redundant_manager`` Cannot execute the rebalance command with manual operaiton
+    * It was happened while one manager-node downed
+* [#417](https://github.com/leo-project/leofs/issues/417) ``leo_manager`` ``leo_redundant_manager`` It possible of inconsistent status of a storage-node between leo_redundant_manager and leo_manager
+* [#418](https://github.com/leo-project/leofs/issues/418) ``leo_manager`` leo_manager slave can't restart when detach was executed while the slave was down
+
+
+## Used Libraries
+
+* leo project
+    * [leo_backend-db v1.1.9](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.9)
+    * [leo_cache v0.6.5](https://github.com/leo-project/leo_cache/releases/tag/0.6.5)
+    * [leo_commons v1.1.4](https://github.com/leo-project/leo_commons/releases/tag/1.1.4)
+    * [leo_dcerl v0.4.0](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.0)
+    * [leo_logger v1.1.6](https://github.com/leo-project/leo_logger/releases/tag/1.1.6)
+    * [leo_mcerl v0.6.0](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.0)
+    * [leo_mq v1.3.14](https://github.com/leo-project/leo_mq/releases/tag/1.3.14)
+    * [leo_object_storage v1.2.9](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.9)
+    * [leo_ordning_reda v1.1.0](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.1.0)
+    * [leo_redundant_manager 1.9.18](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.18)
+    * [leo_rpc v0.10.5](https://github.com/leo-project/leo_rpc/releases/tag/0.10.5)
+    * [leo_pod v0.6.6](https://github.com/leo-project/leo_pod/releases/tag/0.6.6)
+    * [leo_s3_libs v1.1.8](https://github.com/leo-project/leo_s3_libs/releases/tag/1.1.8)
+    * [leo_statistics v1.1.6](https://github.com/leo-project/leo_statistics/releases/tag/1.1.6)
+    * [leo_watchdog v0.10.2](https://github.com/leo-project/leo_watchdog/releases/tag/0.10.2)
+    * [savanna_agent v0.4.9](https://github.com/leo-project/savanna_agent/releases/tag/0.4.9)
+    * [savanna_commons v0.8.12](https://github.com/leo-project/savanna_commons/releases/tag/0.8.12)
+    * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
+    * [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
+    * [leo_gateway v1.2.14](https://github.com/leo-project/leo_gateway/releases/tag/1.2.14)
+    * [leo_manager v1.2.14](https://github.com/leo-project/leo_manager/releases/tag/1.2.14)
+    * [leo_storage v1.2.14](https://github.com/leo-project/leo_storage/releases/tag/1.2.14)
+* others
+    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
+    * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+    * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+    * [eleveldb v2.1.1](https://github.com/basho/eleveldb/releases/tag/2.1.1)
+    * [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
+    * [jiffy v0.13.3](https://github.com/davisp/jiffy/releases/tag/0.13.3)
+    * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2)
+    * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
+# 1.2.12
+## Features and Improvements for LeoFS
 
 * Able to use ``compact-suspend`` comamnd when the auto-compaction is enabled
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * [#390](https://github.com/leo-project/leofs/issues/390) ``leo_object_storage`` Unexpected 500 error when getting a zero size object not cached
 * [#393](https://github.com/leo-project/leofs/issues/393) ``leo_object_storage`` Compaction can be slow because of the watchdog communication
@@ -15,8 +100,7 @@ Bugs Fixed
 * [#396](https://github.com/leo-project/leofs/issues/396) ``leo_storage`` Auto Compaction tend to be executed on the same node
 * [#398](https://github.com/leo-project/leofs/issues/398) ``leo_object_storage`` Compaction may stop unintentionally under heavy load
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.9](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.9)
@@ -53,17 +137,13 @@ Used Libraries
     * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.11
-======
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.11
+## Features and Improvements for LeoFS
 
 *  [#377](https://github.com/leo-project/leofs/issues/377) ``leo_gateway`` Support logging bucket operation
 *  ``leofs-adm`` Added ``diagnose-start`` command
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 *  Retrieves range of an object
     *  [#376](https://github.com/leo-project/leofs/issues/376) ``leo_gateway`` Could not get an object with range
@@ -91,8 +171,7 @@ Bugs Fixed
 * Leo Manager
     *  [#371](https://github.com/leo-project/leofs/issues/371) ``leo_manager`` ``leo_statistics`` Could NOT migrate from v1.0.x to 1.2
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.9](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.9)
@@ -129,18 +208,14 @@ Used Libraries
     * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.10
-======
-
-Bugs Fixed
------------
+# 1.2.10
+## Bugs Fixed
 
 * [#366](https://github.com/leo-project/leofs/issues/366) ``leo_storage`` Cannot migrate old one to LeoFS v1.2.9
     * We're planning to implement and provide the auto-migration-test tool
 * ``leo_statistics`` Strictly check creating mnesia's tables
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.8](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.8)
@@ -177,11 +252,8 @@ Used Libraries
     * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.9
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.9
+## Features and Improvements for LeoFS
 
 * Improvements
     * [#354](https://github.com/leo-project/leofs/issues/354) ``leo_gateway`` ``leo_storage`` Exit when the number of retries reached a certain time
@@ -189,8 +261,7 @@ Features and Improvements for LeoFS
     * [#358](https://github.com/leo-project/leofs/issues/358) ``leo_watchdog`` ``leo_manager`` Implemented changing configuration by leo_manager's console
     * [#360](https://github.com/leo-project/leofs/issues/360) ``leo_gateway`` Replace ``erlang:now`` with ``os:timestamp`` to improve the performance
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * Improve performance of recover-node and rebalance processing
     * [#359](https://github.com/leo-project/leofs/issues/359) ``leo_mq`` ``leo_storage`` CPU can be bottleneck in case doing ``rebalance/recover``
@@ -198,8 +269,7 @@ Bugs Fixed
     * [Benchmark LeoFS v1.2.9 w/recover-node, watchdog and auto-compaction](https://github.com/leo-project/notes/tree/master/leofs/benchmark/leofs/recover_with_front/20150515_recover_node_1.2.9)
 * [#361](https://github.com/leo-project/leofs/issues/361) ``leo_statistics`` ``leo_storage`` ``leo_gateway`` ``leo_manager`` All Leo's servers can start normally even if starting statistics related erlang processes failed
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.7](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.7)
@@ -236,18 +306,14 @@ Used Libraries
     * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.8
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.8
+## Features and Improvements for LeoFS
 
 * Improvements
     * [#347](https://github.com/leo-project/leofs/issues/347) Delete Multiple Objects method of S3 API support
     * Implemented the mq-stats command for JSON format
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * Multi Data Center related issues
     * [#329](https://github.com/leo-project/leofs/issues/329) ``mdc-replication`` Wrong cluster-status when executing the command on a remote-cluster's manager
@@ -264,8 +330,7 @@ Bugs Fixed
 * Othe issues
     * [#141](https://github.com/leo-project/leofs/issues/141) ``leo_rpc``Performance degradation due to leaking tcp connections
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.6](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.6)
@@ -302,16 +367,12 @@ Used Libraries
     * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.7
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.7
+## Features and Improvements for LeoFS
 
 * [#320](https://github.com/leo-project/leofs/issues/320) ``leo_mq`` Can take too much time to get started consuming messages in a MQ
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * [#313](https://github.com/leo-project/leofs/issues/313) ``leo_watchdog`` Watchdog downed every an hour
 * [#315](https://github.com/leo-project/leofs/issues/315) ``leo_redundant_manager`` Inconsistent storage node status
@@ -320,8 +381,7 @@ Bugs Fixed
 * [#322](https://github.com/leo-project/leofs/issues/322) ``leo_cache`` Set wrong value to a disk cache capacity
 * [#323](https://github.com/leo-project/leofs/issues/323) ``leo_dcerl`` LeoFS's gateway do not response or return HTTP error code 5xx
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.5](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.5)
@@ -358,17 +418,13 @@ Used Libraries
     * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.6
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.6
+## Features and Improvements for LeoFS
 
 * [#296](https://github.com/leo-project/leofs/issues/296) ``leo_commons`` Replace leo_hashtable with Erlang built-in function
 * [#305](https://github.com/leo-project/leofs/issues/305) ``leo_statistics`` some system metrics should be added for more reliability
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * [#307](https://github.com/leo-project/leofs/issues/307) ``leo_storage`` Could not respond not existed object immediately (LeoFS v1.2.5's bug)
     * LeoFS Gateway was timeout because LeoFS Storage could not respond not existed object immediately.
@@ -379,8 +435,7 @@ And also, load of a primary of storage-node became high by this issue.
 * [#310](https://github.com/leo-project/leofs/issues/310) ``leo_gateway`` Delete request might consume CPU resource more than necessary
 * [#311](https://github.com/leo-project/leofs/issues/311) ``leo_storage`` Could NOT respond an object when facing the inconsistent object
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.4)
@@ -417,26 +472,21 @@ Used Libraries
     * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
 
 
-1.2.5
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.5
+## Features and Improvements for LeoFS
 
 * Started to provide LeoFS integration test tool - [leofs_test](https://github.com/leo-project/leofs_test2)
     * We're able to easily check LeoFS with it whether latest LeoFS has issues or not before getting installed LeoFS in your dev/staging/production environment(s).
 
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * [#299](https://github.com/leo-project/leofs/issues/299) ``leo_redundant_manager`` Inconsistent ring of a resumed storage-node which is timing issue
 * [#301](https://github.com/leo-project/leofs/issues/301) ``leo_storage`` Replication messages could be lost in some edge cases
 * ``leo_storage`` Fix the read-and-repair mechanism. Some inconsistent data could not recover with it.
 
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.4)
@@ -472,16 +522,12 @@ Used Libraries
     * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.4
-=====
-
-Bugs Fixed
------------
+# 1.2.4
+## Bugs Fixed
 
 * [#297](https://github.com/leo-project/leofs/issues/297) ``leo_object_storage`` Could NOT handle delete requests which made by the MQ mechanism at LeoFS v1.2.3
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db.git)
@@ -517,26 +563,21 @@ Used Libraries
     * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.3
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.3
+## Features and Improvements for LeoFS
 
 * Improvements
     * [#285](https://github.com/leo-project/leofs/issues/285) ``leo_storage`` Implemented "cluster-watchdog" in order to keep best condition of a cluster
     * [#286](https://github.com/leo-project/leofs/issues/286) ``leo_storage`` Unified name of configuration items for the mq and the compaction
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * [#288](https://github.com/leo-project/leofs/issues/288) ``leo_manager`` Fixed wrong mix/max values when issueing [the status &lt;storage-node&gt; command](http://leo-project.net/leofs/docs/admin_guide/admin_guide_2.html#status-command) with ``leofs-adm command``
 * [#290](https://github.com/leo-project/leofs/issues/290) [the du detail &lt;storage-node&gt; command](http://leo-project.net/leofs/docs/admin_guide/admin_guide_5.html#du-detail) with ``leofs-adm command`` had broken 1.2.2
 * [#292](https://github.com/leo-project/leofs/issues/292) ``leo_storage`` [proc_lib:start_link](http://erlang.org/doc/man/proc_lib.html#spawn_link-1) must be used instead of [erlang:spawn](http://erlang.org/doc/man/erlang.html#spawn-1)
 * [#293](https://github.com/leo-project/leofs/issues/293) Fixed that remain objects after finished data-compaction, situation of which is combination auto-compaction and deletion of a bucket
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db.git)
@@ -572,11 +613,8 @@ Used Libraries
     * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.2
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.2
+## Features and Improvements for LeoFS
 
 * New Features
     * [#117](https://github.com/leo-project/leofs/issues/117) ``leo_storage`` Implemented the auto-compaction mechanism
@@ -690,8 +728,7 @@ Features and Improvements for LeoFS
       leo_per_object_queue            |   idling    | 0              | 1000           | 100            | recover inconsistent objs
        ```
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * [#273](https://github.com/leo-project/leofs/issues/273) ``leo_gateway`` ``NFS`` Max file size was hardcoded as 4GB
 * [#274](https://github.com/leo-project/leofs/issues/274) ``leo_manager`` ``leo_storage`` ``leo_gateway`` Crashed a manager node by snmp-related issue with Erlang-17
@@ -700,8 +737,7 @@ Bugs Fixed
 * [#279](https://github.com/leo-project/leofs/issues/279) ``leo_object_storage`` Compaction status can be inconsistent when an error occured while preparing compaction
 * [#282](https://github.com/leo-project/leofs/issues/282) ``leo_gateway`` Gateway's timeout configuration has been ignored
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db.git)
@@ -737,22 +773,17 @@ Used Libraries
     * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.1
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.1
+## Features and Improvements for LeoFS
 
 * Improvements
     * Supported [LeoCenter](https://github.com/leo-project/leo_center) for LeoFS v1.2
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * Fixed system migration issue from v1.x to v1.2.0
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.3](https://github.com/leo-project/leo_backend_db.git)
@@ -788,11 +819,8 @@ Used Libraries
     * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4.git) - forked from [szktty/erlang-lz4](https://github.com/szktty/erlng-lz4)
 
 
-1.2.0
-=====
-
-Features and Improvements for LeoFS
------------------------------------
+# 1.2.0
+## Features and Improvements for LeoFS
 
 * New Features
     * Watchdog mechnism has been implemented, which is called [leo_watchdog](https://github.com/leo-project/leo_watchdog)
@@ -811,16 +839,14 @@ Features and Improvements for LeoFS
     * ``leo_storage`` ``leo_mq`` Implemented to be able to operate a mq server of a storage internal
     * ``leo_storage`` Able to recursively remove objects of under directory with S3-Clients
 
-Bugs Fixed
------------
+## Bugs Fixed
 
 * [#262](https://github.com/leo-project/leofs/issues/262) ``leo_gateway`` ``leo_storage`` Improved RPC in order to be able to handle huge traffic with large size objects
 * [#263](https://github.com/leo-project/leofs/issues/263) ``leo_gateway`` Wrong error code when creating a bucket that already exists
 * [#265](https://github.com/leo-project/leofs/issues/265) ``leo_object_storage`` Fixed that some succeeded updates might be ignored silently while executing compaction
 * [#268](https://github.com/leo-project/leofs/issues/265) ``leo_object_storage`` Fixed that wrong output format of data-diagnosis when including children of an large-object
 
-Used Libraries
----------------
+## Used Libraries
 
 * leo project
     * [leo_backend-db v1.1.3](https://github.com/leo-project/leo_backend_db.git)
