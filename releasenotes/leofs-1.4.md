@@ -1,5 +1,51 @@
-## 1.4.0-pre.1
+## 1.4.0-pre.2
+### Features and Improvements for LeoFS
+* NFS Support
+	* NFS Support for FreeBSD
+	* Implement NFSPROC3_READDIR based on NFSPROC3_READDIRPLUS
+	* Handle Deleted Sub-Directories in is_empty_dir/1
+* Improved the ``ls`` command support
+	* Able to remove a directory and objects from the dir-metadata with synchronous
+* [#325](https://github.com/leo-project/leofs/issues/325) ``leo_gateway`` Reduce network traffic between leo_gateway and leo_storage
 
+### Used Libraries
+#### leo project
+* [leo_backend-db v1.1.14](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.14)
+* [leo_cache 1.4-branch](https://github.com/leo-project/leo_cache/tree/1.4)
+* [leo_commons v1.1.6](https://github.com/leo-project/leo_commons/releases/tag/1.1.6)
+* [leo_dcerl v0.4.1](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.1)
+* [leo_logger v1.2.1](https://github.com/leo-project/leo_logger/releases/tag/1.2.1)
+* [leo_mcerl v0.6.0](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.0)
+* [leo_mq v1.3.17](https://github.com/leo-project/leo_mq/releases/tag/1.3.17)
+* [leo_object_storage 1.4-branch](https://github.com/leo-project/leo_object_storage/tree/1.4)
+* [leo_ordning_reda v1.1.4](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.1.4)
+* [leo_redundant_manager 1.9.20](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.20)
+* [leo_rpc v0.10.7](https://github.com/leo-project/leo_rpc/releases/tag/0.10.7)
+* [leo_pod v0.6.4](https://github.com/leo-project/leo_pod/releases/tag/0.6.4)
+* [leo_s3_libs v1.2.3](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.3)
+* [leo_statistics v1.1.10](https://github.com/leo-project/leo_statistics/releases/tag/1.1.10)
+* [leo_watchdog v0.12.1](https://github.com/leo-project/leo_watchdog/releases/tag/0.12.1)
+* [savanna_agent v0.4.13](https://github.com/leo-project/savanna_agent/releases/tag/0.4.13)
+* [savanna_commons v0.8.16](https://github.com/leo-project/savanna_commons/releases/tag/0.8.16)
+* [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
+* [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
+* [leo_gateway v1.4.0-pre.2](https://github.com/leo-project/leo_gateway/releases/tag/1.4.0-pre.2)
+* [leo_manager v1.4.0-pre.2](https://github.com/leo-project/leo_manager/releases/tag/1.4.0-pre.2)
+* [leo_storage v1.4.0-pre.2](https://github.com/leo-project/leo_storage/releases/tag/1.4.0-pre.2)
+
+#### others
+* [bitcask v2.0.1](https://github.com/lbasho/bitcask/releases/tag/2.0.1)
+* [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
+* [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+* [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+* [eleveldb v2.1.4](https://github.com/basho/eleveldb/releases/tag/2.1.4)
+* [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
+* [jiffy v0.14.4](https://github.com/davisp/jiffy/releases/tag/0.14.4)
+* [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2)
+* [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
+## 1.4.0-pre.1
 ### Features and Improvements for LeoFS
 
 * New Features
@@ -31,38 +77,37 @@
 * [#407](https://github.com/leo-project/leofs/issues/407) ``leo_ordning_reda`` ``add_container`` and ``remove_container`` can get into race condition
 
 ### Used Libraries
+#### leo project
+* [leo_backend-db v1.1.11](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.11)
+* [leo_cache v0.6.7](https://github.com/leo-project/leo_cache/releases/tag/0.6.7)
+* [leo_commons v1.1.4](https://github.com/leo-project/leo_commons/releases/tag/1.1.4)
+* [leo_dcerl v0.4.0](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.0)
+* [leo_logger v1.1.10](https://github.com/leo-project/leo_logger/releases/tag/1.1.10)
+* [leo_mcerl v0.6.0](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.0)
+* [leo_mq v1.3.14](https://github.com/leo-project/leo_mq/releases/tag/1.3.14)
+* [leo_object_storage v1.3.0](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.0)
+* [leo_ordning_reda v1.1.2](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.1.2)
+* [leo_redundant_manager 1.9.17](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.17)
+* [leo_rpc v0.10.5](https://github.com/leo-project/leo_rpc/releases/tag/0.10.5)
+* [leo_pod v0.6.4](https://github.com/leo-project/leo_pod/releases/tag/0.6.4)
+* [leo_s3_libs v1.2.1](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.1)
+* [leo_statistics v1.1.8](https://github.com/leo-project/leo_statistics/releases/tag/1.1.8)
+* [leo_watchdog v0.10.4](https://github.com/leo-project/leo_watchdog/releases/tag/0.10.2)
+* [savanna_agent v0.4.11](https://github.com/leo-project/savanna_agent/releases/tag/0.4.11)
+* [savanna_commons v0.8.14](https://github.com/leo-project/savanna_commons/releases/tag/0.8.14)
+* [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
+* [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
+* [leo_gateway v1.4.0-pre1](https://github.com/leo-project/leo_gateway/releases/tag/1.4.0-pre.1)
+* [leo_manager v1.4.0-pre1](https://github.com/leo-project/leo_manager/releases/tag/1.4.0-pre.1)
+* [leo_storage v1.4.0-pre1](https://github.com/leo-project/leo_storage/releases/tag/1.4.0-pre.1)
 
-* Used libraries
-    * leo project
-        * [leo_backend-db v1.1.11](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.11)
-        * [leo_cache v0.6.7](https://github.com/leo-project/leo_cache/releases/tag/0.6.7)
-        * [leo_commons v1.1.4](https://github.com/leo-project/leo_commons/releases/tag/1.1.4)
-        * [leo_dcerl v0.4.0](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.0)
-        * [leo_logger v1.1.10](https://github.com/leo-project/leo_logger/releases/tag/1.1.10)
-        * [leo_mcerl v0.6.0](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.0)
-        * [leo_mq v1.3.14](https://github.com/leo-project/leo_mq/releases/tag/1.3.14)
-        * [leo_object_storage v1.3.0](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.0)
-        * [leo_ordning_reda v1.1.2](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.1.2)
-        * [leo_redundant_manager 1.9.17](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.17)
-        * [leo_rpc v0.10.5](https://github.com/leo-project/leo_rpc/releases/tag/0.10.5)
-        * [leo_pod v0.6.4](https://github.com/leo-project/leo_pod/releases/tag/0.6.4)
-        * [leo_s3_libs v1.2.1](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.1)
-        * [leo_statistics v1.1.8](https://github.com/leo-project/leo_statistics/releases/tag/1.1.8)
-        * [leo_watchdog v0.10.4](https://github.com/leo-project/leo_watchdog/releases/tag/0.10.2)
-        * [savanna_agent v0.4.11](https://github.com/leo-project/savanna_agent/releases/tag/0.4.11)
-        * [savanna_commons v0.8.14](https://github.com/leo-project/savanna_commons/releases/tag/0.8.14)
-        * [erpcgen v0.2.3](https://github.com/leo-project/erpcgen/releases/tag/0.2.3)
-        * [nfs_rpc_server v0.2.3](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.3)
-        * [leo_gateway v1.4.0-pre1](https://github.com/leo-project/leo_gateway/releases/tag/1.4.0-pre.1)
-        * [leo_manager v1.4.0-pre1](https://github.com/leo-project/leo_manager/releases/tag/1.4.0-pre.1)
-        * [leo_storage v1.4.0-pre1](https://github.com/leo-project/leo_storage/releases/tag/1.4.0-pre.1)
-    * others
-        * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
-        * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
-        * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
-        * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
-        * [eleveldb v2.1.1](https://github.com/basho/eleveldb/releases/tag/2.1.1)
-        * [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
-        * [jiffy v0.13.3](https://github.com/davisp/jiffy/releases/tag/0.13.3)
-        * [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2)
-        * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+#### others
+* [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+* [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
+* [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+* [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+* [eleveldb v2.1.1](https://github.com/basho/eleveldb/releases/tag/2.1.1)
+* [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
+* [jiffy v0.13.3](https://github.com/davisp/jiffy/releases/tag/0.13.3)
+* [lz4 v0.2.2](https://github.com/leo-project/erlang-lz4/releases/tag/0.2.2)
+* [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
