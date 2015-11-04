@@ -1,0 +1,159 @@
+#!/bin/sh
+# -*- tab-width:4;indent-tabs-mode:nil -*-
+# ex: ts=4 sw=4 et
+#======================================================================
+#
+# LeoFS
+#
+# Copyright (c) 2012-2015 Rakuten, Inc.
+#
+# This file is provided to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file
+# except in compliance with the License.  You may obtain
+# a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#======================================================================
+bold=`tput bold`
+normal=`tput sgr0`
+
+SCRIPT=`basename $0`
+OS=`uname -s`
+
+##
+## Output text
+##
+output() {
+    case $OS in
+        FreeBSD)
+            echo -e "$1"
+            ;;
+        SunOS)
+            echo -e "$1"
+            ;;
+        *)
+            echo "$1"
+    esac
+}
+
+##
+## Usage of the script
+##
+usage() {
+    output "usage: ${bold}$SCRIPT${normal} [--help]"
+    output "       ${bold}$SCRIPT${normal} -c <concurrency> -d <target-dir> -k <kind_of_client>"
+    output "                      [--debug]"
+    output ""
+    output "       ${bold}description of the parameters:${normal}"
+    output "         * <kind_of_client>: [s3cmd | nfs]"
+    output ""
+}
+
+
+##
+## Exuecute ls-command(s)
+##
+do_exec() {
+    index=$BENCH_CONCURRENCY
+    while [ $index -ne 0 ]
+    do
+        case "$BENCH_KIND_OF_CLIENT" in
+            s3cmd)
+                if test "${BENCH_DEBUG_FLG}" = ""; then
+                    s3cmd ls s3://$BENCH_TARGET_DIR > /dev/null &
+                else
+                    echo "- s3cmd [$index]"
+                    s3cmd ls s3://$BENCH_TARGET_DIR &
+                fi
+                ;;
+            nfs)
+                if test "${BENCH_DEBUG_FLG}" = ""; then
+                    ls $BENCH_TARGET_DIR > /dev/null &
+                else
+                    echo "- nfs [$index]"
+                    ls $BENCH_TARGET_DIR &
+                fi
+                ;;
+            *)
+                usage
+                exit 1
+        esac
+        index=`expr $index - 1`
+    done
+
+    wait
+}
+
+
+##
+## Generate a configuration file
+##
+if [ $# -lt 3 ]; then
+    usage
+    exit 1
+fi
+
+while test -n "$1"; do
+    case "$1" in
+        --help)
+            usage | less -r
+            exit 0
+            ;;
+        -c)
+            BENCH_CONCURRENCY="$2"
+            shift
+            ;;
+        -d)
+            BENCH_TARGET_DIR="$2"
+            shift
+            ;;
+        -k)
+            BENCH_KIND_OF_CLIENT="$2"
+            shift
+            ;;
+        --debug)
+            BENCH_DEBUG_FLG="true"
+            shift
+            ;;
+        *)
+            break
+    esac
+    shift
+done
+
+if test "${BENCH_CONCURRENCY}" = ""; then
+    usage
+    exit 1
+fi
+if test "${BENCH_TARGET_DIR}" = ""; then
+    usage
+    exit 1
+fi
+if test "${BENCH_KIND_OF_CLIENT}" = ""; then
+    usage
+    exit 1
+fi
+
+UNIXTIME=`date +%s`
+BENCH_LOG_FILENAME="leofs-ls-bnech-result.$UNIXTIME.log"
+
+echo "[Parametes]" >> "$BENCH_LOG_FILENAME"
+echo "  * concurrency: $BENCH_CONCURRENCY" >> "$BENCH_LOG_FILENAME"
+echo "  * target dir: $BENCH_TARGET_DIR" >> "$BENCH_LOG_FILENAME"
+echo "  * client: $BENCH_KIND_OF_CLIENT" >> "$BENCH_LOG_FILENAME"
+echo "" >> "$BENCH_LOG_FILENAME"
+echo "[Result]" >> "$BENCH_LOG_FILENAME"
+(time -p do_exec) >> "$BENCH_LOG_FILENAME" 2>&1
+
+echo "FINISHED"
+echo "    * Log Filename: $BENCH_LOG_FILENAME"
+echo ""
+cat $BENCH_LOG_FILENAME
