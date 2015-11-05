@@ -4,7 +4,7 @@
 ```bash
 usage: leofs-ls-bench [--help]
        leofs-ls-bench -c <concurrency> -d <target-dir> -k <kind_of_client>
-                      [--debug]
+                      [-num-of-sub-dirs <number-of-sub-dirs>] [--debug]
 
        description of the parameters:
          * <kind_of_client>: [s3cmd | nfs]
@@ -14,11 +14,25 @@ usage: leofs-ls-bench [--help]
 ### Run leofs-ls-bench
 #### TEST
 ```bash
-$ leofs-ls-bench -c 10 -d <target-dir> -k <s3cmd> --debug
+$ leofs-ls-bench -c <concurrency> -d <target-dir> -k <s3cmd> --debug
 ```
 #### Run
+* Without sub-directories
+
 ```bash
-$ leofs-ls-bench -c 10 -d <target-dir> -k <nfs>
+$ leofs-ls-bench -c <concurrency> -d <target-dir> -k <kind_of_client>
+
+## example:
+$ leofs-ls-bench -c 3 -d test/ -k s3cmd
+```
+
+* Within sub-directories
+
+```bash
+$ leofs-ls-bench -c <concurrency> -d <target-dir> -k <kind_of_client> -num-of-sub-dirs <number-of-sub-dirs>
+
+## example:
+$ leofs-ls-bench -c 3 -d test/sub_ -k s3cmd -num-of-sub-dirs 3
 ```
 
 #### Log file
