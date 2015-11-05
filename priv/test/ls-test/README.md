@@ -32,7 +32,10 @@ $ leofs-ls-bench -c 3 -d test/ -k s3cmd
 $ leofs-ls-bench -c <concurrency> -d <target-dir> -k <kind_of_client> -num-of-sub-dirs <number-of-sub-dirs>
 
 ## example:
+##   - <num-of-sub-dirs> affects the processing.
+##     In this case, "test/sub_1", "test/sub_2" and "test/sub_3" will be requested.
 $ leofs-ls-bench -c 3 -d test/sub_ -k s3cmd -num-of-sub-dirs 3
+
 ```
 
 #### Log file
