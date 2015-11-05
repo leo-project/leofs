@@ -50,7 +50,7 @@ output() {
 usage() {
     output "usage: ${bold}$SCRIPT${normal} [--help]"
     output "       ${bold}$SCRIPT${normal} -c <concurrency> -d <target-dir> -k <kind_of_client>"
-    output "                      [--debug]"
+    output "                      [-num-of-sub-dirs <number-of-sub-dirs>] [--debug]"
     output ""
     output "       ${bold}description of the parameters:${normal}"
     output "         * <kind_of_client>: [s3cmd | nfs]"
@@ -62,39 +62,54 @@ usage() {
 ## Exuecute ls-command(s)
 ##
 do_exec() {
-    index=$BENCH_CONCURRENCY
-    while [ $index -ne 0 ]
+    if test "${BENCH_NUM_OF_SUB_DIRS}" = ""; then
+        BENCH_DIR=$BENCH_TARGET_DIR
+        do_exec_sub
+    else
+        index=$BENCH_NUM_OF_SUB_DIRS
+        while [ $index -ne 0 ]
+        do
+            BENCH_DIR="${BENCH_TARGET_DIR}${index}/"
+            do_exec_sub
+            index=`expr $index - 1`
+        done
+    fi
+}
+
+
+do_exec_sub() {
+    cnt=$BENCH_CONCURRENCY
+    while [ $cnt -ne 0 ]
     do
         case "$BENCH_KIND_OF_CLIENT" in
             s3cmd)
                 if test "${BENCH_DEBUG_FLG}" = ""; then
-                    s3cmd ls s3://$BENCH_TARGET_DIR > /dev/null &
+                    s3cmd ls s3://$BENCH__DIR > /dev/null &
                 else
-                    echo "- s3cmd [$index]"
-                    s3cmd ls s3://$BENCH_TARGET_DIR &
+                    echo "- s3cmd [$cnt]"
+                    s3cmd ls s3://$BENCH_DIR &
                 fi
                 ;;
             nfs)
                 if test "${BENCH_DEBUG_FLG}" = ""; then
-                    ls $BENCH_TARGET_DIR > /dev/null &
+                    ls $BENCH_DIR > /dev/null &
                 else
-                    echo "- nfs [$index]"
-                    ls $BENCH_TARGET_DIR &
+                    echo "- nfs [$cnt]"
+                    ls $BENCH_DIR &
                 fi
                 ;;
             *)
                 usage
                 exit 1
         esac
-        index=`expr $index - 1`
+        cnt=`expr $cnt - 1`
     done
-
     wait
 }
 
 
 ##
-## Generate a configuration file
+## Handle parameters
 ##
 if [ $# -lt 3 ]; then
     usage
@@ -117,6 +132,10 @@ while test -n "$1"; do
             ;;
         -k)
             BENCH_KIND_OF_CLIENT="$2"
+            shift
+            ;;
+        -num-of-sub-dirs)
+            BENCH_NUM_OF_SUB_DIRS="$2"
             shift
             ;;
         --debug)
@@ -142,12 +161,17 @@ if test "${BENCH_KIND_OF_CLIENT}" = ""; then
     exit 1
 fi
 
+
+##
+## Output the prameters and the result
+##
 UNIXTIME=`date +%s`
 BENCH_LOG_FILENAME="leofs-ls-bnech-result.$UNIXTIME.log"
 
 echo "[Parametes]" >> "$BENCH_LOG_FILENAME"
 echo "  * concurrency: $BENCH_CONCURRENCY" >> "$BENCH_LOG_FILENAME"
 echo "  * target dir: $BENCH_TARGET_DIR" >> "$BENCH_LOG_FILENAME"
+echo "  * number of sub directories: $BENCH_NUM_OF_SUB_DIRS" >> "$BENCH_LOG_FILENAME"
 echo "  * client: $BENCH_KIND_OF_CLIENT" >> "$BENCH_LOG_FILENAME"
 echo "" >> "$BENCH_LOG_FILENAME"
 echo "[Result]" >> "$BENCH_LOG_FILENAME"
