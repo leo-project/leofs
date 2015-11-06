@@ -84,7 +84,7 @@ do_exec_sub() {
         case "$BENCH_KIND_OF_CLIENT" in
             s3cmd)
                 if test "${BENCH_DEBUG_FLG}" = ""; then
-                    s3cmd ls s3://$BENCH__DIR > /dev/null &
+                    s3cmd ls s3://$BENCH_DIR > /dev/null &
                 else
                     echo "- s3cmd [$cnt]"
                     s3cmd ls s3://$BENCH_DIR &
