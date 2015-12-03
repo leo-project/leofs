@@ -690,6 +690,20 @@ usage_chown_bucket() {
     esac
 }
 
+usage_set_redundancy_method() {
+    USAGE="set-redundancy-method <bucket> $ACCESS_KEY_ID (copy | erasure-code)"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Set redundancy method of the bucket"
+    esac
+}
+
 usage_update_acl() {
     USAGE="update-acl <bucket> $ACCESS_KEY_ID (private | public-read | public-read-write)"
     case "$1" in
@@ -862,6 +876,7 @@ usage() {
     usage_get_bucket min
     usage_get_buckets min
     usage_chown_bucket min
+    usage_set_redundancy_method min
     usage_update_acl min
     output ""
     output "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
@@ -1443,6 +1458,13 @@ case "$1" in
             send_command "$@"
         else
             usage_chown_bucket
+        fi
+        ;;
+    set-redundancy-method)
+        if [ $# -eq 4 ]; then
+            send_command "$@"
+        else
+            usage_set_redundancy_method
         fi
         ;;
     update-acl)
