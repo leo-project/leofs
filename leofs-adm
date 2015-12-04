@@ -691,7 +691,7 @@ usage_chown_bucket() {
 }
 
 usage_set_redundancy_method() {
-    USAGE="set-redundancy-method <bucket> $ACCESS_KEY_ID (copy | erasure-code)"
+    USAGE="set-redundancy-method <bucket> $ACCESS_KEY_ID (copy | erasure-code) [<number-of-data-chunks>] [<number-of-conding-chunks>]"
     case "$1" in
         min)
             output "$WHITESPACE $USAGE "
@@ -701,6 +701,14 @@ usage_set_redundancy_method() {
             output "  $SCRIPT $USAGE"
             output "Description:"
             output "  - Set redundancy method of the bucket"
+            output "  - erasure-code:"
+            output "      - number-of-data-chunks: The number of chunks in which the original object is divided"
+            output "      - number-of-coding-chunks: The number of additional chunks computed by leo_erasure's encoding functions"
+            output "      ex-1. RAID 5: number-of-data-chunks = 2, number-of-coding-chunks: 1"
+            output "      ex-2. RAID 6: number-of-data-chunks = 2, number-of-coding-chunks: 2"
+            output "      ex-3. Custom params.1: number-of-data-chunks = 4, number-of-coding-chunks: 2"
+            output "      ex-4. Custom params.2: number-of-data-chunks = 8, number-of-coding-chunks: 3"
+            output "      ex-5. Custom params.3: number-of-data-chunks = 10, number-of-coding-chunks: 4"
     esac
 }
 
@@ -1462,6 +1470,8 @@ case "$1" in
         ;;
     set-redundancy-method)
         if [ $# -eq 4 ]; then
+            send_command "$@"
+        elif [ $# -eq 6 ]; then
             send_command "$@"
         else
             usage_set_redundancy_method
