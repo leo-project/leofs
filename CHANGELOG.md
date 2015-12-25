@@ -4,20 +4,21 @@ CHANGELOG
 ## 1.4.0-pre.3 (Dec 25, 2015)
 ### New Features
 * The erasure coding support
-	* Released [Leo's erasure code lib - leo_erasure](https://github.com/leo-project/leo_erasure)
-	* The libraries of the erasure code
-		* Supported [Intel's ersure code lib - ISA-L](https://01.org/intel®-storage-acceleration-library-open-source-version)
-		    * Shared [a benchmark report](https://github.com/leo-project/notes/blob/master/leofs/benchmark/leofs/1.4/erasure_code/20151222_isars_k10m4_15m_r49w1_60min_1/README.md) on Dec 22, 2015
-		* Supported [JErasure](https://github.com/tsuraan/Jerasure) - *Not stable*
-	* Delivered ``set-redundancy-method`` on [leofs-adm](https://github.com/leo-project/leofs/blob/1.4/leofs-adm#L693) to configure parameters of the erasure-coding of a bucket
+    * Released [Leo's erasure code lib - leo_erasure](https://github.com/leo-project/leo_erasure)
+    * The libraries of the erasure code
+        * Supported [Intel's ersure code lib - ISA-L](https://01.org/intel®-storage-acceleration-library-open-source-version)
+            * Shared [a benchmark report](https://github.com/leo-project/notes/blob/master/leofs/benchmark/leofs/1.4/erasure_code/20151222_isars_k10m4_15m_r49w1_60min_1/README.md) on Dec 22, 2015
+        * Supported [JErasure](https://github.com/tsuraan/Jerasure) - *Not stable*
+    * Delivered ``set-redundancy-method`` on [leofs-adm](https://github.com/leo-project/leofs/blob/1.4/leofs-adm#L693) to configure parameters of the erasure-coding of a bucket
 
-	```
-	## erasure-coding
-	$ leofs-adm set-redundancy-method <bucket> <access-key-id> erasure-code \
-                                     <number-of-data-chunks> <number-of-conding-chunks>
+```
+## erasure-coding
+$ leofs-adm set-redundancy-method <bucket> <access-key-id> erasure-code \
+                                  <number-of-data-chunks> <number-of-conding-chunks>
 
-	## replication
-	$ leofs-adm set-redundancy-method <bucket> <access-key-id> copy	```
+## replication
+$ leofs-adm set-redundancy-method <bucket> <access-key-id> copy
+```
 
 ### Improvements
 * [#367](https://github.com/leo-project/leofs/issues/367) ``s3-client`` s3cmd sync and put/get with -r option is not working
