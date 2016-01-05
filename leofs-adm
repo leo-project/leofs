@@ -474,6 +474,20 @@ usage_update_log_level() {
     esac
 }
 
+usage_update_consistency_level() {
+    USAGE="update-consistency-level <write-quorum> <read-quorum> <delete-quorum>"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Update a consistency level of the node"
+    esac
+}
+
 usage_update_property() {
     USAGE="update-property <node> <property-name> <property-value>"
     case "$1" in
@@ -842,6 +856,7 @@ usage() {
     usage_update_managers min
     usage_dump_ring min
     usage_update_log_level min
+    usage_update_consistency_level min
     output ""
     output "      ${UNDERLINE}Watchdog Operation:${NONE}"
     usage_update_property min
@@ -1308,6 +1323,14 @@ case "$1" in
             send_command "$@"
         else
             usage_update_log_level
+        fi
+        ;;
+
+    update-consistency-level)
+        if [ $# -eq 4 ]; then
+            send_command "$@"
+        else
+            usage_update_consistency_level
         fi
         ;;
 
