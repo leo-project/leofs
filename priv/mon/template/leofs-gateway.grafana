@@ -1,0 +1,1330 @@
+{
+  "id": 3,
+  "title": "<TITLE>",
+  "originalTitle": "<TITLE>",
+  "tags": [
+    "leofs"
+  ],
+  "style": "dark",
+  "timezone": "browser",
+  "editable": true,
+  "hideControls": false,
+  "sharedCrosshair": false,
+  "rows": [
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 13,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "system_load1",
+              "query": "SELECT mean(value) FROM \"system_load1\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "system_load5",
+              "query": "SELECT mean(value) FROM \"system_load5\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "system_load15",
+              "query": "SELECT mean(value) FROM \"system_load15\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "CPU Load AVG (OS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": 100,
+            "leftMin": 0,
+            "rightLogBase": 1,
+            "rightMax": 100,
+            "rightMin": 0,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)",
+            "thresholdLine": false
+          },
+          "id": 9,
+          "leftYAxisLabel": "",
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "cpu_usage_user",
+              "query": "SELECT mean(value) FROM \"cpu_usage_user\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "cpu_usage_nice",
+              "query": "SELECT mean(value) FROM \"cpu_usage_nice\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "cpu_usage_system",
+              "query": "SELECT mean(value) FROM \"cpu_usage_system\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "cpu_usage_iowait",
+              "query": "SELECT mean(value) FROM \"cpu_usage_iowait\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "cpu_usage_idle",
+              "query": "SELECT mean(value) FROM \"cpu_usage_idle\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "CPU% (OS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "percent",
+            "percent"
+          ]
+        }
+      ],
+      "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "200px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 8,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": true,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "mem_free",
+              "query": "SELECT mean(value) FROM \"mem_free\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "mem_used",
+              "query": "SELECT mean(value) FROM \"mem_used\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "swap_used",
+              "query": "SELECT mean(value) FROM \"swap_used\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Memory (OS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "bytes",
+            "bytes"
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 3,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_total_memory_usage",
+              "query": "SELECT mean(value) FROM \"leofs_total_memory_usage\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_allocated_memory",
+              "query": "SELECT mean(value) FROM \"leofs_allocated_memory\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_used_allocated_memory",
+              "query": "SELECT mean(value) FROM \"leofs_used_allocated_memory\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_ets_memory_usage",
+              "query": "SELECT mean(value) FROM \"leofs_ets_memory_usage\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_system_memory_usage",
+              "query": "SELECT mean(value) FROM \"leofs_system_memory_usage\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Memory usage (Erlang-VM)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "200px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 10,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "disk_free",
+              "query": "SELECT mean(value) FROM \"disk_free\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "disk_used",
+              "query": "SELECT mean(value) FROM \"disk_used\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "disk_total",
+              "query": "SELECT mean(value) FROM \"disk_total\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Disk (OS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "bytes",
+            "bytes"
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 11,
+          "leftYAxisLabel": "",
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "rightYAxisLabel": "",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "hide": false,
+              "measurement": "io_read_bytes",
+              "query": "SELECT mean(value) FROM \"io_read_bytes\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "rawQuery": false,
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "hide": false,
+              "measurement": "io_write_bytes",
+              "query": "SELECT mean(value) FROM \"io_write_bytes\" WHERE \"host\" = '<HOSTNAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "<HOSTNAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "IO Bytes (OS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "200px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null,
+            "threshold1": 650,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": 800,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 2,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_num_of_processes",
+              "query": "SELECT mean(value) FROM \"leofs_num_of_processes\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_num_of_processes_5min",
+              "query": "SELECT mean(value) FROM \"leofs_num_of_processes_5min\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Num of procs (Erlang-VM)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "none",
+            "none"
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": 0,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": 0,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 6,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "distinct",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_num_of_writes",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_writes\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "func": "distinct",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_num_of_reads",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_reads\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "target": ""
+            },
+            {
+              "fields": [
+                {
+                  "func": "distinct",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_num_of_deletes",
+              "query": "SELECT distinct(value) FROM \"leofs_num_of_deletes\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Num of operations (LeoFS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "individual"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ]
+        }
+      ],
+      "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "200px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": 0,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": 0,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 14,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 4,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "distinct",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_count_of_cache-hit",
+              "query": "SELECT distinct(value) FROM \"leofs_count_of_cache-hit\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "func": "distinct",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_count_of_cache-miss",
+              "query": "SELECT distinct(value) FROM \"leofs_count_of_cache-miss\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "target": ""
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Num of cache hit, miss (LeoFS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": null,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 15,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 2,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 4,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "mean",
+                  "name": "value"
+                }
+              ],
+              "groupByTags": [],
+              "measurement": "leofs_total_cached_size",
+              "query": "SELECT mean(value) FROM \"leofs_total_cached_size\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)",
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ]
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Total of cache size (LeoFS)",
+          "tooltip": {
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ]
+        },
+        {
+          "title": "Total of cached objects (LeoFS)",
+          "error": false,
+          "span": 4,
+          "editable": true,
+          "type": "graph",
+          "id": 16,
+          "datasource": null,
+          "renderer": "flot",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "rightMax": null,
+            "leftMin": null,
+            "rightMin": null,
+            "rightLogBase": 1,
+            "threshold1": null,
+            "threshold2": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "lines": true,
+          "fill": 1,
+          "linewidth": 2,
+          "points": true,
+          "pointradius": 2,
+          "bars": false,
+          "stack": false,
+          "percentage": false,
+          "legend": {
+            "show": true,
+            "values": false,
+            "min": false,
+            "max": false,
+            "current": false,
+            "total": false,
+            "avg": false
+          },
+          "nullPointMode": "connected",
+          "steppedLine": false,
+          "tooltip": {
+            "value_type": "cumulative",
+            "shared": true
+          },
+          "timeFrom": null,
+          "timeShift": null,
+          "targets": [
+            {
+              "tags": [
+                {
+                  "key": "node",
+                  "operator": "=",
+                  "value": "<LEO-NODE-NAME>"
+                }
+              ],
+              "groupByTags": [],
+              "fields": [
+                {
+                  "name": "value",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "leofs_total_of_files",
+              "query": "SELECT mean(value) FROM \"leofs_total_of_files\" WHERE \"node\" = '<LEO-NODE-NAME>' AND $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "aliasColors": {},
+          "seriesOverrides": [],
+          "links": [],
+          "transparent": true
+        }
+      ],
+      "title": "New row"
+    }
+  ],
+  "nav": [
+    {
+      "collapse": false,
+      "enable": true,
+      "notice": false,
+      "now": true,
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "status": "Stable",
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ],
+      "type": "timepicker"
+    }
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  },
+  "refresh": "30s",
+  "schemaVersion": 6,
+  "version": 1,
+  "links": []
+}

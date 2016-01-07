@@ -110,15 +110,15 @@ deploy()
 	    cp -r package/leo_storage package/${cname}/leo_storage_${j}
 	done
 
-	cp priv/mdcr-test/${cname}/leo_manager.conf.0 \
+	cp priv/test/mdcr-test/${cname}/leo_manager.conf.0 \
 	    package/${cname}/leo_manager_0/etc/leo_manager.conf
-	cp priv/mdcr-test/${cname}/leo_manager.conf.1 \
+	cp priv/test/mdcr-test/${cname}/leo_manager.conf.1 \
 	    package/${cname}/leo_manager_1/etc/leo_manager.conf
-	cp priv/mdcr-test/${cname}/leo_gateway.conf \
+	cp priv/test/mdcr-test/${cname}/leo_gateway.conf \
 	    package/${cname}/leo_gateway_0/etc/leo_gateway.conf
 	for j in `seq 0 $((CLUSTER_NSTORAGES - 1))`
 	do
-	    cp priv/mdcr-test/${cname}/leo_storage_${j}.conf \
+	    cp priv/test/mdcr-test/${cname}/leo_storage_${j}.conf \
 		package/${cname}/leo_storage_${j}/etc/leo_storage.conf
 	done
 
