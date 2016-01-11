@@ -946,7 +946,8 @@ And also, load of a primary of storage-node became high by this issue.
       mq.interval_between_batch_procs_step = 100
       ```
   * Improved the ``mq-status`` command of ``leofs-adm``
-      ```bash
+
+  ```bash
       $ leofs-adm mq-stats storage_1@127.0.0.1
                     id                |    state    | number of msgs | batch of msgs  |    interval    |            description
       --------------------------------+-------------+----------------|----------------|----------------|-----------------------------------
@@ -958,7 +959,7 @@ And also, load of a primary of storage-node became high by this issue.
       leo_rebalance_queue             |   running   | 2167           | 1400           | 10             | rebalance objs
       leo_sync_by_vnode_id_queue      |   idling    | 0              | 1000           | 100            | sync objs by vnode-id
       leo_per_object_queue            |   idling    | 0              | 1000           | 100            | recover inconsistent objs
-       ```
+  ```
 
 ### Fixed Bugs
 * [#273](https://github.com/leo-project/leofs/issues/273) ``leo_gateway`` ``NFS`` Max file size was hardcoded as 4GB
