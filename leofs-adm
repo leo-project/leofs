@@ -758,6 +758,20 @@ usage_update_acl() {
     esac
 }
 
+usage_gen_nfs_mnt_key() {
+    USAGE="gen-nfs-mnt-key <bucket> <access-key-id> <client-ip-address>"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Generate a NFS mount key"
+    esac
+}
+
 usage_join_cluster() {
     USAGE="join-cluster <remote-manager-master> <remote-manager-slave>"
     case "$1" in
@@ -916,6 +930,7 @@ usage() {
     usage_chown_bucket min
     usage_set_redundancy_method min
     usage_update_acl min
+    usage_gen_nfs_mnt_key min
     output ""
     output "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
     usage_join_cluster min
@@ -1529,7 +1544,13 @@ case "$1" in
             usage_update_acl
         fi
         ;;
-
+    gen-nfs-mnt-key)
+        if [ $# -eq 4 ]; then
+            send_command "$@"
+        else
+            usage_gen_nfs_mnt_key
+        fi
+        ;;
     ##
     ## MDC-Replication
     ##
