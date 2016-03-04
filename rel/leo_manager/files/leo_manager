@@ -212,6 +212,15 @@ case "$1" in
             exit $ES
         fi
         ;;
+    clear-history-data)
+        ## Clear records of history-table
+        $NODETOOL rpc mnesia clear-history-data []
+
+        ES=$?
+        if [ "$ES" -ne 0 ]; then
+            exit $ES
+        fi
+        ;;
     attach)
         # Make sure a node IS running
         RES=`$NODETOOL ping`
@@ -254,18 +263,18 @@ case "$1" in
         exec $CMD
         ;;
 
-     remote_console)
-         # Make sure a node IS running
-         RES=`$NODETOOL ping`
-         ES=$?
-         if [ "$ES" -ne 0 ]; then
-             echo "Node is not running!"
-             exit $ES
-         fi
+    remote_console)
+        # Make sure a node IS running
+        RES=`$NODETOOL ping`
+        ES=$?
+        if [ "$ES" -ne 0 ]; then
+            echo "Node is not running!"
+            exit $ES
+        fi
 
-         shift
-         exec $REMSH
-         ;;
+        shift
+        exec $REMSH
+        ;;
 
     *)
         echo "Usage: $SCRIPT {start|stop|ping|remote_console}"
