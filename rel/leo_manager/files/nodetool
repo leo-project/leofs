@@ -53,7 +53,7 @@ main(Args) ->
             {Function_1, RpcArgs_1} =
                 case (Function == "clear-history-data") of
                     true ->
-                        {"ets", [fun ets:delete_all_objects/1, ['leo_histories']]};
+                        {"clear_table", ['leo_histories']};
                     false ->
                         {Function, RpcArgs}
                 end,
