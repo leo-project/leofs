@@ -66,7 +66,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [leo_manager v1.2.20](https://github.com/leo-project/leo_manager/releases/tag/1.2.20)
     * [leo_storage v1.2.20](https://github.com/leo-project/leo_storage/releases/tag/1.2.20)
 * others
-    * [bitcask v2.0.1](https://github.com/lbasho/bitcask/releases/tag/2.0.1)
+    * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
     * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
     * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
@@ -119,7 +119,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [leo_manager v1.2.18](https://github.com/leo-project/leo_manager/releases/tag/1.2.18)
     * [leo_storage v1.2.18](https://github.com/leo-project/leo_storage/releases/tag/1.2.18)
 * others
-    * [bitcask v2.0.1](https://github.com/lbasho/bitcask/releases/tag/2.0.1)
+    * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
     * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
     * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
@@ -162,7 +162,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [leo_manager v1.2.16](https://github.com/leo-project/leo_manager/releases/tag/1.2.16)
     * [leo_storage v1.2.16](https://github.com/leo-project/leo_storage/releases/tag/1.2.16)
 * others
-    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
     * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
     * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
@@ -208,7 +208,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [leo_manager v1.2.14](https://github.com/leo-project/leo_manager/releases/tag/1.2.14)
     * [leo_storage v1.2.14](https://github.com/leo-project/leo_storage/releases/tag/1.2.14)
 * others
-    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
     * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
     * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
@@ -258,7 +258,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [leo_manager v1.2.12](https://github.com/leo-project/leo_manager/releases/tag/1.2.12)
     * [leo_storage v1.2.12](https://github.com/leo-project/leo_storage/releases/tag/1.2.12)
 * others
-    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
     * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
     * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
@@ -329,7 +329,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [leo_manager v1.2.11](https://github.com/leo-project/leo_manager/releases/tag/1.2.11)
     * [leo_storage v1.2.11](https://github.com/leo-project/leo_storage/releases/tag/1.2.11)
 * others
-    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
     * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0)
     * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
@@ -373,7 +373,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [leo_manager v1.2.10](https://github.com/leo-project/leo_manager/releases/tag/1.2.10)
     * [leo_storage v1.2.10](https://github.com/leo-project/leo_storage/releases/tag/1.2.10)
 * others
-    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
     * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
@@ -427,7 +427,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [leo_manager v1.2.9](https://github.com/leo-project/leo_manager/releases/tag/1.2.9)
     * [leo_storage v1.2.9](https://github.com/leo-project/leo_storage/releases/tag/1.2.9)
 * others
-    * [bitcask v2.0.0](https://github.com/lbasho/bitcask/releases/tag/2.0.0)
+    * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
     * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
     * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
