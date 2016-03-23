@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.2.20 (March 22, 2016)
+## 1.2.20 (March 23, 2016)
 
 * Improvements
     * [#389](https://github.com/leo-project/leofs/issues/389) ``erlang`` To be able to build LeoFS with [Erlang 18](https://www.erlang.org/news/101)
