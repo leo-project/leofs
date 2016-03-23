@@ -46,6 +46,7 @@ package/leo_storage_0/bin/leo_storage stop
 package/leo_storage_1/bin/leo_storage stop
 package/leo_storage_2/bin/leo_storage stop
 package/leo_storage_3/bin/leo_storage stop
+package/leo_storage_4/bin/leo_storage stop
 package/leo_manager_0/bin/leo_manager stop
 package/leo_manager_1/bin/leo_manager stop
 if [ $1 = "stop" ]; then
@@ -60,6 +61,7 @@ cp -r package/leo_storage package/leo_storage_0
 cp -r package/leo_storage package/leo_storage_1
 cp -r package/leo_storage package/leo_storage_2
 cp -r package/leo_storage package/leo_storage_3
+cp -r package/leo_storage package/leo_storage_4
 cp -r package/leo_gateway package/leo_gateway_0
 rm -rf package/leo_storage
 rm -rf package/leo_gateway
@@ -71,6 +73,7 @@ if [ $2 = "integration-test" ]; then
     cp priv/test/integration-test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
     cp priv/test/integration-test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
     cp priv/test/integration-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+    cp priv/test/integration-test/app-s4.conf package/leo_storage_4/etc/leo_storage.conf
     cp priv/test/integration-test/app-g0.conf package/leo_gateway_0/etc/leo_gateway.conf
 else
     cp priv/test/watchdog-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
@@ -79,6 +82,7 @@ else
     cp priv/test/watchdog-test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
     cp priv/test/watchdog-test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
     cp priv/test/watchdog-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+    cp priv/test/watchdog-test/app-s4.conf package/leo_storage_4/etc/leo_storage.conf
 fi
 
 ## Launch the applications

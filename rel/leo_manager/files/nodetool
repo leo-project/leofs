@@ -50,14 +50,15 @@ main(Args) ->
         ["reboot"] ->
             io:format("~p\n", [rpc:call(TargetNode, init, reboot, [], 60000)]);
         ["rpc", Module, Function | RpcArgs] ->
-            case Module of
-                "mnesia" ->
-                    io:format("* Path: ~s~n", hd([RpcArgs]));
-                _ ->
-                    void
-            end,
-            case rpc:call(TargetNode, list_to_atom(Module), list_to_atom(Function),
-                          [RpcArgs], 60000) of
+            {Function_1, RpcArgs_1} =
+                case (Function == "clear-history-data") of
+                    true ->
+                        {"clear_table", ['leo_histories']};
+                    false ->
+                        {Function, RpcArgs}
+                end,
+            case rpc:call(TargetNode, list_to_atom(Module), list_to_atom(Function_1),
+                          RpcArgs_1, 60000) of
                 ok ->
                     ok;
                 {badrpc, Reason} ->
