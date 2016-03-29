@@ -91,6 +91,7 @@ else
     cp priv/test/cache-test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
     cp priv/test/cache-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
     cp priv/test/cache-test/app-s4.conf package/leo_storage_4/etc/leo_storage.conf
+    cp priv/test/cache-test/app-g0.conf package/leo_gateway_0/etc/leo_gateway.conf
 fi
 
 ## Launch the applications
