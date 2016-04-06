@@ -35,6 +35,9 @@ sasl.error_logger_mf_dir = /var/log/leo_manager/sasl
 ## --------------------------------------------------------------------
 ## MANAGER
 ## --------------------------------------------------------------------
+## Mode of Manager: [master|slave]
+manager.mode = master
+
 ## Partner of manager's alias
 manager.partner = manager_1@127.0.0.1
 
