@@ -1,5 +1,7 @@
 # LeoFS - The Lion of Storage Systems
 
+[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ![LeoFS Logo](http://leo-project.net/leofs/docs/_static/leofs-logo-small.png)
 
 ## Overview
