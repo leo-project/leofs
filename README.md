@@ -268,14 +268,14 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
     * Increase compatibility S3-APIs#5
         * Other bucket operations
 * *DONE* - v1.1
-    * NFS Support *(alpha)*
+    * NFS v3 Support *(alpha)*
     * Improve Web GUI Console (Option)
 * *DONE* - v1.2
-    * NFS Support *(beta)*
+    * NFS v3 Support *(beta)*
     * Watchdog
     * Auto-compaction
 * *On Going* - v1.4
-    * NFS Support *(stable)*
+    * NFS v3 Support *(stable)*
         * Improve performance of the list objects
         * NFS lock-option support
     * Erasure Code
@@ -285,9 +285,9 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
         * Objects Expiration into a bucket
         * Versioning
 * v2.0
-    * NFS Support
+    * NFS v4 Support
+    * Data Deduplication
     * QoS Support *(Option)*
-    * Erasure Coding
     * Improve compatibility S3-APIs#7
 
 
