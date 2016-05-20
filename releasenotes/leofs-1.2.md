@@ -1,3 +1,46 @@
+# 1.2.22
+## Improvements
+
+* [#472](https://github.com/leo-project/leofs/issues/472) ``leo_storage`` Possibility to become imbalance of a total mq's msgs during a rebalance (detach-node)
+* [#473](https://github.com/leo-project/leofs/issues/473) ``leo_manager`` Enforced **"-smp enabled"** by default
+* [#474](https://github.com/leo-project/leofs/issues/474) ``leo_storage`` Improved the performance of the recover-node
+
+## Used Libraries
+
+* leo project
+    * [leo_backend-db v1.2.2](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.2)
+    * [leo_cache v0.6.14](https://github.com/leo-project/leo_cache/releases/tag/0.6.14)
+    * [leo_commons v1.1.6](https://github.com/leo-project/leo_commons/releases/tag/1.1.6)
+    * [leo_dcerl v0.4.4](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.4)
+    * [leo_logger v1.2.2](https://github.com/leo-project/leo_logger/releases/tag/1.2.2)
+    * [leo_mcerl v0.6.2](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.2)
+    * [leo_mq v1.4.2](https://github.com/leo-project/leo_mq/releases/tag/1.4.5)
+    * [leo_object_storage v1.2.22](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.22)
+    * [leo_ordning_reda v1.2.0](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.0)
+    * [leo_redundant_manager 1.9.26](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.26)
+    * [leo_rpc v0.10.8](https://github.com/leo-project/leo_rpc/releases/tag/0.10.8)
+    * [leo_pod v0.6.6](https://github.com/leo-project/leo_pod/releases/tag/0.6.6)
+    * [leo_s3_libs v1.1.13](https://github.com/leo-project/leo_s3_libs/releases/tag/1.1.13)
+    * [leo_statistics v1.1.12](https://github.com/leo-project/leo_statistics/releases/tag/1.1.12)
+    * [leo_watchdog v0.12.2](https://github.com/leo-project/leo_watchdog/releases/tag/0.12.2)
+    * [savanna_agent v0.4.15](https://github.com/leo-project/savanna_agent/releases/tag/0.4.15)
+    * [savanna_commons v0.10.1](https://github.com/leo-project/savanna_commons/releases/tag/0.10.1)
+    * [erpcgen v0.2.4](https://github.com/leo-project/erpcgen/releases/tag/0.2.4)
+    * [nfs_rpc_server v0.2.4](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.4)
+    * [leo_gateway v1.2.22](https://github.com/leo-project/leo_gateway/releases/tag/1.2.22)
+    * [leo_manager v1.2.22](https://github.com/leo-project/leo_manager/releases/tag/1.2.22)
+    * [leo_storage v1.2.22](https://github.com/leo-project/leo_storage/releases/tag/1.2.22)
+* others
+    * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
+    * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
+    * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+    * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+    * [eleveldb v2.1.10](https://github.com/basho/eleveldb/releases/tag/2.1.10)
+    * [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
+    * [jiffy v0.14.7](https://github.com/davisp/jiffy/releases/tag/0.14.7)
+    * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
 # 1.2.21
 ## Bugs Fixed
 
@@ -43,7 +86,7 @@
 
 
 # 1.2.20
-## Improvements for LeoFS
+## Improvements
 
 * [#389](https://github.com/leo-project/leofs/issues/389) ``erlang`` To be able to build LeoFS w/Erlang 18
 * [#442](https://github.com/leo-project/leofs/issues/442) ``leo_storage`` When removing a large size object, a high-latency issue can be happened
@@ -122,7 +165,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
 
 
 # 1.2.18
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * [#426](https://github.com/leo-project/leofs/issues/426) ``leo_storage`` Should be logged with warning or error level in some cases
 * [#434](https://github.com/leo-project/leofs/issues/434) ``leo_manager`` Enable to reconfigure a consistency level
@@ -264,7 +307,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
 
 
 # 1.2.12
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * Able to use ``compact-suspend`` comamnd when the auto-compaction is enabled
 
@@ -314,7 +357,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
 
 
 # 1.2.11
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 *  [#377](https://github.com/leo-project/leofs/issues/377) ``leo_gateway`` Support logging bucket operation
 *  ``leofs-adm`` Added ``diagnose-start`` command
@@ -429,7 +472,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
 
 
 # 1.2.9
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * Improvements
     * [#354](https://github.com/leo-project/leofs/issues/354) ``leo_gateway`` ``leo_storage`` Exit when the number of retries reached a certain time
@@ -483,7 +526,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
 
 
 # 1.2.8
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * Improvements
     * [#347](https://github.com/leo-project/leofs/issues/347) Delete Multiple Objects method of S3 API support
@@ -544,7 +587,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
 
 
 # 1.2.7
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * [#320](https://github.com/leo-project/leofs/issues/320) ``leo_mq`` Can take too much time to get started consuming messages in a MQ
 
@@ -595,7 +638,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
 
 
 # 1.2.6
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * [#296](https://github.com/leo-project/leofs/issues/296) ``leo_commons`` Replace leo_hashtable with Erlang built-in function
 * [#305](https://github.com/leo-project/leofs/issues/305) ``leo_statistics`` some system metrics should be added for more reliability
@@ -649,7 +692,7 @@ And also, load of a primary of storage-node became high by this issue.
 
 
 # 1.2.5
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * Started to provide LeoFS integration test tool - [leofs_test](https://github.com/leo-project/leofs_test2)
     * We're able to easily check LeoFS with it whether latest LeoFS has issues or not before getting installed LeoFS in your dev/staging/production environment(s).
@@ -740,7 +783,7 @@ And also, load of a primary of storage-node became high by this issue.
 
 
 # 1.2.3
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * Improvements
     * [#285](https://github.com/leo-project/leofs/issues/285) ``leo_storage`` Implemented "cluster-watchdog" in order to keep best condition of a cluster
@@ -790,7 +833,7 @@ And also, load of a primary of storage-node became high by this issue.
 
 
 # 1.2.2
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * New Features
     * [#117](https://github.com/leo-project/leofs/issues/117) ``leo_storage`` Implemented the auto-compaction mechanism
@@ -950,7 +993,7 @@ And also, load of a primary of storage-node became high by this issue.
 
 
 # 1.2.1
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * Improvements
     * Supported [LeoCenter](https://github.com/leo-project/leo_center) for LeoFS v1.2
@@ -996,7 +1039,7 @@ And also, load of a primary of storage-node became high by this issue.
 
 
 # 1.2.0
-## Features and Improvements for LeoFS
+## Features and Improvements
 
 * New Features
     * Watchdog mechnism has been implemented, which is called [leo_watchdog](https://github.com/leo-project/leo_watchdog)
