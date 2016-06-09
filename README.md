@@ -95,7 +95,7 @@ Then, install Erlang.
 ##
 $ wget http://www.hpl.hp.com/research/linux/atomic_ops/download/libatomic_ops-7.2d.tar.gz
 $ tar xzvf libatomic_ops-7.2d.tar.gz
-$ cd libatomic_ops-7.2d
+$ cd libatomic_ops-7.2
 $ ./configure --prefix=/usr/local
 $ make
 $ sudo make install
