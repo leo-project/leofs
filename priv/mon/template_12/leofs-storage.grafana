@@ -20,7 +20,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "editable": true,
           "error": false,
           "fill": 1,
@@ -54,7 +54,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "system_load1",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -102,10 +101,10 @@
                   "operator": "=",
                   "value": "<HOSTNAME>"
                 }
-              ]
+              ],
+              "alias": "Load AVG 1min"
             },
             {
-              "alias": "system_load5",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -154,10 +153,10 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Load AVG 5min"
             },
             {
-              "alias": "system_load15",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -206,14 +205,15 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Load AVG 15min"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "CPU Load AVG (OS)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -242,7 +242,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -280,7 +280,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "usage_user",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -329,10 +328,10 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "User"
             },
             {
-              "alias": "usage_nice",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -381,10 +380,10 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Nice"
             },
             {
-              "alias": "usage_system",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -433,10 +432,10 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "System"
             },
             {
-              "alias": "usage_iowait",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -485,10 +484,10 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "I/O Wait"
             },
             {
-              "alias": "usage_idle",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -537,14 +536,15 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Idle"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "CPU% (OS)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -582,7 +582,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -617,7 +617,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "mem_free",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -666,10 +665,10 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Free"
             },
             {
-              "alias": "mem_used",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -718,10 +717,10 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Used"
             },
             {
-              "alias": "swap_used",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -770,14 +769,15 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Swap used"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "Memory (OS)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -806,7 +806,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -841,7 +841,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "total_memory_usage",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -890,10 +889,10 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Total memory usage"
             },
             {
-              "alias": "allocated_memory",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -941,10 +940,10 @@
                   "operator": "=",
                   "value": "<LEO-NODE-NAME>"
                 }
-              ]
+              ],
+              "alias": "Allocated memory"
             },
             {
-              "alias": "used_allocated_memory",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -993,10 +992,10 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Used allocated memory"
             },
             {
-              "alias": "ets_memory_usage",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1045,10 +1044,10 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "ETS memory usage"
             },
             {
-              "alias": "sytem_memory_usage",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1097,14 +1096,15 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "System memory usage"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "Memory usage (Erlang-VM)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -1141,7 +1141,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -1176,7 +1176,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "disk_free",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1224,10 +1223,10 @@
                   "operator": "=",
                   "value": "<HOSTNAME>"
                 }
-              ]
+              ],
+              "alias": "free"
             },
             {
-              "alias": "disk_used",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1276,10 +1275,10 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "used"
             },
             {
-              "alias": "disk_total",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1328,14 +1327,15 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "total"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "Disk (OS)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -1364,7 +1364,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -1401,7 +1401,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "io_read_bytes",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1451,10 +1450,10 @@
                   "operator": "=",
                   "value": "<HOSTNAME>"
                 }
-              ]
+              ],
+              "alias": "Read bytes"
             },
             {
-              "alias": "io_write_bytes",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1504,14 +1503,15 @@
                   "value": "<HOSTNAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "Write bytes"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "IO Bytes (OS)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -1550,7 +1550,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -1585,7 +1585,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_num_of_processes",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1633,10 +1632,10 @@
                   "operator": "=",
                   "value": "<LEO-NODE-NAME>"
                 }
-              ]
+              ],
+              "alias": "# of processes (1min)"
             },
             {
-              "alias": "leofs_num_of_processes_5min",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1685,14 +1684,15 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "# of processes (5min)"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "Num of procs (Erlang-VM)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -1721,7 +1721,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1755,7 +1755,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_num_of_replication_messages",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1803,10 +1802,10 @@
                   "operator": "=",
                   "value": "<LEO-NODE-NAME>"
                 }
-              ]
+              ],
+              "alias": "# of replication messages"
             },
             {
-              "alias": "leofs_num_of_sync-vnode_messages",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1855,10 +1854,10 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "# of sync-vnode messages"
             },
             {
-              "alias": "leofs_num_of_rebalance_messages",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -1907,14 +1906,15 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "# of rebalance messages"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "Num of MQ messages (LeoFS)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -1951,7 +1951,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -1986,7 +1986,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_num_of_active_objects",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -2034,10 +2033,10 @@
                   "operator": "=",
                   "value": "<LEO-NODE-NAME>"
                 }
-              ]
+              ],
+              "alias": "num of active objects"
             },
             {
-              "alias": "leofs_total_objects",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -2086,14 +2085,15 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "total num of objects"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "Num of objects (LeoFS)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -2122,7 +2122,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -2157,7 +2157,6 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_num_of_writes",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -2205,10 +2204,10 @@
                   "operator": "=",
                   "value": "<LEO-NODE-NAME>"
                 }
-              ]
+              ],
+              "alias": "# of wites"
             },
             {
-              "alias": "leofs_num_of_reads",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -2257,10 +2256,10 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "# of reads"
             },
             {
-              "alias": "leofs_num_of_deletes",
               "dsType": "influxdb",
               "fields": [
                 {
@@ -2309,14 +2308,15 @@
                   "value": "<LEO-NODE-NAME>"
                 }
               ],
-              "target": ""
+              "target": "",
+              "alias": "# of deletes"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "Num of operations (LeoFS)",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "individual"
           },
@@ -2347,7 +2347,7 @@
     }
   ],
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -2389,6 +2389,6 @@
   },
   "refresh": "30s",
   "schemaVersion": 12,
-  "version": 1,
+  "version": 21,
   "links": []
 }

@@ -20,7 +20,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "editable": true,
           "error": false,
           "fill": 1,
@@ -54,14 +54,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "system_load1",
+              "alias": "Load AVG 1min",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -105,14 +99,8 @@
               ]
             },
             {
-              "alias": "system_load5",
+              "alias": "Load AVG 5min",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -157,14 +145,8 @@
               "target": ""
             },
             {
-              "alias": "system_load15",
+              "alias": "Load AVG 15min",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -242,7 +224,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -280,14 +262,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "usage_user",
+              "alias": "User",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -332,14 +308,8 @@
               "target": ""
             },
             {
-              "alias": "usage_nice",
+              "alias": "Nice",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -384,14 +354,8 @@
               "target": ""
             },
             {
-              "alias": "usage_system",
+              "alias": "System",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -436,14 +400,8 @@
               "target": ""
             },
             {
-              "alias": "usage_iowait",
+              "alias": "I/O wait",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -488,14 +446,8 @@
               "target": ""
             },
             {
-              "alias": "usage_idle",
+              "alias": "Idle",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -582,7 +534,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -617,14 +569,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "mem_free",
+              "alias": "Free",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -669,14 +615,8 @@
               "target": ""
             },
             {
-              "alias": "mem_used",
+              "alias": "Used",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -721,14 +661,8 @@
               "target": ""
             },
             {
-              "alias": "swap_used",
+              "alias": "Swap used",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -806,7 +740,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -841,14 +775,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "total_memory_usage",
+              "alias": "Total memory usage",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -893,14 +821,8 @@
               "target": ""
             },
             {
-              "alias": "allocated_memory",
+              "alias": "Allocated memory",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -944,14 +866,8 @@
               ]
             },
             {
-              "alias": "used_allocated_memory",
+              "alias": "Used allocated memory",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -996,14 +912,8 @@
               "target": ""
             },
             {
-              "alias": "ets_memory_usage",
+              "alias": "ETS memory usage",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1048,14 +958,8 @@
               "target": ""
             },
             {
-              "alias": "system_usage_memory",
+              "alias": "System usage memory",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1141,7 +1045,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -1176,14 +1080,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "disk_free",
+              "alias": "Free",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1227,14 +1125,8 @@
               ]
             },
             {
-              "alias": "disk_used",
+              "alias": "Used",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1279,14 +1171,8 @@
               "target": ""
             },
             {
-              "alias": "disk_total",
+              "alias": "Total",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1364,7 +1250,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -1401,14 +1287,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "read_bytes",
+              "alias": "Read bytes",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1454,14 +1334,8 @@
               ]
             },
             {
-              "alias": "write_bytes",
+              "alias": "Write bytes",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1550,7 +1424,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -1585,14 +1459,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_num_of_processes",
+              "alias": "# of processes (1min)",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1636,14 +1504,8 @@
               ]
             },
             {
-              "alias": "leofs_num_of_processes_5min",
+              "alias": "# of processes (5min)",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1668,7 +1530,7 @@
                 [
                   {
                     "params": [
-                      "num_of_processes_5min"
+                      "value"
                     ],
                     "type": "field"
                   },
@@ -1721,7 +1583,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -1756,14 +1618,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_num_of_writes",
+              "alias": "# of writes",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "distinct",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1794,7 +1650,7 @@
                   },
                   {
                     "params": [],
-                    "type": "mean"
+                    "type": "distinct"
                   }
                 ]
               ],
@@ -1807,14 +1663,8 @@
               ]
             },
             {
-              "alias": "leofs_num_of_reads",
+              "alias": "# of reads",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "distinct",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1845,7 +1695,7 @@
                   },
                   {
                     "params": [],
-                    "type": "mean"
+                    "type": "distinct"
                   }
                 ]
               ],
@@ -1859,14 +1709,8 @@
               "target": ""
             },
             {
-              "alias": "leofs_num_of_deletes",
+              "alias": "# of deletes",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "distinct",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -1897,7 +1741,7 @@
                   },
                   {
                     "params": [],
-                    "type": "mean"
+                    "type": "distinct"
                   }
                 ]
               ],
@@ -1952,7 +1796,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1986,14 +1830,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_count_of_cache-hit",
+              "alias": "# of count of cache-hit",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "distinct",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -2024,7 +1862,7 @@
                   },
                   {
                     "params": [],
-                    "type": "mean"
+                    "type": "distinct"
                   }
                 ]
               ],
@@ -2037,14 +1875,8 @@
               ]
             },
             {
-              "alias": "leofs_count_of_cache-miss",
+              "alias": "# of count of cache-miss",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "distinct",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -2075,7 +1907,7 @@
                   },
                   {
                     "params": [],
-                    "type": "mean"
+                    "type": "distinct"
                   }
                 ]
               ],
@@ -2122,7 +1954,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "editable": true,
           "error": false,
           "fill": 1,
@@ -2156,14 +1988,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_total_cached_size",
+              "alias": "Total cached size",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -2240,7 +2066,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": <DATA_SOURCE>,
+          "datasource": null,
           "editable": true,
           "error": false,
           "fill": 1,
@@ -2274,14 +2100,8 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "leofs_total_of_files",
+              "alias": "Total # of files",
               "dsType": "influxdb",
-              "fields": [
-                {
-                  "func": "mean",
-                  "name": "value"
-                }
-              ],
               "groupBy": [
                 {
                   "params": [
@@ -2360,7 +2180,7 @@
     }
   ],
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -2402,6 +2222,6 @@
   },
   "refresh": "30s",
   "schemaVersion": 12,
-  "version": 1,
+  "version": 16,
   "links": []
 }
