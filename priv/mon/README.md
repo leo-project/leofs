@@ -104,6 +104,9 @@ usage: leofs-mon [--help]
        leofs-mon -h <hostname> -n <leo_node_name> -k <kind_of_node>
                  [-snmp_ip <snmp-ip>] [-snmp_port <snmp-port>]
                  [-influx_ip <influxdb-ip>] [-influx_port <influxdb-port>]
+                 [-data_source <datasource-name>]
+                 [-schema12]
+                 [-api]
 
        description of the parameters:
          * <kind_of_node>: [storage | gateway | manager]

@@ -52,6 +52,9 @@ usage() {
     output "       ${bold}$SCRIPT${normal} -h <hostname> -n <leo_node_name> -k <kind_of_node>"
     output "                 [-snmp_ip <snmp-ip>] [-snmp_port <snmp-port>]"
     output "                 [-influx_ip <influxdb-ip>] [-influx_port <influxdb-port>]"
+    output "                 [-data_source <datasource-name>]"
+    output "                 [-schema12]"
+    output "                 [-api]"
     output ""
     output "       ${bold}description of the parameters:${normal}"
     output "         * <kind_of_node>: [storage | gateway | manager]"
@@ -70,6 +73,9 @@ SNMP_IP="127.0.0.1"
 SNMP_PORT=4010
 INFLUXDB_IP="localhost"
 INFLUXDB_PORT=8086
+DATA_SOURCE=null
+TEMPLATE_DIR="template"
+enabled_api=false
 
 while test -n "$1"; do
     case "$1" in
@@ -105,6 +111,16 @@ while test -n "$1"; do
             INFLUXDB_PORT="$2"
             shift
             ;;
+        -data_source)
+            DATA_SOURCE="\"$2\""
+            shift
+            ;;
+        -schema12)
+            TEMPLATE_DIR="template_12"
+            ;;
+        -api)
+            enabled_api=true
+            ;;
         *)
             break
     esac
@@ -130,16 +146,16 @@ FILENAME_TELEGRAF="${GEN_CONF_NODE_1}.telegraf"
 
 case $GEN_CONF_KIND in
     storage)
-        TEMPLATE_GRAFANA="template/leofs-storage.grafana"
-        TEMPLATE_TELEGRAF="template/leofs-storage.telegraf"
+        TEMPLATE_GRAFANA="$TEMPLATE_DIR/leofs-storage.grafana"
+        TEMPLATE_TELEGRAF="$TEMPLATE_DIR/leofs-storage.telegraf"
         ;;
     gateway)
-        TEMPLATE_GRAFANA="template/leofs-gateway.grafana"
-        TEMPLATE_TELEGRAF="template/leofs-gateway.telegraf"
+        TEMPLATE_GRAFANA="$TEMPLATE_DIR/leofs-gateway.grafana"
+        TEMPLATE_TELEGRAF="$TEMPLATE_DIR/leofs-gateway.telegraf"
         ;;
     manager)
-        TEMPLATE_GRAFANA="template/leofs-manager.grafana"
-        TEMPLATE_TELEGRAF="template/leofs-manager.telegraf"
+        TEMPLATE_GRAFANA="$TEMPLATE_DIR/leofs-manager.grafana"
+        TEMPLATE_TELEGRAF="$TEMPLATE_DIR/leofs-manager.telegraf"
         ;;
     *)
         usage
@@ -150,7 +166,13 @@ cat $TEMPLATE_GRAFANA | \
     sed -e "s/<TITLE>/${GEN_CONF_NODE} Dashboard/g"\
         -e "s/<LEO-NODE-NAME>/${GEN_CONF_NODE}/g" \
         -e "s/<HOSTNAME>/${GEN_CONF_HOST}/g"\
+        -e "s/<DATA_SOURCE>/${DATA_SOURCE}/g"\
         > $FILENAME_GRAFANA
+
+if $enabled_api ; then
+  sed -i -e "2i \"dashboard\": {" $FILENAME_GRAFANA
+  sed -i -e "$ i },\n\"overwrite\":false" $FILENAME_GRAFANA
+fi
 
 cat $TEMPLATE_TELEGRAF | \
     sed -e "s/<SNMP_IP>/${SNMP_IP}/g" \
@@ -158,6 +180,7 @@ cat $TEMPLATE_TELEGRAF | \
         -e "s/<INFLUXDB_IP>/${INFLUXDB_IP}/g" \
         -e "s/<INFLUXDB_PORT>/${INFLUXDB_PORT}/g"\
         > $FILENAME_TELEGRAF
+
 echo "DONE:"
 echo "  - ${FILENAME_GRAFANA}"
 echo "  - ${FILENAME_TELEGRAF}"
