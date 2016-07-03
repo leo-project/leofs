@@ -36,7 +36,7 @@ LeoFS consists of 3 applications - [LeoFS Storage](https://github.com/leo-projec
 
 [LeoFS Manager](https://github.com/leo-project/leo_manager) always monitors LeoFS Gateway and LeoFS Storage nodes. The main monitoring status are Node status and RING’s checksum in order to realise to keep high availability and keep data consistency.
 
-We can access LeoFS server using <a target="_blank" href="http://www.leofs.org/docs/s3_client.html">S3 clients and S3 client libries of each programming language</a>.
+We can access LeoFS server using <a target="_blank" href="http://leo-project.net/leofs/docs/s3api_client/s3_client.html">S3 clients and S3 client libries of each programming language</a>.
 
 
 ## Slide
@@ -243,17 +243,17 @@ $ ./leofs-adm status
 
 You can easily build a LeoFS cluster.
 
-Please refer <a target="_blank" href="http://www.leofs.org/docs/getting_started.html#quick-start-2-cluster">here</a>.
+Please refer <a target="_blank" href="http://leo-project.net/leofs/docs/getting_started/getting_started_2.html">here</a>.
 
 ## Configure LeoFS
 
-About the configuration of LeoFS, please refer <a target="_blank" href="http://www.leofs.org/docs/configuration.html">here</a>.
+About the configuration of LeoFS, please refer <a target="_blank" href="http://leo-project.net/leofs/docs/configuration/configuration.html">here</a>.
 
 ## Benchmarking
 
 You can benchmark LeoFS with <a target="_blank" href="https://github.com/basho/basho_bench">Basho Bench</a>.
 
-<a target="_blank" href="http://www.leofs.org/docs/benchmark.html">Here</a> is a documentation to benchmark LeoFS.
+<a target="_blank" href="http://leo-project.net/leofs/docs/benchmark/benchmark.html">Here</a> is a documentation to benchmark LeoFS.
 
 
 ## Integration Test
