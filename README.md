@@ -1,4 +1,4 @@
-# LeoFS - The Lion of Storage Systems
+# <a href="http://leo-project.net/leofs/" target="_blank">LeoFS</a> - A Storage System for a <a href="https://en.wikipedia.org/wiki/Data_lake" target="_blank">Data Lake</a>
 
 [![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -262,32 +262,39 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
 
 
 ## Milestones
+### Version 1
 
-* *DONE* - v1.0 (Nov 2013 - May 2014)
+* *DONE* - [v1.0](https://github.com/leo-project/leofs/releases/tag/1.0.2)
     * Multi Data Center Replication
     * Increase compatibility S3-APIs#5
         * Other bucket operations
-* *DONE* - v1.1
+* *DONE* - [v1.1](https://github.com/leo-project/leofs/releases/tag/1.1.5)
     * NFS v3 Support *(alpha)*
     * Improve Web GUI Console (Option)
-* *DONE* - v1.2
+* *DONE* - [v1.2](https://github.com/leo-project/leofs/releases/tag/1.2.22)
     * NFS v3 Support *(beta)*
     * Watchdog
     * Auto-compaction
-* *On Going* - v1.4
+* *WIP* - v1.3
     * NFS v3 Support *(stable)*
-        * Improve performance of the list objects
         * NFS lock-option support
-    * Erasure Code
-    * Improve Web GUI console *(option)*
     * Improve compatibility S3-APIs#6
         * AWS Signature v4 support
+        * Custom Metadata Support
+
+### Version 2
+* v2.0
+    * NFS v3 Support *(stable)*
+        * Improve performance of the list objects
+    * Erasure Code
+    * Improve Multi Data Center Replication
+    * Improve compatibility S3-APIs#7
         * Objects Expiration into a bucket
         * Versioning
-* v2.0
+    * Improve Web GUI console, <a href="https://github.com/leo-project/leo_center" target="_blank">LeoFS Center</a> *(option)*
+* v2.x
     * NFS v4 Support
     * Data Deduplication
-    * QoS Support *(Option)*
     * Improve compatibility S3-APIs#7
 
 
