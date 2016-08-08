@@ -15,6 +15,8 @@ LeoFS is supporting the following features:
   * **S3-API Support**
       * LeoFS is an Amazon S3 compatible storage system.
       * Switch to LeoFS to decrease your cost from more expensive public-cloud solutions.
+  * **REST-API Support**
+      * To easily access LeoFS with [REST-API](http://leo-project.net/leofs/docs/rest_api/rest_api.html)
   * **NFS Support**
       * NFS support was provided from LeoFS v1.1, the current status of which is beta.
 * **Large Object Support**
