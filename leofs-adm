@@ -218,6 +218,23 @@ usage_recover_file() {
     esac
 }
 
+# == Note: For v2.0 >>
+# usage_recover_dir() {
+#     USAGE="recover-dir"
+#     case "$1" in
+#         min)
+#             output "$WHITESPACE $USAGE "
+#             ;;
+#         *)
+#             output "Usage:"
+#             output "  $SCRIPT $USAGE"
+#             output "Since: LeoFS v.1.4.0"
+#             output "Description:"
+#             output "  - Recover/Rebuild every directory's metadata for the matadata-layer"
+#     esac
+# }
+# <<
+
 usage_recover_node() {
     USAGE="recover-node $STORAGE_NODE"
     case "$1" in
@@ -703,6 +720,30 @@ usage_chown_bucket() {
     esac
 }
 
+# == Note: For v2.0 >>
+# usage_set_redundancy_method() {
+#     USAGE="set-redundancy-method <bucket> $ACCESS_KEY_ID (copy | erasure-code) [<number-of-data-chunks>] [<number-of-conding-chunks>]"
+#     case "$1" in
+#         min)
+#             output "$WHITESPACE $USAGE "
+#             ;;
+#         *)
+#             output "Usage:"
+#             output "  $SCRIPT $USAGE"
+#             output "Description:"
+#             output "  - Set redundancy method of the bucket"
+#             output "  - erasure-code:"
+#             output "      - number-of-data-chunks: The number of chunks in which the original object is divided"
+#             output "      - number-of-coding-chunks: The number of additional chunks computed by leo_erasure's encoding functions"
+#             output "      ex-1. RAID 5: number-of-data-chunks = 2, number-of-coding-chunks: 1"
+#             output "      ex-2. RAID 6: number-of-data-chunks = 2, number-of-coding-chunks: 2"
+#             output "      ex-3. Custom params.1: number-of-data-chunks = 4, number-of-coding-chunks: 2"
+#             output "      ex-4. Custom params.2: number-of-data-chunks = 8, number-of-coding-chunks: 3"
+#             output "      ex-5. Custom params.3: number-of-data-chunks = 10, number-of-coding-chunks: 4"
+#     esac
+# }
+# <<
+
 usage_update_acl() {
     USAGE="update-acl <bucket> $ACCESS_KEY_ID (private | public-read | public-read-write)"
     case "$1" in
@@ -718,6 +759,20 @@ usage_update_acl() {
             output "    - private (default) : No one except the owner has access rights."
             output "    - public-read       : All users have READ access."
             output "    - public-read-write : All users have READ and WRITE access."
+    esac
+}
+
+usage_gen_nfs_mnt_key() {
+    USAGE="gen-nfs-mnt-key <bucket> <access-key-id> <client-ip-address>"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Generate a NFS mount key"
     esac
 }
 
@@ -877,7 +932,9 @@ usage() {
     usage_get_bucket min
     usage_get_buckets min
     usage_chown_bucket min
+    # usage_set_redundancy_method min
     usage_update_acl min
+    usage_gen_nfs_mnt_key min
     output ""
     output "      ${UNDERLINE}Multi Data Center Operation:${NONE}"
     usage_join_cluster min
@@ -1081,6 +1138,16 @@ case "$1" in
             usage_recover_file
         fi
         ;;
+    # == Note: For v2.0 >>
+    # recover-dir)
+    #     if [ $# -eq 1 ]; then
+    #         send_command "recover dir"
+    #         exit 1
+    #     else
+    #         usage_recover_dir
+    #     fi
+    #     ;;
+    # <<
     recover-node)
         if [ $# -eq 2 ]; then
             case "$2" in
@@ -1467,6 +1534,17 @@ case "$1" in
             usage_chown_bucket
         fi
         ;;
+    # == Note: For v2.0 >>
+    # set-redundancy-method)
+    #     if [ $# -eq 4 ]; then
+    #         send_command "$@"
+    #     elif [ $# -eq 6 ]; then
+    #         send_command "$@"
+    #     else
+    #         usage_set_redundancy_method
+    #     fi
+    #     ;;
+    # <<
     update-acl)
         if [ $# -eq 4 ]; then
             send_command "$@"
@@ -1474,7 +1552,13 @@ case "$1" in
             usage_update_acl
         fi
         ;;
-
+    gen-nfs-mnt-key)
+        if [ $# -eq 4 ]; then
+            send_command "$@"
+        else
+            usage_gen_nfs_mnt_key
+        fi
+        ;;
     ##
     ## MDC-Replication
     ##
