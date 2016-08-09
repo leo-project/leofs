@@ -2,13 +2,14 @@
 
 ## 1.3.0 (Aug 9, 2016)
 * Improvements
-    * [#283](https://github.com/leo-project/leofs/issues/283) [leo_s3_libs]Authenticating requests(AWS Signature version4) to be implemented
-        * [#373](https://github.com/leo-project/leofs/issues/373) Support `aws-sdk-go`
-    * [#436](https://github.com/leo-project/leofs/issues/436) [v1.3][nfs] Everyone is able to operate objects under a bucket with NFS
-    * [#479](https://github.com/leo-project/leofs/issues/479) [leo_gateway] Output access-logs, retrieving object list and removing a directory
+    * AWS Signature v4 support
+        * [#283](https://github.com/leo-project/leofs/issues/283) `leo_s3_libs` Authenticating requests(AWS Signature version4) to be implemented
+        * [#373](https://github.com/leo-project/leofs/issues/373) Supported `aws-sdk-go`
+    * [#436](https://github.com/leo-project/leofs/issues/436) `v1.3``nfs` Everyone is able to operate objects under a bucket with NFS
+    * [#479](https://github.com/leo-project/leofs/issues/479) `leo_gateway` Output access-logs, retrieving object list and removing a directory
 * Fixed Bugs
-    * [#482](https://github.com/leo-project/leofs/issues/482) [leo_gateway] A Delete request failed when `cache.http_cache = true`
-    * [#485](https://github.com/leo-project/leofs/issues/485) [leo_watchdog] Not able to clear state of a cpu's watchdog due to unexpected cpu_sup's error
+    * [#482](https://github.com/leo-project/leofs/issues/482) `leo_gateway` A Delete request failed when `cache.http_cache = true`
+    * [#485](https://github.com/leo-project/leofs/issues/485) `leo_watchdog` Not able to clear state of a cpu's watchdog due to unexpected [Erlang cpu_sup](http://erlang.org/doc/man/cpu_sup.html)'s error
 
 * Used libraries
     * leo project
