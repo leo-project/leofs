@@ -1,4 +1,4 @@
-# LeoFS - The Lion of Storage Systems
+# <a href="http://leo-project.net/leofs/" target="_blank">LeoFS</a> - A Storage System for a <a href="https://en.wikipedia.org/wiki/Data_lake" target="_blank">Data Lake</a>
 
 [![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -15,6 +15,8 @@ LeoFS is supporting the following features:
   * **S3-API Support**
       * LeoFS is an Amazon S3 compatible storage system.
       * Switch to LeoFS to decrease your cost from more expensive public-cloud solutions.
+  * **REST-API Support**
+      * To easily access LeoFS with [REST-API](http://leo-project.net/leofs/docs/rest_api/rest_api.html)
   * **NFS Support**
       * NFS support was provided from LeoFS v1.1, the current status of which is beta.
 * **Large Object Support**
@@ -36,7 +38,7 @@ LeoFS consists of 3 applications - [LeoFS Storage](https://github.com/leo-projec
 
 [LeoFS Manager](https://github.com/leo-project/leo_manager) always monitors LeoFS Gateway and LeoFS Storage nodes. The main monitoring status are Node status and RING’s checksum in order to realise to keep high availability and keep data consistency.
 
-We can access LeoFS server using <a target="_blank" href="http://www.leofs.org/docs/s3_client.html">S3 clients and S3 client libries of each programming language</a>.
+We can access LeoFS server using <a target="_blank" href="http://leo-project.net/leofs/docs/s3api_client/s3_client.html">S3 clients and S3 client libries of each programming language</a>.
 
 
 ## Slide
@@ -95,7 +97,7 @@ Then, install Erlang.
 ##
 $ wget http://www.hpl.hp.com/research/linux/atomic_ops/download/libatomic_ops-7.2d.tar.gz
 $ tar xzvf libatomic_ops-7.2d.tar.gz
-$ cd libatomic_ops-7.2d
+$ cd libatomic_ops-7.2
 $ ./configure --prefix=/usr/local
 $ make
 $ sudo make install
@@ -243,17 +245,17 @@ $ ./leofs-adm status
 
 You can easily build a LeoFS cluster.
 
-Please refer <a target="_blank" href="http://www.leofs.org/docs/getting_started.html#quick-start-2-cluster">here</a>.
+Please refer <a target="_blank" href="http://leo-project.net/leofs/docs/getting_started/getting_started_2.html">here</a>.
 
 ## Configure LeoFS
 
-About the configuration of LeoFS, please refer <a target="_blank" href="http://www.leofs.org/docs/configuration.html">here</a>.
+About the configuration of LeoFS, please refer <a target="_blank" href="http://leo-project.net/leofs/docs/configuration/configuration.html">here</a>.
 
 ## Benchmarking
 
 You can benchmark LeoFS with <a target="_blank" href="https://github.com/basho/basho_bench">Basho Bench</a>.
 
-<a target="_blank" href="http://www.leofs.org/docs/benchmark.html">Here</a> is a documentation to benchmark LeoFS.
+<a target="_blank" href="http://leo-project.net/leofs/docs/benchmark/benchmark.html">Here</a> is a documentation to benchmark LeoFS.
 
 
 ## Integration Test
@@ -262,32 +264,39 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
 
 
 ## Milestones
+### Version 1
 
-* *DONE* - v1.0 (Nov 2013 - May 2014)
+* *DONE* - [v1.0](https://github.com/leo-project/leofs/releases/tag/1.0.2)
     * Multi Data Center Replication
     * Increase compatibility S3-APIs#5
         * Other bucket operations
-* *DONE* - v1.1
+* *DONE* - [v1.1](https://github.com/leo-project/leofs/releases/tag/1.1.5)
     * NFS v3 Support *(alpha)*
     * Improve Web GUI Console (Option)
-* *DONE* - v1.2
+* *DONE* - [v1.2](https://github.com/leo-project/leofs/releases/tag/1.2.22)
     * NFS v3 Support *(beta)*
     * Watchdog
     * Auto-compaction
-* *On Going* - v1.4
+* *WIP* - v1.3
     * NFS v3 Support *(stable)*
-        * Improve performance of the list objects
         * NFS lock-option support
-    * Erasure Code
-    * Improve Web GUI console *(option)*
     * Improve compatibility S3-APIs#6
         * AWS Signature v4 support
+        * Custom Metadata Support
+
+### Version 2
+* v2.0
+    * NFS v3 Support *(stable)*
+        * Improve performance of the list objects
+    * Erasure Code
+    * Improve Multi Data Center Replication
+    * Improve compatibility S3-APIs#7
         * Objects Expiration into a bucket
         * Versioning
-* v2.0
+    * Improve Web GUI console, <a href="https://github.com/leo-project/leo_center" target="_blank">LeoFS Center</a> *(option)*
+* v2.x
     * NFS v4 Support
     * Data Deduplication
-    * QoS Support *(Option)*
     * Improve compatibility S3-APIs#7
 
 

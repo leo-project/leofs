@@ -471,7 +471,7 @@ Features and Improvements for LeoFS
     * Improved cache-mechanism (Gateway)
         * Support Layered Cache, First cache-layer is RAM and Secondary cache-layer is SSD (or HDD)
         * This version realized that cache-destination is decided by object-size
-             * Need to set [gateway's configuration](http://www.leofs.org/docs/install.html#leofs-gateway)
+             * Need to set [gateway's configuration](http://leo-project.net/leofs/docs/configuration/configuration_3.html)
 
 Bugs Fixed
 -----------
