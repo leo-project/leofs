@@ -22,20 +22,18 @@
 .PHONY: all compile deps clean xref eunit generate release pkgsrc
 
 all: deps compile
-
 compile:
+	find . -name rebar.config|xargs sed -i 's/require_otp_vsn,\s\+"\(.\+\)"/require_otp_vsn, "R16B*|17|18|19"/g'
 	@./rebar compile
 deps:
 	@./rebar get-deps
 clean:
 	@./rebar clean
 	make -C pkg clean
-
 xref:
 	@./rebar xref
 eunit:
 	@./rebar eunit
-
 generate:
 	rm -rf rel/leo_manager/leo_manager/
 	rm -rf rel/leo_storage/leo_storage/
@@ -44,7 +42,6 @@ generate:
 	(cd rel/leo_manager && ../../rebar generate)
 	(cd rel/leo_storage && ../../rebar generate)
 	(cd rel/leo_gateway && ../../rebar generate)
-
 release:
 	@./rebar compile
 	rm -rf package/leo_*
