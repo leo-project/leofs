@@ -19,7 +19,7 @@
 # under the License.
 #
 #======================================================================
-.PHONY: deps test
+.PHONY: all compile deps clean xref eunit generate release pkgsrc
 
 all: deps compile
 
