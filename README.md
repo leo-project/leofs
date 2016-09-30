@@ -73,7 +73,7 @@ LeoFS packages have been already provided on the Web. You're able to easily inst
 * Community
     * <a target="_blank" href="http://www.freshports.org/databases/leofs">FreeBSD</a>
 
-<a target="_blank" href="http://leo-project.net/leofs/docs/getting_started.html">Here</a> is the installation manual.
+<a target="_blank" href="http://leo-project.net/leofs/docs/getting_started/getting_started.html">Here</a> is the installation manual.
 
 
 ## Build LeoFS From Source (For Developers)
