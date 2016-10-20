@@ -24,7 +24,7 @@
 * [leo_mq v1.4.2](https://github.com/leo-project/leo_mq/releases/tag/1.4.5)
 * [leo_object_storage v1.2.22](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.22)
 * [leo_ordning_reda v1.2.0](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.0)
-* [leo_redundant_manager 1.9.26](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.26)
+* [leo_redundant_manager v1.9.26](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.26)
 * [leo_rpc v0.10.8](https://github.com/leo-project/leo_rpc/releases/tag/0.10.8)
 * [leo_pod v0.6.6](https://github.com/leo-project/leo_pod/releases/tag/0.6.6)
 * [leo_s3_libs v1.1.13](https://github.com/leo-project/leo_s3_libs/releases/tag/1.1.13)
@@ -41,10 +41,10 @@
 ### Others
 
 * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
-* [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
+* [cowboy v1.0.0-p1](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
 * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
 * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
 * [eleveldb v2.1.10](https://github.com/basho/eleveldb/releases/tag/2.1.10)
 * [folsom v0.8.2-for-leofs](https://github.com/leo-project/folsom/releases/tag/0.8.2-for-leofs)
 * [jiffy v0.14.7](https://github.com/davisp/jiffy/releases/tag/0.14.7)
-* [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+* [recon v2.2.1](https://github.com/ferd/recon/releases/tag/2.2.1)
