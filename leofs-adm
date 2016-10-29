@@ -66,6 +66,9 @@ case $OS in
     SunOS)
         NC_ARGS=""
         ;;
+    Linux)
+        #  -q seconds   after EOF is detected, wait the specified number of seconds and then quit.
+        NC_ARGS="-q 0"
     *)
         NC_ARGS="-C"
 esac
