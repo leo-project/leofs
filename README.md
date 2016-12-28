@@ -1,6 +1,6 @@
 # <a href="http://leo-project.net/leofs/" target="_blank">LeoFS</a> - A Storage System for a <a href="https://en.wikipedia.org/wiki/Data_lake" target="_blank">Data Lake</a> and the Web
 
-[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.3.0-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.3.0)
+[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.3.1-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.3.1)
 
 ![LeoFS Logo](http://leo-project.net/leofs/docs/_static/leofs-logo-small.png)
 
@@ -284,16 +284,19 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
     * Improve compatibility S3-APIs#6
         * AWS Signature v4 support (v1.3.0)
         * Custom Metadata Support (v1.3.1)
+* v1.4
+    * Erasure Code
+    * LeoManager's cluater replaces from mnesia dependensy to another implementation
+    * Improve compatibility S3-APIs#7
+        * Object Encryption
 
 ### Version 2
 * v2.0
     * NFS v3 Support *(stable)*
         * Improve performance of the list objects, `the ls command`
-    * Erasure Code
     * Improvement of the Multi Data Center Replication
-    * Object Encryption
     * Searching objects by a custom-metadata
-    * Improve compatibility S3-APIs#7
+    * Improve compatibility S3-APIs#8
         * Objects Expiration into a Bucket
         * Object Versioning
     * Improve Web GUI console, <a href="https://github.com/leo-project/leo_center" target="_blank">LeoFS Center</a> *(option)*
