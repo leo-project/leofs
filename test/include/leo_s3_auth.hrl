@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Auth
+%% Leo S3 Auth
 %%
-%% Copyright (c) 2012 Rakuten, Inc.
+%% Copyright (c) 2012-2014 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -19,18 +19,18 @@
 %% under the License.
 %%
 %% ---------------------------------------------------------------------
-%% Leo Auth
+%% Leo S3 Auth
 %% @doc
 %% @end
 %%======================================================================
-%% @doc Credential data
+%% @doc Credential data - [- LeoFS v1.0.0]
 %%
 -record(credential, {
-          access_key_id     :: string(),
-          secret_access_key :: string(),
-          user_id           :: string(),
+          access_key_id     :: binary(),
+          secret_access_key :: binary(),
           created_at        :: integer()
          }).
+
 
 %% @doc Authentication Info
 %%
@@ -39,17 +39,28 @@
           provider = [] :: list()  %% auth-info provides
          }).
 
+-define(AWS_SIGN_VER_2, 'v2').
+-define(AWS_SIGN_VER_4, 'v4').
+-type aws_sign_ver()  :: ?AWS_SIGN_VER_2 | ?AWS_SIGN_VER_4.
+
 %% @doc AMZ-S3-API related
 %%
 -record(sign_params, {
-          http_verb    = "" :: string(),
-          content_md5  = "" :: string(),
-          content_type = "" :: string(),
-          date         = "" :: string(),
-          bucket       = "" :: string(),
-          uri          = "" :: string(),
-          query_str    = "" :: string(),
-          sub_resource = "" :: string(), %% [?acl" | "?location" | "?logging" | "?torrent"]
-          amz_headers  = [] :: list()
+          http_verb     = <<>> :: binary(),
+          content_md5   = <<>> :: binary(),
+          content_type  = <<>> :: binary(),
+          date          = <<>> :: binary(),
+          bucket        = <<>> :: binary(),
+          raw_uri       = <<>> :: binary(),
+          requested_uri = <<>> :: binary(),
+          query_str     = <<>> :: binary(),
+          sub_resource  = <<>> :: binary(), %% [?acl" | "?location" | "?logging" | "?torrent"]
+          sign_ver      = v2   :: aws_sign_ver(),   %% [v2 | v4]
+          headers       = []   :: list(),
+          amz_headers   = []   :: list()
          }).
 
+-record(sign_v4_params, {credential     :: binary(),
+                         signature      :: binary(),
+                         signed_headers :: binary()
+                        }).
