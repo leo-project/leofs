@@ -279,14 +279,13 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
     * Auto-compaction
 * *WIP* - v1.3
     * NFS v3 Support *(stable)*
-        * NFS lock-option support
     * Hinted Hand-off (v1.3.2)
     * Improve compatibility S3-APIs#6
         * AWS Signature v4 support (v1.3.0)
         * Custom Metadata Support (v1.3.1)
 * v1.4
     * Erasure Code
-    * LeoManager's cluater replaces from mnesia dependensy to another implementation
+    * LeoManager's cluster replaces from mnesia dependensy to another implementation
     * Improve compatibility S3-APIs#7
         * Object Encryption
 
