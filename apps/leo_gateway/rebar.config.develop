@@ -1,0 +1,51 @@
+%% -*- mode: erlang;erlang-indent-level: 4;indent-tabs-mode: nil -*-
+%%======================================================================
+%%
+%% Leo Gateway
+%%
+%% Copyright (c) 2012-2013 Rakuten, Inc.
+%%
+%% This file is provided to you under the Apache License,
+%% Version 2.0 (the "License"); you may not use this file
+%% except in compliance with the License.  You may obtain
+%% a copy of the License at
+%%
+%%   http://www.apache.org/licenses/LICENSE-2.0
+%%
+%% Unless required by applicable law or agreed to in writing,
+%% software distributed under the License is distributed on an
+%% "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+%% KIND, either express or implied.  See the License for the
+%% specific language governing permissions and limitations
+%% under the License.
+%%
+%%======================================================================
+{require_otp_vsn, "R16B*|17"}.
+
+{deps, [
+        {leo_cache,             ".*", {git, "https://github.com/leo-project/leo_cache.git",             {branch, "develop"}}},
+        {leo_commons,           ".*", {git, "https://github.com/leo-project/leo_commons.git",           {branch, "develop"}}},
+        {leo_logger,            ".*", {git, "https://github.com/leo-project/leo_logger.git",            {branch, "develop"}}},
+        {leo_object_storage,    ".*", {git, "https://github.com/leo-project/leo_object_storage.git",    {branch, "develop"}}},
+        {leo_redundant_manager, ".*", {git, "https://github.com/leo-project/leo_redundant_manager.git", {branch, "develop"}}},
+        {leo_statistics,        ".*", {git, "https://github.com/leo-project/leo_statistics.git",        {branch, "develop"}}},
+        {leo_s3_libs,           ".*", {git, "https://github.com/leo-project/leo_s3_libs.git",           {branch, "develop"}}},
+        {leo_watchdog,          ".*", {git, "https://github.com/leo-project/leo_watchdog.git",          {branch, "develop"}}},
+        {savanna_agent,         ".*", {git, "https://github.com/leo-project/savanna_agent.git",         {branch, "develop"}}},
+        {erpcgen,               ".*", {git, "https://github.com/leo-project/erpcgen.git",               {branch, "develop"}}},
+        {nfs_rpc_server,        ".*", {git, "https://github.com/leo-project/nfs_rpc_server.git",        {branch, "develop"}}},
+        {cowboy,                ".*", {git, "https://github.com/ninenines/cowboy.git",                  {branch, "develop"}}},
+        {cowlib,                ".*", {git, "https://github.com/ninenines/cowlib.git",                  {branch, "develop"}}},
+        {meck,                  ".*", {git, "https://github.com/eproxus/meck.git",                      {branch, "develop"}}},
+        {proper,                ".*", {git, "https://github.com/manopapad/proper.git", "7d535ac61e9c2a9a7616af4615c39595a3c5739f"}}
+       ]}.
+
+{erl_opts, [{d, 'NOTEST'},
+            warn_obsolete_guard,
+            warn_shadow_vars,
+            warn_export_vars,
+            warn_export_all]}.
+{xref_checks, [undefined_function_calls]}.
+{cover_enabled, true}.
+{clean_files, []}.
+

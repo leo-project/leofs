@@ -1,0 +1,11 @@
+leo_*.sh
+.eunit
+ebin
+deps
+snmp/*/db
+ring_*
+.leo_storage_dialyzer_plt
+leo_storage.dot
+leo_storage.png
+.rebar/
+rel/leo_storage

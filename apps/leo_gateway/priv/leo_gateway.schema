@@ -1,0 +1,1235 @@
+%% -*- mode: erlang;erlang-indent-level: 4;indent-tabs-mode: nil -*-
+%%======================================================================
+%%
+%% LeoFS
+%%
+%% Copyright (c) 2012-2016 Rakuten, Inc.
+%%
+%% This file is provided to you under the Apache License,
+%% Version 2.0 (the "License"); you may not use this file
+%% except in compliance with the License.  You may obtain
+%% a copy of the License at
+%%
+%%   http://www.apache.org/licenses/LICENSE-2.0
+%%
+%% Unless required by applicable law or agreed to in writing,
+%% software distributed under the License is distributed on an
+%% "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+%% KIND, either express or implied.  See the License for the
+%% specific language governing permissions and limitations
+%% under the License.
+%%
+%% @author: Yosuke Hara
+%%
+%%======================================================================
+%% --------------------------------------------------------------------
+%% SASL
+%% --------------------------------------------------------------------
+%% See: http://www.erlang.org/doc/man/sasl_app.html
+%%
+%% The following configuration parameters are defined for
+%% the SASL application. See app(4) for more information
+%% about configuration parameters
+%%
+%% @doc SASL error log path
+{mapping,
+ "sasl.sasl_error_log",
+ "sasl.sasl_error_logger",
+ [
+  {datatype, string},
+  {default, "./log/sasl/sasl-error.log"}
+ ]}.
+
+{translation, "sasl.sasl_error_logger",
+ fun(Conf) ->
+         Path = cuttlefish_util:conf_get_value("sasl.sasl_error_log", Conf),
+         {file, Path}
+ end}.
+
+%% @doc Restricts the error logging performed by the specified sasl_error_logger
+%%      to error reports, progress reports, or both.
+%%      errlog_type = [error | progress | all]
+{mapping,
+ "sasl.errlog_type",
+ "sasl.errlog_type",
+ [
+  {datatype, atom},
+  {default, error}
+ ]}.
+
+%% @doc Specifies in which directory the files are stored.
+%%      If this parameter is undefined or false, the error_logger_mf_h is not installed.
+{mapping,
+ "sasl.error_logger_mf_dir",
+ "sasl.error_logger_mf_dir",
+ [
+  {default, "./log/sasl"}
+ ]}.
+
+%% @doc Specifies how large each individual file can be.
+%%      If this parameter is undefined, the error_logger_mf_h is not installed.
+%%
+{mapping,
+ "sasl.error_logger_mf_maxbytes",
+ "sasl.error_logger_mf_maxbytes",
+ [
+  {datatype, bytesize},
+  {default, 10485760}
+ ]}.
+
+%% @doc Specifies how many files are used.
+%%      If this parameter is undefined, the error_logger_mf_h is not installed.
+{mapping,
+ "sasl.error_logger_mf_maxfiles",
+ "sasl.error_logger_mf_maxfiles",
+ [
+  {datatype, integer},
+  {default, 5}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% MANAGER
+%% --------------------------------------------------------------------
+%% @doc Nodes of manager
+{mapping,
+ "managers",
+ "leo_gateway.managers",
+ [
+  {datatype, string}
+ ]}.
+
+{translation, "leo_gateway.managers",
+ fun(Conf) ->
+         Managers = cuttlefish_util:conf_get_value("managers", Conf),
+         case string:tokens(Managers, "[ , ]") of
+             [] ->
+                 ['manager_0@127.0.0.1', 'manager_1@127.0.0.1'];
+             Tokens ->
+                 lists:map(fun(X) ->
+                                   list_to_atom(X)
+                           end, Tokens)
+         end
+ end}.
+
+
+%% --------------------------------------------------------------------
+%% GATEWAY
+%% --------------------------------------------------------------------
+%% @doc LeoFS version
+{mapping,
+ "system_version",
+ "leo_gateway.system_version",
+ [
+  {datatype, string},
+  {default, "1.3.1"}
+ ]}.
+
+
+%% @doc Gateway Protocol to use: [s3 | rest | embed]
+{mapping,
+ "protocol",
+ "leo_gateway.protocol",
+ [
+  {datatype, {enum, [s3, rest, embed, nfs]}},
+  {default, s3}
+ ]}.
+
+%% @doc Port number the Gateway uses for HTTP connections
+{mapping,
+ "http.port",
+ "leo_gateway.http.port",
+ [
+  {datatype, integer},
+  {default, 8080}
+ ]}.
+
+%% @doc Numbers of processes listening for connections
+{mapping,
+ "http.num_of_acceptors",
+ "leo_gateway.http.num_of_acceptors",
+ [
+  {datatype, integer},
+  {default, 128}
+ ]}.
+
+%% @doc Maximum number of requests allowed in a single keep-alive session
+{mapping,
+ "http.max_keepalive",
+ "leo_gateway.http.max_keepalive",
+ [
+  {datatype, integer},
+  {default, 4096}
+ ]}.
+
+%% @doc Total number of virtual directories
+{mapping,
+ "http.layer_of_dirs",
+ "leo_gateway.http.layer_of_dirs",
+ [
+  {datatype, integer},
+  {default, 12}
+ ]}.
+
+{translation, "leo_gateway.http.layer_of_dirs",
+ fun(Conf) ->
+         MaxDirs = cuttlefish_util:conf_get_value("http.layer_of_dirs", Conf),
+         {1, MaxDirs}
+ end}.
+
+%% @doc Port number the Gateway uses for HTTPS connections
+{mapping,
+ "http.ssl_port",
+ "leo_gateway.http.ssl_port",
+ [
+  {datatype, integer},
+  {default, 8443}
+ ]}.
+
+%% @doc SSL Certificate file
+{mapping,
+ "http.ssl_certfile",
+ "leo_gateway.http.ssl_certfile",
+ [
+  {default, "./etc/server_cert.pem"}
+ ]}.
+
+%% @doc SSL key
+{mapping,
+ "http.ssl_keyfile",
+ "leo_gateway.http.ssl_keyfile",
+ [
+  {default, "./etc/server_key.pem"}
+ ]}.
+
+%% @doc HTTP custom header configuration file path
+{mapping,
+ "http.headers_config_file",
+ "leo_gateway.http.headers_config_file",
+ [
+  {default, "./etc/http_custom_header.conf"}
+ ]}.
+
+%% @doc Timeout for reading header
+{mapping,
+ "http.timeout_for_header",
+ "leo_gateway.http.timeout_for_header",
+ [
+  {datatype, integer},
+  {default, 5000}
+ ]}.
+
+%% @doc Timeout for reading body
+{mapping,
+ "http.timeout_for_body",
+ "leo_gateway.http.timeout_for_body",
+ [
+  {datatype, integer},
+  {default, 15000}
+ ]}.
+
+%% @doc Sending chunk length
+{mapping,
+ "http.sending_chunked_obj_len",
+ "leo_gateway.http.sending_chunked_obj_len",
+ [
+  {datatype, integer},
+  {default, 5242880}
+ ]}.
+
+%% @doc Synchronized time of a bucket property (second)
+{mapping,
+ "bucket_prop_sync_interval",
+ "leo_gateway.bucket_prop_sync_interval",
+ [
+  {datatype, integer},
+  {default, 300}
+ ]}.
+
+%% --------------------------------------------------------------------
+%% GATEWAY - Large Object
+%% --------------------------------------------------------------------
+%% @doc Total number of chunked objects
+{mapping,
+ "large_object.max_chunked_objs",
+ "leo_gateway.large_object.max_chunked_objs",
+ [
+  {datatype, integer},
+  {default, 1000}
+ ]}.
+
+%% @doc Length of a chunked object
+{mapping,
+ "large_object.chunked_obj_len",
+ "leo_gateway.large_object.chunked_obj_len",
+ [
+  {datatype, bytesize},
+  {default, 5242880}
+ ]}.
+
+{translation, "leo_gateway.large_object.chunked_obj_len",
+ fun(Conf) ->
+         Protocol = cuttlefish_util:conf_get_value("protocol", Conf),
+         case Protocol of
+             'nfs' ->
+                 1048576; %% 1MB
+             _ ->
+                 cuttlefish_util:conf_get_value("large_object.chunked_obj_len", Conf)
+         end
+ end}.
+
+
+%% @doc Threshold of length of a chunked object
+{mapping,
+ "large_object.threshold_of_chunk_len",
+ "leo_gateway.large_object.threshold_of_chunk_len",
+ [
+  {datatype, bytesize},
+  {default, 5767168}
+ ]}.
+
+%% @doc Reading length of a chunked object
+{mapping,
+ "large_object.reading_chunked_obj_len",
+ "leo_gateway.large_object.reading_chunked_obj_len",
+ [
+  {datatype, bytesize},
+  {default, 5242880}
+ ]}.
+
+{translation, "leo_gateway.large_object.reading_chunked_obj_len",
+ fun(Conf) ->
+         Len = cuttlefish_util:conf_get_value("large_object.chunked_obj_len", Conf),
+         ReadingLen = cuttlefish_util:conf_get_value("large_object.reading_chunked_obj_len", Conf),
+         case ReadingLen > Len of
+             true ->
+                 Reason = lists:flatten(io_lib:format("reading_chunked_obj_len: ~w > chunked_obj_len: ~w", [ReadingLen, Len])),
+                 {error, Reason};
+             false ->
+                 ReadingLen
+         end
+ end}.
+
+
+%% @doc Large Object Handler - put worker pool size
+{mapping,
+ "large_object.put_worker_pool_size",
+ "leo_gateway.large_object.put_worker_pool_size",
+ [
+  {datatype, integer},
+  {default, 64}
+ ]}.
+
+%% @doc Large Object Handler - put worker buffer size
+{mapping,
+ "large_object.put_worker_buffer_size",
+ "leo_gateway.large_object.put_worker_buffer_size",
+ [
+  {datatype, integer},
+  {default, 32}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% GATEWAY - CACHE
+%% --------------------------------------------------------------------
+%% @doc If this parameter is 'true', Gateway turns on HTTP-based cache server, like Varnish OR Squid.
+%%      If this parameter is 'false', Stores objects into the Gateway’s memory.
+%%      When operating READ, the Etag of the cache is compared with a backend storage’s Etag.
+{mapping,
+ "cache.http_cache",
+ "leo_gateway.cache.http_cache",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc A number of cache workers
+{mapping,
+ "cache.cache_workers",
+ "leo_gateway.cache.cache_workers",
+ [
+  {datatype, integer},
+  {default, 16}
+ ]}.
+
+%% @doc Memory cache capacity in bytes
+{mapping,
+ "cache.cache_ram_capacity",
+ "leo_gateway.cache.cache_ram_capacity",
+ [
+  {datatype, bytesize},
+  {default, 1073741824}
+ ]}.
+
+{translation, "leo_gateway.cache.cache_ram_capacity",
+ fun(Conf) ->
+         NumOfWorkers = cuttlefish_util:conf_get_value("cache.cache_workers", Conf),
+         RamCapacity  = cuttlefish_util:conf_get_value("cache.cache_ram_capacity", Conf),
+
+         case RamCapacity > 0 of
+             true ->
+                 case (8 * 1024 * 1024) * NumOfWorkers > RamCapacity of
+                     true ->
+                         {error, {invalid_configuration,
+                                  "(8 * 1024 * 1024) * ${cache.cache_workers} >= ${cache.cache_ram_capacity}"}};
+                     false ->
+                         RamCapacity
+                 end;
+             false ->
+                 0
+         end
+ end}.
+
+
+%% @doc Disk cache capacity in bytes
+{mapping,
+ "cache.cache_disc_capacity",
+ "leo_gateway.cache.cache_disc_capacity",
+ [
+  {datatype, bytesize},
+  {default, 524288000}
+ ]}.
+
+{translation, "leo_gateway.cache.cache_disc_capacity",
+ fun(Conf) ->
+         NumOfWorkers = cuttlefish_util:conf_get_value("cache.cache_workers", Conf),
+         DiscCapacity  = cuttlefish_util:conf_get_value("cache.cache_disc_capacity", Conf),
+
+         case DiscCapacity > 0 of
+             true ->
+                 case (8 * 1024 * 1024) * NumOfWorkers > DiscCapacity of
+                     true ->
+                         {error, {invalid_configuration,
+                                  "(8 * 1024 * 1024) * ${cache.cache_workers} >= ${cache.cache_disc_capacity}"}};
+                     false ->
+                         DiscCapacity
+                 end;
+             false ->
+                 0
+         end
+ end}.
+
+
+%% @doc When the length of the object exceeds this value, store the object on disk
+{mapping,
+ "cache.cache_disc_threshold_len",
+ "leo_gateway.cache.cache_disc_threshold_len",
+ [
+  {datatype, bytesize},
+  {default, 1048576}
+ ]}.
+
+%% @doc Directory for the disk cache data
+{mapping,
+ "cache.cache_disc_dir_data",
+ "leo_gateway.cache.cache_disc_dir_data",
+ [
+  {default, "./cache/data"}
+ ]}.
+
+%% @doc Directory for the disk cache journal
+{mapping,
+ "cache.cache_disc_dir_journal",
+ "leo_gateway.cache.cache_disc_dir_journal",
+ [
+  {default, "./cache/journal"}
+ ]}.
+
+%% @doc Cache Expire in seconds for the http-cache feature
+{mapping,
+ "cache.cache_expire",
+ "leo_gateway.cache.cache_expire",
+ [
+  {datatype, integer},
+  {default, 300}
+ ]}.
+
+%% @doc Cache Max Content Length in bytes
+%%       for the http-cache feature
+{mapping,
+ "cache.cache_max_content_len",
+ "leo_gateway.cache.cache_max_content_len",
+ [
+  {datatype, bytesize},
+  {default, 1048576}
+ ]}.
+
+%% @doc Cache Content Type(s)
+%%      In case of "empty", all objects are cached.
+%%      for the http-cache feature
+{mapping,
+ "cache.cachable_content_types",
+ "leo_gateway.cache.cachable_content_type",
+ [
+  {datatype, string},
+  {default, []}
+ ]}.
+
+{translation, "leo_gateway.cache.cachable_content_type",
+ fun(Conf) ->
+         Types = cuttlefish_util:conf_get_value("cache.cachable_content_types", Conf),
+         string:tokens(Types, "[ , ]")
+ end}.
+
+%% @doc Cache Content Pattern(s)
+%%      In case of "empty", all objects are cached.
+%%      for the http-cache feature
+{mapping,
+ "cache.cachable_path_patterns",
+ "leo_gateway.cache.cachable_path_pattern",
+ [
+  {datatype, string},
+  {default, []}
+ ]}.
+
+{translation, "leo_gateway.cache.cachable_path_pattern",
+ fun(Conf) ->
+         Patterns = cuttlefish_util:conf_get_value("cache.cachable_path_patterns", Conf),
+         string:tokens(Patterns, "[ , ]")
+ end}.
+
+%% --------------------------------------------------------------------
+%% GATEWAY - Watchdog
+%% --------------------------------------------------------------------
+%% @doc When reach a number of safe (clear watchdog), a watchdog loosen the control
+{mapping,
+ "watchdog.common.loosen_control_at_safe_count",
+ "leo_watchdog.loosen_control_at_safe_count",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
+%%
+%%  Watchdog.REX
+%%
+%% @doc REX - Is enabled
+{mapping,
+ "watchdog.rex.is_enabled",
+ "leo_watchdog.rex_enabled",
+ [
+  {datatype, atom},
+  {default, false}
+ ]}.
+
+%% @doc Check inteval (sec) - defalut:5sec
+{mapping,
+ "watchdog.rex.interval",
+ "leo_watchdog.rex_interval",
+ [
+  {datatype, integer},
+  {default, 5}
+ ]}.
+
+
+%% @doc Threshold memory capacity of binary for rex(rpc) - default:32MB
+{mapping,
+ "watchdog.rex.threshold_mem_capacity",
+ "leo_watchdog.rex_threshold_mem_capacity",
+ [
+  {datatype, integer},
+  {default, 33554432}
+ ]}.
+
+%%
+%%  Watchdog.CPU
+%%
+%% @doc CPU - Is enabled
+{mapping,
+ "watchdog.cpu.is_enabled",
+ "leo_watchdog.cpu_enabled",
+ [
+  {datatype, atom},
+  {default, false}
+ ]}.
+
+%% @doc CPU - Raised error times - defalut:3
+{mapping,
+ "watchdog.cpu.raised_error_times",
+ "leo_watchdog.cpu_raised_error_times",
+ [
+  {datatype, integer},
+  {default, 3}
+ ]}.
+
+%% @doc Check inteval (sec) - defalut:5sec
+{mapping,
+ "watchdog.cpu.interval",
+ "leo_watchdog.cpu_interval",
+ [
+  {datatype, integer},
+  {default, 5}
+ ]}.
+
+%% @doc Threshold CPU load avg for 1min/5min - default:3.0
+{mapping,
+ "watchdog.cpu.threshold_cpu_load_avg",
+ "leo_watchdog.cpu_threshold_load_avg",
+ [
+  {default, "5.0"}
+ ]}.
+
+%% @doc Threshold CPU load util - default:100 = "100%"
+{mapping,
+ "watchdog.cpu.threshold_cpu_util",
+ "leo_watchdog.cpu_threshold_util",
+ [
+  {datatype, integer},
+  {default, 100}
+ ]}.
+
+%%
+%%  Watchdog.IO
+%%
+%% @doc IO - Is enabled
+{mapping,
+ "watchdog.io.is_enabled",
+ "leo_watchdog.io_enabled",
+ [
+  {datatype, atom},
+  {default, false}
+ ]}.
+
+%% @doc Check inteval (sec) - defalut:1sec
+{mapping,
+ "watchdog.io.interval",
+ "leo_watchdog.io_interval",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
+%% @doc Threshold input size for interval - default:128MB
+{mapping,
+ "watchdog.io.threshold_input_per_sec",
+ "leo_watchdog.io_threshold_input_per_sec",
+ [
+  {datatype, integer},
+  {default, 134217728}
+ ]}.
+
+%% @doc Threshold output size for interval - default:128MB
+{mapping,
+ "watchdog.io.threshold_output_per_sec",
+ "leo_watchdog.io_threshold_output_per_sec",
+ [
+  {datatype, integer},
+  {default, 134217728}
+ ]}.
+
+
+%%
+%%  Watchdog.disk
+%%
+%% @doc Disk - Is enabled
+{mapping,
+ "watchdog.disk.is_enabled",
+ "leo_watchdog.disk_enabled",
+ [
+  {datatype, atom},
+  {default, false}
+ ]}.
+
+%% @doc Disk - Raised error times - defalut:3
+{mapping,
+ "watchdog.disk.raised_error_times",
+ "leo_watchdog.disk_raised_error_times",
+ [
+  {datatype, integer},
+  {default, 3}
+ ]}.
+
+%% @doc Check inteval (sec) - defalut:1sec
+{mapping,
+ "watchdog.disk.interval",
+ "leo_watchdog.disk_interval",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
+
+%% @doc Monitoring target paths
+{mapping,
+ "watchdog.disk.target_paths",
+ "leo_watchdog.disk_target_paths",
+ [
+  {datatype, string},
+  {default, []}
+ ]}.
+
+{translation, "leo_watchdog.disk_target_paths",
+ fun(Conf) ->
+         %% retrieve pathes
+         Paths = cuttlefish_util:conf_get_value("obj_containers.path", Conf),
+         Paths_1 = case string:tokens(Paths, "[ , ]") of
+                       [] ->
+                           ["./avs"];
+                       Tokens_1 ->
+                           Tokens_1
+                   end,
+         lists:map(
+           fun(Path) ->
+                   {ok, Curr} = file:get_cwd(),
+                   Path_1 = case Path of
+                                "/"   ++ _Rest -> Path;
+                                "../" ++ _Rest -> Path;
+                                "./"  ++  Rest -> Curr ++ "/" ++ Rest;
+                                _              -> Curr ++ "/" ++ Path
+                            end,
+                   Path_2 = case (string:len(Path_1) == string:rstr(Path_1, "/")) of
+                                true  -> Path_1;
+                                false -> Path_1 ++ "/"
+                            end,
+                   Path_2
+           end, Paths_1)
+ end}.
+
+
+%% @doc Threshold disk use% - default:85%
+{mapping,
+ "watchdog.disk.threshold_disk_use",
+ "leo_watchdog.disk_threshold_use",
+ [
+  {datatype, integer},
+  {default, 85}
+ ]}.
+
+%% @doc Threshold disk util% - default:100%
+{mapping,
+ "watchdog.disk.threshold_disk_util",
+ "leo_watchdog.disk_threshold_util",
+ [
+  {datatype, integer},
+  {default, 100}
+ ]}.
+
+%% @doc Threshold disk read kb/sec
+%%      default:131072(KB) - 256MB
+{mapping,
+ "watchdog.disk.threshold_disk_rkb",
+ "leo_watchdog.disk_threshold_rkb",
+ [
+  {datatype, integer},
+  {default, 262144}
+ ]}.
+
+%% @doc Threshold disk write kb/sec
+%%      default:262144(KB) - 256MB
+{mapping,
+ "watchdog.disk.threshold_disk_wkb",
+ "leo_watchdog.disk_threshold_wkb",
+ [
+  {datatype, integer},
+  {default, 262144}
+ ]}.
+
+
+%% @doc Monitoring target devices
+%%
+{mapping,
+ "watchdog.disk.target_devices",
+ "leo_watchdog.disk_target_devices",
+ [
+  {datatype, string},
+  {default, []}
+ ]}.
+
+{translation, "leo_watchdog.disk_target_devices",
+ fun(Conf) ->
+         Managers = cuttlefish_util:conf_get_value("watchdog.disk.target_devices", Conf),
+         case string:tokens(Managers, "[ , ]") of
+             [] ->
+                 [];
+             Tokens ->
+                 Tokens
+         end
+ end}.
+
+
+%%
+%%  Watchdog.Cluster
+%%
+%% @doc Cluster - Is enabled
+{mapping,
+ "watchdog.cluster.is_enabled",
+ "leo_watchdog.cluster_enabled",
+ [
+  {datatype, atom},
+  {default, false}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% GATEWAY - NFS-related configuration
+%% --------------------------------------------------------------------
+%% @doc Mountd's port number
+{mapping,
+ "nfs.mountd.port",
+ "leo_gateway.nfs.mountd_port",
+ [
+  {datatype, integer},
+  {default, 22050}
+ ]}.
+
+%% @doc Mountd's the number of acceptors
+{mapping,
+ "nfs.mountd.acceptors",
+ "leo_gateway.nfs.mountd_acceptors",
+ [
+  {datatype, integer},
+  {default, 128}
+ ]}.
+
+%% @doc Mountd's port number
+{mapping,
+ "nfs.nfsd.port",
+ "leo_gateway.nfs.nfsd_port",
+ [
+  {datatype, integer},
+  {default, 2049}
+ ]}.
+
+%% @doc Mountd's the number of acceptors
+{mapping,
+ "nfs.nfsd.acceptors",
+ "leo_gateway.nfs.nfsd_acceptors",
+ [
+  {datatype, integer},
+  {default, 128}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% GATEWAY - NLM-related configuration
+%% --------------------------------------------------------------------
+%% @doc Lock Handler
+{mapping,
+ "nlm.handler",
+ "leo_gateway.nlm.handler",
+ [
+  {datatype, atom},
+  {default, leo_nlm_lock_handler_ets}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% GATEWAY - Timeout
+%% --------------------------------------------------------------------
+%% @doc Timeout value when requesting to a storage
+{mapping,
+ "timeout.level_1",
+ "leo_gateway.timeout.level_1",
+ [
+  {datatype, integer},
+  {default, 5000}
+ ]}.
+
+%% @doc Timeout value when requesting to a storage
+{mapping,
+ "timeout.level_2",
+ "leo_gateway.timeout.level_2",
+ [
+  {datatype, integer},
+  {default, 7000}
+ ]}.
+
+%% @doc Timeout value when requesting to a storage
+{mapping,
+ "timeout.level_3",
+ "leo_gateway.timeout.level_3",
+ [
+  {datatype, integer},
+  {default, 10000}
+ ]}.
+
+%% @doc Timeout value when requesting to a storage
+{mapping,
+ "timeout.level_4",
+ "leo_gateway.timeout.level_4",
+ [
+  {datatype, integer},
+  {default, 20000}
+ ]}.
+
+%% @doc Timeout value when requesting to a storage
+{mapping,
+ "timeout.level_5",
+ "leo_gateway.timeout.level_5",
+ [
+  {datatype, integer},
+  {default, 30000}
+ ]}.
+
+%% @doc Timeout value when requesting a GET to a storage
+{mapping,
+ "timeout.get",
+ "leo_gateway.timeout.get",
+ [
+  {datatype, integer},
+  {default, 30000}
+ ]}.
+
+%% @doc Timeout value when requesting a LS(find_by_parent_dir) to a storage
+{mapping,
+ "timeout.ls",
+ "leo_gateway.timeout.ls",
+ [
+  {datatype, integer},
+  {default, 30000}
+ ]}.
+
+%% --------------------------------------------------------------------
+%% GATEWAY - LOG
+%% --------------------------------------------------------------------
+%% @doc Log level
+{mapping,
+ "log.log_level",
+ "leo_gateway.log_level",
+ [
+  {datatype, integer}, %% >> enum
+  {default, 1}
+ ]}.
+
+%% @doc Is enable access log
+{mapping,
+ "log.is_enable_access_log",
+ "leo_gateway.is_enable_access_log",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc Output log file(s) - erlang
+{mapping,
+ "log.erlang",
+ "leo_gateway.log_dir",
+ [
+  {datatype, string},
+  {default, "./log/erlang"}
+ ]}.
+
+%% @doc Output log file(s) - app
+{mapping,
+ "log.app",
+ "leo_gateway.log_appender",
+ [
+  {datatype, string},
+  {default, "./log/app"}
+ ]}.
+
+{translation, "leo_gateway.log_appender",
+ fun(Conf) ->
+         Path = cuttlefish_util:conf_get_value("log.app", Conf),
+         [{file, [{path, Path}]}]
+ end}.
+
+%% @doc Output log file(s) - members of storage-cluster
+{mapping,
+ "log.member_dir",
+ "leo_redundant_manager.log_dir_member",
+ [
+  {datatype, string},
+  {default, "./log/ring"}
+ ]}.
+
+%% @doc Output log file(s) - ring
+{mapping,
+ "log.ring_dir",
+ "leo_redundant_manager.log_dir_ring",
+ [
+  {datatype, string},
+  {default, "./log/ring"}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% GATEWAY - Other Directories
+%% --------------------------------------------------------------------
+%% @doc Directory of queue for monitoring "RING"
+{mapping,
+ "queue_dir",
+ "leo_gateway.queue_dir",
+ [
+  {default, "./work/queue"}
+ ]}.
+
+%% @doc Directory of SNMP agent configuration
+{mapping,
+ "snmp_agent",
+ "leo_gateway.snmp_agent",
+ [
+  {default, "./snmp/snmpa_gateway_0/LEO-GATEWAY"}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% QoS
+%% --------------------------------------------------------------------
+%% @doc is enable qos for statistics?
+{mapping,
+ "qos.stat.is_enable",
+ "leo_gateway.is_enable_qos_stat",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc is enable qos for notification?
+{mapping,
+ "qos.notify.is_enable",
+ "leo_gateway.is_enable_qos_notify",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc savanna-manager nodes
+{mapping,
+ "qos.managers",
+ "savanna_agent.managers",
+ [
+  {datatype, string},
+  {default, "savanna_manager_0:13075@127.0.0.1, savanna_manager_1:13076@127.0.0.1"}
+ ]}.
+
+{translation, "savanna_agent.managers",
+ fun(Conf) ->
+         Managers = cuttlefish_util:conf_get_value("qos.managers", Conf),
+         case string:tokens(Managers, "[ , ]") of
+             [] ->
+                 ['savanna_manager_0:13075@127.0.0.1',
+                  'savanna_manager_1:13076@127.0.0.1'];
+             Tokens ->
+                 lists:map(fun(X) ->
+                                   list_to_atom(X)
+                           end, Tokens)
+         end
+ end}.
+
+
+%% --------------------------------------------------------------------
+%% Other Libs
+%% --------------------------------------------------------------------
+%% @doc
+{mapping,
+ "leo_backend_db.profile",
+ "leo_backend_db.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_logger.profile",
+ "leo_logger.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_mq.profile",
+ "leo_mq.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_mq.backend_db",
+ "leo_mq.backend_db",
+ [
+  {datatype, atom},
+  {default, 'leveldb'}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_redundant_manager.profile",
+ "leo_redundant_manager.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_redundant_manager.notify_mf",
+ "leo_redundant_manager.notify_mf",
+ [
+  {default, []}
+ ]}.
+
+{translation, "leo_redundant_manager.notify_mf",
+ fun(_Conf) ->
+         [leo_manager_api, notify]
+ end}.
+
+%% @doc
+{mapping,
+ "leo_redundant_manager.sync_mf",
+ "leo_redundant_manager.sync_mf",
+ [
+  {default, false}
+ ]}.
+
+{translation, "leo_redundant_manager.sync_mf",
+ fun(_Conf) ->
+         [leo_manager_api, synchronize]
+ end}.
+
+%% @doc
+{mapping,
+ "leo_statistics.profile",
+ "leo_statistics.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% VM.ARGS
+%% --------------------------------------------------------------------
+%%%% Tunables
+%% @doc Name of the riak node
+{mapping,
+ "nodename",
+ "vm_args.-name",
+ [
+  {default, "gateway_0@127.0.0.1"}
+ ]}.
+
+%% @doc Cookie for distributed node communication.  All nodes in the same cluster
+%% should use the same cookie or they will not be able to communicate.
+{mapping,
+ "distributed_cookie",
+ "vm_args.-setcookie",
+ [
+  {default, "leofs"}
+ ]}.
+
+{mapping,
+ "erlang.kernel_poll",
+ "vm_args.+K",
+ [
+  {default, "true"}
+ ]}.
+
+{mapping,
+ "erlang.asyc_threads",
+ "vm_args.+A",
+ [
+  {default, "32"}
+ ]}.
+
+%% @doc Increase number of concurrent ports/sockets
+{mapping,
+ "erlang.max_ports",
+ "vm_args.-env ERL_MAX_PORTS",
+ [
+  {default, "64000"}
+ ]}.
+
+%% @doc Tweak GC to run more often
+{mapping,
+ "erlang.fullsweep_after",
+ "vm_args.-env ERL_FULLSWEEP_AFTER",
+ [
+  {default, "0"},
+  {level, advanced}
+ ]}.
+
+%% @doc Set the location of crash dumps
+{mapping,
+ "erlang.crash_dump",
+ "vm_args.-env ERL_CRASH_DUMP",
+ [
+  {default, "./log/erl_crash.dump"}
+ ]}.
+
+%% @doc Raise the ETS table limit
+{mapping,
+ "erlang.max_ets_tables",
+ "vm_args.-env ERL_MAX_ETS_TABLES",
+ [
+  {default, "256000"}
+ ]}.
+
+%% @doc Enable or disable SMP
+{mapping,
+ "erlang.smp",
+ "vm_args.-smp",
+ [
+  {default, "enable"}
+ ]}.
+
+%% @doc Erlang scheduler's compaction of load
+{mapping,
+ "erlang.schedulers.compaction_of_load",
+ "vm_args.+scl",
+ [
+  {datatype, atom},
+  {default, 'true'}
+ ]}.
+
+%% Erlang scheduler's balancing of load
+%% {mapping,
+%%  "erlang.schedulers.utilization_balancing",
+%%  "vm_args.+sub",
+%%  [
+%%   {datatype, atom},
+%%   {default, 'false'}
+%%  ]}.
+
+%% Sender-side network distribution buffer size
+{mapping,
+ "erlang.distribution_buffer_size",
+ "vm_args.+zdbbl",
+ [
+  {default, "16384"}
+ ]}.
+
+%% %% @doc Raise the ETS table limit
+%% {mapping,
+%%  "erlang.hidden_flag",
+%%  "vm_args.-hidden",
+%%  [
+%%   {default, ""}
+%%  ]}.
+
+%% @doc Enable/Disable eager check I/O (Erlang 17.4/erts-6.3-, ref:OTP-12117)
+%% {mapping,
+%%  "erlang.secio",
+%%  "vm_args.+secio",
+%%  [
+%%   {default, false}
+%%  ]}.
+
+%% @doc Raise the default erlang process limit
+{mapping, "process_limit", "vm_args.+P",
+ [
+  {datatype, integer},
+  {default, 1048576}
+ ]}.
+
+{translation, "vm_args.+P",
+ fun(Conf) ->
+         Procs = cuttlefish_util:conf_get_value("process_limit", Conf),
+         integer_to_list(Procs)
+ end}.
+
+
+%% @doc configuration path of the leofs gateway's snmp-agent
+%% See: http://leo-project.net/leofs/docs/configuration/configuration_4.html#index-3
+{mapping,
+ "snmp_conf",
+ "vm_args.-config",
+ [
+  {default, "./snmp/snmpa_gateway_0/leo_gateway_snmp"}
+ ]}.

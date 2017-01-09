@@ -1,0 +1,197 @@
+##======================================================================
+## LeoFS - Manager Configuration (MASTER)
+##
+## See: http://leo-project.net/leofs/docs/configuration/configuration_1.html
+#======================================================================
+## --------------------------------------------------------------------
+## SASL
+## --------------------------------------------------------------------
+## See: http://www.erlang.org/doc/man/sasl_app.html
+##
+## The following configuration parameters are defined for
+## the SASL application. See app(4) for more information
+## about configuration parameters
+
+## SASL error log path
+## sasl.sasl_error_log = ./log/sasl/sasl-error.log
+
+## Restricts the error logging performed by the specified sasl_error_logger
+## to error reports, progress reports, or both.
+## errlog_type = [error | progress | all]
+## sasl.errlog_type = error
+
+## Specifies in which directory the files are stored.
+## If this parameter is undefined or false, the error_logger_mf_h is not installed.
+## sasl.error_logger_mf_dir = ./log/sasl
+
+## Specifies how large each individual file can be.
+## If this parameter is undefined, the error_logger_mf_h is not installed.
+## sasl.error_logger_mf_maxbytes = 10485760
+
+## Specifies how many files are used.
+## If this parameter is undefined, the error_logger_mf_h is not installed.
+## sasl.error_logger_mf_maxfiles = 5
+
+## --------------------------------------------------------------------
+## MANAGER
+## --------------------------------------------------------------------
+## Partner of manager's alias
+manager.partner = manager_1@127.0.0.1
+
+## Manager-console accepatable port number
+console.port.cui  = 10010
+console.port.json = 10020
+
+## Manager-console's number of acceptors
+console.acceptors.cui = 3
+console.acceptors.json = 16
+
+
+## --------------------------------------------------------------------
+## MANAGER - System
+##     * Only set its configurations to **Manager-master**
+## --------------------------------------------------------------------
+## DC Id
+system.dc_id = tokyo_1
+
+## Cluster Id
+system.cluster_id = leofs_1
+
+## --------------------------------------------------------------------
+## MANAGER - Consistency Level
+##     * Only set its configurations to **Manager-master**
+##     * See: http://leo-project.net/leofs/docs/configuration/configuration_1.html
+## --------------------------------------------------------------------
+## A number of replicas
+consistency.num_of_replicas = 3
+
+## A number of replicas needed for a successful WRITE operation
+consistency.write = 2
+
+## A number of replicas needed for a successful READ operation
+consistency.read = 1
+
+## A number of replicas needed for a successful DELETE operation
+consistency.delete = 2
+
+## A number of rack-aware replicas
+consistency.rack_aware_replicas = 1
+
+
+## --------------------------------------------------------------------
+## MANAGER - Multi DataCenter Settings
+## --------------------------------------------------------------------
+## A number of replication targets
+mdc_replication.max_targets = 2
+
+## A number of replicas a DC
+mdc_replication.num_of_replicas_a_dc = 1
+
+
+## --------------------------------------------------------------------
+## MANAGER - Mnesia
+##     * Store the info storage-cluster and the info of gateway(s)
+##     * Store the RING and the command histories
+## --------------------------------------------------------------------
+## Mnesia dir
+mnesia.dir = ./work/mnesia/127.0.0.1
+
+## The write threshold for transaction log dumps
+## as the number of writes to the transaction log
+mnesia.dump_log_write_threshold = 50000
+
+## Controls how often disc_copies tables are dumped from memory
+mnesia.dc_dump_limit = 40
+
+
+## --------------------------------------------------------------------
+## MANAGER - Log
+## --------------------------------------------------------------------
+## Log level: [0:debug, 1:info, 2:warn, 3:error]
+## log.log_level = 1
+
+## Output log file(s) - Erlang's log
+## log.erlang = ./log/erlang
+
+## Output log file(s) - app
+## log.app = ./log/app
+
+## Output log file(s) - members of storage-cluster
+## log.member_dir = ./log/ring
+
+## Output log file(s) - ring
+## log.ring_dir = ./log/ring
+
+
+## --------------------------------------------------------------------
+## MANAGER - Other Directories
+## --------------------------------------------------------------------
+## Directory of queue for monitoring "RING"
+## queue_dir = ./work/queue
+
+## Directory of SNMP agent configuration
+## snmp_agent = ./snmp/snmpa_manager_0/LEO-MANAGER
+
+
+## --------------------------------------------------------------------
+## RPC
+## --------------------------------------------------------------------
+## RPC-Server's acceptors
+rpc.server.acceptors = 64
+
+## RPC-Server's listening port number
+rpc.server.listen_port = 13075
+
+## RPC-Server's listening timeout
+rpc.server.listen_timeout = 5000
+
+
+## --------------------------------------------------------------------
+## Other Libs
+## --------------------------------------------------------------------
+## Enable profiler - leo_backend_db
+## leo_backend_db.profile = false
+
+## Enable profiler - leo_logger
+## leo_logger.profile = false
+
+## Enable profiler - leo_mq
+## leo_mq.profile = false
+
+## Enable profiler - leo_redundant_manager
+## leo_redundant_manager.profile = false
+
+## Enable profiler - leo_statistics
+## leo_statistics.profile = false
+
+
+#======================================================================
+# For vm.args
+#======================================================================
+## Name of the LeoFS's manager node
+nodename = manager_0@10.3.2.1
+
+## Cookie for distributed node communication.  All nodes in the same cluster
+## should use the same cookie or they will not be able to communicate.
+distributed_cookie = 401321b4
+
+## Enable kernel poll
+erlang.kernel_poll = true
+
+## Number of async threads
+erlang.asyc_threads = 32
+
+## Increase number of concurrent ports/sockets
+erlang.max_ports = 64000
+
+## Set the location of crash dumps
+erlang.crash_dump = ./log/erl_crash.dump
+
+## Raise the ETS table limit
+erlang.max_ets_tables = 256000
+
+## Raise the default erlang process limit
+process_limit = 1048576
+
+## Path of SNMP-agent configuration
+##snmp_conf = ./snmp/snmpa_manager_0/leo_manager_snmp

@@ -1,0 +1,259 @@
+LEO-GATEWAY DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY, OBJECT-TYPE, Gauge32, enterprises FROM SNMPv2-SMI
+
+        OBJECT-GROUP FROM SNMPv2-CONF
+
+        DisplayString, TruthValue FROM SNMPv2-TC;
+
+        leofs    MODULE-IDENTITY
+                 LAST-UPDATED "201502170000Z"
+                 ORGANIZATION "github.com/leo-project"
+                 CONTACT-INFO
+                              "e-mail:dev@leo-project.org"
+                 DESCRIPTION
+                              "LEOFS SNMP MIB"
+                 REVISION     "201502170000Z"
+                 DESCRIPTION
+                              "v1.0"
+                 ::= { enterprises 35450}
+
+leofsGroups OBJECT IDENTIFIER ::= { leofs 1 }
+staticOid OBJECT IDENTIFIER   ::= { leofs 34}
+
+-- =====================================
+-- Items
+-- =====================================
+--
+-- ErlangVM Related Items
+--
+node-name
+    OBJECT-TYPE
+        SYNTAX DisplayString
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Node name"
+        ::= { staticOid 1 }
+
+vm-proc-count-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Num of Processes (1min mean)"
+        ::= { staticOid 2 }
+
+vm-total-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total Memory (1min mean)"
+        ::= { staticOid 3 }
+
+vm-system-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "System Memory (1min mean)"
+        ::= { staticOid 4 }
+
+vm-procs-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Procs Memory (1min mean)"
+        ::= { staticOid 5 }
+
+vm-ets-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "ETS Memory (1min mean)"
+        ::= { staticOid 6 }
+
+vm-proc-count-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Num of Processes (5min mean)"
+        ::= { staticOid 7 }
+
+vm-total-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total Memory (5min mean)"
+        ::= { staticOid 8 }
+
+vm-system-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "System Memory (5min mean)"
+        ::= { staticOid 9 }
+
+vm-procs-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Procs Memory (5min mean)"
+        ::= { staticOid 10 }
+
+vm-ets-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "ETS Memory (5min mean)"
+        ::= { staticOid 11 }
+
+--
+-- Request-related Items
+--
+req-writes-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of Writes during 1min"
+        ::= { staticOid 12 }
+
+req-reads-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of Reads during 1min"
+        ::= { staticOid 13 }
+
+req-deletes-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of Deletes during 1min"
+        ::= { staticOid 14 }
+
+req-writes-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of Writes during 5min"
+        ::= { staticOid 15 }
+
+req-reads-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of Reads during 5min"
+        ::= { staticOid 16 }
+
+req-deletes-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of Deletes during 5min"
+        ::= { staticOid 17 }
+
+--
+-- Cache-related Items
+--
+cache-hit-count
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of Hits"
+        ::= { staticOid 18 }
+
+cache-miss-count
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of Misses"
+        ::= { staticOid 19 }
+
+cache-object-count
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of objects"
+        ::= { staticOid 20 }
+
+cache-object-size
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total of object-size"
+        ::= { staticOid 21 }
+
+
+---
+--- Optional VM-related items
+---
+vm-used-per-allocated-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Used per allocated memory ratio (1min mean)"
+        ::= { staticOid 31 }
+
+vm-allocated-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Allocated memory (1min mean)"
+        ::= { staticOid 32 }
+
+vm-used-per-allocated-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Used per allocated memory ratio (5min mean)"
+        ::= { staticOid 33 }
+
+vm-allocated-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Allocated memory (5min mean)"
+        ::= { staticOid 34 }
+
+
+--
+-- Global Group
+--
+leofsGroup OBJECT-GROUP
+        OBJECTS {node-name,
+                 vm-proc-count-1m, vm-total-mem-1m, vm-system-mem-1m, vm-procs-mem-1m, vm-ets-mem-1m,
+                 vm-proc-count-5m, vm-total-mem-5m, vm-system-mem-5m, vm-procs-mem-5m, vm-ets-mem-5m,
+                 req-writes-1m, req-reads-1m, req-deletes-1m,
+                 req-writes-5m, req-reads-5m, req-deletes-5m,
+                 cache-hit-count, cache-miss-count, cache-object-count, cache-object-size,
+                 vm-used-per-allocated-mem-1m, vm-allocated-mem-1m,
+                 vm-used-per-allocated-mem-5m, vm-allocated-mem-5m
+        }
+        STATUS current
+        DESCRIPTION "leofs group"
+        ::= { leofsGroups 1 }
+
+END

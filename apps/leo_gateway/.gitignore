@@ -1,0 +1,16 @@
+ebin
+deps
+cherly
+snmp/*/db/*
+.eunit/
+ring_*
+leofs_gateway.sh
+*.log
+*.swp
+*.json
+*.bak
+erl_crash.dump
+.leo_gateway_dialyzer_plt
+leo_gateway.dot
+.rebar/
+rel/leo_gateway/

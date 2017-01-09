@@ -1,0 +1,28 @@
+## Name of the node
+-name {{node}}
+
+## Cookie for distributed erlang
+-setcookie {{cookie}}
+
+## Heartbeat management; auto-restarts VM if it dies or becomes unresponsive
+## (Disabled by default..use with caution!)
+##-heart
+
+## Enable kernel poll and a few async threads
++K true
++A 32
+
+## Increase number of concurrent ports/sockets
+##-env ERL_MAX_PORTS 4096
+
+## Tweak GC to run more often
+##-env ERL_FULLSWEEP_AFTER 10
+
+## SNMP Config file
+-config {{platform_snmp_dir}}/{{snmp_conf_dir}}/leo_gateway_snmp
+
+## Sets the maximum number of concurrent processes for this system
++P 1048576
+
+## set up the node with the -hidden flag
+-hidden

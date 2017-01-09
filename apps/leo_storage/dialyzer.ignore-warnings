@@ -1,0 +1,3 @@
+The pattern 'delete' can never match the type 'put'
+The pattern {'ok', _} can never match the type {'error',reference(),_} | {'ok',reference(),{'etag',binary()}}
+The pattern 'ok' can never match the type 'not_found' | {'error',_}

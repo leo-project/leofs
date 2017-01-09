@@ -1,0 +1,13 @@
+deps/
+ebin/
+*.ets
+snmp/*/db
+.eunit/
+Mnesia*/
+work/
+log/
+.leo_manager_dialyzer_plt
+leo_manager.dot
+leo_manager.png
+.rebar/
+rel/leo_manager/

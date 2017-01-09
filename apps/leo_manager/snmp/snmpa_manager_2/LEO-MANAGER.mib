@@ -1,0 +1,169 @@
+LEO-MANAGER DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY, OBJECT-TYPE, Gauge32, enterprises FROM SNMPv2-SMI
+
+        OBJECT-GROUP FROM SNMPv2-CONF
+
+        DisplayString, TruthValue FROM SNMPv2-TC;
+
+        leofs    MODULE-IDENTITY
+                 LAST-UPDATED "201502170000Z"
+                 ORGANIZATION "github.com/leo-project"
+                 CONTACT-INFO
+                             "e-mail:dev@leo-project.org"
+                 DESCRIPTION
+                             "LEO MANAGER SNMP MIB"
+                 REVISION    "201502170000Z"
+                 DESCRIPTION
+                             "v1.0"
+                 ::= { enterprises 35450}
+
+leofsGroups OBJECT IDENTIFIER ::= { leofs 1 }
+staticOid OBJECT IDENTIFIER   ::= { leofs 15}
+
+-- =====================================
+-- Items
+-- =====================================
+-- ErlangVM Related
+
+node-name
+    OBJECT-TYPE
+        SYNTAX DisplayString
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Node name"
+        ::= { staticOid 1 }
+
+vm-proc-count-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Num of Processes (1min mean)"
+        ::= { staticOid 2 }
+
+vm-total-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total Memory (1min mean)"
+        ::= { staticOid 3 }
+
+vm-system-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "System Memory (1min mean)"
+        ::= { staticOid 4 }
+
+vm-procs-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Procs Memory (1min mean)"
+        ::= { staticOid 5 }
+
+vm-ets-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "ETS Memory (1min mean)"
+        ::= { staticOid 6 }
+
+vm-proc-count-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Num of Processes (5min mean)"
+        ::= { staticOid 7 }
+
+vm-total-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Total Memory (5min mean)"
+        ::= { staticOid 8 }
+
+vm-system-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "System Memory (5min mean)"
+        ::= { staticOid 9 }
+
+vm-procs-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Procs Memory (5min mean)"
+        ::= { staticOid 10 }
+
+vm-ets-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "ETS Memory (5min mean)"
+        ::= { staticOid 11 }
+
+
+---
+--- Optional VM-related items
+---
+vm-used-per-allocated-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Used per allocated memory ratio (1min mean)"
+        ::= { staticOid 12 }
+
+vm-allocated-mem-1m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Allocated memory (1min mean)"
+        ::= { staticOid 13 }
+
+vm-used-per-allocated-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Used per allocated memory ratio (5min mean)"
+        ::= { staticOid 14 }
+
+vm-allocated-mem-5m
+    OBJECT-TYPE
+        SYNTAX Gauge32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Allocated memory (5min mean)"
+        ::= { staticOid 15 }
+
+
+--
+-- Global Group
+--
+leofsGroup OBJECT-GROUP
+        OBJECTS {node-name,
+                 vm-proc-count-1m, vm-total-mem-1m, vm-system-mem-1m, vm-procs-mem-1m, vm-ets-mem-1m,
+                 vm-proc-count-5m, vm-total-mem-5m, vm-system-mem-5m, vm-procs-mem-5m, vm-ets-mem-5m,
+                 vm-used-per-allocated-mem-1m, vm-allocated-mem-1m,
+                 vm-used-per-allocated-mem-5m, vm-allocated-mem-5m
+        }
+        STATUS current
+        DESCRIPTION "LeoFS group"
+        ::= { leofsGroups 1 }
+
+END

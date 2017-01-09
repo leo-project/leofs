@@ -1,0 +1,651 @@
+%% -*- mode: erlang;erlang-indent-level: 4;indent-tabs-mode: nil -*-
+%%======================================================================
+%%
+%% LeoFS
+%%
+%% Copyright (c) 2012-2016 Rakuten, Inc.
+%%
+%% This file is provided to you under the Apache License,
+%% Version 2.0 (the "License"); you may not use this file
+%% except in compliance with the License.  You may obtain
+%% a copy of the License at
+%%
+%%   http://www.apache.org/licenses/LICENSE-2.0
+%%
+%% Unless required by applicable law or agreed to in writing,
+%% software distributed under the License is distributed on an
+%% "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+%% KIND, either express or implied.  See the License for the
+%% specific language governing permissions and limitations
+%% under the License.
+%%
+%% @author: Yosuke Hara
+%%
+%%======================================================================
+%% --------------------------------------------------------------------
+%% SASL
+%% --------------------------------------------------------------------
+%% See: http://www.erlang.org/doc/man/sasl_app.html
+%%
+%% The following configuration parameters are defined for
+%% the SASL application. See app(4) for more information
+%% about configuration parameters
+%%
+%% @doc SASL error log path
+{mapping,
+ "sasl.sasl_error_log",
+ "sasl.sasl_error_logger",
+ [
+  {datatype, string},
+  {default, "./log/sasl/sasl-error.log"}
+ ]}.
+
+{translation, "sasl.sasl_error_logger",
+ fun(Conf) ->
+         Path = cuttlefish_util:conf_get_value("sasl.sasl_error_log", Conf),
+         {file, Path}
+ end}.
+
+%% @doc Restricts the error logging performed by the specified sasl_error_logger
+%%      to error reports, progress reports, or both.
+%%      errlog_type = [error | progress | all]
+{mapping,
+ "sasl.errlog_type",
+ "sasl.errlog_type",
+ [
+  {datatype, atom},
+  {default, error}
+ ]}.
+
+%% @doc Specifies in which directory the files are stored.
+%%      If this parameter is undefined or false, the error_logger_mf_h is not installed.
+{mapping,
+ "sasl.error_logger_mf_dir",
+ "sasl.error_logger_mf_dir",
+ [
+  {default, "./log/sasl"}
+ ]}.
+
+%% @doc Specifies how large each individual file can be.
+%%      If this parameter is undefined, the error_logger_mf_h is not installed.
+%%
+{mapping,
+ "sasl.error_logger_mf_maxbytes",
+ "sasl.error_logger_mf_maxbytes",
+ [
+  {datatype, bytesize},
+  {default, 10485760}
+ ]}.
+
+%% @doc Specifies how many files are used.
+%%      If this parameter is undefined, the error_logger_mf_h is not installed.
+{mapping,
+ "sasl.error_logger_mf_maxfiles",
+ "sasl.error_logger_mf_maxfiles",
+ [
+  {datatype, integer},
+  {default, 5}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% MANAGER
+%% --------------------------------------------------------------------
+%% @doc LeoFS version
+{mapping,
+ "system_version",
+ "leo_manager.system_version",
+ [
+  {datatype, string},
+  {default, "1.3.1"}
+ ]}.
+
+%% @doc Mode of Manager: [master|slave]
+{mapping,
+ "manager.mode",
+ "leo_manager.manager_mode",
+ [
+  {datatype, {enum, [master, slave]}},
+  {default, master}
+ ]}.
+
+%% @doc Partner of manager's alias
+{mapping,
+ "manager.partner",
+ "leo_manager.manager_partners",
+ [
+  {datatype, atom}
+ ]}.
+
+{translation, "leo_manager.manager_partners",
+ fun(Conf) ->
+         Partner = cuttlefish_util:conf_get_value("manager.partner", Conf),
+         [Partner]
+ end}.
+
+%% @doc Manager acceptable port number
+{mapping,
+ "console.port.cui",
+ "leo_manager.port_cui",
+ [
+  {datatype, integer},
+  {default, 10010}
+ ]}.
+
+{mapping,
+ "console.port.json",
+ "leo_manager.port_json",
+ [
+  {datatype, integer},
+  {default, 10020}
+ ]}.
+
+%% @doc # of acceptors
+{mapping,
+ "console.acceptors.cui",
+ "leo_manager.num_of_acceptors_cui",
+ [
+  {datatype, integer},
+  {default, 3}
+ ]}.
+
+{mapping,
+ "console.acceptors.json",
+ "leo_manager.num_of_acceptors_json",
+ [
+  {datatype, integer},
+  {default, 16}
+ ]}.
+
+%% @doc # of histories to display at once
+{mapping,
+ "console.histories.num_of_display",
+ "leo_manager.num_of_histories",
+ [
+  {datatype, integer},
+  {default, 200}
+ ]}.
+
+%% --------------------------------------------------------------------
+%% MANAGER - System
+%% --------------------------------------------------------------------
+%% @doc DC Id
+{mapping,
+ "system.dc_id",
+ "leo_manager.system",
+ [
+  {datatype, atom},
+  {default, "dc_1"}
+ ]}.
+
+%% @doc Cluster Id
+{mapping,
+ "system.cluster_id",
+ "leo_manager.system",
+ [
+  {datatype, atom},
+  {default, "leofs_1"}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% MANAGER - Consistency Level
+%% --------------------------------------------------------------------
+%% @doc A number of mq-server's processes
+{mapping,
+ "consistency.num_of_replicas",
+ "leo_manager.system",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
+%% @doc A number of replicas needed for a successful WRITE operation
+{mapping,
+ "consistency.write",
+ "leo_manager.system",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
+%% @doc A number of replicas needed for a successful READ operation
+{mapping,
+ "consistency.read",
+ "leo_manager.system",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
+%% @doc A number of replicas needed for a successful DELETE operation
+{mapping,
+ "consistency.delete",
+ "leo_manager.system",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
+%% @doc A number of rack-aware replicas
+{mapping,
+ "consistency.rack_aware_replicas",
+ "leo_manager.system",
+ [
+  {datatype, integer},
+  {default, 0}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% MANAGER - Multi DC Replication
+%% --------------------------------------------------------------------
+%% @doc A number of replication target
+{mapping,
+ "mdc_replication.max_targets",
+ "leo_manager.system",
+ [
+  {datatype, integer},
+  {default, 2}
+ ]}.
+
+%% @doc A number of replicas a DC
+{mapping,
+ "mdc_replication.num_of_replicas_a_dc",
+ "leo_manager.system",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
+
+{translation, "leo_manager.system",
+ fun(Conf) ->
+         DCID = cuttlefish_util:conf_get_value("system.dc_id", Conf),
+         ClusterID = cuttlefish_util:conf_get_value("system.cluster_id", Conf),
+         N  = cuttlefish_util:conf_get_value("consistency.num_of_replicas", Conf),
+         W  = cuttlefish_util:conf_get_value("consistency.write", Conf),
+         R  = cuttlefish_util:conf_get_value("consistency.read", Conf),
+         D  = cuttlefish_util:conf_get_value("consistency.delete", Conf),
+         L1 = cuttlefish_util:conf_get_value("mdc_replication.num_of_replicas_a_dc", Conf),
+         L2 = cuttlefish_util:conf_get_value("consistency.rack_aware_replicas", Conf),
+         DC = cuttlefish_util:conf_get_value("mdc_replication.max_targets", Conf),
+
+         [{dc_id, DCID},
+          {cluster_id, ClusterID},
+          {n, N},
+          {w, W},
+          {r, R},
+          {d, D},
+          {bit_of_ring, 128},
+          {max_mdc_targets,      DC},
+          {num_of_dc_replicas,   L1},
+          {num_of_rack_replicas, L2}
+         ]
+ end}.
+
+
+%% --------------------------------------------------------------------
+%% MANAGER - Mnesia
+%% --------------------------------------------------------------------
+%% @doc Mnesia Direcotry
+{mapping,
+ "mnesia.dir",
+ "mnesia.dir",
+ [
+  {datatype, string},
+  {default, "./work/mnesia/127.0.0.1"}
+ ]}.
+
+%% @doc The write threshold for transaction log dumps
+%%      as the number of writes to the transaction log
+{mapping,
+ "mnesia.dump_log_write_threshold",
+ "mnesia.dump_log_write_threshold",
+ [
+  {datatype, integer},
+  {default, 50000}
+ ]}.
+
+
+%% @doc Controls how often disc_copies tables are dumped from memory
+{mapping,
+ "mnesia.dc_dump_limit",
+ "mnesia.dc_dump_limit",
+ [
+  {datatype, integer},
+  {default, 40}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% MANAGER - LOG
+%% --------------------------------------------------------------------
+%% @doc Log level
+{mapping,
+ "log.log_level",
+ "leo_manager.log_level",
+ [
+  {datatype, integer}, %% >> enum
+  {default, 1}
+ ]}.
+
+%% @doc Output log file(s) - erlang
+{mapping,
+ "log.erlang",
+ "leo_manager.log_dir",
+ [
+  {datatype, string},
+  {default, "./log/erlang"}
+ ]}.
+
+%% @doc Output log file(s) - app
+{mapping,
+ "log.app",
+ "leo_manager.log_appender",
+ [
+  {datatype, string},
+  {default, "./log/app"}
+ ]}.
+
+{translation, "leo_manager.log_appender",
+ fun(Conf) ->
+         Path = cuttlefish_util:conf_get_value("log.app", Conf),
+         [ {file, [{path, Path}]} ]
+ end}.
+
+%% @doc Output log file(s) - members of storage-cluster
+{mapping,
+ "log.member_dir",
+ "leo_redundant_manager.log_dir_member",
+ [
+  {datatype, string},
+  {default, "./log/ring"}
+ ]}.
+
+%% @doc Output log file(s) - ring
+{mapping,
+ "log.ring_dir",
+ "leo_redundant_manager.log_dir_ring",
+ [
+  {datatype, string},
+  {default, "./log/ring"}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% MANAGER - DIR
+%% --------------------------------------------------------------------
+%% @doc Directory of queue for monitoring "RING"
+{mapping,
+ "queue_dir",
+ "leo_manager.queue_dir",
+ [
+  {default, "./work/queue"}
+ ]}.
+
+%% @doc Directory of SNMP agent configuration
+{mapping,
+ "snmp_agent",
+ "leo_manager.snmp_agent",
+ [
+  {default, "./snmp/snmpa_manager_0/LEO-MANAGER"}
+ ]}.
+
+
+%% --------------------------------------------------------------------
+%% RPC
+%% --------------------------------------------------------------------
+%% @doc
+{mapping,
+ "rpc.nodename",
+ "leo_rpc.node",
+ [
+  {datatype, atom},
+  {default, 'node_0@127.0.0.1'}
+ ]}.
+
+{translation, "leo_rpc.node",
+ fun(Conf) ->
+         NodeName = cuttlefish_util:conf_get_value("nodename", Conf),
+         PortNum  = cuttlefish_util:conf_get_value("rpc.server.listen_port", Conf),
+         list_to_atom(lists:append([NodeName, ":", integer_to_list(PortNum)]))
+ end}.
+
+
+%% @doc
+{mapping,
+ "rpc.server.acceptors",
+ "leo_rpc.num_of_acceptors",
+ [
+  {datatype, integer},
+  {default, 16}
+ ]}.
+
+%% @doc
+{mapping,
+ "rpc.server.listen_port",
+ "leo_rpc.listen_port",
+ [
+  {datatype, integer},
+  {default, 13075}
+ ]}.
+
+%% @doc
+{mapping,
+ "rpc.server.listen_timeout",
+ "leo_rpc.listen_timeout",
+ [
+  {datatype, integer},
+  {default, 5000}
+ ]}.
+
+%% @doc
+{mapping,
+ "rpc.client.connection_pool_size",
+ "leo_rpc.connection_pool_size",
+ [
+  {datatype, integer},
+  {default, 16}
+ ]}.
+
+%% @doc
+{mapping,
+ "rpc.client.connection_buffer_size",
+ "leo_rpc.connection_buffer_size",
+ [
+  {datatype, integer},
+  {default, 16}
+ ]}.
+
+
+%%======================================================================
+%% Other libs
+%%======================================================================
+%% @doc
+{mapping,
+ "leo_backend_db.profile",
+ "leo_backend_db.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_logger.profile",
+ "leo_logger.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_mq.profile",
+ "leo_mq.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_mq.backend_db",
+ "leo_mq.backend_db",
+ [
+  {datatype, atom},
+  {default, 'bitcask'}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_redundant_manager.profile",
+ "leo_redundant_manager.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc
+{mapping,
+ "leo_redundant_manager.notify_mf",
+ "leo_redundant_manager.notify_mf",
+ [
+  {default, []}
+ ]}.
+
+{translation, "leo_redundant_manager.notify_mf",
+ fun(_Conf) ->
+         [leo_manager_api, notify]
+ end}.
+
+%% @doc
+{mapping,
+ "leo_redundant_manager.sync_mf",
+ "leo_redundant_manager.sync_mf",
+ [
+  {default, false}
+ ]}.
+
+{translation, "leo_redundant_manager.sync_mf",
+ fun(_Conf) ->
+         [leo_manager_api, synchronize]
+ end}.
+
+%% @doc
+{mapping,
+ "leo_statistics.profile",
+ "leo_statistics.profile",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+
+%%======================================================================
+%% For vm.args
+%%======================================================================
+%%%% Tunables
+%% @doc Name of the riak node
+{mapping,
+ "nodename",
+ "vm_args.-name",
+ [
+  {default, "manager_0@127.0.0.1"}
+ ]}.
+
+%% @doc Cookie for distributed node communication.  All nodes in the same cluster
+%% should use the same cookie or they will not be able to communicate.
+{mapping,
+ "distributed_cookie",
+ "vm_args.-setcookie",
+ [
+  {default, "leofs"}
+ ]}.
+
+{mapping,
+ "erlang.kernel_poll",
+ "vm_args.+K",
+ [
+  {default, "true"}
+ ]}.
+
+{mapping,
+ "erlang.asyc_threads",
+ "vm_args.+A",
+ [
+  {default, "32"}
+ ]}.
+
+%% @doc Increase number of concurrent ports/sockets
+{mapping,
+ "erlang.max_ports",
+ "vm_args.-env ERL_MAX_PORTS",
+ [
+  {default, "64000"}
+ ]}.
+
+%% @doc Tweak GC to run more often
+{mapping,
+ "erlang.fullsweep_after",
+ "vm_args.-env ERL_FULLSWEEP_AFTER",
+ [
+  {default, "0"},
+  {level, advanced}
+ ]}.
+
+%% @doc Set the location of crash dumps
+{mapping,
+ "erlang.crash_dump",
+ "vm_args.-env ERL_CRASH_DUMP",
+ [
+  {default, "./log/erl_crash.dump"}
+ ]}.
+
+%% @doc Raise the ETS table limit
+{mapping,
+ "erlang.max_ets_tables",
+ "vm_args.-env ERL_MAX_ETS_TABLES",
+ [
+  {default, "256000"}
+ ]}.
+
+%% @doc Enable or disable SMP
+{mapping,
+ "erlang.smp",
+ "vm_args.-smp",
+ [
+  {default, "enable"}
+ ]}.
+
+%% %% @doc Raise the ETS table limit
+%% {mapping,
+%%  "erlang.hidden_flag",
+%%  "vm_args.-hidden",
+%%  [
+%%   {default, ""}
+%%  ]}.
+
+%% @doc Raise the default erlang process limit
+{mapping, "process_limit", "vm_args.+P",
+ [
+  {datatype, integer},
+  {default, 1048576}
+ ]}.
+
+{translation, "vm_args.+P",
+ fun(Conf) ->
+         Procs = cuttlefish_util:conf_get_value("process_limit", Conf),
+         integer_to_list(Procs)
+ end}.
+
+
+%% @doc configuration path of the LeoFS manager's snmp-agent
+%% See: http://leo-project.net/leofs/docs/configuration/configuration_4.html#index-1
+{mapping,
+ "snmp_conf",
+ "vm_args.-config",
+ [
+  {default, "./snmp/snmpa_manager_0/leo_manager_snmp"}
+ ]}.

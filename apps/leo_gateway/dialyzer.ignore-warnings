@@ -1,0 +1,8 @@
+## Dialyzer - ignore warnings
+##
+##
+## leo_gateway_nfs_mount3_xdr.erl(auto generated file)
+##
+The pattern <Fun, Bin, Off, Max, N> can never match since previous clauses completely covered the type <fun((_,_) -> {integer(),pos_integer()}),<<_:40,_:_*8>>,pos_integer(),'infinity',non_neg_integer()>
+The pattern {'error', ErrType} can never match the type 'match' | 'nomatch' | {'match',[binary() | [binary() | string() | char() | {integer(),integer()} | {'error',[any()],binary()} | {'incomplete',[any()],binary()}] | {integer(),integer()} | {'error',string(),binary()} | {'incomplete',string(),binary()}]}
+The call leo_cache_api:put_end_tran

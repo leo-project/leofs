@@ -23,27 +23,26 @@
 
 all: deps compile
 compile:
-	find . -name rebar.config|xargs sed -i 's/require_otp_vsn,\s\+"\(.\+\)"/require_otp_vsn, "R16B*|17|18|19"/g'
-	@./rebar compile
+	@./rebar3 compile
 deps:
-	@./rebar get-deps
+	@./rebar3 deps
 clean:
-	@./rebar clean
+	@./rebar3 clean
 	make -C pkg clean
 xref:
-	@./rebar xref
+	@./rebar3 xref
 eunit:
-	@./rebar eunit
+	@./rebar3 eunit
 generate:
 	rm -rf rel/leo_manager/leo_manager/
 	rm -rf rel/leo_storage/leo_storage/
 	rm -rf rel/leo_gateway/leo_gateway/
-	@./rebar compile
+	@./rebar3 compile
 	(cd rel/leo_manager && ../../rebar generate)
 	(cd rel/leo_storage && ../../rebar generate)
 	(cd rel/leo_gateway && ../../rebar generate)
 release:
-	@./rebar compile
+	@./rebar3 compile
 	rm -rf package/leo_*
 	##
 	## manager-master
