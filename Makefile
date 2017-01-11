@@ -23,7 +23,8 @@
 
 all: deps compile
 compile:
-	find . -name rebar.config|xargs sed -i 's/require_otp_vsn,\s\+"\(.\+\)"/require_otp_vsn, "R16B*|17|18|19"/g'
+	# compile leofs w/erlang/otp 19
+	# find . -name rebar.config|xargs sed -i 's/require_otp_vsn,\s\+"\(.\+\)"/require_otp_vsn, "R16B*|17|18|19"/g'
 	@./rebar compile
 deps:
 	@./rebar get-deps
@@ -44,34 +45,34 @@ generate:
 release:
 	@./rebar compile
 	rm -rf package/leo_*
-	##
-	## manager-master
-	##
+	#
+	# manager-master
+	#
 	rm -rf rel/leo_manager/leo_manager/
 	mkdir -p package/leo_manager_0
 	cp apps/leo_manager/priv/leo_manager_0.conf rel/leo_manager/files/leo_manager.conf
 	cp apps/leo_manager/priv/leo_manager_0.schema rel/leo_manager/files/leo_manager.schema
 	(cd rel/leo_manager && ../../rebar generate)
 	cp -r rel/leo_manager/leo_manager/* package/leo_manager_0/
-	##
-	## manager-slave
-	##
+	#
+	# manager-slave
+	#
 	rm -rf rel/leo_manager/leo_manager/
 	mkdir -p package/leo_manager_1
 	cp apps/leo_manager/priv/leo_manager_1.conf rel/leo_manager/files/leo_manager.conf
 	cp apps/leo_manager/priv/leo_manager_1.schema rel/leo_manager/files/leo_manager.schema
 	(cd rel/leo_manager && ../../rebar generate)
 	cp -r rel/leo_manager/leo_manager/* package/leo_manager_1/
-	##
-	## storage
-	##
+	#
+	# storage
+	#
 	rm -rf rel/leo_storage/leo_storage/
 	mkdir -p package/leo_storage
 	(cd rel/leo_storage && ../../rebar generate)
 	cp -r rel/leo_storage/leo_storage/* package/leo_storage/
-	##
-	## gateway
-	##
+	#
+	# gateway
+	#
 	rm -rf rel/leo_gateway/leo_gateway/
 	mkdir -p package/leo_gateway
 	(cd rel/leo_gateway && ../../rebar generate)
