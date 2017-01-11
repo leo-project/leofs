@@ -19,7 +19,7 @@
 # under the License.
 #
 #======================================================================
-.PHONY: all compile deps clean xref eunit generate release pkgsrc
+.PHONY: all compile deps clean distclean generate release pkgsrc
 
 all: deps compile
 compile:
@@ -30,6 +30,9 @@ deps:
 clean:
 	@./rebar clean
 	make -C pkg clean
+distclean:
+	@./rebar delete-deps
+	@./rebar clean
 generate:
 	rm -rf rel/leo_manager/leo_manager/
 	rm -rf rel/leo_storage/leo_storage/
