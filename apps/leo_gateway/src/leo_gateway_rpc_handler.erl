@@ -206,21 +206,19 @@ invoke([#redundant_node{available = false}|T], Mod, Method, Args, Errors) ->
     invoke(T, Mod, Method, Args, [?ERR_TYPE_INTERNAL_ERROR|Errors]);
 invoke([#redundant_node{node = Node,
                         available = true}|T], Mod, Method, Args, Errors) ->
-    RPCKey = rpc:async_call(Node, Mod, Method, Args),
     Timeout = timeout(Method, Args),
-
-    case rpc:nb_yield(RPCKey, Timeout) of
+    case rpc:call(Node, Mod, Method, Args, Timeout) of
         %% is_dir
-        {value, Ret} when is_boolean(Ret) ->
+        Ret when is_boolean(Ret) ->
             Ret;
         %% delete
-        {value, ok = Ret} ->
+        ok = Ret ->
             Ret;
         %% put
-        {value, {ok, {etag, ETag}}} ->
+        {ok, {etag, ETag}} ->
             {ok, ETag};
         %% get-1
-        {value, {ok, Meta, Bin}} ->
+        {ok, Meta, Bin} ->
             case leo_object_storage_transformer:transform_metadata(Meta) of
                 {error,_} ->
                     {ok, Meta, Bin};
@@ -228,11 +226,10 @@ invoke([#redundant_node{node = Node,
                     {ok, Meta_1, Bin}
             end;
         %% get-2
-        {value, {ok, match} = Ret} ->
+        {ok, match} = Ret ->
             Ret;
         %% find_by_parent_dir
-        {value, {ok, MetaL}} when is_list(MetaL) ->
-            ?debug("invoke/5", [{ret, MetaL}]),
+        {ok, MetaL} when is_list(MetaL) ->
             TMetaL = lists:foldl(fun(Meta, Acc) ->
                                          Out = case leo_object_storage_transformer:transform_metadata(Meta) of
                                                    {error, _} ->
@@ -244,21 +241,19 @@ invoke([#redundant_node{node = Node,
                                  end, [], MetaL),
             {ok, lists:reverse(TMetaL)};
         %% head/get_dir_meta
-        {value, {ok, Meta}} ->
+        {ok, Meta} ->
             case leo_object_storage_transformer:transform_metadata(Meta) of
                 {error,_} ->
                     {ok, Meta};
                 Meta_1 ->
                     {ok, Meta_1}
             end;
-        %% error
-        {value, {error,_Cause}} = Error ->
-            {error, handle_error(Node, Mod, Method, Args, Error)};
-        Error ->
+        {badrpc, _Cause} = Error ->
             E = handle_error(Node, Mod, Method, Args, Error),
-            invoke(T, Mod, Method, Args, [E|Errors])
+            invoke(T, Mod, Method, Args, [E|Errors]);
+        Error ->
+            {error, handle_error(Node, Mod, Method, Args, Error)}
     end.
-
 
 %% @doc Get request parameters
 %%
@@ -295,16 +290,16 @@ error_filter([_H|T],                Prev) -> error_filter(T, Prev).
 
 %% @doc Handle an error response
 %%
-handle_error(_Node,_Mod,_Method,_Args, {value, {error, not_found = Error}}) ->
+handle_error(_Node,_Mod,_Method,_Args, {error, not_found = Error}) ->
     Error;
-handle_error(_Node,_Mod,_Method,_Args, {value, {error, unavailable = Error}}) ->
+handle_error(_Node,_Mod,_Method,_Args, {error, unavailable = Error}) ->
     Error;
-handle_error(Node, Mod, Method, _Args, {value, {error, Cause}}) ->
+handle_error(Node, Mod, Method, _Args, {error, Cause}) ->
     ?warn("handle_error/5",
           [{node, Node}, {mod, Mod},
            {method, Method}, {cause, Cause}]),
     ?ERR_TYPE_INTERNAL_ERROR;
-handle_error(Node, Mod, Method, _Args, {value, {badrpc, Cause}}) ->
+handle_error(Node, Mod, Method, _Args, {badrpc, Cause}) ->
     ?warn("handle_error/5",
           [{node, Node}, {mod, Mod},
            {method, Method}, {cause, Cause}]),
