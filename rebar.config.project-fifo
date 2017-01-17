@@ -22,9 +22,11 @@
 %%======================================================================
 {require_otp_vsn, "R16B*|17|18|19"}.
 
-{sub_dirs, ["rel", "apps/leo_gateway","apps/leo_manager","apps/leo_storage"]}.
+{sub_dirs, ["apps/leo_gateway","apps/leo_manager","apps/leo_storage"]}.
 
-{deps, []}.
+{deps, [
+        {fifo_utils, "0.1.*", {git, "https://github.com/leo-project/fifo_utils.git", "6911b96d5bd813d3688108afb57746020c61daf2"}}
+       ]}.
 
 {erl_opts, [debug_info, warn_untyped_record,
             {platform_define, "^[0-9]+", namespaced_types}]}.
