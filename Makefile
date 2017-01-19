@@ -19,7 +19,7 @@
 # under the License.
 #
 #======================================================================
-.PHONY: all compile deps clean distclean generate release pkgsrc
+.PHONY: all compile deps clean distclean test generate release pkgsrc
 
 all: deps compile
 compile:
@@ -34,6 +34,10 @@ clean:
 distclean:
 	@./rebar delete-deps
 	@./rebar clean
+test:
+	(cd apps/leo_manager && make)
+	(cd apps/leo_gateway && make)
+	(cd apps/leo_storage && make)
 generate:
 	rm -rf rel/leo_manager/leo_manager/
 	rm -rf rel/leo_storage/leo_storage/
