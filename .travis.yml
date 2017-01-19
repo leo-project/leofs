@@ -4,6 +4,8 @@ notifications:
   email: false
 otp_release:
   - R16B03-1
+  - 17.5
+  - 18.3
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -y check
