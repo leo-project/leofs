@@ -2282,7 +2282,7 @@ delete_bucket_1(AccessKeyBin, BucketBin) ->
                                       Node
                               end, Members),
             case rpc:multicall(Nodes, leo_storage_handler_directory,
-                               delete,
+                               delete_objects_in_parent_dir,
                                [BucketBin], ?DEF_TIMEOUT) of
                 {_, []} -> void;
                 {_, BadNodes} ->
