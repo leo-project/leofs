@@ -1,6 +1,6 @@
 # <a href="http://leo-project.net/leofs/" target="_blank">LeoFS</a> - A Storage System for a <a href="https://en.wikipedia.org/wiki/Data_lake" target="_blank">Data Lake</a> and the Web
 
-[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.3.1-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.3.1)[![Build Status](https://travis-ci.org/leo-project/leofs.svg?branch=master)](http://travis-ci.org/leo-project/leofs)
+[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.3.1-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.3.1) [![Build Status](https://travis-ci.org/leo-project/leofs.svg?branch=master)](http://travis-ci.org/leo-project/leofs)
 
 ![LeoFS Logo](http://leo-project.net/leofs/docs/_static/leofs-logo-small.png)
 
@@ -20,10 +20,10 @@ LeoFS is supporting the following features:
   * **NFS Support**
       * NFS support was provided from LeoFS v1.1, the current status of which is beta.
 * **Large Object Support**
-  * LeoFS can handle files with more than GB
+  * LeoFS covers handling large size objects.
 * **Multi Data Center Replication**
   * LeoFS is a highly scalable, fault-tolerant distributed file system without SPOF.
-  * LeoFS's cluster can be viewed as ONE-HUGE storage. It consists of a set of loosely connected nodes.
+  * LeoFS's cluster can be viewed as a huge capacity storage. It consists of a set of loosely connected nodes.
   * We can build a global scale storage system with easy operations
 
 ## Architecture
