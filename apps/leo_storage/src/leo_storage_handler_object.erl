@@ -1015,8 +1015,10 @@ read_and_repair_2(#read_parameter{addr_id = AddrId,
                                   start_pos = StartPos,
                                   end_pos = EndPos} = ReadParameter,
                   #redundant_node{node = Node}, Redundancies) when Node == erlang:node() ->
+    LeftRedundancies = [RedundantNode ||
+                         #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
     read_and_repair_3(
-      get_fun(AddrId, Key, StartPos, EndPos), ReadParameter, Redundancies);
+      get_fun(AddrId, Key, StartPos, EndPos), ReadParameter, LeftRedundancies);
 
 read_and_repair_2(#read_parameter{addr_id = AddrId,
                                   key = Key,
@@ -1048,8 +1050,10 @@ read_and_repair_2(#read_parameter{addr_id = AddrId,
         {ok, match} = Reply ->
             Reply;
         _ ->
+            LeftRedundancies = [RedundantNode ||
+                                #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
             read_and_repair_3(
-              get_fun(AddrId, Key, StartPos, EndPos), ReadParameter, Redundancies)
+              get_fun(AddrId, Key, StartPos, EndPos), ReadParameter, LeftRedundancies)
     end;
 
 read_and_repair_2(ReadParameter, #redundant_node{node = Node}, Redundancies) ->
@@ -1071,7 +1075,9 @@ read_and_repair_2(ReadParameter, #redundant_node{node = Node}, Redundancies) ->
                  timeout = Cause ->
                      {error, Cause}
              end,
-    read_and_repair_3(RetRPC, ReadParameter, Redundancies).
+    LeftRedundancies = [RedundantNode ||
+                        #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
+    read_and_repair_3(RetRPC, ReadParameter, LeftRedundancies).
 
 %% @private
 read_and_repair_3({ok, Metadata, #?OBJECT{data = Bin}}, #read_parameter{}, []) ->

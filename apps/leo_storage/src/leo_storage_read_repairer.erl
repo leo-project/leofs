@@ -79,17 +79,15 @@ repair(#read_parameter{quorum = ReadQuorum,
                       void;
                  (#redundant_node{node = Node,
                                   available = true,
-                                  can_read_repair = true}) when Node /= erlang:node() ->
+                                  can_read_repair = true}) ->
                       spawn(fun() ->
                                     RPCKey = rpc:async_call(
                                                Node, leo_storage_handler_object,
                                                head, [AddrId, Key, false]),
                                     compare(Ref, From, RPCKey, Node, Params)
-                            end);
-                 (_) ->
-                      erlang:send(From, {Ref, ok})
+                            end)
               end, Redundancies),
-            loop(ReadQuorum, Ref, From, NumOfNodes, {ReqId, Key, []}, Callback)
+            loop(ReadQuorum - 1, Ref, From, NumOfNodes, {ReqId, Key, []}, Callback)
     end.
 
 
