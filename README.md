@@ -95,20 +95,20 @@ Then, install Erlang.
 ##
 ## 1. Install libatomic
 ##
-$ wget http://www.hpl.hp.com/research/linux/atomic_ops/download/libatomic_ops-7.2d.tar.gz
-$ tar xzvf libatomic_ops-7.2d.tar.gz
-$ cd libatomic_ops-7.2
+$ wget http://www.ivmaisoft.com/_bin/atomic_ops/libatomic_ops-7.4.4.tar.gz
+$ tar xzvf libatomic_ops-7.4.4.tar.gz
+$ cd libatomic_ops-7.4.4
 $ ./configure --prefix=/usr/local
 $ make
 $ sudo make install
 
 ##
-## 2. Install Erlang (17.5)
+## 2. Install Erlang (18.3)
 ##
-$ wget http://www.erlang.org/download/otp_src_17.5.tar.gz
-$ tar xzf otp_src_17.5.tar.gz
-$ cd otp_src_17.5
-$ ./configure --prefix=/usr/local/erlang/17.5 \
+$ wget http://erlang.org/download/otp_src_18.3.tar.gz
+$ tar xzf otp_src_18.3.tar.gz
+$ cd otp_src_18.3
+$ ./configure --prefix=/usr/local/erlang/18.3 \
               --enable-smp-support \
               --enable-m64-build \
               --enable-halfword-emulator \
@@ -127,7 +127,7 @@ $ sudo make install
 ##
 $ vi ~/.profile
     ## append the follows:
-    export ERL_HOME=/usr/local/erlang/17.5
+    export ERL_HOME=/usr/local/erlang/18.3
     export PATH=$PATH:$ERL_HOME/bin
 
 $ source ~/.profile
@@ -146,9 +146,7 @@ $ ./git_checkout.sh develop
 Then, build LeoFS with the following commands.
 
 ```bash
-$ make clean
-$ make
-$ make release
+$ make && make release
 ```
 
 Now, you can find the LeoFS package as follow.
@@ -276,16 +274,19 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
 * *DONE* - [v1.2](https://github.com/leo-project/leofs/releases/tag/1.2.22)
     * NFS v3 Support *(beta)*
     * Watchdog
-    * Auto-compaction
+    * Automated data-compaction
 * *WIP* - v1.3
     * NFS v3 Support *(stable)*
     * Improve compatibility S3-APIs#6
-        * AWS Signature v4 support (v1.3.0)
+        * [AWS Signature v4](http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html) support (v1.3.0)
         * Custom Metadata Support (v1.3.1)
 * v1.4
     * Hinted Hand-off
+    * Integration with distributed computing frameworks
+        * Hadoop integration
+        * Spark integration
     * Improve compatibility S3-APIs#7
-        * Object Encryption
+        * [Server Side Object Encryption](http://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html)
 * v1.5
     * Erasure Code
     * LeoManager's cluster replaces from mnesia dependensy to another implementation
