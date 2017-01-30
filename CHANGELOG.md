@@ -3,8 +3,8 @@
 ## 1.3.2 (Jan 30, 2017)
 
 * Improvements
-    * [#509](https://github.com/leo-project/leofs/issues/509) [boto3](https://github.com/boto/boto3) which is a S3 client was supported
-    * [#577](https://github.com/leo-project/leofs/issues/577) Erlang VM' parameter, `eager check I/O scheduling` is enabled
+    * [#509](https://github.com/leo-project/leofs/issues/509) [boto3](https://github.com/boto/boto3) which is an S3 client was supported
+    * [#577](https://github.com/leo-project/leofs/issues/577) An Erlang VM's parameter, `eager check I/O scheduling` is enabled
 * Fixed Bugs
     * LeoGateway:
         * [#489](https://github.com/leo-project/leofs/issues/489) `leo_gateway` Cannot integrate LeoFS with Hadoop
