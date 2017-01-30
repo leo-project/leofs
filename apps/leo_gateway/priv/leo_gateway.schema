@@ -509,7 +509,7 @@
  "watchdog.rex.is_enabled",
  "leo_watchdog.rex_enabled",
  [
-  {datatype, atom},
+  {datatype, {enum, [true, false]}},
   {default, false}
  ]}.
 
@@ -540,7 +540,7 @@
  "watchdog.cpu.is_enabled",
  "leo_watchdog.cpu_enabled",
  [
-  {datatype, atom},
+  {datatype, {enum, [true, false]}},
   {default, false}
  ]}.
 
@@ -587,7 +587,7 @@
  "watchdog.io.is_enabled",
  "leo_watchdog.io_enabled",
  [
-  {datatype, atom},
+  {datatype, {enum, [true, false]}},
   {default, false}
  ]}.
 
@@ -627,7 +627,7 @@
  "watchdog.disk.is_enabled",
  "leo_watchdog.disk_enabled",
  [
-  {datatype, atom},
+  {datatype, {enum, [true, false]}},
   {default, false}
  ]}.
 
@@ -756,7 +756,7 @@
  "watchdog.cluster.is_enabled",
  "leo_watchdog.cluster_enabled",
  [
-  {datatype, atom},
+  {datatype, {enum, [true, false]}},
   {default, false}
  ]}.
 
@@ -1075,6 +1075,7 @@
  "leo_redundant_manager.sync_mf",
  "leo_redundant_manager.sync_mf",
  [
+  {datatype, {enum, [true, false]}},
   {default, false}
  ]}.
 
@@ -1118,7 +1119,8 @@
  "erlang.kernel_poll",
  "vm_args.+K",
  [
-  {default, "true"}
+  {datatype, {enum, [true, false]}},
+  {default, 'true'}
  ]}.
 
 {mapping,
@@ -1174,7 +1176,7 @@
  "erlang.schedulers.compaction_of_load",
  "vm_args.+scl",
  [
-  {datatype, atom},
+  {datatype, {enum, [true, false]}},
   {default, 'true'}
  ]}.
 
@@ -1204,12 +1206,13 @@
 %%  ]}.
 
 %% @doc Enable/Disable eager check I/O (Erlang 17.4/erts-6.3-, ref:OTP-12117)
-%% {mapping,
-%%  "erlang.secio",
-%%  "vm_args.+secio",
-%%  [
-%%   {default, false}
-%%  ]}.
+{mapping,
+ "erlang.secio",
+ "vm_args.+secio",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, 'true'}
+ ]}.
 
 %% @doc Raise the default erlang process limit
 {mapping, "process_limit", "vm_args.+P",
