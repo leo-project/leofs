@@ -1,5 +1,56 @@
 # CHANGELOG
 
+## 1.3.2 (Jan 30, 2017)
+
+* Improvements
+    * [#509](https://github.com/leo-project/leofs/issues/509) [boto3](https://github.com/boto/boto3) which is a S3 client was supported
+    * [#577](https://github.com/leo-project/leofs/issues/577) Erlang VM' parameter, `eager check I/O scheduling` is enabled
+* Fixed Bugs
+    * LeoGateway:
+        * [#489](https://github.com/leo-project/leofs/issues/489) `leo_gateway` Cannot integrate LeoFS with Hadoop
+            * `transfer-encoding`, Identity in [Cowboy](https://github.com/leo-project/cowboy/)
+        * [#564](https://github.com/leo-project/leofs/issues/564) `leo_gateway` `v1.3.1` Large object put handler could halt infinitely
+        * [#566](https://github.com/leo-project/leofs/issues/566) `leo_gateway` After upgrading to v1.3.1, breaks file listing of a bucket, a result of which is empty
+        * [#570](https://github.com/leo-project/leofs/issues/570) `leo_gateway` Large Object Handler consumes much memory and causes out of memory(OOM) eventually
+    * LeoStorage:
+        * [#581](https://github.com/leo-project/leofs/issues/581) `leo_storage` Unit test failure with Erlang/OTP 17.x and 18.x
+            * Bumped [meck which is a mocking library for Erlang](https://github.com/eproxus/meck)
+        * [#586](https://github.com/leo-project/leofs/issues/586) `leo_storage` `leo_object_storage` A LeoStorage's configuration, `is_strict_check` is ignored
+        * [#589](https://github.com/leo-project/leofs/issues/589) `leo_storage` `read_repair` Not satisfy the read-consistency
+    * LeoManager:
+        * [#583](https://github.com/leo-project/leofs/issues/583) `leo_manager` Delete Bucket does not remove the objects stored in it, `v1.3.0` and `v1.3.1` is affected
+* Used libraries
+    * Leo Project
+        * [leo_backend-db v1.2.9](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.9)
+        * [leo_cache v0.8.3](https://github.com/leo-project/leo_cache/releases/tag/0.8.3)
+        * [leo_commons v1.1.9](https://github.com/leo-project/leo_commons/releases/tag/1.1.9)
+        * [leo_dcerl v0.4.6](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.6)
+        * [leo_logger v1.2.5](https://github.com/leo-project/leo_logger/releases/tag/1.2.5)
+        * [leo_mcerl v0.6.3](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.3)
+        * [leo_mq v1.4.12](https://github.com/leo-project/leo_mq/releases/tag/1.4.12)
+        * [leo_object_storage v1.2.31](https://github.com/leo-project/leo_object_storage/releases/tag/1.2.31)
+        * [leo_ordning_reda v1.2.4](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.4)
+        * [leo_pod v0.6.8](https://github.com/leo-project/leo_pod/releases/tag/0.6.8)
+        * [leo_redundant_manager 1.9.29](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.32)
+        * [leo_rpc v0.10.12](https://github.com/leo-project/leo_rpc/releases/tag/0.10.12)
+        * [leo_s3_libs v1.2.9](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.9)
+        * [leo_statistics v1.1.17](https://github.com/leo-project/leo_statistics/releases/tag/1.1.17)
+        * [leo_watchdog v0.12.6](https://github.com/leo-project/leo_watchdog/releases/tag/0.12.6)
+        * [savanna_agent v0.4.20](https://github.com/leo-project/savanna_agent/releases/tag/0.4.20)
+        * [savanna_commons v0.10.6](https://github.com/leo-project/savanna_commons/releases/tag/0.10.6)
+        * [erpcgen v0.2.4](https://github.com/leo-project/erpcgen/releases/tag/0.2.4)
+        * [nfs_rpc_server v0.2.4](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.4)
+    * Others
+        * [bitcask v2.0.7](https://github.com/basho/bitcask/releases/tag/2.0.7)
+        * [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
+        * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+        * [elarm v0.3.0](https://github.com/leo-project/elarm/releases/tag/0.3.0)
+        * [eleveldb v2.0.33](https://github.com/basho/eleveldb/releases/tag/2.0.33)
+        * [folsom v0.8.2-p1](https://github.com/leo-project/folsom/releases/tag/0.8.2-p1)
+        * [jiffy v0.14.7](https://github.com/davisp/jiffy/releases/tag/0.14.7)
+        * [recon v0.8.5](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
 ## 1.3.1 (Dec 28, 2016)
 
 * Improvements
@@ -42,7 +93,7 @@
         * [#476](https://github.com/leo-project/leofs/issues/476) `libcutil``leo_cache` [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/) support
         * [#494](https://github.com/leo-project/leofs/issues/494) `watchdog``iostat` result parsing error
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.2.6](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.6)
         * [leo_cache v0.8.2](https://github.com/leo-project/leo_cache/releases/tag/0.8.2)
         * [leo_commons v1.1.8](https://github.com/leo-project/leo_commons/releases/tag/1.1.8)
@@ -65,7 +116,7 @@
         * [leo_gateway v1.3.1](https://github.com/leo-project/leo_gateway/releases/tag/1.3.1)
         * [leo_manager v1.3.1](https://github.com/leo-project/leo_manager/releases/tag/1.3.1)
         * [leo_storage v1.3.1](https://github.com/leo-project/leo_storage/releases/tag/1.3.1)
-    * others
+    * Others
         * [bitcask v2.0.6](https://github.com/basho/bitcask/releases/tag/2.0.6)
         * [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -88,7 +139,7 @@
     * [#485](https://github.com/leo-project/leofs/issues/485) `leo_watchdog` Not able to clear state of a cpu's watchdog due to unexpected [Erlang cpu_sup](http://erlang.org/doc/man/cpu_sup.html)'s error
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.2.2](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.2)
         * [leo_cache v0.8.0](https://github.com/leo-project/leo_cache/releases/tag/0.8.0)
         * [leo_commons v1.1.6](https://github.com/leo-project/leo_commons/releases/tag/1.1.6)
@@ -111,7 +162,7 @@
         * [leo_gateway v1.3.0](https://github.com/leo-project/leo_gateway/releases/tag/1.3.0)
         * [leo_manager v1.3.0](https://github.com/leo-project/leo_manager/releases/tag/1.3.0)
         * [leo_storage v1.3.0](https://github.com/leo-project/leo_storage/releases/tag/1.3.0)
-    * others
+    * Others
         * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
         * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -129,7 +180,7 @@
     * [#474](https://github.com/leo-project/leofs/issues/474) ``leo_storage`` Improved the performance of the recover-node
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.2.2](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.2)
         * [leo_cache v0.6.14](https://github.com/leo-project/leo_cache/releases/tag/0.6.14)
         * [leo_commons v1.1.6](https://github.com/leo-project/leo_commons/releases/tag/1.1.6)
@@ -152,7 +203,7 @@
         * [leo_gateway v1.2.22](https://github.com/leo-project/leo_gateway/releases/tag/1.2.22)
         * [leo_manager v1.2.22](https://github.com/leo-project/leo_manager/releases/tag/1.2.22)
         * [leo_storage v1.2.22](https://github.com/leo-project/leo_storage/releases/tag/1.2.22)
-    * others
+    * Others
         * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
         * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -170,7 +221,7 @@
         * Reduced amount of error logs which is related to the cache feature
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.2.1](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.1)
         * [leo_cache v0.6.14](https://github.com/leo-project/leo_cache/releases/tag/0.6.14)
         * [leo_commons v1.1.6](https://github.com/leo-project/leo_commons/releases/tag/1.1.6)
@@ -193,7 +244,7 @@
         * [leo_gateway v1.2.21](https://github.com/leo-project/leo_gateway/releases/tag/1.2.21)
         * [leo_manager v1.2.21](https://github.com/leo-project/leo_manager/releases/tag/1.2.21)
         * [leo_storage v1.2.21](https://github.com/leo-project/leo_storage/releases/tag/1.2.21)
-    * others
+    * Others
         * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
         * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -249,7 +300,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [$468](https://github.com/leo-project/leofs/issues/468) ``leo_storage``,``leo_redundant_manager`` Incorrect ring after executing the takeover
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.2.1](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.1)
         * [leo_cache v0.6.12](https://github.com/leo-project/leo_cache/releases/tag/0.6.12)
         * [leo_commons v1.1.6](https://github.com/leo-project/leo_commons/releases/tag/1.1.6)
@@ -272,7 +323,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.20](https://github.com/leo-project/leo_gateway/releases/tag/1.2.20)
         * [leo_manager v1.2.20](https://github.com/leo-project/leo_manager/releases/tag/1.2.20)
         * [leo_storage v1.2.20](https://github.com/leo-project/leo_storage/releases/tag/1.2.20)
-    * others
+    * Others
         * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
         * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -298,7 +349,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [#438](https://github.com/leo-project/leofs/issues/438) ``leo_s3_libs`` Requests to leo_gateway take too much time when leo_manager is down
     * [#439](https://github.com/leo-project/leofs/issues/439) ``mdc-replication`` ``leo_redundant_manager`` Failed upgrading leo_cluster_info table from 1.2.x to 1.2.x
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.14](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.15)
         * [leo_cache v0.6.10](https://github.com/leo-project/leo_cache/tag/0.6.10)
         * [leo_commons v1.1.6](https://github.com/leo-project/leo_commons/releases/tag/1.1.6)
@@ -322,7 +373,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.18](https://github.com/leo-project/leo_gateway/releases/tag/1.2.18)
         * [leo_manager v1.2.18](https://github.com/leo-project/leo_manager/releases/tag/1.2.18)
         * [leo_storage v1.2.18](https://github.com/leo-project/leo_storage/releases/tag/1.2.18)
-    * others
+    * Others
         * [bitcask v2.0.1](https://github.com/basho/bitcask/releases/tag/2.0.1)
         * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0-p1)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -341,7 +392,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [#423](https://github.com/leo-project/leofs/issues/423)``v1.2.11-`` ``leo_watchdog`` Did not clear combination of for errors - "cpu_util" and "load_avg_1m"
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.13](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.13)
         * [leo_cache v0.6.5](https://github.com/leo-project/leo_cache/releases/tag/0.6.5)
         * [leo_commons v1.1.5](https://github.com/leo-project/leo_commons/releases/tag/1.1.4)
@@ -364,7 +415,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.16](https://github.com/leo-project/leo_gateway/releases/tag/1.2.16)
         * [leo_manager v1.2.16](https://github.com/leo-project/leo_manager/releases/tag/1.2.16)
         * [leo_storage v1.2.16](https://github.com/leo-project/leo_storage/releases/tag/1.2.16)
-    * others
+    * Others
         * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
         * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -385,7 +436,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [#418](https://github.com/leo-project/leofs/issues/418) ``leo_manager`` leo_manager slave can't restart when detach was executed while the slave was down
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.9](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.9)
         * [leo_cache v0.6.5](https://github.com/leo-project/leo_cache/releases/tag/0.6.5)
         * [leo_commons v1.1.4](https://github.com/leo-project/leo_commons/releases/tag/1.1.4)
@@ -408,7 +459,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.14](https://github.com/leo-project/leo_gateway/releases/tag/1.2.14)
         * [leo_manager v1.2.14](https://github.com/leo-project/leo_manager/releases/tag/1.2.14)
         * [leo_storage v1.2.14](https://github.com/leo-project/leo_storage/releases/tag/1.2.14)
-    * others
+    * Others
         * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
         * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -432,7 +483,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [#398](https://github.com/leo-project/leofs/issues/398) ``leo_object_storage`` Compaction may stop unintentionally under heavy load
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.9](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.9)
         * [leo_cache v0.6.5](https://github.com/leo-project/leo_cache/releases/tag/0.6.5)
         * [leo_commons v1.1.2](https://github.com/leo-project/leo_commons/releases/tag/1.1.2)
@@ -455,7 +506,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.12](https://github.com/leo-project/leo_gateway/releases/tag/1.2.12)
         * [leo_manager v1.2.12](https://github.com/leo-project/leo_manager/releases/tag/1.2.12)
         * [leo_storage v1.2.12](https://github.com/leo-project/leo_storage/releases/tag/1.2.12)
-    * others
+    * Others
         * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
         * [cowboy v1.0.1](https://github.com/leo-project/cowboy/releases/tag/for-leofs-1.2.11)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -499,7 +550,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * Leo Manager
         *  [#371](https://github.com/leo-project/leofs/issues/371) ``leo_manager`` ``leo_statistics`` Could NOT migrate from v1.0.x to 1.2
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.9](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.9)
         * [leo_cache v0.6.5](https://github.com/leo-project/leo_cache/releases/tag/0.6.5)
         * [leo_commons v1.1.2](https://github.com/leo-project/leo_commons/releases/tag/1.1.2)
@@ -522,7 +573,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.11](https://github.com/leo-project/leo_gateway/releases/tag/1.2.11)
         * [leo_manager v1.2.11](https://github.com/leo-project/leo_manager/releases/tag/1.2.11)
         * [leo_storage v1.2.11](https://github.com/leo-project/leo_storage/releases/tag/1.2.11)
-    * others
+    * Others
         * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
         * [cowboy v1.0.0](https://github.com/leo-project/cowboy/releases/tag/1.0.0)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -542,7 +593,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * ``leo_statistics`` Strictly check creating mnesia's tables
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.8](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.8)
         * [leo_cache v0.6.3](https://github.com/leo-project/leo_cache/releases/tag/0.6.3)
         * [leo_commons v1.1.1](https://github.com/leo-project/leo_commons/releases/tag/1.1.1)
@@ -565,7 +616,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.10](https://github.com/leo-project/leo_gateway/releases/tag/1.2.10)
         * [leo_manager v1.2.10](https://github.com/leo-project/leo_manager/releases/tag/1.2.10)
         * [leo_storage v1.2.10](https://github.com/leo-project/leo_storage/releases/tag/1.2.10)
-    * others
+    * Others
         * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
         * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -593,7 +644,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [#361](https://github.com/leo-project/leofs/issues/361) ``leo_statistics`` ``leo_storage`` ``leo_gateway`` ``leo_manager`` All Leo's servers can start normally even if starting statistics related erlang processes failed
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.7](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.7)
         * [leo_cache v0.6.3](https://github.com/leo-project/leo_cache/releases/tag/0.6.3)
         * [leo_commons v1.1.1](https://github.com/leo-project/leo_commons/releases/tag/1.1.1)
@@ -616,7 +667,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.9](https://github.com/leo-project/leo_gateway/releases/tag/1.2.9)
         * [leo_manager v1.2.9](https://github.com/leo-project/leo_manager/releases/tag/1.2.9)
         * [leo_storage v1.2.9](https://github.com/leo-project/leo_storage/releases/tag/1.2.9)
-    * others
+    * Others
         * [bitcask v2.0.0](https://github.com/basho/bitcask/releases/tag/2.0.0)
         * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -650,7 +701,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [#141](https://github.com/leo-project/leofs/issues/141) ``leo_rpc``Performance degradation due to leaking tcp connections
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.6](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.6)
         * [leo_cache v0.6.3](https://github.com/leo-project/leo_cache/releases/tag/0.6.3)
         * [leo_commons v1.1.1](https://github.com/leo-project/leo_commons/releases/tag/1.1.1)
@@ -673,7 +724,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.8](https://github.com/leo-project/leo_gateway/releases/tag/1.2.8)
         * [leo_manager v1.2.8](https://github.com/leo-project/leo_manager/releases/tag/1.2.8)
         * [leo_storage v1.2.8](https://github.com/leo-project/leo_storage/releases/tag/1.2.8)
-    * others
+    * Others
         * [bitcask v1.7.1](https://github.com/leo-project/bitcask/releases/tag/1.7.1)
         * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -699,7 +750,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
     * [#323](https://github.com/leo-project/leofs/issues/323) ``leo_dcerl`` LeoFS's gateway do not response or return HTTP error code 5xx
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.5](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.5)
         * [leo_cache v0.6.3](https://github.com/leo-project/leo_cache/releases/tag/0.6.3)
         * [leo_commons v1.1.1](https://github.com/leo-project/leo_commons/releases/tag/1.1.1)
@@ -722,7 +773,7 @@ $ tail -f /path/to/leofs/leofs-1.2.20/leo_manager_0/log/app/cmd_history
         * [leo_gateway v1.2.7](https://github.com/leo-project/leo_gateway/releases/tag/1.2.7)
         * [leo_manager v1.2.7](https://github.com/leo-project/leo_manager/releases/tag/1.2.7)
         * [leo_storage v1.2.7](https://github.com/leo-project/leo_storage/releases/tag/1.2.7)
-    * others
+    * Others
         * [bitcask v1.7.1](https://github.com/leo-project/bitcask/releases/tag/1.7.1)
         * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -749,7 +800,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#310](https://github.com/leo-project/leofs/issues/310) ``leo_gateway`` Delete request might consume CPU resource more than necessary
     * [#311](https://github.com/leo-project/leofs/issues/311) ``leo_storage`` Could NOT respond an object when facing the inconsistent object
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.4)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache/releases/tag/0.6.0)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons/releases/tag/1.1.0)
@@ -772,7 +823,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.2.6](https://github.com/leo-project/leo_gateway/releases/tag/1.2.6)
         * [leo_manager v1.2.6](https://github.com/leo-project/leo_manager/releases/tag/1.2.6)
         * [leo_storage v1.2.6](https://github.com/leo-project/leo_storage/releases/tag/1.2.6)
-    * others
+    * Others
         * [bitcask v1.7.1](https://github.com/leo-project/bitcask/releases/tag/1.7.1)
         * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -794,7 +845,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#301](https://github.com/leo-project/leofs/issues/301) ``leo_storage`` Replication messages could be lost in some edge cases
     * ``leo_storage`` Fix the read-and-repair mechanism. Some inconsistent data could not recover with it.
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db/releases/tag/1.1.4)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache/releases/tag/0.6.0)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons/releases/tag/1.1.0)
@@ -817,7 +868,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.2.5](https://github.com/leo-project/leo_gateway/releases/tag/1.2.5)
         * [leo_manager v1.2.5](https://github.com/leo-project/leo_manager/releases/tag/1.2.5)
         * [leo_storage v1.2.5](https://github.com/leo-project/leo_storage/releases/tag/1.2.5)
-    * others
+    * Others
         * [bitcask v1.7.1](https://github.com/leo-project/bitcask/releases/tag/1.7.1)
         * [cowboy v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
         * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -834,7 +885,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#297](https://github.com/leo-project/leofs/issues/297) ``leo_object_storage`` Could NOT handle delete requests which made by the MQ mechanism at LeoFS v1.2.3
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons.git)
@@ -857,7 +908,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.2.4](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.2.4](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.2.4](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.1](https://github.com/leo-project/bitcask.git)
         * [cowboy v1.0.0](https://github.com/extend/cowboy.git)
         * [cowlib v1.0.0](https://github.com/extend/cowboy.git)
@@ -879,7 +930,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#292](https://github.com/leo-project/leofs/issues/292) ``leo_storage`` [proc_lib:start_link](http://erlang.org/doc/man/proc_lib.html#spawn_link-1) must be used instead of [erlang:spawn](http://erlang.org/doc/man/erlang.html#spawn-1)
     * [#293](https://github.com/leo-project/leofs/issues/293) Fixed that remain objects after finished data-compaction, situation of which is combination auto-compaction and deletion of a bucket
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons.git)
@@ -902,7 +953,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.2.3](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.2.3](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.2.3](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.1](https://github.com/leo-project/bitcask.git)
         * [cowboy v1.0.0](https://github.com/extend/cowboy.git)
         * [cowlib v1.0.0](https://github.com/extend/cowboy.git)
@@ -1035,7 +1086,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#279](https://github.com/leo-project/leofs/issues/279) ``leo_object_storage`` Compaction status can be inconsistent when an error occured while preparing compaction
     * [#282](https://github.com/leo-project/leofs/issues/282) ``leo_gateway`` Gateway's timeout configuration has been ignored
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.4](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons.git)
@@ -1058,7 +1109,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.2.2](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.2.2](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.2.2](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.1](https://github.com/leo-project/bitcask.git)
         * [cowboy v1.0.0](https://github.com/extend/cowboy.git)
         * [cowlib v1.0.0](https://github.com/extend/cowboy.git)
@@ -1077,7 +1128,7 @@ And also, load of a primary of storage-node became high by this issue.
     * Fixed system migration issue from v1.x to v1.2.0
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.3](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons.git)
@@ -1100,7 +1151,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.2.1](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.2.1](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.2.1](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
         * [cowboy v1.0.0](https://github.com/extend/cowboy.git)
         * [cowlib v1.0.0](https://github.com/extend/cowboy.git)
@@ -1136,7 +1187,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#268](https://github.com/leo-project/leofs/issues/265) ``leo_object_storage`` Fixed that wrong output format of data-diagnosis when including children of an large-object
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.3](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons.git)
@@ -1159,7 +1210,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.2.0](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.2.0](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.2.0](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
         * [cowboy v1.0.0](https://github.com/extend/cowboy.git)
         * [cowlib v1.0.0](https://github.com/extend/cowboy.git)
@@ -1178,7 +1229,7 @@ And also, load of a primary of storage-node became high by this issue.
 * Fixed Bugs
     * [#254](https://github.com/leo-project/leofs/issues/254) ``leo_redundant_manager`` Failed creating RING on cheap VM environment
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.2](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons.git)
@@ -1200,7 +1251,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.1.5](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.1.5](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.1.5](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [cowlib v0.6.2](https://github.com/extend/cowboy.git)
@@ -1221,7 +1272,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#247](https://github.com/leo-project/leofs/issues/247) ``leo_storage`` Start normally even if error occur
     * [#250](https://github.com/leo-project/leofs/issues/250) ``leo_statistics`` leo_statistics_sampler can be down under very high load
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.2](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.6.0](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.1.0](https://github.com/leo-project/leo_commons.git)
@@ -1243,7 +1294,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.1.4](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.1.4](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.1.4](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [cowlib v0.6.2](https://github.com/extend/cowboy.git)
@@ -1265,7 +1316,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#242](https://github.com/leo-project/leofs/issues/242) ``leo_gateway`` - leo_garteway process could be down when receiving an invalid request
     * [#243](https://github.com/leo-project/leofs/issues/243) ``leo_storage`` - leo_gateway could respond 500 instead of 404
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.1](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.24](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.0.5](https://github.com/leo-project/leo_commons.git)
@@ -1287,7 +1338,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.1.3](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.1.3](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.1.3](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [cowlib v0.6.2](https://github.com/extend/cowboy.git)
@@ -1310,7 +1361,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#234](https://github.com/leo-project/leofs/issues/234) ``leo_gateway`` - Unexpected error may occur when responding 403/404
     * [#235](https://github.com/leo-project/leofs/issues/235) ``leo_storage`` - MDC replication could cause VM to crash (in narrow band width network - 100Mbps)
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.1.1](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.24](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.0.5](https://github.com/leo-project/leo_commons.git)
@@ -1332,7 +1383,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.1.2](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.1.2](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.1.2](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [cowlib v0.6.2](https://github.com/extend/cowboy.git)
@@ -1360,7 +1411,7 @@ And also, load of a primary of storage-node became high by this issue.
         * It's absolutely rare case
     * ``leo_redundant_manager`` - Manager could not generate RING when taking over objects from a detach-node to a attach-node (a new node)
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.0.8](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.23](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.0.4](https://github.com/leo-project/leo_commons.git)
@@ -1382,7 +1433,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.1.1](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.1.1](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.1.1](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [cowlib v0.6.2](https://github.com/extend/cowboy.git)
@@ -1411,7 +1462,7 @@ And also, load of a primary of storage-node became high by this issue.
     * ``leo-storage`` Multi data center replication may fail without notifying errors under a narrow bandwidth and very high-load.
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.0.8](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.23](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.0.4](https://github.com/leo-project/leo_commons.git)
@@ -1433,7 +1484,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.1.0](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.1.0](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.1.0](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.7.0](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [cowlib v0.6.2](https://github.com/extend/cowboy.git)
@@ -1449,7 +1500,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#189](https://github.com/leo-project/leofs/issues/189) ``leo_object_storage`` - Actual disk usage is different from the manager-console.
     * [#188](https://github.com/leo-project/leofs/issues/188) ``leo_object_storage`` - When existing large objects in a leo_storage, data loss of which happend with the compaction command.
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.0.3](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.20](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.0.1](https://github.com/leo-project/leo_commons.git)
@@ -1469,7 +1520,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.0.2](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.0.2](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.0.2](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [eleveldb v1.4.7](https://github.com/basho/eleveldb.git)
@@ -1498,7 +1549,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#160](https://github.com/leo-project/leofs/issues/160) ``leo_manager`` - Failed to upgrade from v0.14.6 to v1.0.0
     * [#153](https://github.com/leo-project/leofs/issues/153) ``leo_gateway`` - When using s3cmd, GET operation for larger than 5MB object gives error at leo_gateway
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.0.3](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.20](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.0.1](https://github.com/leo-project/leo_commons.git)
@@ -1518,7 +1569,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.0.1](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.0.1](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.0.1](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
         * [eleveldb v1.4.7](https://github.com/basho/eleveldb.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
@@ -1550,7 +1601,7 @@ And also, load of a primary of storage-node became high by this issue.
     * [#162](https://github.com/leo-project/leofs/issues/162) - Able to get removed user on the manager-console
     * [#163](https://github.com/leo-project/leofs/issues/163) - ``update-acl`` and ``get-acl`` methods unexpected to display the permission messages
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.0.2](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.20](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.0.1](https://github.com/leo-project/leo_commons.git)
@@ -1571,7 +1622,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.0.0](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.0.0](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.0.0](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom v0.8.1](https://github.com/boundary/folsom.git)
@@ -1601,7 +1652,7 @@ And also, load of a primary of storage-node became high by this issue.
     * `leo_rpc` Fixed to close a tcp socket properly in any cases
     * `leo_gateway` [#140](https://github.com/leo-project/leofs/issues/140) Fixed to return 206 status when responding a partial body
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v1.0.0](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.19](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v1.0.0](https://github.com/leo-project/leo_commons.git)
@@ -1620,7 +1671,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.0.0-pre3](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.0.0-pre3](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.0.0-pre3](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.7](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [eleveldb v1.4.7](https://github.com/basho/eleveldb)
@@ -1645,7 +1696,7 @@ And also, load of a primary of storage-node became high by this issue.
      * Unexpected response from leo_storage to leo_gateway when an object wan not found
      * Respond an error with deletion of an object when it was not found
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.14.5](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.17](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.10](https://github.com/leo-project/leo_commons.git)
@@ -1663,7 +1714,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.0.0-pre2](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.0.0-pre2](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.0.0-pre2](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.4](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom v0.8.0](https://github.com/boundary/folsom.git)
@@ -1684,7 +1735,7 @@ And also, load of a primary of storage-node became high by this issue.
    * Fixed that a rebalance msg can be lost during rebalance with a 0.02% possibility
    * Fixed that not retrieved a bucket-info when stopping all managers
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.14.2](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.16](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.9](https://github.com/leo-project/leo_commons.git)
@@ -1700,7 +1751,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v1.0.0-pre1](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v1.0.0-pre1](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v1.0.0-pre1](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.4](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom v0.8.0](https://github.com/boundary/folsom.git)
@@ -1721,7 +1772,7 @@ And also, load of a primary of storage-node became high by this issue.
   * Fixed that not migrated "Bucket Table"
   * Fixed that an exception of compaction happened rarely
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.14.2](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.16](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.9](https://github.com/leo-project/leo_commons.git)
@@ -1737,7 +1788,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.16.8](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.16.8](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.16.8](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.4](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -1769,7 +1820,7 @@ And also, load of a primary of storage-node became high by this issue.
   * [#97] (https://github.com/leo-project/leofs/issues/97) Could not upload an object when including a bucket name in a path
   * [#100] (https://github.com/leo-project/leofs/issues/100) Broken records after update from 0.14.9 to 0.16.0
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.14.1](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.14](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.8](https://github.com/leo-project/leo_commons.git)
@@ -1785,7 +1836,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.16.5](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.16.5](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.16.5](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -1806,7 +1857,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Supported single 'Manager'
         * Supported to check # of detached node before executing detach-command
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.14.1](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.13](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.8](https://github.com/leo-project/leo_commons.git)
@@ -1822,7 +1873,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.16.0](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.16.0](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.16.0](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -1837,7 +1888,7 @@ And also, load of a primary of storage-node became high by this issue.
     * Increased performance of leo_redundant_manager
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.14.0](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.12](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.6](https://github.com/leo-project/leo_commons.git)
@@ -1853,7 +1904,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.14.14](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.9](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.7](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -1873,7 +1924,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Not removed a member(storage-node) when its status was 'attached'
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.12.17](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.11](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.4](https://github.com/leo-project/leo_commons.git)
@@ -1889,7 +1940,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.14.13](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.8](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.6](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -1904,7 +1955,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Able to output access-log
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.12.17](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.10](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.4](https://github.com/leo-project/leo_commons.git)
@@ -1920,7 +1971,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.14.12](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.7](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.5](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -1940,7 +1991,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Fixed changed status from *running* to *restarted* when restarted leo-manager
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.12.17](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.10](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.4](https://github.com/leo-project/leo_commons.git)
@@ -1956,7 +2007,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.14.11](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.6](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.4](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -1972,7 +2023,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Fixed an error handlings properly when processing a large file with disk cache
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.12.17](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.10](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.4](https://github.com/leo-project/leo_commons.git)
@@ -1988,7 +2039,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.14.10](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.5](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.4](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2004,7 +2055,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Optimize the slab size for normal use cases
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.12.16](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.9](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.3](https://github.com/leo-project/leo_commons.git)
@@ -2020,7 +2071,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.14.7](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.3](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.3](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2045,7 +2096,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Compaction-function can fail - "did not match data" when a target file is corrupted
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.12.16](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.8](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.3](https://github.com/leo-project/leo_commons.git)
@@ -2061,7 +2112,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.14.5](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.3](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.3](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.6](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2101,7 +2152,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Reply empty response unintentionally when using some s3-clients
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_backend-db v0.12.14](https://github.com/leo-project/leo_backend_db.git)
         * [leo_cache v0.4.7](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.14.1](https://github.com/leo-project/leo_commons.git)
@@ -2117,7 +2168,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_gateway v0.14.4](https://github.com/leo-project/leo_gateway.git)
         * [leo_manager v0.14.2](https://github.com/leo-project/leo_manager.git)
         * [leo_storage v0.14.2](https://github.com/leo-project/leo_storage.git)
-    * others
+    * Others
         * [bitcask v1.6.2](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.5](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2161,7 +2212,7 @@ And also, load of a primary of storage-node became high by this issue.
     * Stored wrong file-path with REST-API by degraded
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_cache v0.4.4](https://github.com/leo-project/leo_cache.git)
         * [leo_commons v0.12.12](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.12.11](https://github.com/leo-project/leo_backend_db.git)
@@ -2177,7 +2228,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.14.1](https://github.com/leo-project/leo_storage.git)
         * [cherly v0.12.5](https://github.com/leo-project/cherly.git)
         * [dcerl v0.4.1](https://github.com/leo-project/dcerl.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.3](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2198,7 +2249,7 @@ And also, load of a primary of storage-node became high by this issue.
     * Not handle ``compaction-start command`` invalid argument on Manager-console
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.11](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.12.10](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.29](https://github.com/leo-project/leo_object_storage.git)
@@ -2213,7 +2264,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.14.0](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.15](https://github.com/leo-project/ecache.git)
         * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.8.2](https://github.com/extend/cowboy.git)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2234,7 +2285,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Possibility of including node(s) of ``attached (status)``
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.11](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.12.10](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.29](https://github.com/leo-project/leo_object_storage.git)
@@ -2249,7 +2300,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.14.0-RC2](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.14](https://github.com/leo-project/ecache.git)
         * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2272,7 +2323,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Resolved that messages of a detached node ignored
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.10](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.12.9](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.28](https://github.com/leo-project/leo_object_storage.git)
@@ -2287,7 +2338,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.14.0-RC1](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.8](https://github.com/leo-project/ecache.git)
         * [cherly v0.12.4](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2322,7 +2373,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Crush get-users when no-records
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.6](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.12.2](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.16](https://github.com/leo-project/leo_object_storage.git)
@@ -2337,7 +2388,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.12.9](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.5](https://github.com/leo-project/ecache.git)
         * [cherly v0.12.0](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2365,7 +2416,7 @@ And also, load of a primary of storage-node became high by this issue.
             * Related libs: [leo_storage, leo_object_storage]
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.6](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.12.0](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.12](https://github.com/leo-project/leo_object_storage.git)
@@ -2380,7 +2431,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.12.6](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.3](https://github.com/leo-project/ecache.git)
         * [cherly v0.10.2](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2403,7 +2454,7 @@ And also, load of a primary of storage-node became high by this issue.
     * Manager-console crashed when inputed invalid parameter(s)
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.5](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.10.8](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.11](https://github.com/leo-project/leo_object_storage.git)
@@ -2418,7 +2469,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.12.5](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.2](https://github.com/leo-project/ecache.git)
         * [cherly v0.10.1](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2444,7 +2495,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Adjust the start timing of RPC for reject requests from remote-node(s)
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.5](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.10.8](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.10](https://github.com/leo-project/leo_object_storage.git)
@@ -2459,7 +2510,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.12.4](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.1](https://github.com/leo-project/ecache.git)
         * [cherly v0.10.0](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2481,7 +2532,7 @@ And also, load of a primary of storage-node became high by this issue.
     * Storage "Compaction"
         * When excuting compact-command, Objects to be removed remain (chunked objects)
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.3](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.10.7](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.9](https://github.com/leo-project/leo_object_storage.git)
@@ -2496,7 +2547,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.12.3](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.1](https://github.com/leo-project/ecache.git)
         * [cherly v0.10.0](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2521,7 +2572,7 @@ And also, load of a primary of storage-node became high by this issue.
         * Able to add a bucket with NOT exists access-key
 
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.0](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.10.4](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.4](https://github.com/leo-project/leo_object_storage.git)
@@ -2536,7 +2587,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.12.1](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.1](https://github.com/leo-project/ecache.git)
         * [cherly v0.10.0](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
@@ -2563,7 +2614,7 @@ And also, load of a primary of storage-node became high by this issue.
     * Compaction
         * When excuting compact-command, Objects to be removed partly may remain
 * Used libraries
-    * leo project
+    * Leo Project
         * [leo_commons v0.12.0](https://github.com/leo-project/leo_commons.git)
         * [leo_backend-db v0.10.4](https://github.com/leo-project/leo_backend_db.git)
         * [leo_object_storage v0.12.3](https://github.com/leo-project/leo_object_storage.git)
@@ -2578,7 +2629,7 @@ And also, load of a primary of storage-node became high by this issue.
         * [leo_storage v0.12.0](https://github.com/leo-project/leo_storage.git)
         * [ecache v0.10.1](https://github.com/leo-project/ecache.git)
         * [cherly v0.10.0](https://github.com/leo-project/cherly.git)
-    * others
+    * Others
         * [bitcask](https://github.com/basho/bitcask.git)
         * [cowboy v0.6.2](https://github.com/leo-project/cowboy.git) - forked from [extend/cowboy](https://github.com/extend/cowboy)
         * [folsom](https://github.com/boundary/folsom.git)
