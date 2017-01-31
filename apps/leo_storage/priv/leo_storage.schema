@@ -885,13 +885,24 @@
   {default, 1}
  ]}.
 
-%% @doc Is enable access log
+%% @doc Is enable Access log
 {mapping,
  "log.is_enable_access_log",
  "leo_storage.is_enable_access_log",
  [
   {datatype, {enum, [true, false]}},
   {default, false}
+ ]}.
+
+%% @doc Access log's level
+{mapping,
+ "log.access_log_level",
+ "leo_storage.access_log_level",
+ [
+  %% 0: only regular case
+  %% 1: includes error cases
+  {datatype, integer},
+  {default, 0}
  ]}.
 
 %% @doc Output log file(s) - erlang
