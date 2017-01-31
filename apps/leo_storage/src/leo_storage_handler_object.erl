@@ -80,14 +80,14 @@ get({Ref, Key}) ->
                     ?access_log_storage_get(Key, byte_size(Bin), BeginTime, ok),
                     {ok, Ref, Metadata, Bin};
                 {error, Cause} ->
-                    ?access_log_storage_get(Key, 0, BeginTime, error),
+                    ?access_log_storage_get(?ACC_LOG_L_ERROR, Key, 0, BeginTime, error),
                     ?error("get/1", [{from, storage}, {method, get},
                                      {key, Key}, {cause, Cause}]),
                     {error, Ref, Cause}
             end;
         _ ->
             Cause = ?ERROR_COULD_NOT_GET_REDUNDANCY,
-            ?access_log_storage_get(Key, 0, BeginTime, {error, Cause}),
+            ?access_log_storage_get(?ACC_LOG_L_ERROR, Key, 0, BeginTime, {error, Cause}),
             ?error("get/1", [{from, storage}, {method, get},
                              {key, Key}, {cause, Cause}]),
             {error, Ref, Cause}
@@ -112,7 +112,8 @@ get(#read_parameter{addr_id = AddrId} = ReadParameter,_Redundancies) ->
                 Redundancies);
         _Error ->
             Cause = ?ERROR_COULD_NOT_GET_REDUNDANCY,
-            ?access_log_storage_get(ReadParameter#read_parameter.key, 0, BeginTime, {error, Cause}),
+            ?access_log_storage_get(?ACC_LOG_L_ERROR, ReadParameter#read_parameter.key, 0,
+                                    BeginTime, {error, Cause}),
             ?error("get/2", [{from, storage}, {method, get},
                              {key, ReadParameter#read_parameter.key},
                              {cause, Cause}]),
@@ -136,9 +137,9 @@ get(AddrId, Key, ReqId) ->
         {ok, _, Bin} ->
             ?access_log_get(Key, byte_size(Bin), ReqId, BeginTime, ok);
         {error, Reply = not_found} ->
-            ?access_log_get(Key, 0, ReqId, BeginTime, Reply);
+            ?access_log_get(?ACC_LOG_L_ERROR, Key, 0, ReqId, BeginTime, Reply);
         {error, Cause} ->
-            ?access_log_get(Key, 0, ReqId, BeginTime, error),
+            ?access_log_get(?ACC_LOG_L_ERROR, Key, 0, ReqId, BeginTime, error),
             ?error("get/3", [{from, gateway}, {method, get},
                              {key, Key}, {req_id, ReqId}, {cause, Cause}])
     end,
@@ -166,9 +167,9 @@ get(AddrId, Key, ETag, ReqId) ->
         {ok, _, Bin} ->
             ?access_log_get(Key, byte_size(Bin), ReqId, BeginTime, ok);
         {error, Reply = not_found} ->
-            ?access_log_get(Key, 0, ReqId, BeginTime, Reply);
+            ?access_log_get(?ACC_LOG_L_ERROR, Key, 0, ReqId, BeginTime, Reply);
         {error, Cause} ->
-            ?access_log_get(Key, 0, ReqId, BeginTime, error),
+            ?access_log_get(?ACC_LOG_L_ERROR, Key, 0, ReqId, BeginTime, error),
             ?error("get/4", [{from, gateway}, {method, get},
                              {key, Key}, {req_id, ReqId}, {etag, ETag}, {cause, Cause}])
     end,
@@ -196,9 +197,9 @@ get(AddrId, Key, StartPos, EndPos, ReqId) ->
         {ok, _, Bin} ->
             ?access_log_range_get(Key, StartPos, EndPos, byte_size(Bin), ReqId, BeginTime, ok);
         {error, Reply = not_found} ->
-            ?access_log_get(Key, 0, ReqId, BeginTime, Reply);
+            ?access_log_get(?ACC_LOG_L_ERROR, Key, 0, ReqId, BeginTime, Reply);
         {error, Cause} ->
-            ?access_log_range_get(Key, StartPos, EndPos, 0, ReqId, BeginTime, error),
+            ?access_log_range_get(?ACC_LOG_L_ERROR, Key, StartPos, EndPos, 0, ReqId, BeginTime, error),
             ?error("get/5", [{from, gateway}, {method, get},
                              {key, Key}, {req_id, ReqId},
                              {start_pos, StartPos}, {end_pos, EndPos}, {cause, Cause}])
@@ -314,7 +315,7 @@ put(Object, ReqId) ->
         {ok, _} ->
             ?access_log_put(Object#?OBJECT.key, Object#?OBJECT.dsize, ReqId, BeginTime, ok);
         {error, Cause} ->
-            ?access_log_put(Object#?OBJECT.key, Object#?OBJECT.dsize, ReqId, BeginTime, error),
+            ?access_log_put(?ACC_LOG_L_ERROR, Object#?OBJECT.key, Object#?OBJECT.dsize, ReqId, BeginTime, error),
             ?error("put/2", [{from, gateway}, {method, put},
                              {key, Object#?OBJECT.key}, {req_id, ReqId}, {cause, Cause}])
     end,
@@ -347,10 +348,10 @@ put(Ref, From, Object, ReqId) ->
             erlang:send(From, {Ref, {ok, ETag}});
         %% not found an object (during rebalance and delete-operation)
         {error, Cause = not_found} when ReqId == 0 ->
-            ?access_log_storage_put(Method, Key, 0, ReqId, BeginTime, Cause),
+            ?access_log_storage_put(?ACC_LOG_L_ERROR, Method, Key, 0, ReqId, BeginTime, Cause),
             erlang:send(From, {Ref, {ok, 0}});
         {error, Cause} ->
-            ?access_log_storage_put(Method, Key, 0, ReqId, BeginTime, error),
+            ?access_log_storage_put(?ACC_LOG_L_ERROR, Method, Key, 0, ReqId, BeginTime, error),
             ?error("put/4", [{from, storage}, {method, Method},
                              {key, Key}, {req_id, ReqId}, {cause, Cause}]),
             erlang:send(From, {Ref, {error, {node(), Cause}}})
@@ -494,10 +495,10 @@ delete(Object, ReqId, CheckUnderDir) ->
             ?access_log_delete(Key, Object#?OBJECT.dsize, ReqId, BeginTime, ok),
             delete_1(ok, Object, CheckUnderDir);
         {error, Cause = not_found} ->
-            ?access_log_delete(Key, Object#?OBJECT.dsize, ReqId, BeginTime, Cause),
+            ?access_log_delete(?ACC_LOG_L_ERROR, Key, Object#?OBJECT.dsize, ReqId, BeginTime, Cause),
             delete_1({error, Cause}, Object, CheckUnderDir);
         {error, Cause} ->
-            ?access_log_delete(Key, Object#?OBJECT.dsize, ReqId, BeginTime, error),
+            ?access_log_delete(?ACC_LOG_L_ERROR, Key, Object#?OBJECT.dsize, ReqId, BeginTime, error),
             ?error("delete/3", [{from, gateway}, {method, del},
                                 {key, Object#?OBJECT.key}, {req_id, ReqId}, {cause, Cause}]),
             {error, Cause}
