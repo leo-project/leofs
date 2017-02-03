@@ -2,8 +2,8 @@
 
 # Settings
 MOUNT_HOST=localhost
-MOUNT_DIR=/mnt/foo
-BUCKET=bbb
+MOUNT_DIR=/mnt/leofs
+BUCKET=test/05236/bb5034f0c740148a346ed663ca0cf5157efb439f
 RET=
 FNAME_1K=1k.dat
 FNAME_1M=1m.dat
