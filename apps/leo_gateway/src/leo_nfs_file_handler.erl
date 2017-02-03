@@ -291,7 +291,7 @@ write_large2any(Key, Start, End, Bin, SrcMetadata) ->
                                        LargeObjectProp, ?DEF_LOBJ_CHUNK_OBJ_LEN),
     IndexStart = Start div ChunkedObjLen + 1,
     IndexEnd = End div ChunkedObjLen + 1,
-    LastChunkSize = case IndexStart =:= IndexEnd of
+    _LastChunkSize = case IndexStart =:= IndexEnd of
         true ->
             Offset = Start rem ChunkedObjLen,
             Size = End - Start + 1,
@@ -334,9 +334,10 @@ write_large2any(Key, Start, End, Bin, SrcMetadata) ->
             end
     end,
     NumChunks = erlang:max(IndexEnd, SrcMetadata#?METADATA.cnumber),
-    %% https://github.com/leo-project/leofs/issues/537
-    %% calc total size
-    TotalSize = ChunkedObjLen * (NumChunks - 1) + LastChunkSize,
+    %% https://github.com/leo-project/leofs/issues/596 revealed the below fix was wrong.
+    %% - https://github.com/leo-project/leofs/issues/537
+    %% instead must be
+    TotalSize = erlang:max(End + 1, SrcMetadata#?METADATA.dsize),
     large_obj_partial_commit(Key, NumChunks, ChunkedObjLen, TotalSize).
 
 %% @private
