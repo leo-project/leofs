@@ -337,6 +337,23 @@ handle_call(_Socket, <<?CMD_CREATE_USER, ?SPACE, Option/binary>>,
     {reply, Reply, State};
 
 
+%% Command: "import-user ${USER_ID} ${access-key-id} ${secret-access-key}"
+handle_call(_Socket, <<?CMD_IMPORT_USER, ?SPACE, Option/binary>>,
+            #state{formatter = Formatter} = State) ->
+    Fun = fun() ->
+                  case import_user(Option) of
+                      {ok, PropList} ->
+                          AccessKeyId     = leo_misc:get_value('access_key_id',     PropList),
+                          SecretAccessKey = leo_misc:get_value('secret_access_key', PropList),
+                          Formatter:credential(AccessKeyId, SecretAccessKey);
+                      {error, Cause} ->
+                          Formatter:error(Cause)
+                  end
+          end,
+    Reply = invoke(?CMD_IMPORT_USER, Formatter, Fun),
+    {reply, Reply, State};
+
+
 %% Command: "update-user-role ${USER_ID} ${ROLE}"
 handle_call(_Socket, <<?CMD_UPDATE_USER_ROLE, ?SPACE, Option/binary>>,
             #state{formatter = Formatter} = State) ->
@@ -1935,6 +1952,47 @@ create_user(Option) ->
                     {error, ?ERROR_COULD_NOT_ADD_USER}
             end;
         {error, Cause} ->
+            {error, Cause}
+    end.
+
+
+%% @doc Import a user account (S3)
+%% @private
+-spec(import_user(binary()) ->
+             {ok, [tuple()]} | {error, any()}).
+import_user(Option) ->
+    Ret = case ?get_tokens(Option, ?ERROR_INVALID_ARGS) of
+              {ok, [UserId, AccessKey, SecretKey]} ->
+                  {ok, {list_to_binary(UserId),
+                        list_to_binary(AccessKey),
+                        list_to_binary(SecretKey)}};
+              {ok,_} ->
+                  {error, ?ERROR_INVALID_ARGS};
+              Error ->
+                  Error
+          end,
+    case Ret of
+        {ok, {UserId_1, AccessKey_1, SecretKey_1}} ->
+            case leo_s3_user:import(UserId_1, AccessKey_1, SecretKey_1) of
+                {ok, Keys} ->
+                    AccessKeyId     = leo_misc:get_value(access_key_id,     Keys),
+                    SecretAccessKey = leo_misc:get_value(secret_access_key, Keys),
+
+                    ok = leo_s3_user:update(#?S3_USER{id = UserId_1,
+                                                      role_id = ?ROLE_GENERAL,
+                                                      password = SecretAccessKey}),
+
+                    {ok, [{access_key_id,     AccessKeyId},
+                          {secret_access_key, SecretAccessKey}]};
+
+                %% User ID or Access Key ID Already Exists
+                {error, already_exists} ->
+                    {error, already_exists};
+                {error,_Cause} ->
+                    {error, ?ERROR_COULD_NOT_ADD_USER}
+            end;
+        {error, Cause} ->
+            ?error("import_user/1", "Error:~p", [Cause]),
             {error, Cause}
     end.
 

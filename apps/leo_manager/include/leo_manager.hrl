@@ -95,6 +95,7 @@
 
 %% For S3-API
 -define(CMD_CREATE_USER, "create-user").
+-define(CMD_IMPORT_USER, "import-user").
 -define(CMD_UPDATE_USER_ROLE, "update-user-role").
 -define(CMD_UPDATE_USER_PW, "update-user-password").
 -define(CMD_DELETE_USER, "delete-user").
@@ -194,6 +195,7 @@
                    %% for S3-API
                    %% - user-related
                    {?CMD_CREATE_USER, "create-user <user-id> [<password>]"},
+                   {?CMD_IMPORT_USER, "import-user <user-id> <access-key-id> <secret-access-key>"},
                    {?CMD_DELETE_USER, "delete-user <user-id>"},
                    {?CMD_UPDATE_USER_ROLE, "update-user-role <user-id> <role-id>"},
                    {?CMD_UPDATE_USER_PW, "update-user-password <user-id> <password>"},

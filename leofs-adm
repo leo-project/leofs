@@ -44,6 +44,7 @@ GATEWAY_NODE="<gateway-node>"
 FILE_PATH="<file-path>"
 USER_ID="<user-id>"
 ACCESS_KEY_ID="<access-key-id>"
+SECRET_ACCESS_KEY="<secret-access-key>"
 ENDPOINT="<endpoint>"
 WHITESPACE="         "
 BAR="|"
@@ -549,6 +550,20 @@ usage_create_user() {
     esac
 }
 
+usage_import_user() {
+    USAGE="import-user $USER_ID $ACCESS_KEY_ID $SECRET_ACCESS_KEY"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Import a user with access key and secret key"
+    esac
+}
+
 usage_delete_user() {
     USAGE="delete-user $USER_ID"
     case "$1" in
@@ -918,6 +933,7 @@ usage() {
     output ""
     output "      ${UNDERLINE}S3-related Commands:${NONE}"
     usage_create_user min
+    usage_import_user min
     usage_delete_user min
     usage_get_users min
     usage_update_user_role min
@@ -1420,6 +1436,13 @@ case "$1" in
             send_command "$@"
         else
             usage_create_user
+        fi
+        ;;
+    import-user)
+        if [ $# -eq 4 ]; then
+            send_command "$@"
+        else
+            usage_import_user
         fi
         ;;
     delete-user)
