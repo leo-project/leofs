@@ -69,7 +69,8 @@
           {false, void}
          }).
 
--define(NFS_DUMMY_FILE4S3DIR, << "$$_dir_$$" >>).
+-define(NFS_DUMMY_FILE4S3DIR_OLD, << "$$_dir_$$" >>).
+-define(NFS_DUMMY_FILE4S3DIR, << "\x00_dir_\x00" >>).
 -define(NFS_READDIR_NUM_OF_RESPONSE, 10).
 
 -define(NFS3_OK,          'NFS3_OK').
@@ -325,8 +326,10 @@ nfsproc3_rmdir_3({{{UID}, Name}} = _1, Clnt, State) ->
     Path4S3Dir = leo_nfs_file_handler:path_to_dir(Path4S3),
     case is_empty_dir(Path4S3Dir) of
         true ->
-            Key = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR),
+            Key = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR_OLD),
             catch leo_gateway_rpc_handler:delete(Key),
+            Key_2 = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR),
+            catch leo_gateway_rpc_handler:delete(Key_2),
             {reply, {?NFS3_OK, {?SIMPLENFS_WCC_EMPTY}}, State};
         false ->
             {reply, {?NFS3ERR_NOTEMPTY, {?SIMPLENFS_WCC_EMPTY}}, State}
@@ -540,16 +543,25 @@ is_empty_dir(Path) ->
                                   Acc;
                               #?METADATA{dsize = -1} ->
                                   DummyKey = filename:join(Meta#?METADATA.key,
-                                                           ?NFS_DUMMY_FILE4S3DIR),
+                                                           ?NFS_DUMMY_FILE4S3DIR_OLD),
                                   case leo_gateway_rpc_handler:head(DummyKey) of
                                       {ok, #?METADATA{del = 0}} ->
                                           [Meta | Acc];
                                       _ ->
-                                          Acc
+                                          DummyKey_2 = filename:join(Meta#?METADATA.key,
+                                                                     ?NFS_DUMMY_FILE4S3DIR),
+                                          case leo_gateway_rpc_handler:head(DummyKey_2) of
+                                              {ok, #?METADATA{del = 0}} ->
+                                                  [Meta | Acc];
+                                              _ ->
+                                                  Acc
+                                          end
                                   end;
                               _ ->
                                   case filename:basename(Meta#?METADATA.key) of
                                       ?NFS_DUMMY_FILE4S3DIR ->
+                                          Acc;
+                                      ?NFS_DUMMY_FILE4S3DIR_OLD ->
                                           Acc;
                                       _ ->
                                           [Meta | Acc]
@@ -646,12 +658,18 @@ readdir_create_resp(Path, CurCookie,
     Del2 = case Size =:= -1 andalso
                is_empty_dir(NormalizedKey) of
                true ->
-                   DummyKey = filename:join(NormalizedKey, ?NFS_DUMMY_FILE4S3DIR),
+                   DummyKey = filename:join(NormalizedKey, ?NFS_DUMMY_FILE4S3DIR_OLD),
                    case leo_gateway_rpc_handler:head(DummyKey) of
                        {ok, #?METADATA{del = 1}} ->
                            1;
                        _ ->
-                           Del
+                           DummyKey_2 = filename:join(NormalizedKey, ?NFS_DUMMY_FILE4S3DIR),
+                           case leo_gateway_rpc_handler:head(DummyKey_2) of
+                               {ok, #?METADATA{del = 1}} ->
+                                   1;
+                               _ ->
+                                   Del
+                           end
                    end;
                _ ->
                    Del
@@ -660,6 +678,14 @@ readdir_create_resp(Path, CurCookie,
     FileName = filename:basename(Key),
     case {Del2, FileName} of
         {1,_} ->
+            readdir_create_resp(Path,
+                                CurCookie - 1,
+                                ReadDir,
+                                Cookie,
+                                EOF,
+                                IsPlus,
+                                Resp);
+        {_, ?NFS_DUMMY_FILE4S3DIR_OLD} ->
             readdir_create_resp(Path,
                                 CurCookie - 1,
                                 ReadDir,
