@@ -1,6 +1,6 @@
 # Index of leofs-adm Command Lines
 
-[leofs-adm](https://github.com/leo-project/leofs/blob/master/leofs-adm) makes administrative operations of LeoFS very easy, which includes as below:
+[leofs-adm](https://github.com/leo-project/leofs/blob/master/leofs-adm) easily makes administrative operations of LeoFS, the commands of which include as below:
 
 * General Commands
 * LeoStorage Cluster Operation
@@ -13,8 +13,6 @@
 * S3-API Related Commands
 * Multi Data Center Operation
 
-
-## General Commands:
 
 | Command                               | Description |
 |---------------------------------------|-------------|
