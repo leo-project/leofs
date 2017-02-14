@@ -9,3 +9,6 @@ rel/leo_manager/files/leo_manager.conf
 rel/leo_manager/files/leo_manager.schema
 
 apps/leo_gateway/cache/
+
+docs/_book/
+docs/node_modules/
