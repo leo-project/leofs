@@ -16,7 +16,7 @@ LeoFS supports the following features:
 * Data lake solution
 * Cloud solution integration
 
-To try LeoFS, see our [Getting Started guides](installation/installation_quick.md), and to learn more about LeoFS, see our [Architecture section]().
+To try LeoFS, see our [Getting Started guides](installation/quick.md), and to learn more about LeoFS, see our [Architecture section](architecture/README.md).
 
 ## Goals
 

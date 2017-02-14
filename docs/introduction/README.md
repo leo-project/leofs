@@ -8,7 +8,7 @@ LeoFS provides High Reliability thanks to its great design on top of the Erlang/
 
 LeoFS provides High Scalability. Adding and removing nodes is simple and quick, allowing you to react swiftly when your needs change. A LeoFS cluster can be thought as elastic storage that you can stretch as much and as often as you need.
 
-![](/assets/leofs-architecture.0012.jpg)
+![](../assets/leofs-architecture.0012.jpg)
 
 LeoFS consists of 3 components - LeoStorage, LeoGateway and LeoManager which depend on Erlang.
 
