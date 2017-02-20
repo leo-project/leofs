@@ -178,6 +178,27 @@
  end}.
 
 
+%% Leo' Object-Storage (v1.3.3-)
+%% @doc leo-object-storage.sync_mode - ['none', 'periodic', 'writethrough']
+{mapping,
+ "obj_containers.sync_mode",
+ "leo_object_storage.sync_mode",
+ [
+  {datatype, {enum, ['none', 'periodic', 'writethrough']}},
+  {default, 'none'}
+ ]}.
+
+%% Leo' Object-Storage (v1.3.3-)
+%% @doc leo-object-storage.sync_interval_in_ms
+{mapping,
+ "obj_containers.sync_interval_in_ms",
+ "leo_object_storage.sync_interval_in_ms",
+ [
+  {datatype, integer},
+  {default, 1000}
+ ]}.
+
+
 %% Leo' Object-Storage (v1.2.2-)
 %% @doc leo-object-storage.metadata_storage
 {mapping,
