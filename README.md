@@ -1,6 +1,6 @@
 # <a href="http://leo-project.net/leofs/" target="_blank">LeoFS</a> - A Storage System for a <a href="https://en.wikipedia.org/wiki/Data_lake" target="_blank">Data Lake</a> and the Web
 
-[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.3.2-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.3.2) [![Build Status](https://travis-ci.org/leo-project/leofs.svg?branch=master)](http://travis-ci.org/leo-project/leofs)
+[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.3.2.1-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.3.2.1) [![Build Status](https://travis-ci.org/leo-project/leofs.svg?branch=master)](http://travis-ci.org/leo-project/leofs)
 
 ![LeoFS Logo](http://leo-project.net/leofs/docs/_static/leofs-logo-small.png)
 
@@ -305,6 +305,16 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
     * NFS v4 Support
     * Data Deduplication
     * Improve compatibility S3-APIs#8
+
+
+## Versioning Policy
+
+LeoFS adheres to [the versioning policy](http://semver.org/) from v1.3.3.
+
+
+## Licensing
+
+LeoFS is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
 
 
 ## Sponsors
