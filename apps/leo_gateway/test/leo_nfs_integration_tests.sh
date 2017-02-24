@@ -1,9 +1,17 @@
 #!/bin/bash
 
+#####################
+#       Setup       #
+#####################
+# In Storage Nodes
+# 1. mkdir /ssd
+# 2. tar nfs_dummy_test_avs.tar.gz -C /ssd
+# 3. set obj_containers.path in leo_storage.conf to [/ssd/avs]
+
 # Settings
-MOUNT_HOST=localhost
-MOUNT_DIR=/mnt/leofs
-BUCKET=test/05236/bb5034f0c740148a346ed663ca0cf5157efb439f
+MOUNT_HOST="${MOUNT_HOST:-localhost}"
+MOUNT_DIR="${MOUNT_DIR:-/mnt/leofs}"
+BUCKET="${BUCKET:-test/05236/bb5034f0c740148a346ed663ca0cf5157efb439f}"
 RET=
 FNAME_1K=1k.dat
 FNAME_1M=1m.dat
@@ -25,6 +33,9 @@ DST_SUB_ROOT_DIR=$MOUNT_DIR/sub1
 DST_50M_FILE2=$DST_SUB_DIR/$FNAME_50M
 DST_50M_FILE3=$MOUNT_DIR/${FNAME_50M}.3
 DST_50M_FILE4=$MOUNT_DIR/${FNAME_50M}.4
+DST_OLD_DIR=$MOUNT_DIR/test_old_dir
+DST_NEW_DIR=$MOUNT_DIR/test_new_dir
+DST_BOTH_DIR=$MOUNT_DIR/test_both_dir
 TOUCHED_FILE=$MOUNT_DIR/$FNAME_TOUCH
 dd if=/dev/urandom of=$TMP_1K_FILE bs=1024 count=1
 dd if=/dev/urandom of=$TMP_1M_FILE bs=1024 count=1024
@@ -50,6 +61,9 @@ CMD_RMDIR_SUB="rmdir $DST_SUB_DIR"
 CMD_RM_SUB_ROOT="rm -rf $DST_SUB_ROOT_DIR"
 CMD_TOUCH="touch $TOUCHED_FILE"
 CMD_DD="dd if=$DST_50M_FILE3 of=$DST_50M_FILE4 bs=128 count=1"
+#CMD_OLDDUMMYDIR="[ -d $DST_OLD_DIR ]"
+#CMD_NEWDUMMYDIR="[ -d $DST_NEW_DIR ]"
+#CMD_BOTHDUMMYDIR="[ -d $DST_BOTH_DIR ]"
 
 # Functions
 function ls_validate_num_of_childs() {
@@ -110,11 +124,29 @@ function make_many_files() {
     return 0
 }
 
+function check_dummy() {
+    if [ ! -d $DST_OLD_DIR ]; then
+        echo "[Failed] Old Dummy Dir File Missing"
+        return 1
+    elif [ ! -d $DST_NEW_DIR ]; then
+        echo "[Failed] NEW Dummy Dir File Missing"
+        return 1
+    elif [ ! -d $DST_BOTH_DIR ]; then
+        echo "[Failed] OLD+NEW Dummy Dir File Missing"
+        return 1
+    fi
+    rmdir $DST_OLD_DIR
+    rmdir $DST_NEW_DIR
+    rmdir $DST_BOTH_DIR
+    return 0
+}
+
 # Tests
 {
     # try block
     eval $CMD_MOUNT &&
     eval $CMD_DF &&
+    check_dummy &&
     eval $CMD_MKDIR &&
     eval $CMD_CP_1K &&
     eval $CMD_CP_1M &&
@@ -122,7 +154,7 @@ function make_many_files() {
     eval $CMD_DIFF_1K &&
     eval $CMD_DIFF_1M &&
     eval $CMD_DIFF_50M &&
-    ls_validate_num_of_childs $MOUNT_DIR 4 && 
+    ls_validate_num_of_childs $MOUNT_DIR 4 &&
     eval $CMD_RM_1K &&
     ls_validate_num_of_childs $MOUNT_DIR 3 &&
     eval $CMD_MV_50M &&
