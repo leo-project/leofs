@@ -114,7 +114,7 @@ list_dir(Redundancies, Path, Marker, Acc, Modifier) when is_function(Modifier) -
                 TrimedKey ->
                     {ok, Modifier(Path, Acc)};
                 _Other ->
-                    list_dir(Redundancies, Path, TrimedKey, Metadata ++ Acc, Modifier)
+                    list_dir(Redundancies, Path, TrimedKey, [Metadata|Acc], Modifier)
             end;
         Error ->
             ?error("list_dir/5", [{cause, Error}]),
@@ -129,12 +129,13 @@ list_dir(Redundancies, Path, Marker,_Acc,_Modifier) ->
 
 %% @private
 list_dir_append_hidden_files(BasePath, List) ->
+    NewList = lists:flatten(List),
     %% add current(.) and parent(..) directories
     CuurentDirKey = << BasePath/binary, <<".">>/binary >>,
     CurrentDir = #?METADATA{key = CuurentDirKey, dsize = -1},
     ParentDirKey = << BasePath/binary, <<"..">>/binary >>,
     ParentDir = #?METADATA{key = ParentDirKey, dsize = -1},
-    [CurrentDir, ParentDir|List].
+    [CurrentDir, ParentDir|NewList].
 
 
 %% @doc Rename the file SrcKey to DstKey
