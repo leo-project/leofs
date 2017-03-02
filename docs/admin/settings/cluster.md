@@ -25,12 +25,12 @@ This document delivers the relationship of `data availability` and `configuratio
 
 | Data Availability | Configuration Level                  | Description |
 |-------------------|--------------------------------------|-------------|
-| Extremely Low     | n = 2, r = 1, w = 1, d = 1           | Data can not be acquired even if two nodes goes down *(for personal use)*|
-| Low               | n = 3, r = 1, w = 1, d = 1           | Low data consistency|
-| Middle(1)         | n = 3, r = 1, w = 2, d = 2           | Typical settings |
-| Middle(2)         | n = 3, r = 2, w = 2, d = 2           | High data consistency than `Middle(1)` |
-| High              | n = 3, r = 2, w = 3, d = 3           | Data can not be input and removed even if one node goes down |
-| Extremely High    | n = 3, r = 3, w = 3, d = 3           | Data can not be acquired even if one node goes down *(can not be recommended)*|
+| Extremely Low     | n = 2<br/>r = 1<br/>w = 1<br/>d = 1  | Data can not be acquired even if two nodes goes down *(for personal use)*|
+| Low               | n = 3<br/>r = 1<br/>w = 1<br/>d = 1  | Low data consistency|
+| Middle(1)         | n = 3<br/>r = 1<br/>w = 2<br/>d = 2  | Typical settings |
+| Middle(2)         | n = 3<br/>r = 2<br/>w = 2<br/>d = 2  | High data consistency than `Middle(1)` |
+| High              | n = 3<br/>r = 2<br/>w = 3<br/>d = 3  | Data can not be input and removed even if one node goes down |
+| Extremely High    | n = 3<br/>r = 3<br/>w = 3<br/>d = 3  | Data can not be acquired even if one node goes down *(can not be recommended)*|
 
 
 ### How To Change Consistency Level
@@ -42,3 +42,7 @@ You're able to change `consistency.write `, `consistency.read` and `consistency.
 $ leofs-adm update-consistency-level 2 2 1
 
 ```
+
+## Related Links
+
+* [Settings / LeoManager Settings](leo_manager.md)
