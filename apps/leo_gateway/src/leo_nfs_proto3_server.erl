@@ -327,10 +327,22 @@ nfsproc3_rmdir_3({{{UID}, Name}} = _1, Clnt, State) ->
     case is_empty_dir(Path4S3Dir) of
         true ->
             Key = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR_OLD),
-            catch leo_gateway_rpc_handler:delete(Key),
-            Key_2 = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR),
-            catch leo_gateway_rpc_handler:delete(Key_2),
-            {reply, {?NFS3_OK, {?SIMPLENFS_WCC_EMPTY}}, State};
+            case leo_gateway_rpc_handler:delete(Key) of
+                ok ->
+                    Key_2 = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR),
+                    case leo_gateway_rpc_handler:delete(Key_2) of
+                        ok ->
+                            {reply, {?NFS3_OK, {?SIMPLENFS_WCC_EMPTY}}, State};
+                        {error, Reason} ->
+                            ?error("nfsproc3_rmdir_3/3",
+                                   [{path, Key_2}, {cause, Reason}]),
+                            {reply, {?NFS3ERR_IO, {?SIMPLENFS_WCC_EMPTY}}, State}
+                    end;
+                {error, Reason} ->
+                    ?error("nfsproc3_rmdir_3/3",
+                           [{path, Key}, {cause, Reason}]),
+                    {reply, {?NFS3ERR_IO, {?SIMPLENFS_WCC_EMPTY}}, State}
+            end;
         false ->
             {reply, {?NFS3ERR_NOTEMPTY, {?SIMPLENFS_WCC_EMPTY}}, State}
     end.
