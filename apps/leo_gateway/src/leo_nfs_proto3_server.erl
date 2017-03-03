@@ -89,9 +89,9 @@
 %% @doc Called only once from a parent rpc server process to initialize this module
 %%      during starting a leo_storage server.
 -spec(init(any()) -> {ok, any()}).
-init(_Args) ->
+init(Args) ->
     leo_nfs_state_ets:add_write_verfier(crypto:rand_bytes(8)),
-    {ok, void}.
+    {ok, Args}.
 
 handle_call(Req,_From, S) ->
     ?debug("handle_call", "req:~p from:~p", [Req,_From]),
@@ -420,20 +420,20 @@ nfsproc3_fsstat_3(_1, Clnt, State) ->
 
 
 %% @doc
-nfsproc3_fsinfo_3(_1, Clnt, State) ->
+nfsproc3_fsinfo_3(_1, Clnt, {RTMAX, WTMAX} = State) ->
     ?debug("nfsproc3_fsinfo_3", "args:~p client:~p", [_1, Clnt]),
     MaxFileSize = ?DEF_NFSD_MAX_FILE_SIZE,
     {reply, {?NFS3_OK, {{false, void}, %% post_op_attr
-                        5242880,       %% rtmax
-                        5242880,       %% rtperf(limited at client up to 1024 * 1024)
-                        8,             %% rtmult
-                        5242880,       %% wtmaxa(limited at client up to 1024 * 1024)
-                        5242880,       %% wtperf
-                        8,             %% wtmult
-                        5242880,       %% dperf (limited at client up to 32768)
-                        MaxFileSize,   %% max file size
-                        {1, 0},        %% time_delta
-                        0              %% properties
+                        RTMAX,       %% rtmax
+                        RTMAX,       %% rtperf(limited at client up to 1024 * 1024)
+                        8,           %% rtmult
+                        WTMAX,       %% wtmaxa(limited at client up to 1024 * 1024)
+                        WTMAX,       %% wtperf
+                        8,           %% wtmult
+                        5242880,     %% dperf (limited at client up to 32768)
+                        MaxFileSize, %% max file size
+                        {1, 0},      %% time_delta
+                        0            %% properties
                        }}, State}.
 
 

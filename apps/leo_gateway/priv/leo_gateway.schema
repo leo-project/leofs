@@ -800,6 +800,23 @@
   {default, 128}
  ]}.
 
+%% @doc NFSd's the rtmax
+{mapping,
+ "nfs.nfsd.rtmax",
+ "leo_gateway.nfs.nfsd_rtmax",
+ [
+  {datatype, bytesize},
+  {default, 5242880}
+ ]}.
+
+%% @doc NFSd's the wtmax
+{mapping,
+ "nfs.nfsd.wtmax",
+ "leo_gateway.nfs.nfsd_wtmax",
+ [
+  {datatype, bytesize},
+  {default, 5242880}
+ ]}.
 
 %% --------------------------------------------------------------------
 %% GATEWAY - NLM-related configuration

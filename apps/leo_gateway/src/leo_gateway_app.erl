@@ -294,6 +294,8 @@ after_process_1(Pid, Managers) ->
             MntdAcceptors = leo_misc:get_value('mountd_acceptors', NFS_Options, ?DEF_MOUNTD_ACCEPTORS),
             NFSdPort = leo_misc:get_value('nfsd_port', NFS_Options, ?DEF_NFSD_PORT),
             NFSdAcceptors = leo_misc:get_value('nfsd_acceptors', NFS_Options, ?DEF_NFSD_ACCEPTORS),
+            NFSdRTMAX = leo_misc:get_value('nfsd_rtmax', NFS_Options, ?DEF_NFSD_RTMAX),
+            NFSdWTMAX = leo_misc:get_value('nfsd_wtmax', NFS_Options, ?DEF_NFSD_WTMAX),
             LockdPort = leo_misc:get_value('lockd_port', NFS_Options, ?DEF_LOCKD_PORT),
             LockdAcceptors = leo_misc:get_value('lockd_acceptors', NFS_Options, ?DEF_LOCKD_ACCEPTORS),
 
@@ -324,7 +326,7 @@ after_process_1(Pid, Managers) ->
                             vsn_hi = ?NFS_V3,
                             use_pmap = true,
                             mod = leo_nfs_proto3_svc,
-                            init_args = [],
+                            init_args = {NFSdRTMAX, NFSdWTMAX},
                             state = []},
 
             %% NLM:Arguments for lockd
