@@ -226,7 +226,7 @@ nfsproc3_write_3({{UID}, Offset, Count,_HowStable, Data} = _1, Clnt, State) ->
             {ok, WriteVerf} = leo_nfs_state_ets:get_write_verfier(),
             {reply, {?NFS3_OK, {?SIMPLENFS_WCC_EMPTY,
                                 Count,
-                                'DATA_SYNC',
+                                'FILE_SYNC',
                                 WriteVerf}
                     }, State};
         {error, Reason} ->
@@ -247,8 +247,14 @@ nfsproc3_create_3({{{UID}, Name}, {_CreateMode,_How}} = _1, Clnt, State) ->
                                                      dsize = 0}) of
         {ok,_}->
             {ok, FileUID} = leo_nfs_state_ets:add_path(Key),
+            TS = calendar:datetime_to_gregorian_seconds(calendar:universal_time()),
+            Meta = #?METADATA{
+                      key = Key,
+                      dsize = 0,
+                      timestamp = TS
+            },
             {reply, {?NFS3_OK, {{true, {FileUID}}, %% post_op file handle
-                                {false, void},      %% post_op_attr
+                                {true, meta2fattr3(Meta)}, %% post_op_attr
                                 ?SIMPLENFS_WCC_EMPTY}
                     }, State};
         {error, Reason} ->
