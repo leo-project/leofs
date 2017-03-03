@@ -79,6 +79,8 @@
 -define(NFS3ERR_IO,       'NFS3ERR_IO').
 -define(NFS3ERR_NOTEMPTY, 'NFS3ERR_NOTEMPTY').
 -define(NFS3ERR_BADHANDLE,'NFS3ERR_BADHANDLE').
+-define(NFS3ERR_BADTYPE,  'NFS3ERR_BADTYPE').
+-define(NFS3ERR_NOTSUPP,  'NFS3ERR_NOTSUPP').
 
 
 %% ---------------------------------------------------------------------
@@ -191,7 +193,7 @@ nfsproc3_access_3({{UID}, AccessBitMask} = _1, Clnt, State) ->
 %% @doc
 nfsproc3_readlink_3(_1, Clnt, State) ->
     ?debug("nfsproc3_readlink_3", "args:~p client:~p", [_1, Clnt]),
-    {reply, {?NFS3_OK, {{false, void}, %% post_op_attr for obj
+    {reply, {?NFS3ERR_NOTSUPP, {{false, void}, %% post_op_attr for obj
                         << "link path" >>}
             }, State}.
 
@@ -294,7 +296,7 @@ nfsproc3_mkdir_3({{{UID}, Name},_How} = _1, Clnt, State) ->
 %% @doc
 nfsproc3_symlink_3(_1, Clnt, State) ->
     ?debug("nfsproc3_symlink_3", "args:~p client:~p", [_1, Clnt]),
-    {reply, {?NFS3_OK, {{false, void}, %% post_op file handle
+    {reply, {?NFS3ERR_NOTSUPP, {{false, void}, %% post_op file handle
                         {false, void}, %% post_op_attr
                         ?SIMPLENFS_WCC_EMPTY}
             }, State}.
@@ -303,7 +305,7 @@ nfsproc3_symlink_3(_1, Clnt, State) ->
 %% @doc
 nfsproc3_mknod_3(_1, Clnt, State) ->
     ?debug("nfsproc3_mknod_3", "args:~p client:~p", [_1, Clnt]),
-    {reply, {?NFS3_OK, {{false, void}, %% post_op file handle
+    {reply, {?NFS3ERR_BADTYPE, {{false, void}, %% post_op file handle
                         {false, void}, %% post_op_attr
                         ?SIMPLENFS_WCC_EMPTY}
             }, State}.
@@ -382,7 +384,7 @@ nfsproc3_rename_3({{{SrcUID}, SrcName}, {{DstUID}, DstName}} =_1, Clnt, State) -
 %% @doc
 nfsproc3_link_3(_1, Clnt, State) ->
     ?debug("nfsproc3_link_3", "args:~p client:~p", [_1, Clnt]),
-    {reply, {?NFS3_NG, {{false, void}, %% post_op_attr
+    {reply, {?NFS3ERR_NOTSUPP, {{false, void}, %% post_op_attr
                         ?SIMPLENFS_WCC_EMPTY
                        }
             }, State}.
