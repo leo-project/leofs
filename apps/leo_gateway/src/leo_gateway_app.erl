@@ -344,6 +344,12 @@ after_process_1(Pid, Managers) ->
                            init_args = [],
                            state = []},
             ok = application:set_env(nfs_rpc_server, args, [MountdArgs, NFS_D_Args, LockdArgs]),
+            {ok, _} = supervisor:start_child(
+                        leo_gateway_sup, {leo_nfs_readdir_state_ets,
+                                          {leo_nfs_readdir_state_ets, start_link,
+                                           [NFS_Options]},
+                                          permanent, 2000, worker,
+                                          [leo_nfs_readdir_state_ets]}),
             ok = application:ensure_started(nfs_rpc_server);
         _ ->
             void
