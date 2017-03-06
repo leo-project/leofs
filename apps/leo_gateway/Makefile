@@ -7,6 +7,7 @@ LIBS = deps/leo_commons/ebin deps/leo_logger/ebin deps/leo_object_storage/ebin \
        deps/leo_s3_libs/ebin deps/leo_cache/ebin deps/leo_dcerl/ebin deps/leo_mcerl/ebin \
        deps/savanna_commons/ebin deps/savanna_agent/ebin deps/erpcgen/ebin
 PLT_FILE = .leo_gateway_dialyzer_plt
+COMMON_PLT_FILE = .common_dialyzer_plt
 DOT_FILE = leo_gateway.dot
 CALL_GRAPH_FILE = leo_gateway.png
 
@@ -26,13 +27,16 @@ release:
 	(cd rel/ && ../rebar generate)
 check_plt:
 	@$(REBAR) compile
-	dialyzer --check_plt --plt $(PLT_FILE) --apps $(APPS)
+	dialyzer --check_plt --plts $(PLT_FILE) $(COMMON_PLT_FILE) --apps $(APPS)
 build_plt:
 	@$(REBAR) compile
-	dialyzer --build_plt --output_plt $(PLT_FILE) --apps $(APPS) $(LIBS)
+	dialyzer --build_plt --output_plt $(PLT_FILE) --apps $(LIBS)
+build_plt_common:
+	@$(REBAR) compile
+	dialyzer --build_plt --output_plt $(COMMON_PLT_FILE) --apps $(APPS)
 dialyzer:
 	@$(REBAR) compile
-	dialyzer --plt $(PLT_FILE) -r ebin/ --dump_callgraph $(DOT_FILE) -Wrace_conditions | fgrep -v -f ./dialyzer.ignore-warnings
+	dialyzer --plts $(PLT_FILE) $(COMMON_PLT_FILE) -r ebin/ --dump_callgraph $(DOT_FILE) -Wrace_conditions | fgrep -v -f ./dialyzer.ignore-warnings
 doc: compile
 	@$(REBAR) doc
 callgraph: graphviz

@@ -33,6 +33,8 @@
 -define(LEO_GW_NFS_PATH2UID_ETS_TBL, path2uid_ets_tbl).
 -define(LEO_GW_NFS_READDIR_ENTRY_ETS_TBL, readdir_entry_ets_tbl).
 -define(LEO_GW_NFS_WRITE_VERIFIER_ETS_TBL, write_verifier_ets_tbl).
+-define(LEO_GW_NFS_FILEID_GEN_TBL, fileid_gen_ets_tbl).
+-define(LEO_GW_NFS_FILEID_GEN_KEY, counter).
 
 
 %% ---------------------------------------------------------------------
@@ -44,6 +46,8 @@ init(_Params) ->
     ets:new(?LEO_GW_NFS_PATH2UID_ETS_TBL, [set, named_table, public]),
     ets:new(?LEO_GW_NFS_READDIR_ENTRY_ETS_TBL, [set, named_table, public]),
     ets:new(?LEO_GW_NFS_WRITE_VERIFIER_ETS_TBL, [set, named_table, public]),
+    ets:new(?LEO_GW_NFS_FILEID_GEN_TBL, [set, named_table, public]),
+    ets:insert(?LEO_GW_NFS_FILEID_GEN_TBL, {?LEO_GW_NFS_FILEID_GEN_KEY, 0}),
     ok.
 
 
@@ -52,7 +56,7 @@ add_path(Path4S3) ->
     Ret = ets:lookup(?LEO_GW_NFS_PATH2UID_ETS_TBL, Path4S3),
     case Ret of
         [] ->
-            NewUID = v4(),
+            NewUID = uuid(),
             ets:insert(?LEO_GW_NFS_UID2PATH_ETS_TBL, {NewUID, Path4S3}),
             ets:insert(?LEO_GW_NFS_PATH2UID_ETS_TBL, {Path4S3, NewUID}),
             {ok, NewUID};
@@ -137,15 +141,8 @@ get_write_verfier() ->
 %% ---------------------------------------------------------------------
 %% INNER FUNCTIONS
 %% ---------------------------------------------------------------------
-%% @doc Generates a random binary UUID.
+%% @doc Generates a binary UUID by atomic incremental counter.
 %% @private
-v4() ->
-    v4(crypto:rand_uniform(1, round(math:pow(2, 48))) - 1,
-       crypto:rand_uniform(1, round(math:pow(2, 12))) - 1,
-       crypto:rand_uniform(1, round(math:pow(2, 32))) - 1,
-       crypto:rand_uniform(1, round(math:pow(2, 30))) - 1).
-
-%% @private
-v4(R1, R2, R3, R4) ->
-    <<R1:48, 4:4, R2:12, 2:2, R3:32, R4: 30>>.
-
+uuid() ->
+    ID = ets:update_counter(?LEO_GW_NFS_FILEID_GEN_TBL, ?LEO_GW_NFS_FILEID_GEN_KEY, 1),
+    leo_hex:integer_to_raw_binary(ID, 16).

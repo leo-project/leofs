@@ -79,6 +79,8 @@
 -define(NFS3ERR_IO,       'NFS3ERR_IO').
 -define(NFS3ERR_NOTEMPTY, 'NFS3ERR_NOTEMPTY').
 -define(NFS3ERR_BADHANDLE,'NFS3ERR_BADHANDLE').
+-define(NFS3ERR_BADTYPE,  'NFS3ERR_BADTYPE').
+-define(NFS3ERR_NOTSUPP,  'NFS3ERR_NOTSUPP').
 
 
 %% ---------------------------------------------------------------------
@@ -87,9 +89,9 @@
 %% @doc Called only once from a parent rpc server process to initialize this module
 %%      during starting a leo_storage server.
 -spec(init(any()) -> {ok, any()}).
-init(_Args) ->
+init(Args) ->
     leo_nfs_state_ets:add_write_verfier(crypto:rand_bytes(8)),
-    {ok, void}.
+    {ok, Args}.
 
 handle_call(Req,_From, S) ->
     ?debug("handle_call", "req:~p from:~p", [Req,_From]),
@@ -191,7 +193,7 @@ nfsproc3_access_3({{UID}, AccessBitMask} = _1, Clnt, State) ->
 %% @doc
 nfsproc3_readlink_3(_1, Clnt, State) ->
     ?debug("nfsproc3_readlink_3", "args:~p client:~p", [_1, Clnt]),
-    {reply, {?NFS3_OK, {{false, void}, %% post_op_attr for obj
+    {reply, {?NFS3ERR_NOTSUPP, {{false, void}, %% post_op_attr for obj
                         << "link path" >>}
             }, State}.
 
@@ -226,7 +228,7 @@ nfsproc3_write_3({{UID}, Offset, Count,_HowStable, Data} = _1, Clnt, State) ->
             {ok, WriteVerf} = leo_nfs_state_ets:get_write_verfier(),
             {reply, {?NFS3_OK, {?SIMPLENFS_WCC_EMPTY,
                                 Count,
-                                'DATA_SYNC',
+                                'FILE_SYNC',
                                 WriteVerf}
                     }, State};
         {error, Reason} ->
@@ -247,8 +249,14 @@ nfsproc3_create_3({{{UID}, Name}, {_CreateMode,_How}} = _1, Clnt, State) ->
                                                      dsize = 0}) of
         {ok,_}->
             {ok, FileUID} = leo_nfs_state_ets:add_path(Key),
+            TS = calendar:datetime_to_gregorian_seconds(calendar:universal_time()),
+            Meta = #?METADATA{
+                      key = Key,
+                      dsize = 0,
+                      timestamp = TS
+            },
             {reply, {?NFS3_OK, {{true, {FileUID}}, %% post_op file handle
-                                {false, void},      %% post_op_attr
+                                {true, meta2fattr3(Meta)}, %% post_op_attr
                                 ?SIMPLENFS_WCC_EMPTY}
                     }, State};
         {error, Reason} ->
@@ -288,7 +296,7 @@ nfsproc3_mkdir_3({{{UID}, Name},_How} = _1, Clnt, State) ->
 %% @doc
 nfsproc3_symlink_3(_1, Clnt, State) ->
     ?debug("nfsproc3_symlink_3", "args:~p client:~p", [_1, Clnt]),
-    {reply, {?NFS3_OK, {{false, void}, %% post_op file handle
+    {reply, {?NFS3ERR_NOTSUPP, {{false, void}, %% post_op file handle
                         {false, void}, %% post_op_attr
                         ?SIMPLENFS_WCC_EMPTY}
             }, State}.
@@ -297,7 +305,7 @@ nfsproc3_symlink_3(_1, Clnt, State) ->
 %% @doc
 nfsproc3_mknod_3(_1, Clnt, State) ->
     ?debug("nfsproc3_mknod_3", "args:~p client:~p", [_1, Clnt]),
-    {reply, {?NFS3_OK, {{false, void}, %% post_op file handle
+    {reply, {?NFS3ERR_BADTYPE, {{false, void}, %% post_op file handle
                         {false, void}, %% post_op_attr
                         ?SIMPLENFS_WCC_EMPTY}
             }, State}.
@@ -327,10 +335,22 @@ nfsproc3_rmdir_3({{{UID}, Name}} = _1, Clnt, State) ->
     case is_empty_dir(Path4S3Dir) of
         true ->
             Key = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR_OLD),
-            catch leo_gateway_rpc_handler:delete(Key),
-            Key_2 = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR),
-            catch leo_gateway_rpc_handler:delete(Key_2),
-            {reply, {?NFS3_OK, {?SIMPLENFS_WCC_EMPTY}}, State};
+            case leo_gateway_rpc_handler:delete(Key) of
+                ok ->
+                    Key_2 = filename:join(Path4S3Dir, ?NFS_DUMMY_FILE4S3DIR),
+                    case leo_gateway_rpc_handler:delete(Key_2) of
+                        ok ->
+                            {reply, {?NFS3_OK, {?SIMPLENFS_WCC_EMPTY}}, State};
+                        {error, Reason} ->
+                            ?error("nfsproc3_rmdir_3/3",
+                                   [{path, Key_2}, {cause, Reason}]),
+                            {reply, {?NFS3ERR_IO, {?SIMPLENFS_WCC_EMPTY}}, State}
+                    end;
+                {error, Reason} ->
+                    ?error("nfsproc3_rmdir_3/3",
+                           [{path, Key}, {cause, Reason}]),
+                    {reply, {?NFS3ERR_IO, {?SIMPLENFS_WCC_EMPTY}}, State}
+            end;
         false ->
             {reply, {?NFS3ERR_NOTEMPTY, {?SIMPLENFS_WCC_EMPTY}}, State}
     end.
@@ -364,7 +384,7 @@ nfsproc3_rename_3({{{SrcUID}, SrcName}, {{DstUID}, DstName}} =_1, Clnt, State) -
 %% @doc
 nfsproc3_link_3(_1, Clnt, State) ->
     ?debug("nfsproc3_link_3", "args:~p client:~p", [_1, Clnt]),
-    {reply, {?NFS3_NG, {{false, void}, %% post_op_attr
+    {reply, {?NFS3ERR_NOTSUPP, {{false, void}, %% post_op_attr
                         ?SIMPLENFS_WCC_EMPTY
                        }
             }, State}.
@@ -400,20 +420,20 @@ nfsproc3_fsstat_3(_1, Clnt, State) ->
 
 
 %% @doc
-nfsproc3_fsinfo_3(_1, Clnt, State) ->
+nfsproc3_fsinfo_3(_1, Clnt, {RTMAX, WTMAX} = State) ->
     ?debug("nfsproc3_fsinfo_3", "args:~p client:~p", [_1, Clnt]),
     MaxFileSize = ?DEF_NFSD_MAX_FILE_SIZE,
     {reply, {?NFS3_OK, {{false, void}, %% post_op_attr
-                        5242880,       %% rtmax
-                        5242880,       %% rtperf(limited at client up to 1024 * 1024)
-                        8,             %% rtmult
-                        5242880,       %% wtmaxa(limited at client up to 1024 * 1024)
-                        5242880,       %% wtperf
-                        8,             %% wtmult
-                        5242880,       %% dperf (limited at client up to 32768)
-                        MaxFileSize,   %% max file size
-                        {1, 0},        %% time_delta
-                        0              %% properties
+                        RTMAX,       %% rtmax
+                        RTMAX,       %% rtperf(limited at client up to 1024 * 1024)
+                        8,           %% rtmult
+                        WTMAX,       %% wtmaxa(limited at client up to 1024 * 1024)
+                        WTMAX,       %% wtperf
+                        8,           %% wtmult
+                        5242880,     %% dperf (limited at client up to 32768)
+                        MaxFileSize, %% max file size
+                        {1, 0},      %% time_delta
+                        0            %% properties
                        }}, State}.
 
 
