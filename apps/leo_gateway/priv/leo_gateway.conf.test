@@ -101,6 +101,13 @@ bucket_prop_sync_interval = 300
 ## NFSd's the number of acceptors
 ## nfs.nfsd.acceptors = 128
 
+## NFSd's Readdir Entry Table Scan Interval (leo-project/leofs#612)
+## nfs.nfsd.readdir_scan_int = 1800
+
+## NFSd's Readdir Entry TTL (leo-project/leofs#612)
+## nfs.nfsd.readdir_entry_ttl = 3600
+
+
 ## --------------------------------------------------------------------
 ## GATEWAY - NLM-related configurations
 ## --------------------------------------------------------------------

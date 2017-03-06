@@ -818,6 +818,25 @@
   {default, 5242880}
  ]}.
 
+%% @doc NFSd's Readdir Entry Scan Interval
+{mapping,
+ "nfs.nfsd.readdir_scan_int",
+ "leo_gateway.nfs.nfsd_readdir_scan_int",
+ [
+  {datatype, integer},
+  {default, 3600}
+ ]}.
+
+%% @doc NFSd's Readdir Entry TTL
+{mapping,
+ "nfs.nfsd.readdir_entry_ttl",
+ "leo_gateway.nfs.nfsd_readdir_entry_ttl",
+ [
+  {datatype, integer},
+  {default, 1800}
+ ]}.
+
+
 %% --------------------------------------------------------------------
 %% GATEWAY - NLM-related configuration
 %% --------------------------------------------------------------------
