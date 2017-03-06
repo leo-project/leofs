@@ -18,7 +18,7 @@
 ## Interface
 
 * [S3-API](protocols/s3.md)
-* [RES-API](protocols/rest.md)
+* [REST-API](protocols/rest.md)
 * [NFS v3](protocols/nfs_v3.md)
 
 ## System Operations

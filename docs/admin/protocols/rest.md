@@ -1,4 +1,4 @@
-# Interface: RES-API
+# Interface: REST-API
 ## Configuration
 
 Update LeoGateway's protocol configuration to `rest` in your [LeoGateway configuration](https://github.com/leo-project/leofs/blob/1.3.2.1/apps/leo_gateway/priv/leo_gateway.conf)
