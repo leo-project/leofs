@@ -31,6 +31,7 @@
 
 -define(TEST_COOKIE,    <<1,2,3,4,5,6,7,8>>).
 -define(TEST_COOKIE_2,  <<8,7,6,5,4,3,2,1>>).
+-define(TEST_COOKIE_3,  <<1,1,1,1,1,1,1,1>>).
 
 %%--------------------------------------------------------------------
 %% TEST
@@ -42,7 +43,11 @@ readdir_test_() ->
       {timeout, 30, fun readdir_entry_and_clean/0}]}.
 
 readdir_sync_clean_test_() ->
-    {setup, fun setup_mem_thres/0,
+    {setup, fun setup_zero_thres/0, fun teardown/1,
+     [fun readdir_entry_add_clean/0]}.
+
+readdir_sync_mem_thres_test_() ->
+    {setup, fun setup_mem_thres/0, fun teardown/1,
      [fun readdir_entry_mem_thres/0]}.
 
 get_count() ->
@@ -59,6 +64,13 @@ setup() ->
     ok.
 
 setup_mem_thres() ->
+    leo_nfs_readdir_state_ets_server:start_link(
+      [{nfsd_readdir_scan_int, 180},
+       {nfsd_readdir_entry_ttl, 0},
+       {nfsd_readdir_mem_thres, 320}]),
+    ok.
+
+setup_zero_thres() ->
     leo_nfs_readdir_state_ets_server:start_link(
       [{nfsd_readdir_scan_int, 180},
        {nfsd_readdir_entry_ttl, 0},
@@ -91,7 +103,7 @@ readdir_entry_and_clean() ->
     ?assertEqual(0, Cnt_3),
     ok.
 
-readdir_entry_mem_thres() ->
+readdir_entry_add_clean() ->
     leo_nfs_readdir_state_ets_server:add_readdir_entry(?TEST_COOKIE, dummy),
     Cnt_1 = get_count(),
     ?assertEqual(1, Cnt_1),
@@ -102,6 +114,18 @@ readdir_entry_mem_thres() ->
     leo_nfs_readdir_state_ets_server:del_readdir_entry(?TEST_COOKIE_2),
     Cnt_3 = get_count(),
     ?assertEqual(0, Cnt_3),
+    ok.
+
+readdir_entry_mem_thres() ->
+    leo_nfs_readdir_state_ets_server:add_readdir_entry(?TEST_COOKIE, dummy),
+    Cnt_1 = get_count(),
+    ?assertEqual(1, Cnt_1),
+    leo_nfs_readdir_state_ets_server:add_readdir_entry(?TEST_COOKIE_2, dummy2),
+    Cnt_2 = get_count(),
+    ?assertEqual(2, Cnt_2),
+    leo_nfs_readdir_state_ets_server:add_readdir_entry(?TEST_COOKIE_3, dummy3),
+    Cnt_3 = get_count(),
+    ?assertEqual(1, Cnt_3),
     ok.
 
 -endif.
