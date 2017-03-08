@@ -607,7 +607,7 @@ readdir_add_entry(Path) ->
             %% gen cookie verfier
             CookieVerf = crypto:rand_bytes(8),
             ReadDir = #ongoing_readdir{filelist = FileList},
-            leo_nfs_readdir_state_ets:add_readdir_entry(CookieVerf, ReadDir),
+            leo_nfs_readdir_state_ets_server:add_readdir_entry(CookieVerf, ReadDir),
             {ok, CookieVerf, ReadDir};
         Error ->
             Error
@@ -619,7 +619,7 @@ readdir_add_entry(Path) ->
 -spec(readdir_get_entry(binary()) ->
              {ok, binary(), #ongoing_readdir{} | undefined}).
 readdir_get_entry(CookieVerf) ->
-    case leo_nfs_readdir_state_ets:get_readdir_entry(CookieVerf) of
+    case leo_nfs_readdir_state_ets_server:get_readdir_entry(CookieVerf) of
         not_found ->
             {ok, CookieVerf, undefined};
         {ok, Ret} ->
@@ -631,7 +631,7 @@ readdir_get_entry(CookieVerf) ->
 %% @private
 -spec(readdir_del_entry(binary()) -> ok).
 readdir_del_entry(CookieVerf) ->
-    leo_nfs_readdir_state_ets:del_readdir_entry(CookieVerf),
+    leo_nfs_readdir_state_ets_server:del_readdir_entry(CookieVerf),
     ok.
 
 

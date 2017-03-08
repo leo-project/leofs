@@ -836,6 +836,15 @@
   {default, 1800}
  ]}.
 
+%% @doc NFSd's Readdir Entry Memory Threshold
+{mapping,
+ "nfs.nfsd.readdir_mem_thres",
+ "leo_gateway.nfs.nfsd_readdir_mem_thres",
+ [
+  {datatype, integer},
+  {default, 268435456}
+ ]}.
+
 
 %% --------------------------------------------------------------------
 %% GATEWAY - NLM-related configuration

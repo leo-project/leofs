@@ -19,7 +19,7 @@
 %% under the License.
 %%
 %%======================================================================
--module(leo_nfs_readdir_state_ets).
+-module(leo_nfs_readdir_state_ets_server).
 
 -behaviour(leo_nfs_readdir_state_behaviour).
 -behaviour(gen_server).
@@ -36,12 +36,13 @@
          handle_info/2,
          terminate/2,
          code_change/3]).
--export([info/0, start_link/1]).
+-export([info/0, start_link/1, stop/0]).
 -export([add_readdir_entry/2, get_readdir_entry/1, del_readdir_entry/1]).
 
 -record(state, {
-          scan_interval :: integer(),
-          entry_ttl     :: integer()
+          scan_interval :: timer:time(),
+          entry_ttl     :: timer:time(),
+          mem_thres     :: non_neg_integer()
          }).
 
 
@@ -53,13 +54,18 @@ info() ->
 
 start_link(Params) ->
     ets:new(?LEO_GW_NFS_READDIR_ENTRY_ETS_TBL, [set, named_table, public]),
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [Params], []).
+    {ok, _} = gen_server:start_link({local, ?MODULE}, ?MODULE, [Params], []).
+
+
+stop() ->
+    ok = gen_server:call(?MODULE, stop, ?DEF_TIMEOUT),
+    ets:delete(?LEO_GW_NFS_READDIR_ENTRY_ETS_TBL).
 
 
 %% @doc
 add_readdir_entry(CookieVerf, ReadDirEntry) ->
+    gen_server:call(?MODULE, scan, ?DEF_TIMEOUT),
     Now = leo_date:now(),
-    gen_server:call(?MODULE, scan),
     ets:insert(?LEO_GW_NFS_READDIR_ENTRY_ETS_TBL,
                {CookieVerf, {Now, ReadDirEntry}}).
 
@@ -87,14 +93,26 @@ del_readdir_entry(CookieVerf) ->
 init([Args]) ->
     ScanInterval = leo_misc:get_value('nfsd_readdir_scan_int', Args, ?DEF_NFSD_READDIR_SCAN_INT) * 1000,
     EntryTTL = leo_misc:get_value('nfsd_readdir_entry_ttl', Args, ?DEF_NFSD_READDIR_ENTRY_TTL),
-    ?debug("init/1", "Scan Int: ~p, TTL: ~p", [ScanInterval, EntryTTL]),
+    MemThres = leo_misc:get_value('nfsd_readdir_mem_thres', Args, ?DEF_NFSD_READDIR_MEM_THRES),
+    ?info("init/1", "Scan Int: ~p, TTL: ~p, Mem Thres: ~p", [ScanInterval, EntryTTL, MemThres]),
     erlang:send_after(ScanInterval, self(), scan),
     {ok, #state{scan_interval = ScanInterval,
-                entry_ttl = EntryTTL}}.
+                entry_ttl = EntryTTL,
+                mem_thres = MemThres}}.
 
 
-handle_call(scan, _, #state{entry_ttl = EntryTTL} = S) ->
-    cleanup(EntryTTL),
+handle_call(stop, _, S) ->
+    {stop, normal, ok, S};
+
+handle_call(scan, _, #state{entry_ttl = EntryTTL,
+                            mem_thres = MemThres} = S) ->
+    Info = info(),
+    case proplists:get_value('memory', Info) of
+        Mem when Mem >= MemThres ->
+            cleanup(EntryTTL);
+        _ ->
+            void
+    end,
     {reply, ok, S}.
 
 
@@ -117,14 +135,13 @@ code_change(_OldVsn, State, _Extra) ->
 
 
 %% ---------------------------------------------------------------------
-%% PRIVATE METHODS 
+%% PRIVATE METHODS
 %% ---------------------------------------------------------------------
 cleanup(EntryTTL) ->
     Now = leo_date:now(),
     Limit = Now - EntryTTL,
-    MatchSpec = ets:fun2ms(fun({Cookie, {Time, _}}) when Time < Limit ->
+    MatchSpec = ets:fun2ms(fun({Cookie, {Time, _}}) when Time =< Limit ->
                                    true
                            end),
     Cnt = ets:select_delete(?LEO_GW_NFS_READDIR_ENTRY_ETS_TBL, MatchSpec),
-    ?debug("cleanup/1", "Cleaned up: ~p", [Cnt]),
     Cnt.
