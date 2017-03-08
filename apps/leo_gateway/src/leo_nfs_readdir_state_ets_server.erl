@@ -84,6 +84,8 @@ get_readdir_entry(CookieVerf) ->
 
 
 %% @doc
+%%del_readdir_entry(_) ->
+%%    ok.
 del_readdir_entry(CookieVerf) ->
     ets:delete(?LEO_GW_NFS_READDIR_ENTRY_ETS_TBL, CookieVerf).
 
@@ -98,7 +100,7 @@ init([Args]) ->
     erlang:send_after(ScanInterval, self(), scan),
     {ok, #state{scan_interval = ScanInterval,
                 entry_ttl = EntryTTL,
-                mem_thres = MemThres}}.
+                mem_thres = MemThres div erlang:system_info(wordsize)}}.
 
 
 handle_call(stop, _, S) ->
