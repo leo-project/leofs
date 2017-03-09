@@ -61,9 +61,6 @@ CMD_RMDIR_SUB="rmdir $DST_SUB_DIR"
 CMD_RM_SUB_ROOT="rm -rf $DST_SUB_ROOT_DIR"
 CMD_TOUCH="touch $TOUCHED_FILE"
 CMD_DD="dd if=$DST_50M_FILE3 of=$DST_50M_FILE4 bs=128 count=1"
-#CMD_OLDDUMMYDIR="[ -d $DST_OLD_DIR ]"
-#CMD_NEWDUMMYDIR="[ -d $DST_NEW_DIR ]"
-#CMD_BOTHDUMMYDIR="[ -d $DST_BOTH_DIR ]"
 
 # Functions
 function ls_validate_num_of_childs() {
@@ -141,6 +138,31 @@ function check_dummy() {
     return 0
 }
 
+function drop_cache() {
+    echo 3 | sudo tee /proc/sys/vm/drop_caches
+}
+
+function partial_write_test() {
+    TMP_FILE=$1
+    TAR_FILE=$2
+    OFFSET=$3
+    dd if=$TMP_1M_FILE of=$TMP_FILE bs=$OFFSET conv=notrunc seek=1
+    dd if=$TMP_1M_FILE of=$TAR_FILE bs=$OFFSET conv=notrunc seek=1
+    drop_cache
+    diff $TMP_FILE $TAR_FILE
+}
+
+function partial_read_test() {
+    TMP_FILE=$1
+    TAR_FILE=$2
+    OFFSET=$3
+    SIZE=$4
+    drop_cache
+    dd if=$TMP_FILE of=$TMP_DIR/part_read_ori skip=$OFFSET bs=$SIZE count=1 iflag=skip_bytes
+    dd if=$TAR_FILE of=$TMP_DIR/part_read_tar skip=$OFFSET bs=$SIZE count=1 iflag=skip_bytes
+    diff $TMP_DIR/part_read_ori $TMP_DIR/part_read_tar
+}
+
 # Tests
 {
     # try block
@@ -173,6 +195,8 @@ function check_dummy() {
     ls_validate_num_of_childs $MOUNT_DIR 504 &&
     eval $CMD_DD &&
     stat_validate_size $DST_50M_FILE4 128 &&
+    partial_write_test $TMP_50M_FILE $DST_50M_FILE3 524288 &&
+    partial_read_test $TMP_50M_FILE $DST_50M_FILE3 1572864 1048576 &&
     echo "[Success]All tests passed."
 } || 
 {
