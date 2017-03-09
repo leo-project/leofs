@@ -5,7 +5,7 @@ COMPONENT=leo_manager
 COMPONENT_PATH=../../package/$(COMPONENT_INTERNAL)_0
 DIR=$(STAGE_DIR)/$(COMPONENT)
 PKG_CATEGORY=leofs
-PKG_HOMEPAGE=http://www.leofs.org/
+PKG_HOMEPAGE=https://leo-project.net/leofs/
 DEPS="erlang>=16.1.2"
 TARGET_DIR=/opt/local
 
