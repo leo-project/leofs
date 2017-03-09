@@ -143,24 +143,38 @@ function drop_cache() {
 }
 
 function partial_write_test() {
-    TMP_FILE=$1
-    TAR_FILE=$2
-    OFFSET=$3
-    dd if=$TMP_1M_FILE of=$TMP_FILE bs=$OFFSET conv=notrunc seek=1
-    dd if=$TMP_1M_FILE of=$TAR_FILE bs=$OFFSET conv=notrunc seek=1
-    drop_cache
-    diff $TMP_FILE $TAR_FILE
+    case $OSTYPE in
+    linux*)
+        TMP_FILE=$1
+        TAR_FILE=$2
+        OFFSET=$3
+        dd if=$TMP_1M_FILE of=$TMP_FILE bs=$OFFSET conv=notrunc seek=1
+        dd if=$TMP_1M_FILE of=$TAR_FILE bs=$OFFSET conv=notrunc seek=1
+        drop_cache
+        diff $TMP_FILE $TAR_FILE
+        ;;
+    *)
+        return 0
+        ;;
+        esac
 }
 
 function partial_read_test() {
-    TMP_FILE=$1
-    TAR_FILE=$2
-    OFFSET=$3
-    SIZE=$4
-    drop_cache
-    dd if=$TMP_FILE of=$TMP_DIR/part_read_ori skip=$OFFSET bs=$SIZE count=1 iflag=skip_bytes
-    dd if=$TAR_FILE of=$TMP_DIR/part_read_tar skip=$OFFSET bs=$SIZE count=1 iflag=skip_bytes
-    diff $TMP_DIR/part_read_ori $TMP_DIR/part_read_tar
+    case $OSTYPE in
+    linux*)
+        TMP_FILE=$1
+        TAR_FILE=$2
+        OFFSET=$3
+        SIZE=$4
+        drop_cache
+        dd if=$TMP_FILE of=$TMP_DIR/part_read_ori skip=$OFFSET bs=$SIZE count=1 iflag=skip_bytes
+        dd if=$TAR_FILE of=$TMP_DIR/part_read_tar skip=$OFFSET bs=$SIZE count=1 iflag=skip_bytes
+        diff $TMP_DIR/part_read_ori $TMP_DIR/part_read_tar
+        ;;
+    *)
+        return 0
+        ;;
+        esac
 }
 
 # Tests
