@@ -3,7 +3,9 @@
 ##
 ## Note:
 ##   - Dependencies:
-##       - [mkdocs-material](https://github.com/squidfunk/mkdocs-material)
+##       - mkdocs-material (pip install mkdocs-material)
+##       - pygments (pip install pygments)
+##       - pymdown-extensions (pip install pymdown-extensions)
 ##
 site_name: LeoFS Docs
 repo_url: https://github.com/leo-project/leofs
@@ -14,6 +16,20 @@ site_description: LeoProject makes LeoFS, which is an open source distributed ob
 
 docs_dir: 'docs'
 theme: 'material'
+markdown_extensions:
+    - admonition
+    - codehilite(linenums=true)
+    - footnotes
+    - meta
+    - toc(permalink=true)
+    - pymdownx.betterem(smart_enable=all)
+    - pymdownx.caret
+    - pymdownx.critic
+    - pymdownx.inlinehilite
+    - pymdownx.magiclink
+    - pymdownx.mark
+    - pymdownx.tasklist(custom_checkbox=true)
+    - pymdownx.tilde
 
 pages:
 - Welcome to LeoFS: 'index.md'
