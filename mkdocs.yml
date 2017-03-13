@@ -1,4 +1,20 @@
+##
+## LeoFS Docs
+##
+## Note:
+##   - Dependencies:
+##       - [mkdocs-material](https://github.com/squidfunk/mkdocs-material)
+##
 site_name: LeoFS Docs
+repo_url: https://github.com/leo-project/leofs
+repo_name: 'GitHub'
+site_author: LeoProject
+copyright: (c) 2012-2017 LeoProject. All rights reserved.
+site_description: LeoProject makes LeoFS, which is an open source distributed object storage system and a highly available, distributed, eventually consistent storage system. LeoFS is supporting the following features:Multi-protocol Support - S3-API, REST-API and NFS v3, Large Object Support, Multi Data Center Replication and others.
+
+docs_dir: 'docs'
+theme: 'material'
+
 pages:
 - Welcome to LeoFS: 'index.md'
 - Introduction:
@@ -49,6 +65,3 @@ pages:
     - LeoFS Limits: 'faq/limits.md'
     - LeoFS Administration: 'faq/administration.md'
 - Production Checklist: 'production_checklist/README.md'
-
-
-theme: readthedocs
