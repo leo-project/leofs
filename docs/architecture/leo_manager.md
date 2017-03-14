@@ -1,9 +1,15 @@
 # LeoManager's Architecture
 
-LeoManager generates and manages a routing table, which is called RING and is based on <a href="https://en.wikipedia.org/wiki/Consistent_hashing" target="_blank">consistent hashing</a>.
+LeoManager monitors state of LeoGateway and LeoStorage nodes to keep high availability of your LeoFS. A consistency of RING (*distributed hash table*) of LeoGateway and LeoStorage nodes are always monitored by LeoManager to prevent <a href="https://en.wikipedia.org/wiki/Split-brain" target="_blank">split-brain</a>.
 
-LeoManager always monitors status and RING's consistency of nodes of LeoStorage and LeoGateway to keep running LeoFS and keep a RING's consistency, and it also distributes a RING to nodes of LeoStorage and LeoGateway.
 
 ![](../assets/leofs-architecture.007.jpg)
 
-In addition, LeoManager provides [LeoFS administration commands]() to be able to easily operate LeoFS. The administration commands already cover entire LeoFS features.
+LeoManager manages configurations of a system and information of every node to be able to recover a system reliablely, and the data are replicated by <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia</a> to avoid data loss.
+
+LeoManager provides [leofs-adm as a LeoFS administration commands](../admin/index_of_commands.md) to be able to easily operate LeoFS. The administration commands already cover entire LeoFS features.
+
+## Related Links
+
+- [admin / Index of LeoFS' Command Lines](../admin/index_of_commands.md)
+- [admin / settings/ LeoManager Settings](../admin/settings/leo_manager.md)

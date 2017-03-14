@@ -1,9 +1,16 @@
 # LeoManager Settings
 
-LeoManager is to monitor state of LeoGateway's nodes and LeoStorage's nodes to keep high availability of your LeoFS, and to deliver [LeoFS' operation commands](../index_of_commands.md). RING - *distributed hash table* consistency of every node is always monitored by LeoManager to avoid <a href="https://en.wikipedia.org/wiki/Split-brain" target="_blank">split-brain</a>.
+## Prior Knowledge
+
+The current version, v1.3 of LeoManager depends on <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia, A distributed telecommunications DBMS</a> to manage configurations of a system and information of all nodes, and LeoManager must always be running on master and slave of LeoManager to replicate the data for preventing data loss. You need to configure both LeoManager master and the slave.
 
 
 ## Configuration
+
+There are some differences between LeoManager master and LeoManager slave. LeoManager master only has configuration items of the consistency level and the multi datacenter replication.
+
+The default setting is to launch a LeoFS system on one node, whose setting cannot replicate data and data loss could be happened with high probability. You need to modify the configuration suitably before launching the LeoFS system on your production or other environments.
+
 ### LeoManager's Related Configurations
 
 | Item                             | Default              | Description                             |
@@ -67,4 +74,5 @@ LeoManager is to monitor state of LeoGateway's nodes and LeoStorage's nodes to k
 
 ## Related Links
 
-* [Settings / Cluster Settings](cluster.md)
+* [Concept and Architecture / LeoManager](../../architecture/leo_manager.md)
+* [For Administrators / Settings / Cluster Settings](cluster.md)
