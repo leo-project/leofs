@@ -964,8 +964,10 @@ get_range_object(Req, BucketName, Key, {error, badarg}, _, BeginTime) ->
 get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) when is_list(Range) ->
     case leo_gateway_rpc_handler:head(Key) of
         {ok, #?METADATA{del = 0,
+                        dsize = ObjectSize,
                         meta = CMetaBin} = Meta}->
-            case get_body_length(Key, Meta, Range) of
+            Range_2 = fix_range_end(Range, ObjectSize),
+            case get_body_length(ObjectSize, Range_2) of
                 {ok, Length} ->
                     Timestamp = leo_http:rfc1123_date(Meta#?METADATA.timestamp),
                     Headers = [?SERVER_HEADER,
@@ -981,7 +983,7 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
                     Req2 = cowboy_req:set_resp_body_fun(
                              Length,
                              fun(Socket, Transport) ->
-                                     get_range_object_1(Req, BucketName, Key, Range, undefined,
+                                     get_range_object_1(Req, BucketName, Key, Range_2, undefined,
                                                         #transport_record{transport = Transport,
                                                                           socket = Socket,
                                                                           sending_chunked_obj_len = SendChunkLen})
@@ -990,7 +992,7 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
                     ?reply_partial_content(Headers2, Req2);
                 {error, bad_range} ->
                     ?access_log_get(BucketName, Key, 0, ?HTTP_ST_BAD_RANGE, BeginTime),
-                    ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req);
+                    ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req)
             end;
         {ok, #?METADATA{del = 1}} ->
             ?access_log_get(BucketName, Key, 0, ?HTTP_ST_NOT_FOUND, BeginTime),
@@ -1085,7 +1087,20 @@ get_range_object_small(_Req, BucketName, Key, Start, End,
 
 
 %% @private
-get_body_length(Key, #?METADATA{dsize = ObjectSize}, Range) ->
+fix_range_end(Range, ObjectSize) ->
+    fix_range_end_1(Range, ObjectSize, []).
+
+fix_range_end_1([], _, Acc) ->
+    lists:reverse(Acc);
+fix_range_end_1([{Start, End}|Rest], ObjectSize, Acc) when is_number(End),
+                                                           End >= ObjectSize ->
+    fix_range_end_1(Rest, ObjectSize, [{Start, ObjectSize - 1} | Acc]);
+fix_range_end_1([Head|Rest], ObjectSize, Acc) ->
+    fix_range_end_1(Rest, ObjectSize, [Head|Acc]).
+
+
+%% @private
+get_body_length(ObjectSize, Range) ->
     get_body_length_1(Range, ObjectSize, 0).
 
 %% @private
