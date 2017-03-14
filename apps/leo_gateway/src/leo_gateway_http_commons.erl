@@ -962,11 +962,11 @@ get_range_object(Req, BucketName, Key, {error, badarg}, _, BeginTime) ->
     ?access_log_get(BucketName, Key, 0, ?HTTP_ST_BAD_RANGE, BeginTime),
     ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req);
 get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) when is_list(Range) ->
-    case get_body_length(Key, Range) of
-        {ok, Length} ->
-            case leo_gateway_rpc_handler:head(Key) of
-                {ok, #?METADATA{del = 0,
-                                meta = CMetaBin} = Meta}->
+    case leo_gateway_rpc_handler:head(Key) of
+        {ok, #?METADATA{del = 0,
+                        meta = CMetaBin} = Meta}->
+            case get_body_length(Key, Meta, Range) of
+                {ok, Length} ->
                     Timestamp = leo_http:rfc1123_date(Meta#?METADATA.timestamp),
                     Headers = [?SERVER_HEADER,
                                {?HTTP_HEAD_RESP_CONTENT_TYPE, leo_mime:guess_mime(Key)},
@@ -988,15 +988,13 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
                              end,
                              Req),
                     ?reply_partial_content(Headers2, Req2);
-                {ok, #?METADATA{del = 1}} ->
-                    ?access_log_get(BucketName, Key, 0, ?HTTP_ST_NOT_FOUND, BeginTime),
-                    ?reply_not_found_without_body([?SERVER_HEADER], Req);
-                {error, Cause} ->
-                    reply_fun({error, Cause}, get, BucketName, Key, 0, Req, BeginTime)
+                {error, bad_range} ->
+                    ?access_log_get(BucketName, Key, 0, ?HTTP_ST_BAD_RANGE, BeginTime),
+                    ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req);
             end;
-        {error, bad_range} ->
-            ?access_log_get(BucketName, Key, 0, ?HTTP_ST_BAD_RANGE, BeginTime),
-            ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req);
+        {ok, #?METADATA{del = 1}} ->
+            ?access_log_get(BucketName, Key, 0, ?HTTP_ST_NOT_FOUND, BeginTime),
+            ?reply_not_found_without_body([?SERVER_HEADER], Req);
         {error, Cause} ->
             reply_fun({error, Cause}, get, BucketName, Key, 0, Req, BeginTime)
     end.
@@ -1087,13 +1085,8 @@ get_range_object_small(_Req, BucketName, Key, Start, End,
 
 
 %% @private
-get_body_length(Key, Range) ->
-    case leo_gateway_rpc_handler:head(Key) of
-        {ok, #?METADATA{dsize = ObjectSize}} ->
-            get_body_length_1(Range, ObjectSize, 0);
-        {error, Reason} ->
-            {error, Reason}
-    end.
+get_body_length(Key, #?METADATA{dsize = ObjectSize}, Range) ->
+    get_body_length_1(Range, ObjectSize, 0).
 
 %% @private
 get_body_length_1([], _ObjectSize, Acc) ->
