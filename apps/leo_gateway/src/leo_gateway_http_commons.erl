@@ -1087,12 +1087,19 @@ get_range_object_small(_Req, BucketName, Key, Start, End,
 
 
 %% @private
+%% @doc Fix last-byte-pos when it is larger than or equal to object size
+%% Quote from RFC-7233#2.1
+%% If the last-byte-pos value is absent, or if the value is greater than
+%% or equal to the current length of the representation data, the byte
+%% range is interpreted as the remainder of the representation (i.e., the
+%% server replaces the value of last-byte-pos with a value that is one
+%% less than the current length of the selected representation).
 fix_range_end(Range, ObjectSize) ->
     fix_range_end_1(Range, ObjectSize, []).
 
 fix_range_end_1([], _, Acc) ->
     lists:reverse(Acc);
-fix_range_end_1([{Start, End}|Rest], ObjectSize, Acc) when is_number(End),
+fix_range_end_1([{Start, End}|Rest], ObjectSize, Acc) when is_integer(End),
                                                            End >= ObjectSize ->
     fix_range_end_1(Rest, ObjectSize, [{Start, ObjectSize - 1} | Acc]);
 fix_range_end_1([Head|Rest], ObjectSize, Acc) ->
@@ -1274,3 +1281,17 @@ reply_fun({error, Cause}, Method, Bucket, Key, ObjLen, BeginTime) ->
     ?reply_fun(Cause, Method, Bucket, Key, ObjLen, BeginTime).
 reply_fun({error, Cause}, Method, Bucket, Key, ObjLen, Req, BeginTime) ->
     ?reply_fun(Cause, Method, Bucket, Key, ObjLen, Req, BeginTime).
+
+
+%%====================================================================
+%% TEST
+%%====================================================================
+-ifdef(TEST).
+fix_range_end_test() ->
+    ?debugMsg("Testing Fix Range End"),
+    [{0,3}] = fix_range_end([{0,4}], 4),
+    [{0,2}] = fix_range_end([{0,2}], 4),
+    [{0,1}, {0,3}] = fix_range_end([{0,1}, {0,4}], 4),
+    [{-1}, {0,2}] = fix_range_end([{-1}, {0,2}], 4),
+    ok.
+-endif.
