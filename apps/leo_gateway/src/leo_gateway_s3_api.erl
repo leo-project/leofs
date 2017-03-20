@@ -412,6 +412,32 @@ head_bucket(Req, Key, #req_params{access_key_id = AccessKeyId}) ->
              {ok, Req} when Req::cowboy_req:req(),
                             Key::binary(),
                             ReqParams::#req_params{}).
+
+%% @doc GET-ACL Operation on Objects
+%% As we only support bucket level ACL, reply bucket ACL here
+%% Related Issue: leo-project/leofs#490
+get_object(Req, Key, #req_params{is_acl = true,
+                                 bucket_name = Bucket}) ->
+    BeginTime = leo_date:clock(),
+    case leo_gateway_rpc_handler:head(Key) of
+        {ok, #?METADATA{del = 0}} ->
+            case leo_s3_bucket:find_bucket_by_name(Bucket) of
+                {ok, BucketInfo} ->
+                    XML = generate_acl_xml(BucketInfo),
+                    Header = [?SERVER_HEADER,
+                              {?HTTP_HEAD_RESP_CONTENT_TYPE, ?HTTP_CTYPE_XML}],
+                    ?reply_ok(Header, XML, Req);
+                not_found ->
+                    ?reply_not_found([?SERVER_HEADER], Bucket, <<>>, Req);
+                {error, _Cause} ->
+                    ?reply_internal_error([?SERVER_HEADER], Bucket, <<>>, Req)
+            end;
+        {ok, #?METADATA{del = 1}}->
+            ?reply_not_found([?SERVER_HEADER], Key, <<>>, Req);
+        {error, Cause} ->
+            ?reply_fun(Cause, get, Bucket, Key, 0, Req, BeginTime)
+    end;
+
 get_object(Req, Key, Params) ->
     leo_gateway_http_commons:get_object(Req, Key, Params).
 
