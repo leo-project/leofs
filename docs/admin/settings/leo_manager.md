@@ -9,7 +9,7 @@ The current version, v1.3 of LeoManager depends on <a href="http://erlang.org/do
 
 There are some differences between LeoManager master and LeoManager slave. LeoManager master only has configuration items of the consistency level and the multi datacenter replication.
 
-The default setting is to launch a LeoFS system on one node, whose setting cannot replicate data and data loss could be happened with high probability. You need to modify the configuration suitably before launching the LeoFS system on your production or other environments.
+The default setting is to launch a LeoFS system on one node, whose setting cannot replicate data, and data loss could be happened with high probability. You need to modify the configuration suitably before launching the LeoFS system on your production or other environments.
 
 ### LeoManager's Related Configurations
 
