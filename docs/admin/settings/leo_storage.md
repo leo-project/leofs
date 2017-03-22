@@ -2,16 +2,26 @@
 
 ## Prior Knowledge
 
-!!! note ""
-    You cannot modify the following LeoStorage's configurations after launched a LeoFS system because the algorithm of retrieving objects depends on their configurations, that means LeoStorage cannot access objects.
+!!! note "Note: Configuration"
+    LeoStroage's features depend on its configuration. If once a LeoFS system is launched, you cannot modify the following LeoStorage's configurations because the algorithm of the data operation strictly adheres to the configurations.
 
-#### NOT able to change items:
 
-- LeoStorage Basic
-    - `obj_containers.path`
-    - `obj_containers.num_of_containers`
-    - `obj_containers.metadata_storage`
-    - `num_of_vnodes`
+#### Irrevocable and Attention Required Items:
+
+| Item                                   | Irrevocable?   | Description                              |
+|----------------------------------------|----------------|------------------------------------------|
+| **LeoStorage Basic**                   |
+| obj_containers.path                    | Modifiable with condition | Able to change the directory of the container(s) but not able to add or remove the directory(s). You need to move the data files which are `<obj\_containers.path>/avs/object` and `<obj\_containers.path>/avs/metadata`, which adhere to this configuration. |
+| obj_containers.num\_of\_containers     | Yes            | Not able to change the configuration because LeoStorage cannot retrieve objects or metadatas. |
+| obj_containers.metadata\_storage       | Yes            | As above |
+| num_of_vnodes`                         | Yes            | As above |
+| **MQ**                                 |
+| mq.backend\_db                         | Modifiable with condition | Lose all the MQ's data after changing |
+| mq.num\_of\_mq\_procs                  | Modifiable with condition | As above |
+| **Replication and Recovery object(s)** |
+| replication.rack_awareness.rack_id     | Yes            | Not able to change the configuration because LeoFS cannot retrieve objects or metadatas. |
+| **Other Directories Settings**         |
+| queue_dir                              | Modifiable with condition | Able to change the MQ's directory but you need to move the MQ's data, which adhere to this configuration. |
 
 
 ## Configuration
