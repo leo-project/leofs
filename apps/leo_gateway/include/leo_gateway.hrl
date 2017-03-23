@@ -406,6 +406,25 @@
               })
             %% ?notify_metrics(<<"GET">>,_Bucket,_Size)
         end).
+-define(access_log_get_acl(_Bucket,_Path,_Response,_Begin),
+        begin
+            {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
+            _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
+            leo_logger_client_base:append(
+              {?LOG_ID_ACCESS,
+               #message_log{format  = "[GET-ACL]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+                            message = [binary_to_list(_Bucket),
+                                       _OrgPath,
+                                       _ChildNum,
+                                       0,
+                                       leo_date:date_format(),
+                                       leo_date:clock(),
+                                       _Response,
+                                       _Latency,
+                                       ""
+                                      ]}
+              })
+        end).
 -define(access_log_put(_Bucket,_Path,_Size,_Response,_Begin),
         begin
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
@@ -471,6 +490,8 @@
             case _Method of
                 get ->
                     ?access_log_get(_Bucket,_Path,_Size,_Response,_Begin);
+                get_acl ->
+                    ?access_log_get_acl(_Bucket,_Path,_Response,_Begin);
                 put ->
                     ?access_log_put(_Bucket,_Path,_Size,_Response,_Begin);
                 delete ->

@@ -426,16 +426,20 @@ get_object(Req, Key, #req_params{is_acl = true,
                     XML = generate_acl_xml(BucketInfo),
                     Header = [?SERVER_HEADER,
                               {?HTTP_HEAD_RESP_CONTENT_TYPE, ?HTTP_CTYPE_XML}],
+                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_OK, BeginTime), 
                     ?reply_ok(Header, XML, Req);
                 not_found ->
+                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime), 
                     ?reply_not_found([?SERVER_HEADER], Bucket, <<>>, Req);
                 {error, _Cause} ->
+                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
                     ?reply_internal_error([?SERVER_HEADER], Bucket, <<>>, Req)
             end;
         {ok, #?METADATA{del = 1}}->
+            ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime), 
             ?reply_not_found([?SERVER_HEADER], Key, <<>>, Req);
         {error, Cause} ->
-            ?reply_fun(Cause, get, Bucket, Key, 0, Req, BeginTime)
+            ?reply_fun(Cause, get_acl, Bucket, Key, 0, Req, BeginTime)
     end;
 
 get_object(Req, Key, Params) ->
