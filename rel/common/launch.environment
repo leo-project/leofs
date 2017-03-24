@@ -1,0 +1,11 @@
+# Directories used by launch script can be re-defined here, if needed
+# Default values will be picked for commented or empty parameters
+
+# Directory with main .conf file. It must be writable by $RUNNER_USER
+# RUNNER_ETC_DIR=
+# Directory for .schema file.
+# RUNNER_SCHEMA_DIR=
+# Directory for erlang log files (erlang.log.* and run_erl.log)
+# RUNNER_LOG_DIR=
+# Defaults to "leofs"
+# RUNNER_USER=
