@@ -2,18 +2,26 @@
 # -*- tab-width:4;indent-tabs-mode:nil -*-
 # ex: ts=4 sw=4 et
 
-RUNNER_SCRIPT_DIR=$(cd ${0%/*} && pwd)
+# Identify the script name
+SCRIPT=`basename "$0"`
 
+RUNNER_SCRIPT_DIR=$(cd ${0%/*} && pwd)
 RUNNER_BASE_DIR=${RUNNER_SCRIPT_DIR%/*}
-RUNNER_ETC_DIR=$RUNNER_BASE_DIR/etc
-RUNNER_LOG_DIR=$RUNNER_BASE_DIR/log
+
+# Source environment script to allow redefining all other variables
+CONFIG_PATH=$RUNNER_BASE_DIR/etc/$SCRIPT.environment
+[ -f $CONFIG_PATH ] && . $CONFIG_PATH
+
+RUNNER_ETC_DIR=${RUNNER_ETC_DIR:-$RUNNER_BASE_DIR/etc}
+RUNNER_SCHEMA_DIR=${RUNNER_SCHEMA_DIR:-$RUNNER_BASE_DIR/etc}
+RUNNER_LOG_DIR=${RUNNER_LOG_DIR:-$RUNNER_BASE_DIR/log}
 # Note the trailing slash on $PIPE_DIR/
 PIPE_DIR=/tmp/$RUNNER_BASE_DIR/
-RUNNER_USER=
+RUNNER_USER=${RUNNER_USER:-}
 
 # Make sure this script is running as the appropriate user
 if [ ! -z "$RUNNER_USER" ] && [ `whoami` != "$RUNNER_USER" ]; then
-    exec sudo -u $RUNNER_USER -i $0 $@
+    exec sudo -u $RUNNER_USER "$RUNNER_SCRIPT_DIR/$SCRIPT" "$@"
 fi
 
 # Make sure CWD is set to runner base dir
@@ -21,8 +29,6 @@ cd $RUNNER_BASE_DIR
 
 # Make sure log directory exists
 mkdir -p $RUNNER_LOG_DIR
-# Identify the script name
-SCRIPT=`basename $0`
 
 help () {
     echo "Usage: $SCRIPT [-type leo_manager|leo_gateway|leo_storage] {start|stop|ping|remote_console}"
@@ -95,16 +101,16 @@ CONFIG_PATH="$RUNNER_ETC_DIR/app.config"
 # Generate conf files - [app.config, vm.args]
 #
 gen_config() {
-    rm -f $RUNNER_BASE_DIR/etc/app.*.config
-    rm -f $RUNNER_BASE_DIR/etc/vm.*.args
+    rm -f $RUNNER_ETC_DIR/app.*.config
+    rm -f $RUNNER_ETC_DIR/vm.*.args
     ERTS_PATH=$RUNNER_BASE_DIR/erts-$ERTS_VSN/bin
-    RES_CUTTLEFISH=`PATH=$ERTS_PATH:$PATH $RUNNER_BASE_DIR/bin/cuttlefish -i $RUNNER_BASE_DIR/etc/$NODE_TYPE.schema -c $RUNNER_BASE_DIR/etc/$NODE_TYPE.conf -d $RUNNER_BASE_DIR/etc/`
+    RES_CUTTLEFISH=`PATH=$ERTS_PATH:$PATH $RUNNER_BASE_DIR/bin/cuttlefish -i $RUNNER_SCHEMA_DIR/$NODE_TYPE.schema -c $RUNNER_ETC_DIR/$NODE_TYPE.conf -d $RUNNER_ETC_DIR/`
 
-    APP_CONFIG=`find $RUNNER_BASE_DIR/etc/ -type f | grep app.*[0-9].config`
-    mv $APP_CONFIG $RUNNER_BASE_DIR/etc/app.config
+    APP_CONFIG=`find $RUNNER_ETC_DIR/ -type f | grep app.*[0-9].config`
+    mv $APP_CONFIG $RUNNER_ETC_DIR/app.config
 
-    VM_ARGS=`find $RUNNER_BASE_DIR/etc/ -type f | grep vm.*[0-9].args`
-    mv $VM_ARGS $RUNNER_BASE_DIR/etc/vm.args
+    VM_ARGS=`find $RUNNER_ETC_DIR/ -type f | grep vm.*[0-9].args`
+    mv $VM_ARGS $RUNNER_ETC_DIR/vm.args
 }
 case "$1" in
     start)
