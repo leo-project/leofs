@@ -40,6 +40,7 @@
          get_node_status/0,
          rebalance/1, rebalance/3,
          get_disk_usage/0,
+         get_info/1,
          update_conf/2
         ]).
 -export([get_mq_consumer_state/0,

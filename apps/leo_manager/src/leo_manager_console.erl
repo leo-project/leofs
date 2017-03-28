@@ -77,6 +77,17 @@ handle_call(_Socket, <<?CMD_VERSION, ?LF>>, #state{formatter = Formatter} = Stat
 handle_call(_Socket, <<?CMD_VERSION, ?CRLF>>, #state{formatter = Formatter} = State) ->
     Reply = version(Formatter),
     {reply, Reply, State};
+handle_call(_Socket, <<?CMD_VERSION, ?SPACE, Option/binary>>, #state{formatter = Formatter} = State) ->
+    Fun = fun() ->
+                  case version_all(Option) of
+                      {ok, NodeList} ->
+                          Formatter:version_all(NodeList);
+                      {error, Cause} ->
+                          Formatter:error(Cause)
+                  end
+          end,
+    Reply = invoke(?CMD_VERSION, Formatter, Fun),
+    {reply, Reply, State};
 
 
 %% Command: "_user-id_"
@@ -1363,6 +1374,73 @@ version() ->
             {ok, []}
     end.
 
+%% @doc Retrieve version of every node in a cluster
+%% @private
+-spec(version_all(binary()) ->
+             {ok, list()} | {error, any()}).
+version_all(Option) ->
+
+    case ?get_tokens(Option, ?ERROR_INVALID_ARGS) of
+        {ok, ["all"|_]} ->
+            Version = case application:get_env(leo_manager, system_version) of
+                          {ok, Vsn} -> Vsn;
+                          undefined -> []
+                      end,
+            {Slave, SlaveVersion} = case ?env_partner_of_manager_node() of
+                   [] ->
+                       {"not_found", "failed to retrieve the version"};
+                   [Partner|_] ->
+                       case rpc:call(Partner, application, get_env, [leo_manager, system_version]) of
+                           {badrpc, _} ->
+                               {atom_to_list(Partner), "failed to retrieve the version"};
+                           {ok, SV} ->
+                               {atom_to_list(Partner), SV}
+                       end
+               end,
+            Managers = [
+                {"M", atom_to_list(erlang:node()), Version},
+                {"M", Slave, SlaveVersion}
+            ],
+            Storages = case leo_manager_mnesia:get_storage_nodes_all() of
+                     {ok, R1} ->
+                         lists:map(fun(N) ->
+                                           Node = N#node_state.node,
+                                           V = case rpc:call(Node, leo_storage_api, get_info, [version]) of
+                                               {badrpc, _} ->
+                                                   "failed to retrieve the version";
+                                               Res ->
+                                                   Res
+                                               end,
+                                           {?SERVER_TYPE_STORAGE,
+                                            atom_to_list(Node),
+                                            V}
+                                   end, R1);
+                     _ ->
+                         []
+                 end,
+            Gateways = case leo_manager_mnesia:get_gateway_nodes_all() of
+                     {ok, R2} ->
+                         lists:map(fun(N) ->
+                                           Node = N#node_state.node,
+                                           V = case rpc:call(Node, leo_gateway_api, get_info, [version]) of
+                                               {badrpc, _} ->
+                                                   "failed to retrieve the version";
+                                               Res ->
+                                                   Res
+                                               end,
+                                           {?SERVER_TYPE_GATEWAY,
+                                            atom_to_list(Node),
+                                            V}
+                                   end, R2);
+                     _ ->
+                         []
+                 end,
+            {ok, Managers ++ Storages ++ Gateways};
+        {ok, _} ->
+            {error, ?ERROR_INVALID_ARGS};
+        Error ->
+            Error
+    end.
 
 %% @doc Exec login
 %% @private
