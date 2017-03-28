@@ -31,11 +31,9 @@ cd $RUNNER_BASE_DIR
 mkdir -p $RUNNER_LOG_DIR
 
 help () {
-    echo "Usage: $SCRIPT [-type leo_manager|leo_gateway|leo_storage] {start|stop|ping|remote_console}"
+    echo "Usage: $SCRIPT [-type leo_manager|leo_gateway|leo_storage] {start|stop|restart|reboot|ping|console|console_clean|attach|remote_console}"
     echo "Script type is picked from its name, but can be overriden with -type option"
-    echo "leo_manager additionally supports commands {dump-mnesia-data|load-mnesia-data|clear-history-data}"
-
-#    echo "Usage: $SCRIPT {start|stop|restart|reboot|ping|console|console_clean|attach|remote_console}"
+    echo "leo_manager additionally supports commands {dump-mnesia-data|load-mnesia-data}"
 }
 
 case "$1" in
@@ -157,9 +155,9 @@ NODETOOL_LITE="$ERTS_PATH/escript $ERTS_PATH/nodetool"
 REMSH="$ERTS_PATH/erl $REMSH_NAME_ARG $REMSH_REMSH_ARG $COOKIE_ARG"
 
 case "$1" in
-    dump-mnesia-data|load-mnesia-data|clear-history-data)
+    dump-mnesia-data|load-mnesia-data)
         if [ "$NODE_TYPE" != leo_manager ]; then
-            echo "Only leo_manager supports {dump-mnesia-data|load-mnesia-data|clear-history-data} commands"
+            echo "Only leo_manager supports {dump-mnesia-data|load-mnesia-data} commands"
             exit 1
         fi
     ;;  # actual implementation follows
@@ -267,15 +265,6 @@ case "$1" in
         else
             echo "Usage: leo_manager load-mnesia-data <absolute-path>"
         fi
-
-        ES=$?
-        if [ "$ES" -ne 0 ]; then
-            exit $ES
-        fi
-        ;;
-    clear-history-data)
-        ## Clear records of history-table
-        $NODETOOL rpc mnesia clear-history-data []
 
         ES=$?
         if [ "$ES" -ne 0 ]; then
