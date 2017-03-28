@@ -101,7 +101,13 @@ get({Ref, Key}) ->
                                  Redundancies::[#redundant_node{}]).
 get(ReadParameter, Redundancies) when Redundancies /= [] ->
     ok = leo_metrics_req:notify(?STAT_COUNT_GET),
-    read_and_repair(ReadParameter, Redundancies);
+    case read_and_repair(ReadParameter, Redundancies) of
+        {ok, #?METADATA{meta = CMeta} = Meta, Bin} when CMeta =/= <<>> ->
+            {ok, NewMeta} = get_cmeta(Meta),
+            {ok, NewMeta, Bin};
+        Other ->
+            Other
+    end;
 
 get(#read_parameter{addr_id = AddrId} = ReadParameter,_Redundancies) ->
     BeginTime = leo_date:clock(),
@@ -206,6 +212,36 @@ get(AddrId, Key, StartPos, EndPos, ReqId) ->
     end,
     Ret.
 
+%% @doc retrieve UDM and set it back to the meta field
+%%      to fix https://github.com/leo-project/leofs/issues/641
+%% @private
+-spec(get_cmeta(Meta) ->
+             {ok, #?METADATA{}} |
+             {error, any()} when Meta::#?METADATA{}).
+get_cmeta(Meta) ->
+    case leo_object_storage_transformer:get_udm_from_cmeta_bin(Meta#?METADATA.meta) of
+        {ok, {ok, {ok, UDM}}} ->
+            %% match if an object belongs to the destination and already read_repaired.
+            {ok, Meta#?METADATA{meta = term_to_binary(UDM)}};
+        {ok, {ok, UDM}} ->
+            %% match if an object belongs to the destination and still not read_repaired.
+            {ok, Meta#?METADATA{meta = term_to_binary(UDM)}};
+        {ok, []} ->
+            %% match if an object belongs to the soruce
+            %% match with <= 1.3.2.1
+            {ok, Meta};
+        {ok, UDM} ->
+            %% match if an object belongs to the source
+            %% match with >= 1.3.3
+            {ok, Meta#?METADATA{meta = term_to_binary(UDM)}};
+        Other ->
+            %% ignore broken custom metadata and just log the error
+            ?error("get_cmeta/1", [{from, storage}, {method, get},
+                             {key, Meta#?METADATA.key},
+                             {meta, Meta#?METADATA.meta},
+                             {cause, Other}]),
+            {ok, Meta#?METADATA{meta = <<>>}}
+    end.
 
 %% @doc read data (common).
 %% @private
@@ -620,7 +656,13 @@ head_1([#redundant_node{node = Node,
                         available = true}|Rest], AddrId, Key) when Node == erlang:node() ->
     case leo_object_storage_api:head({AddrId, Key}) of
         {ok, MetaBin} ->
-            {ok, binary_to_term(MetaBin)};
+            Meta = binary_to_term(MetaBin),
+            case Meta#?METADATA.meta of
+                <<>> ->
+                    {ok, Meta};
+                _CMeta ->
+                    get_cmeta(Meta)
+            end;
         Other ->
             case Other of
                 not_found ->
@@ -635,7 +677,13 @@ head_1([#redundant_node{node = Node,
     RPCKey = rpc:async_call(Node, leo_object_storage_api, head, [{AddrId, Key}]),
     case rpc:nb_yield(RPCKey, ?DEF_REQ_TIMEOUT) of
         {value, {ok, MetaBin}} ->
-            {ok, binary_to_term(MetaBin)};
+            Meta = binary_to_term(MetaBin),
+            case Meta#?METADATA.meta of
+                <<>> ->
+                    {ok, Meta};
+                _CMeta ->
+                    get_cmeta(Meta)
+            end;
         _ ->
             head_1(Rest, AddrId, Key)
     end;
@@ -1195,3 +1243,53 @@ replicate_callback(Object) ->
                     {error, not_found}
             end
     end.
+
+-ifdef(EUNIT).
+get_cmeta_test() ->
+    ok = leo_logger_client_message:new("./", ?LOG_LEVEL_WARN),
+    %% destination side with custom metadata
+    UDM = [{<<"name">>, <<"LeoFS">>},
+           {<<"category">>, <<"distributed storage">>},
+           {<<"url">>, <<"leo-project.net/leofs">>}
+          ],
+    CMeta = [{?PROP_CMETA_CLUSTER_ID, 'leofs_1'},
+             {?PROP_CMETA_NUM_OF_REPLICAS, 3},
+             {?PROP_CMETA_VER, leo_date:clock()},
+             {?PROP_CMETA_UDM, UDM}
+            ],
+    Meta1 = #?METADATA{meta = term_to_binary(CMeta)},
+    {ok, Meta11} = get_cmeta(Meta1),
+    ?assertEqual(term_to_binary(UDM), Meta11#?METADATA.meta),
+
+    %% soruce side with custom metadata
+    Meta2 = #?METADATA{meta = term_to_binary(UDM)},
+    {ok, Meta2} = get_cmeta(Meta2),
+
+    %% soruce side with broken custom metadata
+    Meta3 = #?METADATA{meta = <<"broken">>},
+    {ok, #?METADATA{meta = <<>>} = _Meta} = get_cmeta(Meta3),
+
+    %% destination side with broken custom metadata
+    %% tuple nested doubly
+    CMeta2 = [{?PROP_CMETA_CLUSTER_ID, 'leofs_1'},
+             {?PROP_CMETA_NUM_OF_REPLICAS, 3},
+             {?PROP_CMETA_VER, leo_date:clock()},
+             {?PROP_CMETA_UDM, {ok, UDM}}
+            ],
+    Meta4 = #?METADATA{meta = term_to_binary(CMeta2)},
+    {ok, Meta41} = get_cmeta(Meta4),
+    ?assertEqual(term_to_binary(UDM), Meta41#?METADATA.meta),
+
+    %% destination side with broken custom metadata
+    %% tuple nested triply
+    CMeta3 = [{?PROP_CMETA_CLUSTER_ID, 'leofs_1'},
+             {?PROP_CMETA_NUM_OF_REPLICAS, 3},
+             {?PROP_CMETA_VER, leo_date:clock()},
+             {?PROP_CMETA_UDM, {ok, {ok, UDM}}}
+            ],
+    Meta5 = #?METADATA{meta = term_to_binary(CMeta3)},
+    {ok, Meta51} = get_cmeta(Meta5),
+    ?assertEqual(term_to_binary(UDM), Meta51#?METADATA.meta),
+
+    ok.
+-endif.

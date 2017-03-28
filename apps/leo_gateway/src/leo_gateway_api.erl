@@ -37,6 +37,7 @@
 -export([get_node_status/0,
          register_in_monitor/1, register_in_monitor/2,
          purge/1, update_manager_nodes/1,
+         get_info/1,
          update_conf/2
         ]).
 

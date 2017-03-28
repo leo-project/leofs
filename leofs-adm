@@ -991,7 +991,7 @@ done
 
 case "$1" in
     version)
-        if [ $# -ne 1 ]; then
+        if [ $# -gt 2 ]; then
             echo "Usage: $SCRIPT version"
             exit 1
         fi

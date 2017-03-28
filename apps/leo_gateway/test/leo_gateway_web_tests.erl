@@ -66,6 +66,7 @@ gen_tests_1(Arg) ->
                fun get_object_notfound_/1,
                fun get_object_normal1_/1,
                fun get_object_cmeta_normal1_/1,
+               fun get_object_acl_normal1_/1,
                fun range_object_normal1_/1,
                fun range_object_normal2_/1,
                fun range_object_normal3_/1,
@@ -670,6 +671,64 @@ get_object_cmeta_normal1_([_TermFun, _Node0, Node1]) ->
                     throw(Reason)
             after
                 ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object])
+            end,
+            ok
+    end.
+
+get_object_acl_normal1_([_TermFun, _Node0, Node1]) ->
+    fun() ->
+            meck:expect(leo_s3_bucket, get_acls, 1,
+                        {ok, [#bucket_acl_info{user_id = ?GRANTEE_ALL_USER,
+                                               permissions = [read, write]}]}),
+            meck:expect(leo_s3_bucket, find_bucket_by_name, 1,
+                        {ok, #?BUCKET{name = "bucket",
+                                      access_key_id = <<"ackid">>,
+                                      acls = [#bucket_acl_info{user_id = ?GRANTEE_ALL_USER,
+                                                               permissions = [read, write]},
+                                              #bucket_acl_info{user_id = ?GRANTEE_AUTHENTICATED_USER,
+                                                               permissions = [full_control]}]
+                                     }}),
+            meck:new(leo_s3_auth, [no_link, non_strict]),
+            meck:expect(leo_s3_auth, authenticate, 3, {ok, ["hoge"], undefined}),
+            ok = rpc:call(Node1, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node1, meck, expect,
+                          [leo_storage_handler_object, head, 2,
+                           {ok, #?METADATA{
+                                    key =  <<"bucket/object">>,
+                                    addr_id    = 0,
+                                    ksize      = 4,
+                                    dsize      = 16384,
+                                    meta       = <<>>,
+                                    msize      = 0,
+                                    csize      = 0,
+                                    cnumber    = 0,
+                                    cindex     = 0,
+                                    offset     = 1,
+                                    clock      = 63511805822,
+                                    timestamp  = 19740926,
+                                    checksum   = 0,
+                                    ring_hash  = 0,
+                                    cluster_id = [],
+                                    ver = 0,
+                                    del = ?DEL_FALSE
+                                   }
+                           }]),
+            try
+                Date = leo_http:rfc1123_date(leo_date:now()),
+                {ok, {SC,Body}} =
+                    httpc:request(get, {lists:append(["http://",
+                                                      ?TARGET_HOST, ":8080/bucket/object?acl"]), [{"Date", Date}, {"Authorization","AWS auth:hoge"}]},
+                                  [], [{full_result, false}]),
+                ?assertEqual(200, SC),
+                {_XmlDoc, Rest} = xmerl_scan:string(Body),
+                ?assertEqual([], Rest)
+            catch
+                throw:Reason ->
+                    throw(Reason)
+            after
+                ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object]),
+                meck:unload(leo_s3_auth)
             end,
             ok
     end.

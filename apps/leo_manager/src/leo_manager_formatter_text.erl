@@ -39,6 +39,7 @@
          acls/1, cluster_status/1,
          whereis/1, nfs_mnt_key/1,
          histories/1,
+         version_all/1,
          authorized/0, user_id/0, password/0
         ]).
 
@@ -322,6 +323,53 @@ system_conf_with_node_stat(FormattedSystemConf, Nodes) ->
                        " [State of Node(s)]\r\n",
                        Header1,Header2, Header1], Nodes) ++ Header1 ++ ?CRLF.
 
+%% @doc Format the version of every node
+-spec(version_all(list()) ->
+             string()).
+version_all(Nodes) ->
+    Col_1_Len = lists:foldl(fun({_,N,_}, Acc) ->
+                                    Len = length(N),
+                                    case (Len > Acc) of
+                                        true  -> Len;
+                                        false -> Acc
+                                    end
+                            end, 0, Nodes) + 5,
+    CellColumns = [{"type", 6},
+                   {"node", Col_1_Len},
+                   {"version", 24},
+                   {'$end', 0}],
+    LenPerCol = lists:map(fun({_, Len}) -> Len end, CellColumns),
+
+
+    Fun1 = fun(Col, Str) ->
+                   case Col of
+                       {'$end',_Len      } -> lists:append([Str, ?CRLF]);
+                       {"type", Len      } -> lists:append([Str, lists:duplicate(Len + 1, "-"), "+"]);
+                       {"node", Len      } -> lists:append([Str, lists:duplicate(Len + 2, "-"), "+"]);
+                       {_Other, Len      } -> lists:append([Str, lists:duplicate(Len + 2, "-"), "+"])
+                   end
+           end,
+    Header1 = lists:foldl(Fun1, [], CellColumns),
+
+    Fun2 = fun(Col, Str) ->
+                   {Name, _} = Col,
+                   case Col of
+                       {'$end',_Len      } -> lists:append([Str, ?CRLF]);
+                       {_Other, Len      } -> lists:append([Str, string:centre(Name, Len, $ ), ?SEPARATOR])
+                   end
+           end,
+    Header2 = lists:foldl(Fun2, [], CellColumns),
+
+    Fun3 = fun(N, List) ->
+                   {Type, Alias, Version} = N,
+                   Ret = lists:append([string:centre(Type,    lists:nth(1,LenPerCol)), ?SEPARATOR,
+                                       string:left(Alias,     lists:nth(2,LenPerCol)), ?SEPARATOR,
+                                       string:left(Version,   lists:nth(3,LenPerCol)), ?SEPARATOR,
+                                       ?CRLF]),
+                   List ++ [Ret]
+           end,
+    lists:foldl(Fun3, [" [Version of Node(s)]\r\n",
+                       Header1,Header2, Header1], Nodes) ++ Header1 ++ ?CRLF.
 
 %% @doc Format a cluster node state
 -spec(node_stat(string(), [tuple()]) ->
