@@ -21,8 +21,12 @@
 ##
 ## ======================================================================
 ## 'mv_avs_dir' which can be used to change the data directory.
+##
 ## You just specify the current directory and the destination directory,
-## and you need to modify the leo_storage configuration, 'obj_containers.path '.
+## and you need to modify the leo_storage configuration, 'obj_containers.path '
+## before re-launching the LeoStorage node.
+##
+## Note: You need to stop a target LeoStorage node before executing 'mv_avs_dir'.
 ## ======================================================================
 
 bold=`tput bold`
@@ -35,9 +39,6 @@ SCRIPT=`basename $0`
 DIR_LOG="log"
 DIR_OBJ="object"
 DIR_METADATA="metadata"
-QSTR_LOG="leo_object_storage_*"
-QSTR_OBJ="*.avs"
-QSTR_METADATA="*"
 
 
 ## ------------------------------------
@@ -131,24 +132,27 @@ fi
 
 
 ## ------------------------------------
-## Processing For Source Dir
-## ------------------------------------
-## leo_storage/avs/log
-rm_simlink "$src/$DIR_LOG"
-
-## leo_storage/avs/object
-rm_simlink "$src/$DIR_OBJ"
-
-## leo_storage/avs/metadata
-rm_simlink "$src/$DIR_METADATA"
-
-
-## ------------------------------------
 ## Processing For Destination Dir
 ## ------------------------------------
+## @TODO
 ## mv $src/* $dest/
 cp -r $src/* $dest/
 
+##
+## Remove simlink files
+##
+## leo_storage/avs/log
+rm_simlink "$dest/$DIR_LOG"
+
+## leo_storage/avs/object
+rm_simlink "$dest/$DIR_OBJ"
+
+## leo_storage/avs/metadata
+rm_simlink "$dest/$DIR_METADATA"
+
+##
+##  Make simlink files
+##
 ## leo_storage/avs/log
 create_simlink "$dest/$DIR_LOG" "."
 
