@@ -244,15 +244,20 @@ is_candidates_1(MaxNumOfNodes, Candidates) ->
                                                                    history = History}
                                                       <- Candidates_1]),
                     Candidates_3 = [Node_1 || {_History, Node_1} <- Candidates_2],
-                    {Candidates_4, Others} = lists:split(MaxNumOfNodes_1, Candidates_3),
-                    case Others of
+                    case Candidates_3 of
                         [] ->
-                            void;
-                        _ ->
-                            _ = rpc:multicall(Others, leo_storage_watchdog_fragment,
-                                              clear, [], ?TIMEOUT)
-                    end,
-                    lists:member(erlang:node(), Candidates_4)
+                            false;
+                        _NotEmpty ->
+                            {Candidates_4, Others} = lists:split(MaxNumOfNodes_1, Candidates_3),
+                            case Others of
+                                [] ->
+                                    void;
+                                _ ->
+                                    _ = rpc:multicall(Others, leo_storage_watchdog_fragment,
+                                                      clear, [], ?TIMEOUT)
+                            end,
+                            lists:member(erlang:node(), Candidates_4)
+                    end
             end
     end.
 
