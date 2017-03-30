@@ -887,7 +887,7 @@ usage() {
     output ""
     output "  LeoFS commands are:"
     output "      ${UNDERLINE}General Commands:${NONE}"
-    output "$WHITESPACE version"
+    output "$WHITESPACE version [all]"
     usage_status min
     usage_whereis min
     output ""
@@ -991,7 +991,7 @@ done
 
 case "$1" in
     version)
-        if [ $# -ne 1 ]; then
+        if [ $# -gt 2 ]; then
             echo "Usage: $SCRIPT version"
             exit 1
         fi

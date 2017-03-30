@@ -39,6 +39,7 @@
          acls/1, cluster_status/1,
          whereis/1, nfs_mnt_key/1,
          histories/1,
+         version_all/1,
          authorized/0, user_id/0, password/0
         ]).
 
@@ -180,6 +181,23 @@ system_info_and_nodes_stat(Props) ->
                {<<"node_list">>, NodeInfo}
               ]}).
 
+%% @doc Format a version list
+%%
+-spec(version_all([tuple()]) ->
+             binary()).
+version_all(Nodes) ->
+    NodeInfo = case Nodes of
+                   [] -> [];
+                   _  ->
+                       lists:map(
+                         fun({Type, NodeName, Version}) ->
+                                 {[{<<"type">>,      leo_misc:any_to_binary(Type)},
+                                   {<<"node">>,      leo_misc:any_to_binary(NodeName)},
+                                   {<<"version">>,   leo_misc:any_to_binary(Version)}
+                                  ]}
+                         end, Nodes)
+               end,
+    gen_json({[{<<"result">>, NodeInfo}]}).
 
 %% @doc Format a cluster node state
 %%

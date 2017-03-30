@@ -313,6 +313,7 @@
 -define(ERROR_OVER_MAX_CLUSTERS, "Over max number of clusters").
 -define(ERROR_UPDATED_SYSTEM_CONF, "Updated the system configuration").
 -define(ERROR_FAILED_UPDATE_LOG_LEVEL, "Failed to update the log-level").
+-define(ERROR_FAILED_GET_VERSION, "Failed to get the version").
 
 %% type of console
 -define(CONSOLE_CUI, 'cui').
