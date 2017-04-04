@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ## ======================================================================
 ##
 ## LeoFS
@@ -52,32 +52,48 @@ usage() {
     output "usage: ${bold}$SCRIPT${normal} <source-directory> <destination-directory>"
 }
 
-rm_if_link(){
-    [ ! -L "$1" ] || rm "$1";
-}
 
-rm_simlink() {
-    cd $1
-    for i in *
-    do
-        rm_if_link "$i"
-    done
-    cd -
-}
-
-create_simlink() {
+## Operates files
+##   - Removes current similinks
+##   - Creates new simlinks
+## @param destination-directory
+## @param delimiter
+##
+op_files() {
+    ##
+    ## Removes simlinks
+    ##   and Creates pair of {simlink, original}
+    ##
     dir=$1
     cd "$dir"
+    declare -A array
+
+    for i in *
+    do
+        f=$i
+        if  [ -L "$f" ] ; then
+            l=`readlink -f "$f"`
+            l=${l##*/}
+            rm "$f"
+            array[$l]=$f
+        fi
+    done
+
+    ##
+    ## Creates simlinks
+    ##
     IFS=$2
 
     for i in *
     do
         org=$i
-        set -- $i
-        source_file="$dir/$org"
-        target_file="$dir/$1"
-        ln -s "$source_file" "$target_file"
-        echo "[CREATED] $source_file > $target_file"
+        val=${array[$org]}
+        if [ -n "$val" ]; then
+            source_file="$dir/$org"
+            target_file="$dir/$val"
+            ln -fs "$source_file" "$target_file"
+            echo "[CREATED] $source_file > $target_file"
+        fi
     done
     cd -
 }
@@ -92,16 +108,8 @@ if [ $# -ne 2 ]; then
 fi
 
 cur=$(pwd)
-src=$1
-dest=$2
-
-if `echo $src | tail -c2 | grep -q '/'` ; then
-    src=`echo $src | rev | cut -c 2- | rev`
-fi
-if `echo $dest | tail -c2 | grep -q '/'` ; then
-    dest=`echo $dest | rev | cut -c 2- | rev`
-fi
-
+src=${1%/}
+dest=${2%/}
 
 if [ -e $src ]; then
     if [ -d $src ]; then
@@ -136,30 +144,11 @@ fi
 ## ------------------------------------
 ## @TODO
 ## mv $src/* $dest/
-cp -r $src/* $dest/
+cp -pr $src/* $dest/
 
 ##
-## Remove simlink files
+## Operates files
 ##
-## leo_storage/avs/log
-rm_simlink "$dest/$DIR_LOG"
-
-## leo_storage/avs/object
-rm_simlink "$dest/$DIR_OBJ"
-
-## leo_storage/avs/metadata
-rm_simlink "$dest/$DIR_METADATA"
-
-##
-##  Make simlink files
-##
-## leo_storage/avs/log
-create_simlink "$dest/$DIR_LOG" "."
-
-## leo_storage/avs/object
-create_simlink "$dest/$DIR_OBJ" "_"
-
-## leo_storage/avs/metadata
-create_simlink "$dest/$DIR_METADATA" "_"
-
-echo "[FINISHED]"
+op_files "$dest/$DIR_LOG" "."
+op_files "$dest/$DIR_OBJ" "_"
+op_files "$dest/$DIR_METADATA" "_"
