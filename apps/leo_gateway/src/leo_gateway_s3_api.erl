@@ -1485,6 +1485,13 @@ auth(Req, HTTPMethod, Path, TokenLen, BucketName, ACLs,
         false ->
             auth_1(Req, HTTPMethod, Path, TokenLen, BucketName, ACLs, ReqParams)
     end;
+auth(Req, ?HTTP_GET, Path, 1, BucketName, ACLs, #req_params{qs_prefix = Prefix} = ReqParams) when is_binary(Prefix) ->
+    case is_public_read(ACLs) of
+        true ->
+            {ok, <<>>, undefined};
+        false ->
+            auth_1(Req, ?HTTP_GET, Path, 1, BucketName, ACLs, ReqParams)
+    end;
 auth(Req, HTTPMethod, Path, TokenLen, BucketName, ACLs, ReqParams) when TokenLen =< 1 ->
     auth_1(Req, HTTPMethod, Path, TokenLen, BucketName, ACLs, ReqParams);
 auth(Req, HTTPMethod, Path, TokenLen, BucketName, ACLs, ReqParams) when TokenLen > 1,
