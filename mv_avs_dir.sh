@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ## ======================================================================
 ##
 ## LeoFS
@@ -60,39 +60,22 @@ usage() {
 ## @param delimiter
 ##
 op_files() {
-    ##
-    ## Removes simlinks
-    ##   and Creates pair of {simlink, original}
-    ##
     dir=$1
     cd "$dir"
-    declare -A array
 
     for i in *
     do
         f=$i
         if  [ -L "$f" ] ; then
-            l=`readlink -f "$f"`
+            l=`readlink "$f"`
+            l=${l%/}
             l=${l##*/}
             rm "$f"
-            array[$l]=$f
-        fi
-    done
 
-    ##
-    ## Creates simlinks
-    ##
-    IFS=$2
-
-    for i in *
-    do
-        org=$i
-        val=${array[$org]}
-        if [ -n "$val" ]; then
-            source_file="$dir/$org"
-            target_file="$dir/$val"
+            source_file="$l"
+            target_file="$f"
             ln -fs "$source_file" "$target_file"
-            echo "[CREATED] $source_file > $target_file"
+            echo "[CREATED] $dir/$source_file > $dir/$target_file"
         fi
     done
     cd -
@@ -144,7 +127,7 @@ fi
 ## ------------------------------------
 ## @TODO
 ## mv $src/* $dest/
-cp -pr $src/* $dest/
+cp -pR $src/* $dest/
 
 ##
 ## Operates files
