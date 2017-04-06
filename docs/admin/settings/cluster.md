@@ -5,9 +5,19 @@ This document outlines the various configuration items to keep in mind when plan
 
 ## Prior Knowledge
 
-LeoFS adopts [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency) of the consistency model, it takes priority over AP*(Availability and Partition tolerance)* over C*(consistency)* which depends on [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem).
+LeoFS adopts [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency) of the consistency model, it takes priority over AP *(Availability and Partition tolerance)* over C *(consistency)* which depends on [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem).
 
 To keep consistency of objects eventually, LeoFS delivers the automated replication and recovery to automatically fix consistency of objects. You can configure the consistency level of your LeoFS system, and the LeoFS system is affected by the configuration.
+
+
+### How to Keep RING's Consistency
+#### Case 1
+
+If both managers are unavailable, LeoStorage and LeoGateway nodes don't update the RING to keep its consistency into the LeoFS system.
+
+#### Case 2
+
+If a manager is unavailable, LeoFS can update the RING, and synchronize it into the LeoFS' system eventually. After another LeoManager node is restarted, LeoManager automatically synchronizes the RING between the manager nodes.
 
 
 ## Consistency Level
@@ -30,14 +40,14 @@ There're four configuration items at <a href="https://github.com/leo-project/leo
 
 This document delivers the relationship of `data availability` and `configuration level` as below:
 
-| Data Availability | Configuration Level                  | Description |
-|-------------------|--------------------------------------|-------------|
-| Extremely Low     | n = 2<br/>r = 1<br/>w = 1<br/>d = 1  | Data can not be acquired even if two nodes goes down *(for personal use)*|
-| Low               | n = 3<br/>r = 1<br/>w = 1<br/>d = 1  | Low data consistency|
-| Middle(1)         | n = 3<br/>r = 1<br/>w = 2<br/>d = 2  | Typical settings |
-| Middle(2)         | n = 3<br/>r = 2<br/>w = 2<br/>d = 2  | High data consistency than `Middle(1)` |
-| High              | n = 3<br/>r = 2<br/>w = 3<br/>d = 3  | Data can not be input and removed even if one node goes down |
-| Extremely High    | n = 3<br/>r = 3<br/>w = 3<br/>d = 3  | Data can not be acquired even if one node goes down *(can not be recommended)*|
+| Data Availability | Configuration Level   | Description |
+|-------------------|-----------------------|-------------|
+| Extremely Low     | n=2, r=1<br/>w=1, d=1 | Data can not be acquired even if two nodes goes down *(for personal use)*|
+| Low               | n=3, r=1<br/>w=1, d=1 | Low data consistency|
+| Middle(1)         | n=3, r=1<br/>w=2, d=2 | Typical settings |
+| Middle(2)         | n=3, r=2<br/>w=2, d=2 | High data consistency than `Middle(1)` |
+| High              | n=3, r=2<br/>w=3, d=3 | Data can not be input and removed even if one node goes down |
+| Extremely High    | n=3, r=3<br/>w=3, d=3 | Data can not be acquired even if one node goes down *(can not be recommended)*|
 
 
 ### How To Change Consistency Level

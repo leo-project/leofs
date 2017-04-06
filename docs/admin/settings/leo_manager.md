@@ -2,14 +2,15 @@
 
 ## Prior Knowledge
 
-The current version, v1.3 of LeoManager depends on <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia, A distributed telecommunications DBMS</a> to manage configurations of a system and information of all nodes, and LeoManager must always be running on master and slave of LeoManager to replicate the data for preventing data loss. You need to configure both LeoManager master and the slave.
+The current version, v1.3 of LeoManager depends on <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia, A distributed telecommunications DBMS</a> to manage configurations of a LeoFS system and information of all nodes. LeoManager nodes must keep running to replicate the data for preventing data loss. You need to configure both LeoManager master and the slave.
 
 
 ## Configuration
 
-There are some differences between LeoManager master and LeoManager slave. LeoManager master only has configuration items of the consistency level and the multi datacenter replication.
+There are some condfiguration differences between LeoManager master and LeoManager slave. LeoManager master only has `the consistency level` and `the multi datacenter replication`.
 
-The default setting is to launch a LeoFS system on one node, whose setting cannot replicate data, and data loss could be happened with high probability. You need to modify the configuration suitably before launching the LeoFS system on your production or other environments.
+The default setting is to launch a LeoFS system on one node, whose setting cannot replicate data because the total number of replica is one, and data loss could be happened with high probability. You need to modify the configuration suitably before launching the LeoFS system on your production or other environments.
+
 
 ### LeoManager's Related Configurations
 
