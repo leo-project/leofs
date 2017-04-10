@@ -1099,14 +1099,13 @@ bucket_by_access_key(Buckets) ->
                   BucketStr = binary_to_list(Bucket1),
                   PermissionsStr = leo_s3_bucket:aclinfo_to_str(Permissions1),
 
-                  RedOptions = leo_redundant_manager_api:get_options(),
+                  {ok, RedOptions} = leo_redundant_manager_api:get_options(),
                   ECParamsStr = get_redundancy_method_str(
                                   RedMethod, CPParams, ECParams, RedOptions),
                   Created2  = case (Created1 > 0) of
                                   true  -> leo_date:date_format(Created1);
                                   false -> []
                               end,
-
                   Acc ++ io_lib:format("~s | ~s | ~s | ~s\r\n",
                                        [string:left(BucketStr, Col_1_Len),
                                         string:left(PermissionsStr, Col_2_Len),
