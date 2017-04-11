@@ -1077,7 +1077,7 @@ bucket_by_access_key(Buckets) ->
                              end
                             }
                     end, {Col_1_MinLen, Col_2_MinLen}, Buckets),
-    Col_3_Len = 24,
+    Col_3_Len = 28,
     Col_4_Len = 26,
     Header = lists:append(
                [string:left("bucket", Col_1_Len), " | ",
