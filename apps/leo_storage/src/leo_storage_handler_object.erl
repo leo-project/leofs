@@ -741,13 +741,8 @@ replicate(Object) ->
                            false ->
                                Quorum_1
                        end,
-            case get_active_redundancies(Quorum_2, Redundancies_1) of
-                {ok, Redundancies_2} ->
-                    leo_storage_replicator:replicate(Method, Quorum_2, Redundancies_2,
-                                                     Object, replicate_callback());
-                {error, Reason} ->
-                    {error, Reason}
-            end;
+            leo_storage_replicator:replicate(Method, Quorum_2, Redundancies_1,
+                                             Object, replicate_callback());
         {error, Cause} ->
             {error, Cause}
     end.
@@ -1171,15 +1166,10 @@ replicate_fun(?REP_LOCAL, Method, AddrId, Object) ->
                                    d = DeleteQuorum,
                                    ring_hash = RingHash}} ->
                     Quorum = ?quorum(Method, WriteQuorum, DeleteQuorum),
-                    case get_active_redundancies(Quorum, Redundancies) of
-                        {ok, Redundancies_1} ->
-                            leo_storage_replicator:replicate(
-                              Method, Quorum, Redundancies_1,
-                              Object#?OBJECT{ring_hash = RingHash},
-                              replicate_callback(Object));
-                        {error, Reason} ->
-                            {error, Reason}
-                    end;
+                    leo_storage_replicator:replicate(
+                      Method, Quorum, Redundancies,
+                      Object#?OBJECT{ring_hash = RingHash},
+                      replicate_callback(Object));
                 {error,_Cause} ->
                     {error, ?ERROR_COULD_NOT_GET_REDUNDANCY}
             end;
