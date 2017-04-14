@@ -273,10 +273,11 @@ init() ->
              ok | {error, any()}).
 handle_call({consume, ?QUEUE_ID_PER_OBJECT, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        {'EXIT', Cause} ->
-            ?error("handle_call/1 - QUEUE_ID_PER_OBJECT",
-                   [{cause, Cause}]),
-            {error, Cause};
+        {'EXIT',_} ->
+            ?warn("handle_call/1 - consume",
+                  [{qid, ?QUEUE_ID_PER_OBJECT},
+                   {cause, invalid_data_format}]),
+            ok;
         Term ->
             case ?transform_inconsistent_data_message(Term) of
                 {ok, #?MSG_INCONSISTENT_DATA{addr_id = AddrId,
@@ -287,33 +288,32 @@ handle_call({consume, ?QUEUE_ID_PER_OBJECT, MessageBin}) ->
                     send_object_to_remote_node(SyncNode, AddrId, Key);
                 {ok, #?MSG_INCONSISTENT_DATA{addr_id = AddrId,
                                              key = Key,
-                                             type = ErrorType}} ->
+                                             type = _ErrorType}} ->
                     case correct_redundancies(Key) of
                         ok ->
                             ok;
                         {error, Cause = not_found} ->
                             ?warn("handle_call/1 - consume",
-                                  [{addr_id, AddrId},
+                                  [{qid, ?QUEUE_ID_PER_OBJECT},
+                                   {addr_id, AddrId},
                                    {key, Key}, {cause, Cause}]),
                             ok;
                         {error, Cause} ->
-                            ?warn("handle_call/1 - consume",
-                                  [{addr_id, AddrId},
-                                   {key, Key}, {cause, Cause}]),
-                            publish(?QUEUE_ID_PER_OBJECT, AddrId, Key, ErrorType),
+                            ?debug("handle_call/1 - consume",
+                                   [{addr_id, AddrId},
+                                    {key, Key}, {cause, Cause}]),
                             {error, Cause}
                     end;
-                {error, Error} ->
-                    {error, Error}
+                {error,_Error} ->
+                    ?warn("handle_call/1 - consume",
+                          [{qid, ?QUEUE_ID_PER_OBJECT},
+                           {cause, invalid_data_format}]),
+                    ok
             end
     end;
 
 handle_call({consume, ?QUEUE_ID_SYNC_BY_VNODE_ID, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        {'EXIT', Cause} ->
-            ?error("handle_call/1 - QUEUE_ID_SYNC_BY_VNODE_ID",
-                   [{cause, Cause}]),
-            {error, Cause};
         #sync_unit_of_vnode_message{vnode_id = ToVNodeId,
                                     node = Node} ->
             {ok, Res} = leo_redundant_manager_api:range_of_vnodes(ToVNodeId),
@@ -322,27 +322,25 @@ handle_call({consume, ?QUEUE_ID_SYNC_BY_VNODE_ID, MessageBin}) ->
             ok = sync_vnodes(Node, CurRingHash, Res),
             notify_rebalance_message_to_manager(ToVNodeId);
         _ ->
-            {error, ?ERROR_COULD_NOT_MATCH}
+            ?warn("handle_call/1 - consume",
+                  [{qid, ?QUEUE_ID_SYNC_BY_VNODE_ID},
+                   {cause, invalid_data_format}]),
+            ok
     end;
 
 handle_call({consume, ?QUEUE_ID_REBALANCE, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        {'EXIT', Cause} ->
-            ?error("handle_call/1 - QUEUE_ID_REBALANCE",
-                   [{cause, Cause}]),
-            {error, Cause};
         #rebalance_message{} = Msg ->
             rebalance_1(Msg);
-        _Cause ->
-            {error, ?ERROR_COULD_NOT_MATCH}
+        _ ->
+            ?warn("handle_call/1 - consume",
+                  [{qid, ?QUEUE_ID_REBALANCE},
+                   {cause, invalid_data_format}]),
+            ok
     end;
 
 handle_call({consume, ?QUEUE_ID_ASYNC_DELETION, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        {'EXIT', Cause} ->
-            ?error("handle_call/1 - QUEUE_ID_ASYNC_DELETION",
-                   [{cause, Cause}]),
-            {error, Cause};
         #async_deletion_message{addr_id = AddrId,
                                 key = Key} ->
             case catch leo_storage_handler_object:delete(
@@ -354,43 +352,40 @@ handle_call({consume, ?QUEUE_ID_ASYNC_DELETION, MessageBin}) ->
                                  }, 0, false) of
                 ok ->
                     ok;
-                {_,_Cause} ->
-                    publish(?QUEUE_ID_ASYNC_DELETION, AddrId, Key)
+                {_, Cause} ->
+                    {error, Cause}
             end;
         _ ->
-            {error, ?ERROR_COULD_NOT_MATCH}
+            ?warn("handle_call/1 - consume",
+                  [{qid, ?QUEUE_ID_ASYNC_DELETION},
+                   {cause, invalid_data_format}]),
+            ok
     end;
 
 handle_call({consume, ?QUEUE_ID_RECOVERY_NODE, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        {'EXIT', Cause} ->
-            ?error("handle_call/1 - QUEUE_ID_RECOVERY_NODE",
-                   [{cause, Cause}]),
-            {error, Cause};
         #recovery_node_message{node = Node} ->
             recover_node(Node);
         _ ->
-            {error, ?ERROR_COULD_NOT_MATCH}
+            ?warn("handle_call/1 - consume",
+                  [{qid, ?QUEUE_ID_RECOVERY_NODE},
+                   {cause, invalid_data_format}]),
+            ok
     end;
 
 handle_call({consume, ?QUEUE_ID_SYNC_OBJ_WITH_DC, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        {'EXIT', Cause} ->
-            ?error("handle_call/1 - QUEUE_ID_SYNC_OBJ_WITH_DC",
-                   [{cause, Cause}]),
-            {error, Cause};
         #inconsistent_data_with_dc{} = Msg ->
             fix_consistency_between_clusters(Msg);
         _ ->
-            {error, ?ERROR_COULD_NOT_MATCH}
+            ?warn("handle_call/1 - consume",
+                  [{qid, ?QUEUE_ID_SYNC_OBJ_WITH_DC},
+                   {cause, invalid_data_format}]),
+            ok
     end;
 
 handle_call({consume, ?QUEUE_ID_COMP_META_WITH_DC, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        {'EXIT', Cause} ->
-            ?error("handle_call/1 - QUEUE_ID_COMP_META_WITH_DC",
-                   [{casue, Cause}]),
-            {error, Cause};
         #comparison_metadata_with_dc{cluster_id = ClusterId,
                                      list_of_addrid_and_key = AddrAndKeyList} ->
             %% @doc - condition: if state of a remote-cluster is not 'running',
@@ -404,16 +399,14 @@ handle_call({consume, ?QUEUE_ID_COMP_META_WITH_DC, MessageBin}) ->
                     ok
             end;
         _ ->
-            {error, ?ERROR_COULD_NOT_MATCH}
+            ?warn("handle_call/1 - consume",
+                  [{qid, ?QUEUE_ID_COMP_META_WITH_DC},
+                   {cause, invalid_data_format}]),
+            ok
     end;
 
 handle_call({consume, ?QUEUE_ID_DEL_DIR, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        {'EXIT', Cause} ->
-            ?error("handle_call/1 - QUEUE_ID_DEL_DIR",
-                   [{cause, Cause}]),
-            {error, Cause};
-
         %% A destination node is NOT specified
         #delete_dir{dir = ParentDir,
                     node = undefined} ->
@@ -429,7 +422,12 @@ handle_call({consume, ?QUEUE_ID_DEL_DIR, MessageBin}) ->
                     ok;
                 _Other ->
                     ok
-            end
+            end;
+        _ ->
+            ?warn("handle_call/1 - consume",
+                  [{qid, ?QUEUE_ID_DEL_DIR},
+                   {cause, invalid_data_format}]),
+            ok
     end;
 handle_call(_) ->
     ok.
@@ -768,9 +766,9 @@ correct_redundancies_4({error, not_found = Why},_InconsistentNodes, [Node|_Rest]
            {metadata, Metadata}, {cause, Why}]),
     ok;
 correct_redundancies_4({error, Why}, InconsistentNodes, [Node|Rest], Metadata) ->
-    ?warn("correct_redundancies_4/4",
-          [{inconsistent_nodes, InconsistentNodes},
-           {node, Node}, {metadata, Metadata}, {cause, Why}]),
+    ?debug("correct_redundancies_4/4",
+           [{inconsistent_nodes, InconsistentNodes},
+            {node, Node}, {metadata, Metadata}, {cause, Why}]),
     correct_redundancies_3(InconsistentNodes, Rest, Metadata).
 
 
