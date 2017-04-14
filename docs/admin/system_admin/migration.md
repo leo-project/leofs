@@ -38,7 +38,7 @@ new version.
 3. Start the node through its launch script, as per upgrade flow diagram.
 
 #### Running LeoFS with customized paths
-For those who have LeoFS configured with for examples let's say
+For those who have LeoFS configured with, for example, let's say
 - queue and mnesia in `/mnt/work`
 - log files in `/var/log/leofs`
 - storage data files in `/mnt/avs`
@@ -55,9 +55,9 @@ For those who have LeoFS already running as non-privileged user.
 
 1. Scripts that are provided by packages generally should be enough to run on most configurations without changes. If needed, change user from `leofs` to some other in "environment" config files (e.g. `RUNNER_USER=localuser`). Please refer to the later section for more details about environment config files.
 
-2. Possible pitfall includes ownership of `/usr/local/leofs/.erlang.cookie` file, which is set to `leofs` during package installation. This should only be a problem when trying to run LeoFS nodes with permissions of some user which is not called `leofs`, but has home directory set to `/usr/local/leofs`. This is not supported due to technical reasons. home directory of that user must be set to something else.
+2. Possible pitfall includes ownership of `/usr/local/leofs/.erlang.cookie` file, which is set to `leofs` during package installation. This should only be a problem when trying to run LeoFS nodes with permissions of some user which is not called `leofs`, but has home directory set to `/usr/local/leofs`. This is not supported due to technical reasons. Home directory of that user must be set to something else.
 
-#### Running LeoFS with any form and keep LeoFS running as `root`
+#### Running LeoFS in any form and keeping LeoFS running as `root`
 For those who want to keep maximum compatibility with the previous installation.
 
 1. In "environment" config file, set this option
@@ -65,7 +65,7 @@ For those who want to keep maximum compatibility with the previous installation.
 RUNNER_USER=root
 ```
 
-Please note that switching this node to run as non-privileged user later will require extra steps to carefully change all permissions. This is not recommended, by possible (at very least, in addition to `chown` commands from before, permissions of `leo_*/etc` and `leo_*/snmp/*/db` will have to be changed recursively as well).
+Please note that switching this node to run as non-privileged user later will require extra steps to carefully change all permissions. This is not recommended, but possible (at very least, in addition to `chown` commands from before, permissions of `leo_*/etc` and `leo_*/snmp/*/db` will have to be changed recursively as well).
 
 ## Environment Config Files
 ### Overview
@@ -87,7 +87,7 @@ $ cp /usr/local/leofs/<old_version>/leo_manager_0/etc/leo_manager.environment /u
 $ /usr/local/leofs/<new_version>/leo_manager_0/bin/leo_manager start
 ```
 
-With this, users can place actual config files (like `leo_manager.conf`) to directory of their choice and change them independently of version upgrades, and the `.environment` files that need to be placed into installation tree doesn't need to be changed between versions.  With the correct setup, since no work/temporary files will be kept in the installation tree, you can remove old version cleanly.
+With this, users can place actual config files (like `leo_manager.conf`) to directory of their choice and change them independently of version upgrades, and the `.environment` files that need to be placed into installation tree don't need to be changed between versions.  With the correct setup, since no work/temporary files will be kept in the installation tree, old version can be removed cleanly.
 
 ### Example Configuration
 Contents of `/usr/local/leofs/<version>/leo_manager_0/etc/leo_manager.environment`:
