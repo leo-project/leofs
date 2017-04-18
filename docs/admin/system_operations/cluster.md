@@ -1,7 +1,7 @@
 # Cluster Operations
 ## Prior Knowledge
 
-LeoFS provides the operation of a LeoFS' cluster after launching its storage system with the various commands, which is implemented on <a href="https://github.com/leo-project/leofs/blob/master/leofs-adm" target="_blank">leofs-adm</a>, LeoFS CLI for administration. LeoFS supports `node addition` and as unique features of LeoFS, `node deletion`, and `node suspension`, `node restart` and `node takeover` are already implemented.
+LeoFS provides the cluster operation features which are implemented on <a href="https://github.com/leo-project/leofs/blob/master/leofs-adm" target="_blank">leofs-adm</a>, LeoFS CLI for administration. LeoFS supports `node addition` and `node deletion`, and as unique features of LeoFS, `node suspension`, `node restart` and `node takeover` are already covered. Those functions can be used after a LeoFS system is started.
 
 ## Operations
 ### Add a Node
