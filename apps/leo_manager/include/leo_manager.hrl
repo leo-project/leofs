@@ -255,7 +255,7 @@
 -define(ERROR_NODE_NOT_EXISTS, "Node not exist").
 -define(ERROR_TABLE_NOT_EXISTS, "Tables not exist").
 -define(ERROR_FAILED_COMPACTION, "Failed compaction").
--define(ERROR_FAILED_GET_STORAGE_STATS, "Failed to get storage stats").
+%% -define(ERROR_FAILED_GET_STORAGE_STATS, "Failed to get storage stats").
 -define(ERROR_USER_NOT_FOUND, "User not found").
 -define(ERROR_COULD_NOT_GET_USER, "Could not get user(s)").
 -define(ERROR_COULD_NOT_ADD_USER, "Could not add a user").
@@ -294,9 +294,9 @@
 -define(ERROR_MNESIA_NOT_START, "Mnesia does not start, yet").
 -define(ERROR_NOT_SATISFY_CONDITION, "Not satisfy conditions").
 -define(ERROR_TARGET_NODE_NOT_RUNNING, "Target node does not running").
--define(ERROR_FAILED_BACKUP_MNESIA, "Failed to backup the mnesia backup file").
--define(ERROR_FAILED_RESTORE_MNESIA, "Failed to restore the mnesia backup file").
--define(ERROR_FAILED_UPDATE_MANAGERS, "Failed to update the manager nodes").
+%% -define(ERROR_FAILED_BACKUP_MNESIA, "Failed to backup the mnesia backup file").
+%% -define(ERROR_FAILED_RESTORE_MNESIA, "Failed to restore the mnesia backup file").
+%% -define(ERROR_FAILED_UPDATE_MANAGERS, "Failed to update the manager nodes").
 -define(ERROR_COULD_NOT_GET_CONF, "Could not get the system-config").
 -define(ERROR_MEMBER_NOT_FOUND, "Member not found").
 -define(ERROR_COULD_NOT_GET_MEMBER, "Could not get members (storage-nodes)").
@@ -410,10 +410,15 @@
 %% ---------------------------------------------------------
 %% MACROS
 %% ---------------------------------------------------------
+-define(MANAGER_TYPE_MASTER, 'master').
+-define(MANAGER_TYPE_SLAVE, 'slave').
+-type(manager_type() :: ?MANAGER_TYPE_MASTER |
+                        ?MANAGER_TYPE_SLAVE).
+
 -define(env_mode_of_manager(),
         case application:get_env(leo_manager, manager_mode) of
             {ok, EnvModeOfManager} -> EnvModeOfManager;
-            _ -> 'master'
+            _ -> ?MANAGER_TYPE_MASTER
         end).
 
 -define(env_partner_of_manager_node(),

@@ -2,7 +2,7 @@
 %%
 %% Leo Manager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -171,7 +171,12 @@ system_info_and_nodes_stat(Props) ->
                   {<<"r">>, SystemConf#?SYSTEM_CONF.r},
                   {<<"w">>, SystemConf#?SYSTEM_CONF.w},
                   {<<"d">>, SystemConf#?SYSTEM_CONF.d},
-                  {<<"dc_awareness_replicas">>,   SystemConf#?SYSTEM_CONF.num_of_dc_replicas},
+                  %% @Deprecated: `dc_awareness_replicas`
+                  {<<"dc_awareness_replicas">>, SystemConf#?SYSTEM_CONF.num_of_dc_replicas},
+                  {<<"mdcr_n">>, SystemConf#?SYSTEM_CONF.num_of_dc_replicas},
+                  {<<"mdcr_r">>, SystemConf#?SYSTEM_CONF.mdcr_r},
+                  {<<"mdcr_w">>, SystemConf#?SYSTEM_CONF.mdcr_w},
+                  {<<"mdcr_d">>, SystemConf#?SYSTEM_CONF.mdcr_d},
                   {<<"rack_awareness_replicas">>, SystemConf#?SYSTEM_CONF.num_of_rack_replicas},
                   {<<"ring_size">>,      SystemConf#?SYSTEM_CONF.bit_of_ring},
                   {<<"ring_hash_cur">>,  RH0},

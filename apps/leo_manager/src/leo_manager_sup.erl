@@ -2,7 +2,7 @@
 %%
 %% Leo Manaegr
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -84,66 +84,11 @@ start_link() ->
             ok = leo_manager_console:start_link(leo_manager_formatter_text, CUI_Console,  PluginModConsole),
             ok = leo_manager_console:start_link(leo_manager_formatter_json, JSON_Console, PluginModConsole),
 
-            %% Launch Logger
-            LogDir = ?env_log_dir(),
-            LogLevel = ?env_log_level(leo_manager),
-            ok = leo_logger_client_message:new(
-                   LogDir, LogLevel, log_file_appender()),
-            ok = leo_logger_client_base:new(?LOG_GROUP_ID_HISTORY, ?LOG_ID_HISTORY,
-                                            LogDir, ?LOG_FILENAME_HISTORY),
-
-            %% Launch MQ
+            %% Launch the components
+            ok = start_logger(),
             ok = leo_manager_mq_client:start(?MODULE, [], ?env_queue_dir()),
-
-            %% Launch Redundant-manager
-            SystemConf = leo_manager_api:load_system_config(),
-            MembershipCallback = fun leo_manager_api:synchronize/1,
-
-            ChildSpec = case Mode of
-                            master ->
-                                {leo_redundant_manager_sup,
-                                 {leo_redundant_manager_sup, start_link,
-                                  [?MONITOR_NODE,
-                                   ReplicaNodes_1,
-                                   ?env_queue_dir(leo_manager),
-                                   [{version,1},
-                                    {cluster_id,  SystemConf#?SYSTEM_CONF.cluster_id},
-                                    {dc_id,       SystemConf#?SYSTEM_CONF.dc_id},
-                                    {n,           SystemConf#?SYSTEM_CONF.n},
-                                    {r,           SystemConf#?SYSTEM_CONF.r},
-                                    {w,           SystemConf#?SYSTEM_CONF.w},
-                                    {d,           SystemConf#?SYSTEM_CONF.d},
-                                    {bit_of_ring, SystemConf#?SYSTEM_CONF.bit_of_ring},
-                                    {num_of_dc_replicas,   SystemConf#?SYSTEM_CONF.num_of_dc_replicas},
-                                    {num_of_rack_replicas, SystemConf#?SYSTEM_CONF.num_of_rack_replicas},
-                                    {max_mdc_targets,      SystemConf#?SYSTEM_CONF.max_mdc_targets}
-                                   ],
-                                   MembershipCallback
-                                  ]
-                                 },
-                                 permanent, 2000, supervisor, [leo_redundant_manager_sup]};
-                            _ ->
-                                {leo_redundant_manager_sup,
-                                 {leo_redundant_manager_sup, start_link,
-                                  [?MONITOR_NODE,
-                                   ReplicaNodes_1,
-                                   ?env_queue_dir(leo_manager),
-                                   [],
-                                   MembershipCallback
-                                  ]
-                                 },
-                                 permanent, 2000, supervisor, [leo_redundant_manager_sup]}
-                        end,
-            {ok, _} = supervisor:start_child(Pid, ChildSpec),
-
-            %% Launch S3Libs:Auth/Bucket/EndPoint
-            case ?env_use_s3_api() of
-                false -> void;
-                true  ->
-                    ok = leo_s3_libs:start(master, [])
-            end,
-
-            %% launch leo_rpc's server
+            ok = start_redundant_manager(Pid, Mode, ReplicaNodes_1),
+            ok = start_s3libs(),
             ok = application:start(leo_rpc),
 
             %% Launch Mnesia and create that tables
@@ -244,11 +189,116 @@ init([]) ->
 %% ---------------------------------------------------------------------
 %% Inner Function(s)
 %% ---------------------------------------------------------------------
+%% @doc Launch LeoLogger
+%% @private
+start_logger() ->
+    LogDir = ?env_log_dir(),
+    LogLevel = ?env_log_level(leo_manager),
+    ok = leo_logger_client_message:new(
+           LogDir, LogLevel, log_file_appender()),
+    ok = leo_logger_client_base:new(?LOG_GROUP_ID_HISTORY, ?LOG_ID_HISTORY,
+                                    LogDir, ?LOG_FILENAME_HISTORY),
+    ok.
+
+
+%% @doc Launch LeoRedundantManager
+%% @private
+start_redundant_manager(Pid, Mode, ReplicaNodes) ->
+    SystemConf = leo_manager_api:load_system_config(),
+    N = SystemConf#?SYSTEM_CONF.n,
+    R = SystemConf#?SYSTEM_CONF.r,
+    W = SystemConf#?SYSTEM_CONF.w,
+    D = SystemConf#?SYSTEM_CONF.d,
+    MDCR_N = SystemConf#?SYSTEM_CONF.num_of_dc_replicas,
+    MDCR_R = SystemConf#?SYSTEM_CONF.mdcr_r,
+    MDCR_W = SystemConf#?SYSTEM_CONF.mdcr_w,
+    MDCR_D = SystemConf#?SYSTEM_CONF.mdcr_d,
+    MembershipCallback = fun leo_manager_api:synchronize/1,
+
+    %% Validate the local consistency level
+    case (N < 1 orelse
+          R < 1 orelse
+          W < 1 orelse
+          D < 1 orelse
+          N < R orelse
+          N < W orelse
+          N < D) of
+        true when Mode == ?MANAGER_TYPE_MASTER ->
+            exit('invalid_consistency_level');
+        _ ->
+            %% Validate the consistency level for mdcr
+            case (MDCR_N < 1 orelse
+                  MDCR_R < 1 orelse
+                  MDCR_W < 1 orelse
+                  MDCR_D < 1 orelse
+                  MDCR_N < MDCR_R orelse
+                  MDCR_N < MDCR_W orelse
+                  MDCR_N < MDCR_D) of
+                true when Mode == ?MANAGER_TYPE_MASTER ->
+                    exit('invalid_mdcr_consistency_level');
+                _ ->
+                    ChildSpec =
+                        case Mode of
+                            ?MANAGER_TYPE_MASTER ->
+                                {leo_redundant_manager_sup,
+                                 {leo_redundant_manager_sup, start_link,
+                                  [?MONITOR_NODE,
+                                   ReplicaNodes,
+                                   ?env_queue_dir(leo_manager),
+                                   [{version, 1},
+                                    {cluster_id, SystemConf#?SYSTEM_CONF.cluster_id},
+                                    {dc_id, SystemConf#?SYSTEM_CONF.dc_id},
+                                    {n, N},
+                                    {r, R},
+                                    {w, W},
+                                    {d, D},
+                                    {bit_of_ring, SystemConf#?SYSTEM_CONF.bit_of_ring},
+                                    {num_of_dc_replicas, MDCR_N},
+                                    {num_of_rack_replicas, SystemConf#?SYSTEM_CONF.num_of_rack_replicas},
+                                    {max_mdc_targets, SystemConf#?SYSTEM_CONF.max_mdc_targets},
+                                    {mdcr_r, MDCR_R},
+                                    {mdcr_w, MDCR_W},
+                                    {mdcr_d, MDCR_D}
+                                   ],
+                                   MembershipCallback
+                                  ]
+                                 },
+                                 permanent, 2000, supervisor, [leo_redundant_manager_sup]};
+                            _ ->
+                                {leo_redundant_manager_sup,
+                                 {leo_redundant_manager_sup, start_link,
+                                  [?MONITOR_NODE,
+                                   ReplicaNodes,
+                                   ?env_queue_dir(leo_manager),
+                                   [],
+                                   MembershipCallback
+                                  ]
+                                 },
+                                 permanent, 2000, supervisor, [leo_redundant_manager_sup]}
+                        end,
+                    {ok, _} = supervisor:start_child(Pid, ChildSpec),
+                    ok
+            end
+    end.
+
+
+%% @doc Launch LeoS3Libs
+%% @private
+start_s3libs() ->
+    case ?env_use_s3_api() of
+        false ->
+            void;
+        true ->
+            ok = leo_s3_libs:start(?MANAGER_TYPE_MASTER, [])
+    end,
+    ok.
+
+
 %% @doc Create mnesia tables
 %% @private
--spec(create_mnesia_tables_1(master | slave, list()) ->
+-spec(create_mnesia_tables_1(manager_type(), list()) ->
              ok | {error, any()}).
-create_mnesia_tables_1(master = Mode, Nodes) ->
+create_mnesia_tables_1(?MANAGER_TYPE_MASTER = Mode, Nodes) ->
     Nodes_1 = lists:flatten(lists:map(fun({_, N}) -> N end, Nodes)),
     case mnesia:create_schema(Nodes_1) of
         ok ->
@@ -268,6 +318,7 @@ create_mnesia_tables_1(master = Mode, Nodes) ->
                 leo_mdcr_tbl_cluster_stat:create_table(disc_copies, Nodes_1),
                 leo_mdcr_tbl_cluster_mgr:create_table(disc_copies, Nodes_1),
                 leo_mdcr_tbl_cluster_member:create_table(disc_copies, Nodes_1),
+
                 leo_cluster_tbl_ring:create_table_current(disc_copies, Nodes_1),
                 leo_cluster_tbl_ring:create_table_prev(disc_copies, Nodes_1),
                 leo_cluster_tbl_member:create_table(disc_copies, Nodes_1, ?MEMBER_TBL_CUR),
@@ -299,7 +350,7 @@ create_mnesia_tables_1(slave,_Nodes) ->
 
 %% @doc Create mnesia tables and execute to migrate data
 %% @private
--spec(create_mnesia_tables_2(master | slave, list()) ->
+-spec(create_mnesia_tables_2(manager_type(), list()) ->
              ok | {error, any()}).
 create_mnesia_tables_2(Mode,_Nodes) ->
     case application:start(mnesia) of
@@ -325,7 +376,7 @@ create_mnesia_tables_2(Mode) ->
                           try
                               %% Execute to migrate data
                               case Mode of
-                                  master ->
+                                  ?MANAGER_TYPE_MASTER ->
                                       ok = migrate_mnesia_tables();
                                   _ ->
                                       void
@@ -411,19 +462,19 @@ create_s3api_related_tables(true, Nodes) ->
     %% Insert test-related values
     CreatedAt = leo_date:now(),
     ok = leo_s3_libs_data_handler:insert({mnesia, leo_s3_users},
-                                         {[], #?S3_USER{id         = ?TEST_USER_ID,
-                                                        role_id    = 9,
+                                         {[], #?S3_USER{id = ?TEST_USER_ID,
+                                                        role_id = 9,
                                                         created_at = CreatedAt
                                                        }}),
     ok = leo_s3_libs_data_handler:insert({mnesia, leo_s3_user_credential},
-                                         {[], #user_credential{user_id       = ?TEST_USER_ID,
+                                         {[], #user_credential{user_id = ?TEST_USER_ID,
                                                                access_key_id = ?TEST_ACCESS_KEY,
-                                                               created_at    = CreatedAt
+                                                               created_at = CreatedAt
                                                               }}),
     ok = leo_s3_libs_data_handler:insert({mnesia, leo_s3_credentials},
-                                         {[], #credential{access_key_id     = ?TEST_ACCESS_KEY,
+                                         {[], #credential{access_key_id = ?TEST_ACCESS_KEY,
                                                           secret_access_key = ?TEST_SECRET_KEY,
-                                                          created_at        = CreatedAt
+                                                          created_at = CreatedAt
                                                          }}),
     %% Insert default s3-endpoint values
     leo_s3_endpoint:set_endpoint(?DEF_ENDPOINT_1),

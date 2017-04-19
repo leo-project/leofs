@@ -2,7 +2,7 @@
 %%
 %% Leo Manager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -1478,22 +1478,10 @@ get_status(Option) ->
 
     case (erlang:length(Token) == 0) of
         true ->
-            %% Reload and store system-conf
-            case ?env_mode_of_manager() of
-                'master' ->
-                    case leo_cluster_tbl_conf:get() of
-                        {ok, SystemConf} ->
-                            SystemConf;
-                        _ ->
-                            void
-                    end;
-                _ ->
-                    void
-            end,
-
-            %% Retrieve the status
+            %% Retrieve the state of the loacl cluster
             status(node_list);
         false ->
+            %% Retrieve the state of a specified node
             [Node|_] = Token,
             status({node_state, Node})
     end.
@@ -1503,8 +1491,10 @@ status(node_list) ->
     case leo_cluster_tbl_conf:get() of
         {ok, SystemConf} ->
             Version = case application:get_env(leo_manager, system_version) of
-                          {ok, Vsn} -> Vsn;
-                          undefined -> []
+                          {ok, Vsn} ->
+                              Vsn;
+                          undefined ->
+                              []
                       end,
             {ok, {RingHash0, RingHash1}} = leo_redundant_manager_api:checksum(ring),
 
@@ -1542,9 +1532,9 @@ status(node_list) ->
                          []
                  end,
             {ok, {node_list, [{system_config, SystemConf},
-                              {version,       Version},
-                              {ring_hash,     [RingHash0, RingHash1]},
-                              {nodes,         S1 ++ S2}
+                              {version, Version},
+                              {ring_hash, [RingHash0, RingHash1]},
+                              {nodes, S1 ++ S2}
                              ]}};
         {error, Cause} ->
             {error, Cause}

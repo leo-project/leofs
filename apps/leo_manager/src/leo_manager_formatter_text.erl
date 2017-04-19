@@ -2,7 +2,7 @@
 %%
 %% Leo Manager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -211,6 +211,9 @@ system_info_and_nodes_stat(Props) ->
     %% [Multi DC replication settings]
     %%        # of destination of DCs : 0
     %%        # of replicas to a DC   : 0
+    %%       mdcr/# of successes of R : 1
+    %%       mdcr/# of successes of W : 2
+    %%       mdcr/# of successes of D : 1
     FormattedSystemConf =
         io_lib:format(lists:append([
                                     " [System Confiuration]\r\n",
@@ -231,8 +234,11 @@ system_info_and_nodes_stat(Props) ->
                                     "-----------------------------------+----------\r\n",
                                     " Multi DC replication settings\r\n",
                                     "-----------------------------------+----------\r\n",
-                                    "        max number of joinable DCs | ~w\r\n",
-                                    "           number of replicas a DC | ~w\r\n",
+                                    " [mdcr] max number of joinable DCs | ~w\r\n",
+                                    " [mdcr] total replicas per a DC    | ~w\r\n",
+                                    " [mdcr] number of successes of R   | ~w\r\n",
+                                    " [mdcr] number of successes of W   | ~w\r\n",
+                                    " [mdcr] number of successes of D   | ~w\r\n",
                                     "-----------------------------------+----------\r\n",
                                     " Manager RING hash\r\n",
                                     "-----------------------------------+----------\r\n",
@@ -251,13 +257,20 @@ system_info_and_nodes_stat(Props) ->
                        SystemConf#?SYSTEM_CONF.bit_of_ring,
                        SystemConf#?SYSTEM_CONF.max_mdc_targets,
                        SystemConf#?SYSTEM_CONF.num_of_dc_replicas,
+                       SystemConf#?SYSTEM_CONF.mdcr_r,
+                       SystemConf#?SYSTEM_CONF.mdcr_w,
+                       SystemConf#?SYSTEM_CONF.mdcr_d,
                        case (RH0 < 1) of
-                           true -> "";
-                           false -> leo_hex:integer_to_hex(RH0, 8)
+                           true ->
+                               [];
+                           false ->
+                               leo_hex:integer_to_hex(RH0, 8)
                        end,
                        case (RH1 < 1) of
-                           true -> "";
-                           false -> leo_hex:integer_to_hex(RH1, 8)
+                           true ->
+                               [];
+                           false ->
+                               leo_hex:integer_to_hex(RH1, 8)
                        end
                       ]),
     system_conf_with_node_stat(FormattedSystemConf, Nodes).
