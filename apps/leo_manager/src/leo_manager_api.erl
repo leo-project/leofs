@@ -2,7 +2,7 @@
 %%
 %% Leo Manager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -107,9 +107,12 @@ load_system_config() ->
                      r = leo_misc:get_value(r, Props, 1),
                      d = leo_misc:get_value(d, Props, 1),
                      bit_of_ring = leo_misc:get_value(bit_of_ring, Props, 128),
-                     max_mdc_targets = leo_misc:get_value(max_mdc_targets, Props, 0),
-                     num_of_dc_replicas = leo_misc:get_value(num_of_dc_replicas, Props, 0),
-                     num_of_rack_replicas = leo_misc:get_value(num_of_rack_replicas, Props, 0)
+                     max_mdc_targets = leo_misc:get_value(max_mdc_targets, Props, 1),
+                     num_of_dc_replicas = leo_misc:get_value(num_of_dc_replicas, Props, 1),
+                     num_of_rack_replicas = leo_misc:get_value(num_of_rack_replicas, Props, 0),
+                     mdcr_r = leo_misc:get_value(mdcr_r, Props, 1),
+                     mdcr_w = leo_misc:get_value(mdcr_w, Props, 1),
+                     mdcr_d = leo_misc:get_value(mdcr_d, Props, 1)
                     },
     SystemConf.
 
@@ -129,7 +132,10 @@ load_system_config_with_store_data() ->
                   bit_of_ring = BitOfRing,
                   max_mdc_targets = MaxMDCTargets,
                   num_of_dc_replicas = NumOfDCReplicas,
-                  num_of_rack_replicas = NumOfRackReplicas
+                  num_of_rack_replicas = NumOfRackReplicas,
+                  mdcr_r = MDCR_R,
+                  mdcr_w = MDCR_W,
+                  mdcr_d = MDCR_D
                  } = SystemConf,
 
     %% Compare the current conf
@@ -157,7 +163,10 @@ load_system_config_with_store_data() ->
                                   bit_of_ring = BitOfRing,
                                   max_mdc_targets = MaxMDCTargets,
                                   num_of_dc_replicas = NumOfDCReplicas,
-                                  num_of_rack_replicas = NumOfRackReplicas}) of
+                                  num_of_rack_replicas = NumOfRackReplicas,
+                                  mdcr_r = MDCR_R,
+                                  mdcr_w = MDCR_W,
+                                  mdcr_d = MDCR_D}) of
                 ok ->
                     {ok, SystemConf};
                 Error ->
@@ -192,8 +201,6 @@ compare_system_conf([{K,V}|Rest], SystemConf) ->
 
 %% @doc Modify the system config
 %%      when it did not join remote-cluster(s), yet
-
-
 -spec(update_mdc_items_in_system_conf() ->
              ok | {error, any()}).
 update_mdc_items_in_system_conf() ->

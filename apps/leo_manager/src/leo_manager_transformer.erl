@@ -57,8 +57,9 @@ transform() ->
 
     %% data migration - bucket
     case ?env_use_s3_api() of
-        false -> void;
-        true  ->
+        false ->
+            void;
+        true ->
             {ok, #?SYSTEM_CONF{cluster_id = ClusterId}} = leo_cluster_tbl_conf:get(),
             ok = leo_s3_bucket:transform(),
             ok = leo_s3_bucket:transform(ClusterId),
