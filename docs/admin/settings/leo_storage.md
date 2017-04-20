@@ -26,7 +26,7 @@
 
 ## Configuration
 
-### LeoStorage's Related Configurations
+### LeoStorage Configurations
 
 | Item                                   | Description                              |
 |----------------------------------------|------------------------------------------|
@@ -197,4 +197,4 @@ When the each value reached the min value, the auto-compaction changes the statu
 
 ## Related Links
 
-* [Concept and Architecture / LeoStorage](../../architecture/leo_storage.md)
+* [Concept and Architecture / LeoStorage's Architecture](../../architecture/leo_storage.md)
