@@ -12,7 +12,7 @@ There are some condfiguration differences between LeoManager master and LeoManag
 The default setting is to launch a LeoFS system on one node, whose setting cannot replicate data because the total number of replica is one, and data loss could be happened with high probability. You need to modify the configuration suitably before launching the LeoFS system on your production or other environments.
 
 
-### LeoManager's Related Configurations
+### LeoManager Configurations
 
 | Item                             |  Description                             |
 |----------------------------------|------------------------------------------|
@@ -73,5 +73,5 @@ The default setting is to launch a LeoFS system on one node, whose setting canno
 
 ## Related Links
 
-* [Concept and Architecture / LeoManager](../../architecture/leo_manager.md)
+* [Concept and Architecture / LeoManager's Architecture](../../architecture/leo_manager.md)
 * [For Administrators / Settings / Cluster Settings](cluster.md)
