@@ -1,8 +1,13 @@
 # LeoGateway Settings
 
+## Prior Knowledge
+
+LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API[^1] and NFS v3[^2]. LeoGateway provides the object cache feature to efficiently and effectively handle requests and to keep high performance of your storage system.
+
+
 ## Configuration
 
-### LeoGateway Settings
+### LeoGateway Configurations
 
 | Item                                   | Description                              |
 |----------------------------------------|------------------------------------------|
@@ -100,9 +105,35 @@
 
 ### Notes and Tips of the Configuration
 
+#### Cache Consistency between LeoGateway and LeoStorage
+
+LeoGateway's cache feature does not depend on the consistency level of a cluster. There is a possibility of object inconsistency.
+
+LeoGateway requests a storage node to compare a cached object's hash value with its stored object's hash value. LeoGateway selects a LeoStorage's node from RING, *a distributed hash table* by a target object name, then LeoGateway requests a LeoStorage node of the redundant node. If the requested object is inconsistent in the replicas and LeoGateway cached it, a client may get inconsistent objects.
+
+If strong consistency is required on your system, you can disable the cache setting.
+
+```
+cache.cache_ram_capacity = 0
+cache.cache_disc_capacity = 0
+```
+
+
 #### Configuration related to Disk Cache
 A total number of directories to store cache files is equal to `cache.cache_workers`. A maximum size of a cacheable object per a directory has been determined by `cache.cache_disc_capacity / cache.cache_workers`. If size of a requested object more than the maximum size, LeoFS Gateway avoids storing the object into the disk cache.
 
 And also, when size of a requested object more than `cache.cache_max_content_len`, LeoFS Gateway similarly refuses storing the object into the disk cache.
 
 ![Figure: Disk Cache Limits](../../assets/leofs-gateway-disk-cache-size.png)
+
+
+## Related Links
+
+- [Concept and Architecture / LeoGateway's Architecture](../../architecture/leo_gateway.md)
+- [For Administrators / Interface / S3-API](../protocols/s3.md)
+- [For Administrators / Interface / REST-API](../protocols/rest.md)
+- [For Administrators / Interface / NFS v3](../protocols/nfs_v3.md)
+- [For Administrators / System Operations / S3-API related Operations](../system_operations/s3.md)
+
+[^1]: <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 API</a>
+[^2]: <a href="https://de.wikipedia.org/wiki/Network_File_System" target="_blank">Wikipedia: Network File System</a>
