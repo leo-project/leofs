@@ -55,6 +55,7 @@
           is_reply = false ::boolean()
          }).
 
+-define(LEO_STORAGE_REPLICATOR_MSG_TAG, 'leo_storage_replicator').
 
 %%--------------------------------------------------------------------
 %% API
@@ -108,7 +109,8 @@ replicate_1([], Ref,_From, #state{method   = Method,
                                   key      = Key,
                                   callback = Callback}) ->
     receive
-        {Ref, Reply} ->
+        %% Receive only messages sent from SubParent (_From in this context)
+        {?LEO_STORAGE_REPLICATOR_MSG_TAG, Ref, Reply} ->
             Callback(Reply)
     after
         (?DEF_REQ_TIMEOUT + timer:seconds(1)) ->
@@ -149,6 +151,7 @@ replicate_1([#redundant_node{node = Node,
 %% for unavailable node
 replicate_1([#redundant_node{node = Node,
                              available = false}|Rest], Ref, From, State) ->
+    %% This message is sent to SubParent
     erlang:send(From, {Ref, {error, {Node, nodedown}}}),
     replicate_1(Rest, Ref, From, State).
 
@@ -158,10 +161,12 @@ replicate_1([#redundant_node{node = Node,
 loop(0, 0,_ResL,_Ref,_From, #state{is_reply = true}) ->
     ok;
 loop(0, 0, ResL, Ref, From, #state{method = Method}) ->
-    erlang:send(From, {Ref, {ok, Method, hd(ResL)}});
+    %% This message is sent to Parent so need to add a tag
+    erlang:send(From, {?LEO_STORAGE_REPLICATOR_MSG_TAG, Ref, {ok, Method, hd(ResL)}});
 loop(_, W,_ResL, Ref, From, #state{num_of_nodes = N,
                                    errors = E}) when (N - W) < length(E) ->
-    erlang:send(From, {Ref, {error, E}});
+    %% This message is sent to Parent so need to add a tag
+    erlang:send(From, {?LEO_STORAGE_REPLICATOR_MSG_TAG, Ref, {error, E}});
 loop(N, W, ResL, Ref, From, #state{method = Method,
                                    addr_id = AddrId,
                                    key = Key,
@@ -174,7 +179,8 @@ loop(N, W, ResL, Ref, From, #state{method = Method,
             {W_1, State_1} =
                 case ((W - 1) < 1) of
                     true when IsReply == false ->
-                        erlang:send(From, {Ref, {ok, Method, hd(ResL_1)}}),
+                        %% This message is sent to Parent so need to add a tag
+                        erlang:send(From, {?LEO_STORAGE_REPLICATOR_MSG_TAG, Ref, {ok, Method, hd(ResL_1)}}),
                         {0, State#state{is_reply = true}};
                     true ->
                         {0, State};
@@ -186,7 +192,8 @@ loop(N, W, ResL, Ref, From, #state{method = Method,
             {W_1, State_1} =
                 case ((W - 1) < 1) of
                     true when IsReply == false ->
-                        erlang:send(From, {Ref, {ok, Method, 0}}),
+                        %% This message is sent to Parent so need to add a tag
+                        erlang:send(From, {?LEO_STORAGE_REPLICATOR_MSG_TAG, Ref, {ok, Method, 0}}),
                         {0, State#state{is_reply = true}};
                     true ->
                         {0, State};
@@ -238,6 +245,7 @@ replicate_fun(Ref, #req_params{pid     = Pid,
                           {req_id, ReqId}, {cause, Cause}]),
                    {Ref, {error, {node(), Cause}}}
            end,
+    %% This message is sent to SubParent
     erlang:send(Pid, Ret).
 
 
