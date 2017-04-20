@@ -7,7 +7,7 @@
 ##       - pygments (pip install pygments)
 ##       - pymdown-extensions (pip install pymdown-extensions)
 ##
-site_name: LeoFS Docs
+site_name: LeoFS
 repo_url: https://github.com/leo-project/leofs
 repo_name: 'GitHub'
 site_author: LeoProject
@@ -32,7 +32,7 @@ markdown_extensions:
     - pymdownx.tilde
 
 pages:
-- Welcome to LeoFS: 'index.md'
+- LeoFS Manual: 'index.md'
 - Introduction:
     - Introduction to LeoFS: 'introduction/README.md'
     - What's New?: 'introduction/whats_new.md'
