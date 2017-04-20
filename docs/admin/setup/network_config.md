@@ -31,7 +31,7 @@ To work correctly a LeoFS system, it is necessary to set and check the firewall 
 
 ### How to Change Erlang's Port Range
 
-Port range can be specified by setting Erlang's kernel variables `inet_dist_listen_min` and `inet_dist_listen_max`. If it is necesssary to change those variables, you need to enter a targe node of the Erlang console.
+Port range can be specified by setting Erlang's kernel variables `inet_dist_listen_min` and `inet_dist_listen_max`. If it is necesssary to change those variables, enter the Erlang console of a targe node.
 
 ```bash
 ## Example:
