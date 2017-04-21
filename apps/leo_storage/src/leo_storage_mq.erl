@@ -349,7 +349,7 @@ handle_call({consume, ?QUEUE_ID_ASYNC_DELETION, MessageBin}) ->
                                   clock = leo_date:clock(),
                                   timestamp = leo_date:now(),
                                   del = ?DEL_TRUE
-                                 }, 0, false) of
+                                 }, 0, false, leo_mq) of
                 ok ->
                     ok;
                 {_, Cause} ->
