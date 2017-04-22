@@ -281,15 +281,15 @@ We're able to easily check LeoFS with <a target="_blank" href="https://github.co
         * [AWS Signature v4](http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html) support (v1.3.0)
         * Custom Metadata Support (v1.3.1)
 * v1.4
-    * Hinted Hand-off
-    * Integration with distributed computing frameworks
-        * Hadoop integration
-        * Spark integration
+    * Erasure Code
     * Improve compatibility S3-APIs#7
         * [Server Side Object Encryption](http://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html)
 * v1.5
-    * Erasure Code
-    * LeoManager's cluster replaces from mnesia dependensy to another implementation
+    * Hinted Hand-off
+    * LeoManager's cluster replaces from Erlang's mnesia dependensy to another implementation
+    * Integration with distributed computing frameworks
+        * Hadoop integration
+        * Spark integration
 
 ### Version 2
 * v2.0
