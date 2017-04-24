@@ -357,7 +357,7 @@
         }, 
         {
             "location": "/admin/setup/hardware_requirements/", 
-            "text": "Hardware Requirements\n\n\nMinimum Requirements\n\n\n\n\n\n\n\n\n\n\nCPU\n\n\nMemory\n\n\nDisk\n\n\n\n\n\n\n\n\n\n\nManager\n\n\n1\n\n\n512 MB\n\n\n20 GB\n\n\n\n\n\n\nGateway\n\n\n2\n\n\n1 GB\n\n\n20 GB\n\n\n\n\n\n\nStorage\n\n\n2\n\n\n1 GB\n\n\n100 GB\n\n\n\n\n\n\n\n\nHardware Recommendation\n\n\n\n\nWorkload on Managers are low, it does not consume much resource\n\n\nBetter CPU would allow LeoFS to process more operations (OPS)\n\n\nGateway can utilize memory and disk as cache, adding those resources can reduce the workload to Storage\n\n\nSSDs significantly improve small object read performance\n\n\n10Gbps network is recommended\n\n\n\n\nReference Platform\n\n\n\n\n\n\n\n\nHardware\n\n\nDetail\n\n\n\n\n\n\n\n\n\n\nCPU\n\n\n16C32T (Intel E5-2630 v3)\n\n\n\n\n\n\nMemory\n\n\n32 GB\n\n\n\n\n\n\nNetwork\n\n\n10 GbE\n\n\n\n\n\n\nDisk\n\n\nSSD (Crucial BX100)\n\n\n\n\n\n\n\n\nPerformance\n\n\n\n\n\n\n\n\nData Set\n\n\nRead\n\n\nWrite\n\n\nResource Usage\n\n\n\n\n\n\n\n\n\n\nImage (32KB)\n\n\n20000 OPS\n\n\n20000 OPS\n\n\nHigh CPU Usage\n\n\n\n\n\n\nSmall Mixed (\n2MB)\n\n\n1200 OPS\n\n\n1500 OPS\n\n\nHigh Disk I/O\n\n\n\n\n\n\n\n\nRelated Links\n\n\nBenchmark Report", 
+            "text": "Hardware Requirements\n\n\nMinimum Requirements\n\n\n\n\n\n\n\n\n\n\nCPU\n\n\nMemory\n\n\nDisk\n\n\n\n\n\n\n\n\n\n\nManager\n\n\n1\n\n\n512 MB\n\n\n20 GB\n\n\n\n\n\n\nGateway\n\n\n2\n\n\n1 GB\n\n\n20 GB\n\n\n\n\n\n\nStorage\n\n\n2\n\n\n1 GB\n\n\n100 GB\n\n\n\n\n\n\n\n\nHardware Recommendation\n\n\n\n\nWorkload on Manager is low, it does not consume much resource\n\n\nBetter CPU allows LeoFS to process more operations (OPS)\n\n\nGateway utilizes memory and disk as cache, adding those resources can reduce the workload to Storage\n\n\nSSD significantly improves small object read performance\n\n\n10Gbps network is recommended\n\n\n\n\nReference Platform\n\n\n\n\n\n\n\n\nHardware\n\n\nDetail\n\n\n\n\n\n\n\n\n\n\nCPU\n\n\n16C32T (Intel E5-2630 v3)\n\n\n\n\n\n\nMemory\n\n\n32 GB\n\n\n\n\n\n\nNetwork\n\n\n10 GbE\n\n\n\n\n\n\nDisk\n\n\nSSD (Crucial BX100)\n\n\n\n\n\n\n\n\nPerformance\n\n\n\n\n\n\n\n\nData Set\n\n\nRead\n\n\nWrite\n\n\nResource Usage\n\n\n\n\n\n\n\n\n\n\nImage (32KB)\n\n\n20000 OPS\n\n\n20000 OPS\n\n\nHigh CPU Usage\n\n\n\n\n\n\nSmall Mixed (\n2MB)\n\n\n1200 OPS\n\n\n1500 OPS\n\n\nHigh Disk I/O\n\n\n\n\n\n\n\n\nRelated Links\n\n\n\n\nBenchmark Report", 
             "title": "Hardware Requirements"
         }, 
         {
@@ -372,7 +372,7 @@
         }, 
         {
             "location": "/admin/setup/hardware_requirements/#hardware-recommendation", 
-            "text": "Workload on Managers are low, it does not consume much resource  Better CPU would allow LeoFS to process more operations (OPS)  Gateway can utilize memory and disk as cache, adding those resources can reduce the workload to Storage  SSDs significantly improve small object read performance  10Gbps network is recommended", 
+            "text": "Workload on Manager is low, it does not consume much resource  Better CPU allows LeoFS to process more operations (OPS)  Gateway utilizes memory and disk as cache, adding those resources can reduce the workload to Storage  SSD significantly improves small object read performance  10Gbps network is recommended", 
             "title": "Hardware Recommendation"
         }, 
         {
