@@ -1,0 +1,1669 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LeoProject makes LeoFS, which is an open source distributed object storage system and a highly available, distributed, eventually consistent storage system. LeoFS is supporting the following features:Multi-protocol Support - S3-API, REST-API and NFS v3, Large Object Support, Multi Data Center Replication and others.">
+      
+      
+      
+        <meta name="author" content="LeoProject">
+      
+      
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.5.4">
+    
+    
+      
+        <title>S3-API related Operations - LeoFS Documentation</title>
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-b1a1975878.css">
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <a href="../../.." title="LeoFS Documentation" class="md-icon md-icon--home md-header-nav__button">
+          </a>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  For Administrators
+                </span>
+              
+                <span class="md-header-nav__parent">
+                  System Operations
+                </span>
+              
+            
+            S3-API related Operations
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <div class="md-header-nav__source">
+          
+            
+
+
+  
+
+
+  <a href="https://github.com/leo-project/leofs" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    
+      <i class="md-icon md-icon--home md-nav__button"></i>
+    
+    LeoFS Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/leo-project/leofs" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../whats_new/" title="What's New?" class="md-nav__link">
+      What's New?
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Getting Started
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Getting Started
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../installation/quick/" title="Quick Installation and Setup" class="md-nav__link">
+      Quick Installation and Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../installation/cluster/" title="Building a LeoFS' cluster with Ansible" class="md-nav__link">
+      Building a LeoFS' cluster with Ansible
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Concept and Architecture
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Concept and Architecture
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/README/" title="LeoFS' Architecture" class="md-nav__link">
+      LeoFS' Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_gateway/" title="LeoGateway's Architecture" class="md-nav__link">
+      LeoGateway's Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_storage/" title="LeoStorage's Architecture" class="md-nav__link">
+      LeoStorage's Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_manager/" title="LeoManager's Architecture" class="md-nav__link">
+      LeoManager's Architecture
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      For Administrators
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        For Administrators
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-1" type="checkbox" id="nav-5-1">
+    
+    <label class="md-nav__link" for="nav-5-1">
+      Setup
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-1">
+        Setup
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/planning_for_production/" title="Planning for Production" class="md-nav__link">
+      Planning for Production
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/supported_platforms/" title="Supported Platforms" class="md-nav__link">
+      Supported Platforms
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/hardware_requirements/" title="Hardware Requirements" class="md-nav__link">
+      Hardware Requirements
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/network_config/" title="Network Configurations" class="md-nav__link">
+      Network Configurations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-2" type="checkbox" id="nav-5-2">
+    
+    <label class="md-nav__link" for="nav-5-2">
+      Settings
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-5-2">
+        Settings
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/cluster/" title="Cluster Settings" class="md-nav__link">
+      Cluster Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_manager/" title="LeoManager Settings" class="md-nav__link">
+      LeoManager Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_storage/" title="LeoStroage Settings" class="md-nav__link">
+      LeoStroage Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_gateway/" title="LeoGateway Settings" class="md-nav__link">
+      LeoGateway Settings
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-3" type="checkbox" id="nav-5-3">
+    
+    <label class="md-nav__link" for="nav-5-3">
+      Interface
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="4">
+      <label class="md-nav__title" for="nav-5-3">
+        Interface
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/s3/" title="S3-API" class="md-nav__link">
+      S3-API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/rest/" title="REST-API" class="md-nav__link">
+      REST-API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/nfs_v3/" title="NFS v3" class="md-nav__link">
+      NFS v3
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-4" type="checkbox" id="nav-5-4" checked>
+    
+    <label class="md-nav__link" for="nav-5-4">
+      System Operations
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="5">
+      <label class="md-nav__title" for="nav-5-4">
+        System Operations
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        S3-API related Operations
+      </label>
+    
+    <a href="./" title="S3-API related Operations" class="md-nav__link md-nav__link--active">
+      S3-API related Operations
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prior-knowledge" title="Prior Knowledge" class="md-nav__link">
+    Prior Knowledge
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operations" title="Operations" class="md-nav__link">
+    Operations
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#endpoint" title="Endpoint" class="md-nav__link">
+    Endpoint
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-an-endpoint-add-endpoint" title="Create an endpoint, add-endpoint" class="md-nav__link">
+    Create an endpoint, add-endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-an-endpoint-delete-endpoint" title="Remove an endpoint, delete-endpoint" class="md-nav__link">
+    Remove an endpoint, delete-endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-a-list-of-endpoints-get-endpoints" title="Retrieve a list of endpoints, get-endpoints" class="md-nav__link">
+    Retrieve a list of endpoints, get-endpoints
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user" title="User" class="md-nav__link">
+    User
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-user-create-user" title="Create a user, create-user" class="md-nav__link">
+    Create a user, create-user
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-a-user-delete-user" title="Remove a user, delete-user" class="md-nav__link">
+    Remove a user, delete-user
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-a-list-of-users-get-users" title="Retrieve a list of users, get-users" class="md-nav__link">
+    Retrieve a list of users, get-users
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-role-of-a-user-update-user-role" title="Change role of a user, update-user-role" class="md-nav__link">
+    Change role of a user, update-user-role
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bucket" title="Bucket" class="md-nav__link">
+    Bucket
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-bucket-add-bucket" title="Create a bucket, add-bucket" class="md-nav__link">
+    Create a bucket, add-bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-a-bucket-delete-bucket" title="Remove a bucket, delete-bucket" class="md-nav__link">
+    Remove a bucket, delete-bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-a-list-of-buckets-get-buckets" title="Retrieve a list of buckets, get-buckets" class="md-nav__link">
+    Retrieve a list of buckets, get-buckets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-a-bucket-get-bucket" title="Retrieve a bucket, get-bucket" class="md-nav__link">
+    Retrieve a bucket, get-bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-an-owner-of-a-bucket-chown-bucket" title="Change an owner of a bucket, chown-bucket" class="md-nav__link">
+    Change an owner of a bucket, chown-bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-acl-of-a-bucket-update-acl" title="Update ACL of a bucket, update-acl" class="md-nav__link">
+    Update ACL of a bucket, update-acl
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canned-acl" title="Canned ACL" class="md-nav__link">
+    Canned ACL
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../cluster/" title="Cluster Operations" class="md-nav__link">
+      Cluster Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../data/" title="Data Operations" class="md-nav__link">
+      Data Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../multi_dc_replication/" title="Multi Data Center Replication" class="md-nav__link">
+      Multi Data Center Replication
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../others/" title="Others" class="md-nav__link">
+      Others
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5">
+    
+    <label class="md-nav__link" for="nav-5-5">
+      System Administration
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="6">
+      <label class="md-nav__title" for="nav-5-5">
+        System Administration
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/log_management/" title="Log Management" class="md-nav__link">
+      Log Management
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
+      LeoManager's Maintenance
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
+      System Migration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
+      Backup and Restore
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/integration/" title="System Integration" class="md-nav__link">
+      System Integration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
+      Index of LeoFS' Commands
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
+      Troubleshooting
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../benchmark/README/" title="Benchmark" class="md-nav__link">
+      Benchmark
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      FAQ
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        FAQ
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/fundamentals/" title="LeoFS Fundamentals" class="md-nav__link">
+      LeoFS Fundamentals
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/limits/" title="LeoFS Limits" class="md-nav__link">
+      LeoFS Limits
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/administration/" title="LeoFS Administration" class="md-nav__link">
+      LeoFS Administration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../production_checklist/README/" title="Production Checklist" class="md-nav__link">
+      Production Checklist
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prior-knowledge" title="Prior Knowledge" class="md-nav__link">
+    Prior Knowledge
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operations" title="Operations" class="md-nav__link">
+    Operations
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#endpoint" title="Endpoint" class="md-nav__link">
+    Endpoint
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-an-endpoint-add-endpoint" title="Create an endpoint, add-endpoint" class="md-nav__link">
+    Create an endpoint, add-endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-an-endpoint-delete-endpoint" title="Remove an endpoint, delete-endpoint" class="md-nav__link">
+    Remove an endpoint, delete-endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-a-list-of-endpoints-get-endpoints" title="Retrieve a list of endpoints, get-endpoints" class="md-nav__link">
+    Retrieve a list of endpoints, get-endpoints
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user" title="User" class="md-nav__link">
+    User
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-user-create-user" title="Create a user, create-user" class="md-nav__link">
+    Create a user, create-user
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-a-user-delete-user" title="Remove a user, delete-user" class="md-nav__link">
+    Remove a user, delete-user
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-a-list-of-users-get-users" title="Retrieve a list of users, get-users" class="md-nav__link">
+    Retrieve a list of users, get-users
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-role-of-a-user-update-user-role" title="Change role of a user, update-user-role" class="md-nav__link">
+    Change role of a user, update-user-role
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bucket" title="Bucket" class="md-nav__link">
+    Bucket
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-bucket-add-bucket" title="Create a bucket, add-bucket" class="md-nav__link">
+    Create a bucket, add-bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-a-bucket-delete-bucket" title="Remove a bucket, delete-bucket" class="md-nav__link">
+    Remove a bucket, delete-bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-a-list-of-buckets-get-buckets" title="Retrieve a list of buckets, get-buckets" class="md-nav__link">
+    Retrieve a list of buckets, get-buckets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-a-bucket-get-bucket" title="Retrieve a bucket, get-bucket" class="md-nav__link">
+    Retrieve a bucket, get-bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-an-owner-of-a-bucket-chown-bucket" title="Change an owner of a bucket, chown-bucket" class="md-nav__link">
+    Change an owner of a bucket, chown-bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-acl-of-a-bucket-update-acl" title="Update ACL of a bucket, update-acl" class="md-nav__link">
+    Update ACL of a bucket, update-acl
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canned-acl" title="Canned ACL" class="md-nav__link">
+    Canned ACL
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/system_operations/s3.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
+                
+                
+                <h1 id="s3-api-related-operations">S3-API Related Operations<a class="headerlink" href="#s3-api-related-operations" title="Permanent link">&para;</a></h1>
+<h2 id="prior-knowledge">Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permanent link">&para;</a></h2>
+<p>When choosing Amazon S3 API<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> as LeoGateway's protocol, you need LeoFS' S3-API related operations including <a href="#endpoint">Endpoint</a>, <a href="#user">User</a> and <a href="#bucket">Bucket</a> operations.</p>
+<p>You can access your LeoFS system whose LeoGateway's protocol is S3-API by following the flow.</p>
+<ol>
+<li><strong>Create an endpoint</strong> to be able to access your LeoFS' resources.</li>
+<li><strong>Create a user</strong> to separately manage the user's buckets and objects.</li>
+<li>After creating a bucket, If you need to <strong>change ACL of a bucket</strong>, you can set it as an administrator of your LeoFS system. The current version, v1.3 of LeoFS does not support</li>
+</ol>
+<h2 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h2>
+<h3 id="endpoint">Endpoint<a class="headerlink" href="#endpoint" title="Permanent link">&para;</a></h3>
+<p>You can continue to use your LeoFS' DNS name to access your LeoFS' resources after you've set up an endpoint, which has a policy that controls the use of the endpoint to access the resources.</p>
+<h4 id="create-an-endpoint-add-endpoint">Create an endpoint, <code class="codehilite">add-endpoint</code><a class="headerlink" href="#create-an-endpoint-add-endpoint" title="Permanent link">&para;</a></h4>
+<p>Creates an endpoint so users can access your LeoFS' resources.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm add-endpoint &lt;endpoint&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm add-endpoint leo-project.net
+OK
+</pre></div>
+</td></tr></table>
+
+<h4 id="remove-an-endpoint-delete-endpoint">Remove an endpoint, <code class="codehilite">delete-endpoint</code><a class="headerlink" href="#remove-an-endpoint-delete-endpoint" title="Permanent link">&para;</a></h4>
+<p>Removes an endpoint if your LeoFS' system does not need it.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm delete-endpoint &lt;endpoint&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm delete-endpoint leo-project.net
+OK
+</pre></div>
+</td></tr></table>
+
+<h4 id="retrieve-a-list-of-endpoints-get-endpoints">Retrieve a list of endpoints, <code class="codehilite">get-endpoints</code><a class="headerlink" href="#retrieve-a-list-of-endpoints-get-endpoints" title="Permanent link">&para;</a></h4>
+<p>Retrieves a list of the endpoints if you need to know the existing endpoints.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm get-endpoints
+
+<span class="c1">## Example</span>
+$ leofs-adm get-endpoints
+endpoint         <span class="p">|</span> created at
+-----------------+---------------------------
+leo-project.net  <span class="p">|</span> <span class="m">2017</span>-04-07 <span class="m">10</span>:07:31 +0900
+localhost        <span class="p">|</span> <span class="m">2017</span>-04-07 <span class="m">10</span>:06:18 +0900
+s3.amazonaws.com <span class="p">|</span> <span class="m">2017</span>-04-07 <span class="m">10</span>:06:18 +0900
+</pre></div>
+</td></tr></table>
+
+<h3 id="user">User<a class="headerlink" href="#user" title="Permanent link">&para;</a></h3>
+<p>To access your LeoFS system, its system's users need to create an account and retrieve <code class="codehilite">AccessKeyID</code> and <code class="codehilite">SecretAccessKey</code>.</p>
+<h4 id="create-a-user-create-user">Create a user, <code class="codehilite">create-user</code><a class="headerlink" href="#create-a-user-create-user" title="Permanent link">&para;</a></h4>
+<p>Creates a user's account so its user can access your LeoFS system.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm create-user &lt;user-id&gt; &lt;password&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm create-user leofs-user-1 PASSWORD
+access-key-id: b5f0413d45855fcc055e
+secret-access-key: b74f9ae91dd0de81f71e19f8d455a7c081f34c57
+</pre></div>
+</td></tr></table>
+
+<h4 id="remove-a-user-delete-user">Remove a user, <code class="codehilite">delete-user</code><a class="headerlink" href="#remove-a-user-delete-user" title="Permanent link">&para;</a></h4>
+<p>Removes a user account if your LeoFS' system does not need it.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm delete-user &lt;user-id&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm delete-user leofs-user-1
+OK
+</pre></div>
+</td></tr></table>
+
+<h4 id="retrieve-a-list-of-users-get-users">Retrieve a list of users, <code class="codehilite">get-users</code><a class="headerlink" href="#retrieve-a-list-of-users-get-users" title="Permanent link">&para;</a></h4>
+<p>Retrieves a list of the users if you need to know the existing users.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm get-users
+
+<span class="c1">## Example</span>
+$ leofs-adm get-users
+user_id      <span class="p">|</span> role_id <span class="p">|</span> access_key_id          <span class="p">|</span> created_at
+-------------+---------+------------------------+---------------------------
+_test_leofs  <span class="p">|</span> <span class="m">9</span>       <span class="p">|</span> <span class="m">05236</span>                  <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">09</span>:52:39 +0900
+leofs-user-2 <span class="p">|</span> <span class="m">1</span>       <span class="p">|</span> b5f0413d45855fcc055e   <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">09</span>:54:35 +0900
+</pre></div>
+</td></tr></table>
+
+<h4 id="change-role-of-a-user-update-user-role">Change role of a user, <code class="codehilite">update-user-role</code><a class="headerlink" href="#change-role-of-a-user-update-user-role" title="Permanent link">&para;</a></h4>
+<p>Updates a user's role if you need to change the role of your LeoFS system. You can choose a role from <code class="codehilite">Administrator</code> or <code class="codehilite">General user</code>.</p>
+<table>
+<thead>
+<tr>
+<th align="center">Role Id</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">1</td>
+<td>Administrator</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td>General User</td>
+</tr>
+</tbody>
+</table>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm update-user-role &lt;user-id&gt; &lt;role-id&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm update-user-role leofs-user-2 <span class="m">9</span>
+OK
+
+<span class="c1">## Confirm the latest list of the users</span>
+$ leofs-adm get-users
+user_id      <span class="p">|</span> role_id <span class="p">|</span> access_key_id          <span class="p">|</span> created_at
+-------------+---------+------------------------+---------------------------
+_test_leofs  <span class="p">|</span> <span class="m">9</span>       <span class="p">|</span> <span class="m">05236</span>                  <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">09</span>:52:39 +0900
+leofs-user   <span class="p">|</span> <span class="m">1</span>       <span class="p">|</span> 3c1d889cdd2088fb9482   <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">09</span>:53:33 +0900
+leofs-user-2 <span class="p">|</span> <span class="m">9</span>       <span class="p">|</span> b5f0413d45855fcc055e   <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">09</span>:54:35 +0900
+</pre></div>
+</td></tr></table>
+
+<h3 id="bucket">Bucket<a class="headerlink" href="#bucket" title="Permanent link">&para;</a></h3>
+<p>To manage objects under a bucket, you need to create a bucket with <code class="codehilite">leofs-adm</code> or any client for Amazon S3 such as s3cmd<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup> and DragonDisk<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup>.</p>
+<h4 id="create-a-bucket-add-bucket">Create a bucket, <code class="codehilite">add-bucket</code><a class="headerlink" href="#create-a-bucket-add-bucket" title="Permanent link">&para;</a></h4>
+<p>Creates a bucket so your LeoFS' users can manage resources under its bucket.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm add-bucket &lt;bucket-name&gt; &lt;access-key-id&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm add-bucket backup <span class="m">05236</span>
+OK
+</pre></div>
+</td></tr></table>
+
+<h4 id="remove-a-bucket-delete-bucket">Remove a bucket, <code class="codehilite">delete-bucket</code><a class="headerlink" href="#remove-a-bucket-delete-bucket" title="Permanent link">&para;</a></h4>
+<p>Removes a bucket if its user does not need it.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm delete-bucket &lt;bucket-name&gt; &lt;access-key-id&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm delete-bucket backup <span class="m">05236</span>
+OK
+</pre></div>
+</td></tr></table>
+
+<h4 id="retrieve-a-list-of-buckets-get-buckets">Retrieve a list of buckets, <code class="codehilite">get-buckets</code><a class="headerlink" href="#retrieve-a-list-of-buckets-get-buckets" title="Permanent link">&para;</a></h4>
+<p>Retrieves a list of the buckets if you need to know the existing buckets.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm get-buckets
+
+<span class="c1">## Example</span>
+$ leofs-adm get-buckets
+cluster id   <span class="p">|</span> bucket   <span class="p">|</span> owner       <span class="p">|</span> permissions      <span class="p">|</span> redundancy method            <span class="p">|</span> created at
+-------------+----------+-------------+------------------+------------------------------+---------------------------
+leofs_1      <span class="p">|</span> <span class="nb">test</span>     <span class="p">|</span> _test_leofs <span class="p">|</span> Me<span class="o">(</span>full_control<span class="o">)</span> <span class="p">|</span> copy, <span class="o">{</span>n:1, w:1, r:1, d:1<span class="o">}</span>   <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">10</span>:57:29 +0900
+</pre></div>
+</td></tr></table>
+
+<h4 id="retrieve-a-bucket-get-bucket">Retrieve a bucket, <code class="codehilite">get-bucket</code><a class="headerlink" href="#retrieve-a-bucket-get-bucket" title="Permanent link">&para;</a></h4>
+<p>Retrieves a bucket if you need to know its bucket's information.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm get-bucket &lt;access-key-id&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm get-bucket <span class="m">05236</span>
+bucket   <span class="p">|</span> permissions                            <span class="p">|</span> created at
+---------+----------------------------------------+---------------------------
+backup   <span class="p">|</span> Me<span class="o">(</span>full_control<span class="o">)</span>, Everyone<span class="o">(</span><span class="nb">read</span><span class="o">)</span>       <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">10</span>:39:01 +0900
+docs     <span class="p">|</span> Me<span class="o">(</span>full_control<span class="o">)</span>, Everyone<span class="o">(</span><span class="nb">read</span><span class="o">)</span>       <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">10</span>:39:25 +0900
+logs     <span class="p">|</span> Me<span class="o">(</span>full_control<span class="o">)</span>, Everyone<span class="o">(</span>read,write<span class="o">)</span> <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">10</span>:39:38 +0900
+movie    <span class="p">|</span> Me<span class="o">(</span>full_control<span class="o">)</span>                       <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">10</span>:39:45 +0900
+</pre></div>
+</td></tr></table>
+
+<h4 id="change-an-owner-of-a-bucket-chown-bucket">Change an owner of a bucket, <code class="codehilite">chown-bucket</code><a class="headerlink" href="#change-an-owner-of-a-bucket-chown-bucket" title="Permanent link">&para;</a></h4>
+<p>Updates an owner of a bucket if you need to change its owner to someone else.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm chown-bucket &lt;bucket&gt; &lt;access-key-id&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm chown-bucket <span class="nb">test</span> b5f0413d45855fcc055e
+OK
+
+<span class="c1">## Confirm the latest list of the buckets</span>
+$ leofs-adm get-buckets
+cluster id   <span class="p">|</span> bucket   <span class="p">|</span> owner        <span class="p">|</span> permissions      <span class="p">|</span> redundancy method            <span class="p">|</span> created at
+-------------+----------+--------------+------------------+------------------------------+---------------------------
+leofs_1      <span class="p">|</span> <span class="nb">test</span>     <span class="p">|</span> leofs-user-2 <span class="p">|</span> Me<span class="o">(</span>full_control<span class="o">)</span> <span class="p">|</span> copy, <span class="o">{</span>n:1, w:1, r:1, d:1<span class="o">}</span>   <span class="p">|</span> <span class="m">2017</span>-04-10 <span class="m">10</span>:57:29 +0900
+</pre></div>
+</td></tr></table>
+
+<h4 id="update-acl-of-a-bucket-update-acl">Update ACL of a bucket, <code class="codehilite">update-acl</code><a class="headerlink" href="#update-acl-of-a-bucket-update-acl" title="Permanent link">&para;</a></h4>
+<p>Updates ACL of a bucket if you need to change it.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm update-acl &lt;bucket&gt; &lt;access-key-id&gt; &lt;canned-ACL&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm update-acl <span class="nb">test</span> <span class="m">05236</span> private
+ok
+$ leofs-adm update-acl <span class="nb">test</span> <span class="m">05236</span> public-read
+ok
+$ leofs-adm update-acl <span class="nb">test</span> <span class="m">05236</span> public-read-write
+ok
+</pre></div>
+</td></tr></table>
+
+<h5 id="canned-acl">Canned ACL<a class="headerlink" href="#canned-acl" title="Permanent link">&para;</a></h5>
+<p>When using S3-API, LeoFS supports a set of predefined grants, known as canned ACLs. Each canned ACL has a predefined a set of grantees and permissions. The following table lists the set of canned ACLs and the associated predefined grants.</p>
+<table>
+<thead>
+<tr>
+<th>Canned ACL</th>
+<th>Applies To</th>
+<th>Permissions Added To ACL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>private</td>
+<td>Bucket and object</td>
+<td><code class="codehilite">[default]</code> Owner gets FULL_CONTROL. No one else has access rights.</td>
+</tr>
+<tr>
+<td>public-read</td>
+<td>Bucket and object</td>
+<td>Owner gets FULL_CONTROL. The AllUsers group gets READ access.</td>
+</tr>
+<tr>
+<td>public-read-write</td>
+<td>Bucket and object</td>
+<td>Owner gets FULL_CONTROL. The AllUsers group gets READ and WRITE access. Granting this on a bucket is generally not recommended.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../../admin/protocols/s3/">For Administrators / Interface / S3-API</a></li>
+</ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 API</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="http://s3tools.org/s3cmd" target="_blank">S3cmd: A command Line S3 Client and Backup for Linux and Mac</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="http://www.s3-client.com" target="_blank">DragonDisk: A cloud storage client</a>&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../protocols/nfs_v3/" title="NFS v3" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                NFS v3
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../cluster/" title="Cluster Operations" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Cluster Operations
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            (c) 2012-2017 LeoProject. All rights reserved.
+          </div>
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application-0b7df094bf.js"></script>
+      <script>app.initialize({url:{base:"../../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>

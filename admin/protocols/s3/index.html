@@ -1,0 +1,1544 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LeoProject makes LeoFS, which is an open source distributed object storage system and a highly available, distributed, eventually consistent storage system. LeoFS is supporting the following features:Multi-protocol Support - S3-API, REST-API and NFS v3, Large Object Support, Multi Data Center Replication and others.">
+      
+      
+      
+        <meta name="author" content="LeoProject">
+      
+      
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.5.4">
+    
+    
+      
+        <title>S3-API - LeoFS Documentation</title>
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-b1a1975878.css">
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <a href="../../.." title="LeoFS Documentation" class="md-icon md-icon--home md-header-nav__button">
+          </a>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  For Administrators
+                </span>
+              
+                <span class="md-header-nav__parent">
+                  Interface
+                </span>
+              
+            
+            S3-API
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <div class="md-header-nav__source">
+          
+            
+
+
+  
+
+
+  <a href="https://github.com/leo-project/leofs" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    
+      <i class="md-icon md-icon--home md-nav__button"></i>
+    
+    LeoFS Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/leo-project/leofs" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../whats_new/" title="What's New?" class="md-nav__link">
+      What's New?
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Getting Started
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Getting Started
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../installation/quick/" title="Quick Installation and Setup" class="md-nav__link">
+      Quick Installation and Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../installation/cluster/" title="Building a LeoFS' cluster with Ansible" class="md-nav__link">
+      Building a LeoFS' cluster with Ansible
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Concept and Architecture
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Concept and Architecture
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/README/" title="LeoFS' Architecture" class="md-nav__link">
+      LeoFS' Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_gateway/" title="LeoGateway's Architecture" class="md-nav__link">
+      LeoGateway's Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_storage/" title="LeoStorage's Architecture" class="md-nav__link">
+      LeoStorage's Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_manager/" title="LeoManager's Architecture" class="md-nav__link">
+      LeoManager's Architecture
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      For Administrators
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        For Administrators
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-1" type="checkbox" id="nav-5-1">
+    
+    <label class="md-nav__link" for="nav-5-1">
+      Setup
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-1">
+        Setup
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/planning_for_production/" title="Planning for Production" class="md-nav__link">
+      Planning for Production
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/supported_platforms/" title="Supported Platforms" class="md-nav__link">
+      Supported Platforms
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/hardware_requirements/" title="Hardware Requirements" class="md-nav__link">
+      Hardware Requirements
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/network_config/" title="Network Configurations" class="md-nav__link">
+      Network Configurations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-2" type="checkbox" id="nav-5-2">
+    
+    <label class="md-nav__link" for="nav-5-2">
+      Settings
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-5-2">
+        Settings
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/cluster/" title="Cluster Settings" class="md-nav__link">
+      Cluster Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_manager/" title="LeoManager Settings" class="md-nav__link">
+      LeoManager Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_storage/" title="LeoStroage Settings" class="md-nav__link">
+      LeoStroage Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_gateway/" title="LeoGateway Settings" class="md-nav__link">
+      LeoGateway Settings
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-3" type="checkbox" id="nav-5-3" checked>
+    
+    <label class="md-nav__link" for="nav-5-3">
+      Interface
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="4">
+      <label class="md-nav__title" for="nav-5-3">
+        Interface
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        S3-API
+      </label>
+    
+    <a href="./" title="S3-API" class="md-nav__link md-nav__link--active">
+      S3-API
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-of-leogateway" title="Configuration of LeoGateway" class="md-nav__link">
+    Configuration of LeoGateway
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-api-implementation-status" title="S3 API Implementation Status" class="md-nav__link">
+    S3 API Implementation Status
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#object-operation" title="Object Operation" class="md-nav__link">
+    Object Operation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bucket-operation" title="Bucket Operation" class="md-nav__link">
+    Bucket Operation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amazon-s3-interface" title="Amazon S3 Interface" class="md-nav__link">
+    Amazon S3 Interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3-official-documentation" title="Amazon S3 Official Documentation" class="md-nav__link">
+    Amazon S3 Official Documentation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-determine-the-name-of-bucket" title="How to determine the name of Bucket" class="md-nav__link">
+    How to determine the name of Bucket
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-httpss3amazonawscombucketpath_to_file" title="1. https://s3.amazonaws.com/bucket/path_to_file" class="md-nav__link">
+    1. https://s3.amazonaws.com/bucket/path_to_file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-httpswwwexamplecoms3amazonawscompath_to_file" title="2. https://www.example.com.s3.amazonaws.com/path_to_file" class="md-nav__link">
+    2. https://www.example.com.s3.amazonaws.com/path_to_file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-httpswwwexamplecompath_to_file" title="3. https://www.example.com/path_to_file" class="md-nav__link">
+    3. https://www.example.com/path_to_file
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-rule-of-a-bucket" title="Naming Rule of a Bucket" class="md-nav__link">
+    Naming Rule of a Bucket
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-clients" title="S3 Clients" class="md-nav__link">
+    S3 Clients
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../rest/" title="REST-API" class="md-nav__link">
+      REST-API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../nfs_v3/" title="NFS v3" class="md-nav__link">
+      NFS v3
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-4" type="checkbox" id="nav-5-4">
+    
+    <label class="md-nav__link" for="nav-5-4">
+      System Operations
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="5">
+      <label class="md-nav__title" for="nav-5-4">
+        System Operations
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/s3/" title="S3-API related Operations" class="md-nav__link">
+      S3-API related Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/cluster/" title="Cluster Operations" class="md-nav__link">
+      Cluster Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/data/" title="Data Operations" class="md-nav__link">
+      Data Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/multi_dc_replication/" title="Multi Data Center Replication" class="md-nav__link">
+      Multi Data Center Replication
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/others/" title="Others" class="md-nav__link">
+      Others
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5">
+    
+    <label class="md-nav__link" for="nav-5-5">
+      System Administration
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="6">
+      <label class="md-nav__title" for="nav-5-5">
+        System Administration
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/log_management/" title="Log Management" class="md-nav__link">
+      Log Management
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
+      LeoManager's Maintenance
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
+      System Migration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
+      Backup and Restore
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/integration/" title="System Integration" class="md-nav__link">
+      System Integration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
+      Index of LeoFS' Commands
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
+      Troubleshooting
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../benchmark/README/" title="Benchmark" class="md-nav__link">
+      Benchmark
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      FAQ
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        FAQ
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/fundamentals/" title="LeoFS Fundamentals" class="md-nav__link">
+      LeoFS Fundamentals
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/limits/" title="LeoFS Limits" class="md-nav__link">
+      LeoFS Limits
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/administration/" title="LeoFS Administration" class="md-nav__link">
+      LeoFS Administration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../production_checklist/README/" title="Production Checklist" class="md-nav__link">
+      Production Checklist
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-of-leogateway" title="Configuration of LeoGateway" class="md-nav__link">
+    Configuration of LeoGateway
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-api-implementation-status" title="S3 API Implementation Status" class="md-nav__link">
+    S3 API Implementation Status
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#object-operation" title="Object Operation" class="md-nav__link">
+    Object Operation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bucket-operation" title="Bucket Operation" class="md-nav__link">
+    Bucket Operation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amazon-s3-interface" title="Amazon S3 Interface" class="md-nav__link">
+    Amazon S3 Interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3-official-documentation" title="Amazon S3 Official Documentation" class="md-nav__link">
+    Amazon S3 Official Documentation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-determine-the-name-of-bucket" title="How to determine the name of Bucket" class="md-nav__link">
+    How to determine the name of Bucket
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-httpss3amazonawscombucketpath_to_file" title="1. https://s3.amazonaws.com/bucket/path_to_file" class="md-nav__link">
+    1. https://s3.amazonaws.com/bucket/path_to_file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-httpswwwexamplecoms3amazonawscompath_to_file" title="2. https://www.example.com.s3.amazonaws.com/path_to_file" class="md-nav__link">
+    2. https://www.example.com.s3.amazonaws.com/path_to_file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-httpswwwexamplecompath_to_file" title="3. https://www.example.com/path_to_file" class="md-nav__link">
+    3. https://www.example.com/path_to_file
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-rule-of-a-bucket" title="Naming Rule of a Bucket" class="md-nav__link">
+    Naming Rule of a Bucket
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-clients" title="S3 Clients" class="md-nav__link">
+    S3 Clients
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/protocols/s3.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
+                
+                
+                <h1 id="interface-s3-api">Interface: S3-API<a class="headerlink" href="#interface-s3-api" title="Permanent link">&para;</a></h1>
+<h2 id="configuration-of-leogateway">Configuration of LeoGateway<a class="headerlink" href="#configuration-of-leogateway" title="Permanent link">&para;</a></h2>
+<p>Update LeoGateway's protocol configuration to <code class="codehilite">s3</code> in your <a href="https://github.com/leo-project/leofs/blob/1.3.2.1/apps/leo_gateway/priv/leo_gateway.conf">LeoGateway configuration</a></p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## --------------------------------------------------------------------</span>
+<span class="c1">## GATEWAY Protocol</span>
+<span class="c1">## --------------------------------------------------------------------</span>
+<span class="c1">## Gateway Protocol to use: [s3 | rest | embed | nfs]</span>
+<span class="na">protocol</span> <span class="o">=</span> <span class="s">s3</span>
+</pre></div>
+</td></tr></table>
+
+<h2 id="s3-api-implementation-status">S3 API Implementation Status<a class="headerlink" href="#s3-api-implementation-status" title="Permanent link">&para;</a></h2>
+<h3 id="object-operation">Object Operation<a class="headerlink" href="#object-operation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>API</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>DELETE Object</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Delete Multiple Objects</td>
+<td>No</td>
+</tr>
+<tr>
+<td>3</td>
+<td>GET Object</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>4</td>
+<td>GET Object ACL</td>
+<td>Plans to support with v1.5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>GET Object torrent</td>
+<td>No</td>
+</tr>
+<tr>
+<td>6</td>
+<td>HEAD Object</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>7</td>
+<td>POST Object</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>8</td>
+<td>PUT Object</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>9</td>
+<td>PUT Object ACL</td>
+<td>Plans to support with v1.5</td>
+</tr>
+<tr>
+<td>10</td>
+<td>PUT Object - Copy</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Initiate Multipart Upload</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Upload Part</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Upload Part - Copy</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Complete Multipart Upload</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Abort Multipart Upload</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>16</td>
+<td>List Parts</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bucket-operation">Bucket Operation<a class="headerlink" href="#bucket-operation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>API</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>DELETE Bucket</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DELETE Bucket life cycle</td>
+<td>No</td>
+</tr>
+<tr>
+<td>3</td>
+<td>DELETE Bucket policy</td>
+<td>No</td>
+</tr>
+<tr>
+<td>4</td>
+<td>DELETE Bucket website</td>
+<td>No</td>
+</tr>
+<tr>
+<td>5</td>
+<td>GET Bucket (List Objects)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>6</td>
+<td>GET Bucket ACL</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>7</td>
+<td>GET Bucket life cycle</td>
+<td>No</td>
+</tr>
+<tr>
+<td>8</td>
+<td>GET Bucket policy</td>
+<td>No</td>
+</tr>
+<tr>
+<td>9</td>
+<td>GET Bucket location</td>
+<td>No</td>
+</tr>
+<tr>
+<td>10</td>
+<td>GET Bucket logging</td>
+<td>No</td>
+</tr>
+<tr>
+<td>11</td>
+<td>GET Bucket notification</td>
+<td>No</td>
+</tr>
+<tr>
+<td>12</td>
+<td>GET Bucket Object versions</td>
+<td>Plan to support with v2.0</td>
+</tr>
+<tr>
+<td>13</td>
+<td>GET Bucket requestPayment</td>
+<td>No</td>
+</tr>
+<tr>
+<td>14</td>
+<td>GET Bucket versioning</td>
+<td>Plan to support with v2.0</td>
+</tr>
+<tr>
+<td>15</td>
+<td>GET Bucket website</td>
+<td>No</td>
+</tr>
+<tr>
+<td>16</td>
+<td>HEAD Bucket</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>17</td>
+<td>List Multipart Uploads</td>
+<td>No</td>
+</tr>
+<tr>
+<td>18</td>
+<td>PUT Bucket</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>19</td>
+<td>PUT Bucket ACL</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>20</td>
+<td>PUT Bucket life cycle</td>
+<td>No</td>
+</tr>
+<tr>
+<td>21</td>
+<td>PUT Bucket policy</td>
+<td>No</td>
+</tr>
+<tr>
+<td>22</td>
+<td>PUT Bucket logging</td>
+<td>No</td>
+</tr>
+<tr>
+<td>23</td>
+<td>PUT Bucket notification</td>
+<td>No</td>
+</tr>
+<tr>
+<td>24</td>
+<td>PUT Bucket requestPayment</td>
+<td>No</td>
+</tr>
+<tr>
+<td>24</td>
+<td>PUT Bucket versioning</td>
+<td>Plan to support with v2.0</td>
+</tr>
+<tr>
+<td>25</td>
+<td>PUT Bucket website</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h2 id="amazon-s3-interface">Amazon S3 Interface<a class="headerlink" href="#amazon-s3-interface" title="Permanent link">&para;</a></h2>
+<h3 id="amazon-s3-official-documentation">Amazon S3 Official Documentation<a class="headerlink" href="#amazon-s3-official-documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html">AWS Documentation / Amazon Simple Storage Service (S3) / Developer Guide / What Is Amazon S3?</a></li>
+</ul>
+<h3 id="how-to-determine-the-name-of-bucket">How to determine the name of Bucket<a class="headerlink" href="#how-to-determine-the-name-of-bucket" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html">Virtual Hosting of Buckets</a></li>
+<li>Values used for determining the name:<ul>
+<li>S3 uses a HTTP host header or a path segment in the HTTP request line</li>
+<li>How S3 determines what to use depends on a domain name</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-httpss3amazonawscombucketpath_to_file">1. <a href="https://s3.amazonaws.com/bucket/path_to_file">https://s3.amazonaws.com/bucket/path_to_file</a><a class="headerlink" href="#1-httpss3amazonawscombucketpath_to_file" title="Permanent link">&para;</a></h4>
+<p>In this case, a bucket's name is the first segment of a path.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request line</td>
+<td>GET /bucket/path_to_file HTTP/1.1</td>
+</tr>
+<tr>
+<td>Host header</td>
+<td>Host: s3.amazonaws.com</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-httpswwwexamplecoms3amazonawscompath_to_file">2. <a href="https://www.example.com.s3.amazonaws.com/path_to_file">https://www.example.com.s3.amazonaws.com/path_to_file</a><a class="headerlink" href="#2-httpswwwexamplecoms3amazonawscompath_to_file" title="Permanent link">&para;</a></h4>
+<p>In this case, the name of the bucket is the part of the domain name before <code class="codehilite"><span class="na">.s3.amazonaws.com</span></code>.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request line</td>
+<td>GET /path_to_file HTTP/1.1</td>
+</tr>
+<tr>
+<td>Host header</td>
+<td>Host: <a href="http://www.example.com.s3.amazonaws.com">www.example.com.s3.amazonaws.com</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="3-httpswwwexamplecompath_to_file">3. <a href="https://www.example.com/path_to_file">https://www.example.com/path_to_file</a><a class="headerlink" href="#3-httpswwwexamplecompath_to_file" title="Permanent link">&para;</a></h4>
+<p>In this case, a bucket's name is equal to the <code class="codehilite">FQDN</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request line</td>
+<td>GET /path_to_file HTTP/1.1</td>
+</tr>
+<tr>
+<td>Host header</td>
+<td>Host header</td>
+</tr>
+</tbody>
+</table>
+<p>The argument of LeoFS’ <code class="codehilite">whereis</code> OR <code class="codehilite">purge</code> commands should be "<a href="http://www.example.com/path_to_file">www.example.com/path_to_file</a>".</p>
+<h3 id="naming-rule-of-a-bucket">Naming Rule of a Bucket<a class="headerlink" href="#naming-rule-of-a-bucket" title="Permanent link">&para;</a></h3>
+<p>We recommend as a best practice that you always use DNS-compliant bucket names regardless of the region in which you create the bucket.</p>
+<ul>
+<li>Bucket names can be as long as between 3 and 255 characters.</li>
+<li>Bucket names can contain lowercase letters, numbers, periods (.), dashes (-) and underscores (_).</li>
+<li>Bucket names must not be formatted as an IP address (e.g., 192.168.5.4).</li>
+<li>Bucket name cannot start and end with periods (.), dashes (-) and underscores (_).</li>
+</ul>
+<h2 id="s3-clients">S3 Clients<a class="headerlink" href="#s3-clients" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://aws.amazon.com/tools/">AWS SDKs</a></li>
+<li><a href="http://www.s3-client.com/">Dragon Disk, A cloud stroage client</a></li>
+<li><a href="http://s3tools.org/s3cmd">S3cmd, Command Line S3 Client and Backup for Linux and Mac</a></li>
+</ul>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../settings/leo_gateway/" title="LeoGateway Settings" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                LeoGateway Settings
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../rest/" title="REST-API" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                REST-API
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            (c) 2012-2017 LeoProject. All rights reserved.
+          </div>
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application-0b7df094bf.js"></script>
+      <script>app.initialize({url:{base:"../../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>

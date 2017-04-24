@@ -1,0 +1,1456 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LeoProject makes LeoFS, which is an open source distributed object storage system and a highly available, distributed, eventually consistent storage system. LeoFS is supporting the following features:Multi-protocol Support - S3-API, REST-API and NFS v3, Large Object Support, Multi Data Center Replication and others.">
+      
+      
+      
+        <meta name="author" content="LeoProject">
+      
+      
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.5.4">
+    
+    
+      
+        <title>System Migration - LeoFS Documentation</title>
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-b1a1975878.css">
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <a href="../../.." title="LeoFS Documentation" class="md-icon md-icon--home md-header-nav__button">
+          </a>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  For Administrators
+                </span>
+              
+                <span class="md-header-nav__parent">
+                  System Administration
+                </span>
+              
+            
+            System Migration
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <div class="md-header-nav__source">
+          
+            
+
+
+  
+
+
+  <a href="https://github.com/leo-project/leofs" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    
+      <i class="md-icon md-icon--home md-nav__button"></i>
+    
+    LeoFS Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/leo-project/leofs" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../whats_new/" title="What's New?" class="md-nav__link">
+      What's New?
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Getting Started
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Getting Started
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../installation/quick/" title="Quick Installation and Setup" class="md-nav__link">
+      Quick Installation and Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../installation/cluster/" title="Building a LeoFS' cluster with Ansible" class="md-nav__link">
+      Building a LeoFS' cluster with Ansible
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Concept and Architecture
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Concept and Architecture
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/README/" title="LeoFS' Architecture" class="md-nav__link">
+      LeoFS' Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_gateway/" title="LeoGateway's Architecture" class="md-nav__link">
+      LeoGateway's Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_storage/" title="LeoStorage's Architecture" class="md-nav__link">
+      LeoStorage's Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_manager/" title="LeoManager's Architecture" class="md-nav__link">
+      LeoManager's Architecture
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      For Administrators
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        For Administrators
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-1" type="checkbox" id="nav-5-1">
+    
+    <label class="md-nav__link" for="nav-5-1">
+      Setup
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-1">
+        Setup
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/planning_for_production/" title="Planning for Production" class="md-nav__link">
+      Planning for Production
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/supported_platforms/" title="Supported Platforms" class="md-nav__link">
+      Supported Platforms
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/hardware_requirements/" title="Hardware Requirements" class="md-nav__link">
+      Hardware Requirements
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/network_config/" title="Network Configurations" class="md-nav__link">
+      Network Configurations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-2" type="checkbox" id="nav-5-2">
+    
+    <label class="md-nav__link" for="nav-5-2">
+      Settings
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-5-2">
+        Settings
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/cluster/" title="Cluster Settings" class="md-nav__link">
+      Cluster Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_manager/" title="LeoManager Settings" class="md-nav__link">
+      LeoManager Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_storage/" title="LeoStroage Settings" class="md-nav__link">
+      LeoStroage Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../settings/leo_gateway/" title="LeoGateway Settings" class="md-nav__link">
+      LeoGateway Settings
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-3" type="checkbox" id="nav-5-3">
+    
+    <label class="md-nav__link" for="nav-5-3">
+      Interface
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="4">
+      <label class="md-nav__title" for="nav-5-3">
+        Interface
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/s3/" title="S3-API" class="md-nav__link">
+      S3-API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/rest/" title="REST-API" class="md-nav__link">
+      REST-API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/nfs_v3/" title="NFS v3" class="md-nav__link">
+      NFS v3
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-4" type="checkbox" id="nav-5-4">
+    
+    <label class="md-nav__link" for="nav-5-4">
+      System Operations
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="5">
+      <label class="md-nav__title" for="nav-5-4">
+        System Operations
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/s3/" title="S3-API related Operations" class="md-nav__link">
+      S3-API related Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/cluster/" title="Cluster Operations" class="md-nav__link">
+      Cluster Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/data/" title="Data Operations" class="md-nav__link">
+      Data Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/multi_dc_replication/" title="Multi Data Center Replication" class="md-nav__link">
+      Multi Data Center Replication
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/others/" title="Others" class="md-nav__link">
+      Others
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5" checked>
+    
+    <label class="md-nav__link" for="nav-5-5">
+      System Administration
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="6">
+      <label class="md-nav__title" for="nav-5-5">
+        System Administration
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../log_management/" title="Log Management" class="md-nav__link">
+      Log Management
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
+      LeoManager's Maintenance
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        System Migration
+      </label>
+    
+    <a href="./" title="System Migration" class="md-nav__link md-nav__link--active">
+      System Migration
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prior-knowledge" title="Prior Knowledge" class="md-nav__link">
+    Prior Knowledge
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#procedure-for-upgrading" title="Procedure For Upgrading" class="md-nav__link">
+    Procedure For Upgrading
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-leofs-as-a-non-privileged-user" title="Run LeoFS As a Non-Privileged User" class="md-nav__link">
+    Run LeoFS As a Non-Privileged User
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#since-133" title="Since 1.3.3" class="md-nav__link">
+    Since 1.3.3
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview" title="Overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-steps" title="Extra Steps" class="md-nav__link">
+    Extra Steps
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-leofs-with-default-paths" title="Running LeoFS with default paths" class="md-nav__link">
+    Running LeoFS with default paths
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-leofs-with-customized-paths" title="Running LeoFS with customized paths" class="md-nav__link">
+    Running LeoFS with customized paths
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-leofs-with-customized-launch-scripts" title="Running LeoFS with customized launch scripts" class="md-nav__link">
+    Running LeoFS with customized launch scripts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-leofs-in-any-form-and-keeping-leofs-running-as-root" title="Running LeoFS in any form and keeping LeoFS running as root" class="md-nav__link">
+    Running LeoFS in any form and keeping LeoFS running as root
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-config-files" title="Environment Config Files" class="md-nav__link">
+    Environment Config Files
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_1" title="Overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-configuration" title="Example Configuration" class="md-nav__link">
+    Example Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-settings-snmp-config" title="Additional settings - SNMP config" class="md-nav__link">
+    Additional settings - SNMP config
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notice" title="Notice" class="md-nav__link">
+    Notice
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../backup_and_restore/" title="Backup and Restore" class="md-nav__link">
+      Backup and Restore
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../integration/" title="System Integration" class="md-nav__link">
+      System Integration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
+      Index of LeoFS' Commands
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
+      Troubleshooting
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../benchmark/README/" title="Benchmark" class="md-nav__link">
+      Benchmark
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      FAQ
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        FAQ
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/fundamentals/" title="LeoFS Fundamentals" class="md-nav__link">
+      LeoFS Fundamentals
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/limits/" title="LeoFS Limits" class="md-nav__link">
+      LeoFS Limits
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/administration/" title="LeoFS Administration" class="md-nav__link">
+      LeoFS Administration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../production_checklist/README/" title="Production Checklist" class="md-nav__link">
+      Production Checklist
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prior-knowledge" title="Prior Knowledge" class="md-nav__link">
+    Prior Knowledge
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#procedure-for-upgrading" title="Procedure For Upgrading" class="md-nav__link">
+    Procedure For Upgrading
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-leofs-as-a-non-privileged-user" title="Run LeoFS As a Non-Privileged User" class="md-nav__link">
+    Run LeoFS As a Non-Privileged User
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#since-133" title="Since 1.3.3" class="md-nav__link">
+    Since 1.3.3
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview" title="Overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-steps" title="Extra Steps" class="md-nav__link">
+    Extra Steps
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-leofs-with-default-paths" title="Running LeoFS with default paths" class="md-nav__link">
+    Running LeoFS with default paths
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-leofs-with-customized-paths" title="Running LeoFS with customized paths" class="md-nav__link">
+    Running LeoFS with customized paths
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-leofs-with-customized-launch-scripts" title="Running LeoFS with customized launch scripts" class="md-nav__link">
+    Running LeoFS with customized launch scripts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-leofs-in-any-form-and-keeping-leofs-running-as-root" title="Running LeoFS in any form and keeping LeoFS running as root" class="md-nav__link">
+    Running LeoFS in any form and keeping LeoFS running as root
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-config-files" title="Environment Config Files" class="md-nav__link">
+    Environment Config Files
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_1" title="Overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-configuration" title="Example Configuration" class="md-nav__link">
+    Example Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-settings-snmp-config" title="Additional settings - SNMP config" class="md-nav__link">
+    Additional settings - SNMP config
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notice" title="Notice" class="md-nav__link">
+    Notice
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/system_admin/migration.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
+                
+                
+                <h1 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h1>
+<h2 id="prior-knowledge">Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permanent link">&para;</a></h2>
+<h2 id="procedure-for-upgrading">Procedure For Upgrading<a class="headerlink" href="#procedure-for-upgrading" title="Permanent link">&para;</a></h2>
+<h2 id="run-leofs-as-a-non-privileged-user">Run LeoFS As a Non-Privileged User<a class="headerlink" href="#run-leofs-as-a-non-privileged-user" title="Permanent link">&para;</a></h2>
+<h3 id="since-133">Since 1.3.3<a class="headerlink" href="#since-133" title="Permanent link">&para;</a></h3>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>Starting from 1.3.3, all LeoFS nodes are running as non-privileged user <code class="codehilite">leofs</code> in official Linux packages.
+It should work out of the box for new installations and for new nodes on existing installations.
+However, for existing nodes upgrading to 1.3.3 (or later) from earlier versions the change might be not seamless. Compared to the usual upgrade procedure described at <a href="http://leo-project.net/leofs/docs/admin_guide/admin_guide_10.html">System Maintenance</a>,
+extra steps are needed. There are a few options, depending on how the node was configured.</p>
+<h3 id="extra-steps">Extra Steps<a class="headerlink" href="#extra-steps" title="Permanent link">&para;</a></h3>
+<h4 id="running-leofs-with-default-paths">Running LeoFS with default paths<a class="headerlink" href="#running-leofs-with-default-paths" title="Permanent link">&para;</a></h4>
+<p>For those who have LeoFS configured with
+- queue and mnesia in <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_*/work</code>
+- log files in <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_*/log</code>
+- storage data files in <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_storage/avs</code></p>
+<p>Follow the below instructions when upgrading.</p>
+<ol>
+<li>During upgrade of node (of any type), <strong>after</strong> stopping the old version and copying or moving every
+files to be moved into the new directories, change the owner with the commands below. It has to be done <strong>before</strong> launching the
+new version.</li>
+</ol>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># chown -R leofs:leofs /usr/local/leofs/%version/leo_storage/avs
+# chown -R leofs:leofs /usr/local/leofs/%version/leo_gateway/cache
+# chown -R leofs:leofs /usr/local/leofs/%version/leo_*/log
+# chown -R leofs:leofs /usr/local/leofs/%version/leo_*/work
+</pre></div>
+</td></tr></table>
+
+<ol>
+<li>Remove old temporary directory used by launch scripts. This step is needed because when earlier version was launched with <code class="codehilite">root</code> permissions, it creates a set of temporary directories in <code class="codehilite">/tmp</code> which cannot be re-used by non-privileged user as is, and launch scripts will fail with obscure messages - or with no message at all, except for an error in syslog (usually <code class="codehilite">/var/log/messages</code>).</li>
+</ol>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># rm -rf /tmp/usr
+</pre></div>
+</td></tr></table>
+
+<ol>
+<li>Start the node through its launch script, as per upgrade flow diagram.</li>
+</ol>
+<h4 id="running-leofs-with-customized-paths">Running LeoFS with customized paths<a class="headerlink" href="#running-leofs-with-customized-paths" title="Permanent link">&para;</a></h4>
+<p>For those who have LeoFS configured with, for example, let's say
+- queue and mnesia in <code class="codehilite">/mnt/work</code>
+- log files in <code class="codehilite">/var/log/leofs</code>
+- storage data files in <code class="codehilite">/mnt/avs</code></p>
+<ol>
+<li>
+<p>Before starting new version of a node, execute <code class="codehilite">chown -R leofs:leofs &lt;..&gt;</code> for all these external directories</p>
+</li>
+<li>
+<p>Don't forget to remove temporary directory (<code class="codehilite">rm -rf /tmp/usr</code>) as well for the reasons described above.</p>
+</li>
+</ol>
+<p>These users might be interested in new features of "environment" config files, which allow to redefine
+some environment variables like paths in launch script. We will describe about it on the later section.</p>
+<h4 id="running-leofs-with-customized-launch-scripts">Running LeoFS with customized launch scripts<a class="headerlink" href="#running-leofs-with-customized-launch-scripts" title="Permanent link">&para;</a></h4>
+<p>For those who have LeoFS already running as non-privileged user.</p>
+<ol>
+<li>
+<p>Scripts that are provided by packages generally should be enough to run on most configurations without changes. If needed, change user from <code class="codehilite">leofs</code> to some other in "environment" config files (e.g. <code class="codehilite">RUNNER_USER=localuser</code>). Please refer to the later section for more details about environment config files.</p>
+</li>
+<li>
+<p>Possible pitfall includes ownership of <code class="codehilite">/usr/local/leofs/.erlang.cookie</code> file, which is set to <code class="codehilite">leofs</code> during package installation. This should only be a problem when trying to run LeoFS nodes with permissions of some user which is not called <code class="codehilite">leofs</code>, but has home directory set to <code class="codehilite">/usr/local/leofs</code>. This is not supported due to technical reasons. Home directory of that user must be set to something else.</p>
+</li>
+</ol>
+<h4 id="running-leofs-in-any-form-and-keeping-leofs-running-as-root">Running LeoFS in any form and keeping LeoFS running as <code class="codehilite">root</code><a class="headerlink" href="#running-leofs-in-any-form-and-keeping-leofs-running-as-root" title="Permanent link">&para;</a></h4>
+<p>For those who want to keep maximum compatibility with the previous installation.</p>
+<ol>
+<li>In "environment" config file, set this option</li>
+</ol>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>RUNNER_USER=root
+</pre></div>
+</td></tr></table>
+
+<p>Please note that switching this node to run as non-privileged user later will require extra steps to carefully change all permissions. This is not recommended, but possible (at very least, in addition to <code class="codehilite">chown</code> commands from before, permissions of <code class="codehilite">leo_*/etc</code> and <code class="codehilite">leo_*/snmp/*/db</code> will have to be changed recursively as well).</p>
+<h2 id="environment-config-files">Environment Config Files<a class="headerlink" href="#environment-config-files" title="Permanent link">&para;</a></h2>
+<h3 id="overview_1">Overview<a class="headerlink" href="#overview_1" title="Permanent link">&para;</a></h3>
+<p>Starting from version 1.3.3, some environment variables used by launch scripts can be redefined in
+"environment" config files. They have shell syntax and are read by launch scripts. Their names are:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>leo_gateway/etc/leo_gateway.environment
+leo_manager_0/etc/leo_manager.environment
+leo_manager_1/etc/leo_manager.environment
+leo_storage/etc/leo_storage.environment
+</pre></div>
+</td></tr></table>
+
+<p>Changing settings in these files is completely optional, but can be used to better organize directories
+used by LeoFS nodes and simplify upgrades. Here is highly customized example of <code class="codehilite"><span class="na">.environment</span></code> and <code class="codehilite"><span class="na">.config</span></code> files that allow LeoFS to store all work information and logs outside of default installation tree (<code class="codehilite">/usr/local/leofs/&lt;version&gt;</code>).
+As a result, upgrade process to newer version becomes as simple as placing <code class="codehilite">leo_*.environment</code> files in <code class="codehilite">etc</code> directory of new version, for example (for <code class="codehilite">leo_manager_0</code>):</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ /usr/local/leofs/&lt;old_version&gt;/leo_manager_0/bin/leo_manager stop
+$ cp /usr/local/leofs/&lt;old_version&gt;/leo_manager_0/etc/leo_manager.environment /usr/local/leofs/&lt;new_version&gt;/leo_manager_0/etc/
+$ /usr/local/leofs/&lt;new_version&gt;/leo_manager_0/bin/leo_manager start
+</pre></div>
+</td></tr></table>
+
+<p>With this, users can place actual config files (like <code class="codehilite">leo_manager.conf</code>) to directory of their choice and change them independently of version upgrades, and the <code class="codehilite"><span class="na">.environment</span></code> files that need to be placed into installation tree don't need to be changed between versions.  With the correct setup, since no work/temporary files will be kept in the installation tree, old version can be removed cleanly.</p>
+<h3 id="example-configuration">Example Configuration<a class="headerlink" href="#example-configuration" title="Permanent link">&para;</a></h3>
+<p>Contents of <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/etc/leo_manager.environment</code>:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># pick config file from fixed place
+RUNNER_ETC_DIR=/etc/leofs/leo_manager_0
+# store erlang.log.* and run_erl.log in this directory
+RUNNER_LOG_DIR=/var/log/leofs/leo_manager_0
+</pre></div>
+</td></tr></table>
+
+<p>Directories defined in RUNNER_ETC_DIR and RUNNER_LOG_DIR (in this example, <code class="codehilite">/etc/leofs/leo_manager_0</code> and
+<code class="codehilite">/var/log/leofs/leo_manager_0</code>) must be writable by <code class="codehilite">leofs</code> user, also <code class="codehilite">$RUNNER_LOG_DIR/sasl</code> (here
+<code class="codehilite">/var/log/leofs/leo_manager_0/sasl</code>) must exist:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /etc/leofs/leo_manager_0/
+drwxr-xr-x. 4 leofs leofs 4096 Apr  5 20:00 /var/log/leofs/leo_manager_0/
+drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /var/log/leofs/leo_manager_0/sasl/
+</pre></div>
+</td></tr></table>
+
+<p>In <code class="codehilite">leo_manager.conf</code>, all options related to directories should point to external paths:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>sasl.sasl_error_log = /var/log/leofs/leo_manager_0/sasl/sasl-error.log
+sasl.error_logger_mf_dir = /var/log/leofs/leo_manager_0/sasl
+mnesia.dir = /var/local/leofs/leo_manager_0/work/mnesia/127.0.0.1
+queue_dir = /var/local/leofs/leo_manager_0/work/queue
+log.erlang = /var/log/leofs/leo_manager_0/erlang
+log.app = /var/log/leofs/leo_manager_0/app
+log.member_dir = /var/log/leofs/leo_manager_0/ring
+log.ring_dir = /var/log/leofs/leo_manager_0/ring
+erlang.crash_dump = /var/log/leofs/leo_manager_0/erl_crash.dump
+</pre></div>
+</td></tr></table>
+
+<p>For <code class="codehilite">leo_storage.conf</code> it will be:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>sasl.sasl_error_log = /var/log/leofs/leo_storage/sasl/sasl-error.log
+sasl.error_logger_mf_dir = /var/log/leofs/leo_storage/sasl
+obj_containers.path = [/mnt/avs]
+log.erlang = /var/log/leofs/leo_storage/erlang
+log.app = /var/log/leofs/leo_storage/app
+log.member_dir = /var/log/leofs/leo_storage/ring
+log.ring_dir = /var/log/leofs/leo_storage/ring
+queue_dir  = /var/local/leofs/leo_storage/work/queue
+leo_ordning_reda.temp_stacked_dir = /var/local/leofs/leo_storage/work/ord_reda/
+erlang.crash_dump = /var/log/leofs/leo_storage/erl_crash.dump
+</pre></div>
+</td></tr></table>
+
+<p>For <code class="codehilite">leo_gateway.conf</code>:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>sasl.sasl_error_log = /var/log/leofs/leo_gateway/sasl/sasl-error.log
+sasl.error_logger_mf_dir = /var/log/leofs/leo_gateway/sasl
+log.erlang = /var/log/leofs/leo_gateway/erlang
+log.app = /var/log/leofs/leo_gateway/app
+log.member_dir = /var/log/leofs/leo_gateway/ring
+log.ring_dir = /var/log/leofs/leo_gateway/ring
+cache.cache_disc_dir_data = /var/local/leofs/leo_gateway/cache/data
+cache.cache_disc_dir_journal = /var/local/leofs/leo_gateway/cache/journal
+queue_dir = /var/local/leofs/leo_gateway/work/queue
+erlang.crash_dump = /var/log/leofs/leo_gateway/erl_crash.dump
+</pre></div>
+</td></tr></table>
+
+<p>Of course, all these directories must exist and have correct ownership/permissions (writable by <code class="codehilite">leofs</code> user, unless set up otherwise)</p>
+<h3 id="additional-settings-snmp-config">Additional settings - SNMP config<a class="headerlink" href="#additional-settings-snmp-config" title="Permanent link">&para;</a></h3>
+<p>When pursuing "pure" system which keeps all the data out of installation tree, one might also decide to move SNMP agent config and SNMP "db" directories to external paths, by setting (example for <code class="codehilite">leo_manager_0</code>) this in <code class="codehilite">leo_manager.config</code>:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>snmp_conf = /etc/leofs/leo_manager_0/leo_manager_snmp
+</pre></div>
+</td></tr></table>
+
+<p>then copying <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config</code> to
+<code class="codehilite">/etc/leofs/leo_manager_0/leo_manager_snmp</code> and setting</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>{db_dir, &quot;/var/local/leofs/leo_manager_0/snmp_db&quot;},
+</pre></div>
+</td></tr></table>
+
+<p>in <code class="codehilite">/etc/leofs/leo_manager_0/leo_manager_snmp.config</code> to make sure that absolutely no temporary files are created in <code class="codehilite">/usr/local/leofs</code> tree. It shouldn't matter otherwise since there is no need to keep contents of SNMP <code class="codehilite">db</code> directory between upgrades. (Here, copy of leo_manager_snmp.config was made so that original config would be untouched; while it is possible to change <code class="codehilite">db_dir</code> in original <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config</code> as well, doing so would mean that this file needs to be replaced after each upgrade, reducing benefit of only changing <code class="codehilite"><span class="na">.environment</span></code> file after upgrade)</p>
+<h3 id="notice">Notice<a class="headerlink" href="#notice" title="Permanent link">&para;</a></h3>
+<p>Please note that this configuration is just an example of how to use <code class="codehilite"><span class="na">.environment</span></code> config features to move all the log files and config files out of the tree so they reside at fixed paths, to simplify configuration changes and upgrades as much as possible. The resulting upgrade process can be less safe than original one suggested at <a href="http://leo-project.net/leofs/docs/admin_guide/admin_guide_10.html">System Maintenance</a>, because new version changes working mnesia and queue directories upon launch and going back to the older version might be not always possible. Users should consider making backups of work directories (<code class="codehilite">/var/local/leofs</code> in this example) before launching the newer version of a node.</p>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../monitoring/" title="System Monitoring" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                System Monitoring
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../backup_and_restore/" title="Backup and Restore" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Backup and Restore
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            (c) 2012-2017 LeoProject. All rights reserved.
+          </div>
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application-0b7df094bf.js"></script>
+      <script>app.initialize({url:{base:"../../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>

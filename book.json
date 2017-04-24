@@ -1,0 +1,10 @@
+{
+  "title": "LeoFS Documentation",
+    "plugins": ["toc"],
+    "pluginsConfig": {
+        "toc": {
+            "addClass": true,
+            "className": "toc"
+        }
+    }
+}

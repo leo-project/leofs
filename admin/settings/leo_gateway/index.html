@@ -1,0 +1,1541 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LeoProject makes LeoFS, which is an open source distributed object storage system and a highly available, distributed, eventually consistent storage system. LeoFS is supporting the following features:Multi-protocol Support - S3-API, REST-API and NFS v3, Large Object Support, Multi Data Center Replication and others.">
+      
+      
+      
+        <meta name="author" content="LeoProject">
+      
+      
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.5.4">
+    
+    
+      
+        <title>LeoGateway Settings - LeoFS Documentation</title>
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-b1a1975878.css">
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <a href="../../.." title="LeoFS Documentation" class="md-icon md-icon--home md-header-nav__button">
+          </a>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  For Administrators
+                </span>
+              
+                <span class="md-header-nav__parent">
+                  Settings
+                </span>
+              
+            
+            LeoGateway Settings
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <div class="md-header-nav__source">
+          
+            
+
+
+  
+
+
+  <a href="https://github.com/leo-project/leofs" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    
+      <i class="md-icon md-icon--home md-nav__button"></i>
+    
+    LeoFS Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/leo-project/leofs" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../whats_new/" title="What's New?" class="md-nav__link">
+      What's New?
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Getting Started
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Getting Started
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../installation/quick/" title="Quick Installation and Setup" class="md-nav__link">
+      Quick Installation and Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../installation/cluster/" title="Building a LeoFS' cluster with Ansible" class="md-nav__link">
+      Building a LeoFS' cluster with Ansible
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Concept and Architecture
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Concept and Architecture
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/README/" title="LeoFS' Architecture" class="md-nav__link">
+      LeoFS' Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_gateway/" title="LeoGateway's Architecture" class="md-nav__link">
+      LeoGateway's Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_storage/" title="LeoStorage's Architecture" class="md-nav__link">
+      LeoStorage's Architecture
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../architecture/leo_manager/" title="LeoManager's Architecture" class="md-nav__link">
+      LeoManager's Architecture
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      For Administrators
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        For Administrators
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-1" type="checkbox" id="nav-5-1">
+    
+    <label class="md-nav__link" for="nav-5-1">
+      Setup
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-1">
+        Setup
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/planning_for_production/" title="Planning for Production" class="md-nav__link">
+      Planning for Production
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/supported_platforms/" title="Supported Platforms" class="md-nav__link">
+      Supported Platforms
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/hardware_requirements/" title="Hardware Requirements" class="md-nav__link">
+      Hardware Requirements
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../setup/network_config/" title="Network Configurations" class="md-nav__link">
+      Network Configurations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-2" type="checkbox" id="nav-5-2" checked>
+    
+    <label class="md-nav__link" for="nav-5-2">
+      Settings
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-5-2">
+        Settings
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../cluster/" title="Cluster Settings" class="md-nav__link">
+      Cluster Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../leo_manager/" title="LeoManager Settings" class="md-nav__link">
+      LeoManager Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../leo_storage/" title="LeoStroage Settings" class="md-nav__link">
+      LeoStroage Settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        LeoGateway Settings
+      </label>
+    
+    <a href="./" title="LeoGateway Settings" class="md-nav__link md-nav__link--active">
+      LeoGateway Settings
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prior-knowledge" title="Prior Knowledge" class="md-nav__link">
+    Prior Knowledge
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" title="Configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leogateway-configurations" title="LeoGateway Configurations" class="md-nav__link">
+    LeoGateway Configurations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erlang-vms-related-configurations" title="Erlang VM's Related Configurations" class="md-nav__link">
+    Erlang VM's Related Configurations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes-and-tips-of-the-configuration" title="Notes and Tips of the Configuration" class="md-nav__link">
+    Notes and Tips of the Configuration
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-consistency-between-leogateway-and-leostorage" title="Cache Consistency between LeoGateway and LeoStorage" class="md-nav__link">
+    Cache Consistency between LeoGateway and LeoStorage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-related-to-disk-cache" title="Configuration related to Disk Cache" class="md-nav__link">
+    Configuration related to Disk Cache
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-3" type="checkbox" id="nav-5-3">
+    
+    <label class="md-nav__link" for="nav-5-3">
+      Interface
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="4">
+      <label class="md-nav__title" for="nav-5-3">
+        Interface
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/s3/" title="S3-API" class="md-nav__link">
+      S3-API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/rest/" title="REST-API" class="md-nav__link">
+      REST-API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../protocols/nfs_v3/" title="NFS v3" class="md-nav__link">
+      NFS v3
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-4" type="checkbox" id="nav-5-4">
+    
+    <label class="md-nav__link" for="nav-5-4">
+      System Operations
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="5">
+      <label class="md-nav__title" for="nav-5-4">
+        System Operations
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/s3/" title="S3-API related Operations" class="md-nav__link">
+      S3-API related Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/cluster/" title="Cluster Operations" class="md-nav__link">
+      Cluster Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/data/" title="Data Operations" class="md-nav__link">
+      Data Operations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/multi_dc_replication/" title="Multi Data Center Replication" class="md-nav__link">
+      Multi Data Center Replication
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_operations/others/" title="Others" class="md-nav__link">
+      Others
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5">
+    
+    <label class="md-nav__link" for="nav-5-5">
+      System Administration
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="6">
+      <label class="md-nav__title" for="nav-5-5">
+        System Administration
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/log_management/" title="Log Management" class="md-nav__link">
+      Log Management
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
+      LeoManager's Maintenance
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
+      System Migration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
+      Backup and Restore
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system_admin/integration/" title="System Integration" class="md-nav__link">
+      System Integration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
+      Index of LeoFS' Commands
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
+      Troubleshooting
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../benchmark/README/" title="Benchmark" class="md-nav__link">
+      Benchmark
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      FAQ
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        FAQ
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/fundamentals/" title="LeoFS Fundamentals" class="md-nav__link">
+      LeoFS Fundamentals
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/limits/" title="LeoFS Limits" class="md-nav__link">
+      LeoFS Limits
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../faq/administration/" title="LeoFS Administration" class="md-nav__link">
+      LeoFS Administration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../production_checklist/README/" title="Production Checklist" class="md-nav__link">
+      Production Checklist
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prior-knowledge" title="Prior Knowledge" class="md-nav__link">
+    Prior Knowledge
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" title="Configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leogateway-configurations" title="LeoGateway Configurations" class="md-nav__link">
+    LeoGateway Configurations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erlang-vms-related-configurations" title="Erlang VM's Related Configurations" class="md-nav__link">
+    Erlang VM's Related Configurations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes-and-tips-of-the-configuration" title="Notes and Tips of the Configuration" class="md-nav__link">
+    Notes and Tips of the Configuration
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-consistency-between-leogateway-and-leostorage" title="Cache Consistency between LeoGateway and LeoStorage" class="md-nav__link">
+    Cache Consistency between LeoGateway and LeoStorage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-related-to-disk-cache" title="Configuration related to Disk Cache" class="md-nav__link">
+    Configuration related to Disk Cache
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/settings/leo_gateway.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
+                
+                
+                <h1 id="leogateway-settings">LeoGateway Settings<a class="headerlink" href="#leogateway-settings" title="Permanent link">&para;</a></h1>
+<h2 id="prior-knowledge">Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permanent link">&para;</a></h2>
+<p>LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> and NFS v3<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>. LeoGateway provides the object cache feature to efficiently and effectively handle requests and to keep high performance of your storage system.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="leogateway-configurations">LeoGateway Configurations<a class="headerlink" href="#leogateway-configurations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LeoManager Nodes</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>managers</td>
+<td>Name of LeoManager nodes. This configuration is necessary for communicating with <code class="codehilite">LeoManager&#39;s master</code> and <code class="codehilite">LeoManager&#39;s slave</code>.<p>( Default: [manager_0@127.0.0.1, manager_1@127.0.0.1] )</p></td>
+</tr>
+<tr>
+<td><strong>LeoGateway Basic</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>protocol</td>
+<td>Gateway Protocol - [s3/rest/embed/nfs] <p>( Default: s3 )</p></td>
+</tr>
+<tr>
+<td><strong>HTTP Related (S3/REST)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>http.port</td>
+<td>Port number the Gateway uses for HTTP connections <p>( Default: 8080 )</p></td>
+</tr>
+<tr>
+<td>http.num_of_acceptors</td>
+<td>Numbers of processes listening for connections <p>( Default: 128 )</p></td>
+</tr>
+<tr>
+<td>http.max_keepalive</td>
+<td>Maximum number of requests allowed in a single keep-alive session <p>( Default: 4096 )</p></td>
+</tr>
+<tr>
+<td>http.layer_of_dirs</td>
+<td>Maximum number of virtual directory levels <p>( Default: 12 )</p></td>
+</tr>
+<tr>
+<td>http.ssl_port</td>
+<td>Port number the Gateway uses for HTTPS connections <p>( Default: 8443 )</p></td>
+</tr>
+<tr>
+<td>http.ssl_certfile</td>
+<td>SSL Certificate file <p>( Default: ./etc/server_cert.pem )</p></td>
+</tr>
+<tr>
+<td>http.ssl_keyfile</td>
+<td>SSL key file <p>( Default: ./etc/server_key.pem )</p></td>
+</tr>
+<tr>
+<td>http.headers_config_file</td>
+<td>HTTP custom header configuration file <p>( Default: ./etc/http_custom_header.conf )</p></td>
+</tr>
+<tr>
+<td>http.timeout_for_header</td>
+<td>HTTP timeout for reading header<p>( Default: 5000, Unit: <code class="codehilite">msec</code>)</p></td>
+</tr>
+<tr>
+<td>http.timeout_for_body</td>
+<td>HTTP timeout for reading body<p>( Default: 15000, Unit: <code class="codehilite">msec</code>)</p></td>
+</tr>
+<tr>
+<td><strong>Bucket Related</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>bucket_prop_sync_interval</td>
+<td>Synchronization Interval of Bucket Properties<p>( Default: 300, Unit: <code class="codehilite">sec</code> )</p></td>
+</tr>
+<tr>
+<td><strong>NFS-related configurations</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>nfs.mountd.port</td>
+<td>Mountd’s port number <p>( Default: 22050 )</p></td>
+</tr>
+<tr>
+<td>nfs.mountd.acceptors</td>
+<td>Mountd’s the number of acceptors <p>( Default: 128 )</p></td>
+</tr>
+<tr>
+<td>nfs.nfsd.port</td>
+<td>NFSd’s port number <p>( Default: 2049 )</p></td>
+</tr>
+<tr>
+<td>nfs.nfsd.acceptors</td>
+<td>NFSd’s the number of acceptors <p>( Default: 128 )</p></td>
+</tr>
+<tr>
+<td><strong>Large object processing configuration</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>large_object.max_chunked_objs</td>
+<td>Maximum number of chunked objects <p>( Default: 1000 )</p></td>
+</tr>
+<tr>
+<td>large_object.chunked_obj_len</td>
+<td>Length of a chunked object. This value must be &gt;= <code class="codehilite">large_object.reading_chunked_obj_len</code> <p>( Default: 5242880, Unit: <code class="codehilite">byte</code> )</p></td>
+</tr>
+<tr>
+<td>large_object.threshold_of_chunk_len</td>
+<td>Threshold when object is chunked <p>( Default: 5767168, Unit: <code class="codehilite">byte</code> )</p></td>
+</tr>
+<tr>
+<td>large_object.reading_chunked_obj_len</td>
+<td>Read length of a chunked object. This value must be &lt;= <code class="codehilite">large_object.chunked_obj_len</code> <p>( Default: 5242880, Unit: <code class="codehilite">byte</code> )</p></td>
+</tr>
+<tr>
+<td><strong>Cache configuration</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>cache.http_cache</td>
+<td>Enable HTTP-Cache mode, working like Varnish/Squid. Otherwise as Object Cache<p>( Default: false )</p></td>
+</tr>
+<tr>
+<td>cache.cache_workers</td>
+<td>Number of cache workers <p>( Default: 16 )</p></td>
+</tr>
+<tr>
+<td>cache.cache_ram_capacity</td>
+<td>Memory Cache Capacity, divide across workers. This has to satisfy <code class="codehilite">(8 * 1024 * 1024) * cache.cache_workers &gt;= cache.cache_ram_capacity</code> <p>( Default: 268435456, Unit: <code class="codehilite">byte</code> )</p></td>
+</tr>
+<tr>
+<td>cache.cache_disc_capacity</td>
+<td>Disk Cache Capacity, divide across workers. This has to satisfy <code class="codehilite">(8 * 1024 * 1024) * cache.cache_workers &gt;= cache.cache_disc_capacity</code> <p>( Default: 524288000, Unit: <code class="codehilite">byte</code> )</p></td>
+</tr>
+<tr>
+<td>cache.cache_disc_threshold_len</td>
+<td>Threshold when object is stored in disk cache <p>( Default: 1048576, Unit: <code class="codehilite">byte</code> )</p></td>
+</tr>
+<tr>
+<td>cache.cache_disc_dir_data</td>
+<td>Directory for disk cache data <p>( Default: ./cache/data )</p></td>
+</tr>
+<tr>
+<td>cache.cache_disc_dir_journal</td>
+<td>Directory for disk cache journal <p>( Default: ./cache/journal )</p></td>
+</tr>
+<tr>
+<td><strong>HTTP-Cache related</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>cache.cache_expire</td>
+<td>Cache expiry time <p>( Default: 300, Unit: <code class="codehilite">sec</code>)</p></td>
+</tr>
+<tr>
+<td>cache.cache_max_content_len</td>
+<td>Maximum length of cached object <p>( Default: 1048576, Unit: <code class="codehilite">byte</code> )</td>
+</tr>
+<tr>
+<td>cache.cachable_content_type</td>
+<td>Object types to be cached</td>
+</tr>
+<tr>
+<td>cache.cachable_path_pattern</td>
+<td>Path pattern(s) to be cached (regular expression)</td>
+</tr>
+<tr>
+<td><strong>Watchdog / REX</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>watchdog.rex.is_enabled</td>
+<td>Enables or disables the rex-watchdog which monitors the memory usage of <em>Erlangs RPC component</em>.<p>( Default: true )</p></td>
+</tr>
+<tr>
+<td>watchdog.rex.interval</td>
+<td>An interval of executing the watchdog processing<p>( Default: 10, Unit: <code class="codehilite">sec</code> )</p></td>
+</tr>
+<tr>
+<td><strong>Watchdog / CPU</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>watchdog.cpu.is_enabled</td>
+<td>Enables or disables the CPU-watchdog which monitors both <em>CPU load average</em> and <em>CPU utilization</em><p>( Default: false )</p></td>
+</tr>
+<tr>
+<td>watchdog.cpu.raised_error_times</td>
+<td>Times of raising error to a client<p>( Default: 5 )</p></td>
+</tr>
+<tr>
+<td>watchdog.cpu.interval</td>
+<td>An interval of executing the watchdog processing<p>( Default: 10, Unit: <code class="codehilite">sec</code> )</p></td>
+</tr>
+<tr>
+<td>watchdog.cpu.threshold_cpu_load_avg</td>
+<td>Threshold of CPU load average<p>( Default: 5.0 )</p></td>
+</tr>
+<tr>
+<td>watchdog.cpu.threshold_cpu_util</td>
+<td>Threshold of CPU utilization<p>( Default: 100 )</p></td>
+</tr>
+<tr>
+<td><strong>Watchdog / IO (Erlang VM Internal Traffic)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>watchdog.io.is_enabled</td>
+<td>Enables or disables the IO-watchdog which monitors the <em>Erlang VM Internal Traffic</em> <p>( Default: false )</p></td>
+</tr>
+<tr>
+<td>watchdog.io.interval</td>
+<td>Watchdog interval <p>( Default: 1, Unit: <code class="codehilite">sec</code> )</p></td>
+</tr>
+<tr>
+<td>watchdog.io.threshold_input_per_sec</td>
+<td>Threshold input per second <p>( Default: 134217728, Unit: <code class="codehilite">byte</code> )</p></td>
+</tr>
+<tr>
+<td>watchdog.io.threshold_output_per_sec</td>
+<td>Threshold output per second <p>( Default: 134217728, Unit: <code class="codehilite">byte</code> )</p></td>
+</tr>
+<tr>
+<td><strong>Timeout</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>timeout.level_1</td>
+<td>Timeout when put object to LeoStorage <em>(~65536 bytes)</em> <p> ( Default: 5000, Unit: <code class="codehilite">msec</code> )</td>
+</tr>
+<tr>
+<td>timeout.level_2</td>
+<td>Timeout when put object to LeoStorage <em>(~131071 bytes)</em> <p> ( Default: 7000, Unit: <code class="codehilite">msec</code> )</td>
+</tr>
+<tr>
+<td>timeout.level_3</td>
+<td>Timeout when put object to LeoStorage <em>(~524287 bytes)</em> <p> ( Default: 10000, Unit: <code class="codehilite">msec</code> )</td>
+</tr>
+<tr>
+<td>timeout.level_4</td>
+<td>Timeout when put object to LeoStorage <em>(~1048576 bytes)</em> <p> ( Default: 20000, Unit: <code class="codehilite">msec</code> )</td>
+</tr>
+<tr>
+<td>timeout.level_5</td>
+<td>Timeout when put object to LeoStorage <em>(1048576~ bytes)</em> <p> ( Default: 30000, Unit: <code class="codehilite">msec</code> )</td>
+</tr>
+<tr>
+<td>timeout.get</td>
+<td>Timeout when get object from LeoStorage<p> ( Default: 30000, Unit: <code class="codehilite">msec</code> )</td>
+</tr>
+<tr>
+<td>timeout.ls</td>
+<td>Timeout when list object from LeoStorage<p> ( Default: 30000, Unit: <code class="codehilite">msec</code> )</td>
+</tr>
+<tr>
+<td><strong>Log</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>log.log_level</td>
+<td>Log level:<ul><li>0:debug</li><li>1:info</li><li>2:warn</li><li>3:error</li></ul><p>( Default: 1 )</p></td>
+</tr>
+<tr>
+<td>log.is_enable_access_log</td>
+<td>Enables or disables the access-log feature<p>( Default: false )</p></td>
+</tr>
+<tr>
+<td>log.erlang</td>
+<td>Destination of log file(s) of Erlang's log<p>( Default: ./log/erlang )</p></td>
+</tr>
+<tr>
+<td>log.app</td>
+<td>Destination of log file(s) of LeoStorage<p>( Default: ./log/app )</p></td>
+</tr>
+<tr>
+<td>log.member_dir</td>
+<td>Destination of log file(s) of members of storage-cluster<p>( Default: ./log/ring )</p></td>
+</tr>
+<tr>
+<td>log.ring_dir</td>
+<td>Destination of log file(s) of RING<p>( Default: ./log/ring )</p></td>
+</tr>
+<tr>
+<td><strong>Other Directories Settings</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>queue_dir</td>
+<td>Directory of queue for monitoring "RING"<p>( Default: ./work/queue )</p></td>
+</tr>
+<tr>
+<td>snmp_agent</td>
+<td>Directory of SNMP agent configuration<p>( Default: ./snmp/snmpa_gateway_0/LEO-GATEWAY )</p></td>
+</tr>
+</tbody>
+</table>
+<h3 id="erlang-vms-related-configurations">Erlang VM's Related Configurations<a class="headerlink" href="#erlang-vms-related-configurations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nodename</td>
+<td>The format of the node name is <code class="codehilite">&lt;NAME&gt;@&lt;IP-ADDRESS&gt;</code>, which must be unique always in a LeoFS system<p>( Default: storage_0@127.0.0.1 )</p></td>
+</tr>
+<tr>
+<td>distributed_cookie</td>
+<td>Sets the magic cookie of the node to <code class="codehilite">Cookie</code>. <br/><br/>- See also: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a><p>( Default: 401321b4 )</p></td>
+</tr>
+<tr>
+<td>erlang.kernel_poll</td>
+<td>Kernel poll reduces LeoFS' CPU usage when it has hundreds (or more) network connections.<p>( Default: true )</p></td>
+</tr>
+<tr>
+<td>erlang.asyc_threads</td>
+<td>The total number of Erlang aynch threads<p>( Default: 32 )</p></td>
+</tr>
+<tr>
+<td>erlang.max_ports</td>
+<td>The max_ports sets the default value of maximum number of ports.<br/><br/>- See also: <a href="http://erlang.org/doc/man/erlang.html">Erlang erlang:open_port/2</a><p>( Default: 64000 )</p></td>
+</tr>
+<tr>
+<td>erlang.crash_dump</td>
+<td>The output destination of an Erlang crash dump<p>( Default: ./log/erl_crash.dump )</p></td>
+</tr>
+<tr>
+<td>erlang.max_ets_tables</td>
+<td>The maxinum number of <a href="http://erlang.org/doc/man/ets.html" target="_blank">Erlagn ETS</a> tables<p>( Default: 256000 )</p></td>
+</tr>
+<tr>
+<td>erlang.smp</td>
+<td><code class="codehilite">-smp</code> enable and <code class="codehilite">-smp</code> start the Erlang runtime system with <a href="https://en.wikipedia.org/wiki/Symmetric_multiprocessing" target="_blank">SMP</a> support enabled.<p>( Default: enable )</p></td>
+</tr>
+<tr>
+<td>erlang.schedulers.compaction_of_load</td>
+<td>Enables or disables scheduler compaction of load. If it's enabled, the Erlang VM will attempt to fully load as many scheduler threads as mush as possible.<p>( Default: true )</p></td>
+</tr>
+<tr>
+<td>erlang.schedulers.utilization_balancing</td>
+<td>Enables or disables scheduler utilization balancing of load. By default scheduler utilization balancing is disabled and instead scheduler compaction of load is enabled, which strives for a load distribution that causes as many scheduler threads as possible to be fully loaded (that is, not run out of work).<p>( Default: false )</p></td>
+</tr>
+<tr>
+<td>erlang.distribution_buffer_size</td>
+<td>Sender-side network distribution buffer size <em>(unit: KB)</em><p>( Default: 32768 )</p></td>
+</tr>
+<tr>
+<td>erlang.fullsweep_after</td>
+<td>Option fullsweep_after makes it possible to specify the maximum number of generational collections before forcing a fullsweep, even if there is room on the old heap. Setting the number to zero disables the general collection algorithm, that is, all live data is copied at every garbage collection.<p>( Default: 0 )</p></td>
+</tr>
+<tr>
+<td>erlang.secio</td>
+<td>Enables or disables eager check I/O scheduling. The flag effects when schedulers will check for I/O operations possible to execute, and when such I/O operations will execute.<p>( Default: true )</p></td>
+</tr>
+<tr>
+<td>process_limit</td>
+<td>The maxinum number of Erlang processes. Sets the maximum number of simultaneously existing processes for this system if a Number is passed as value. Valid range for Number is [1024-134217727]<p>( Default: 1048576 )</p></td>
+</tr>
+</tbody>
+</table>
+<h3 id="notes-and-tips-of-the-configuration">Notes and Tips of the Configuration<a class="headerlink" href="#notes-and-tips-of-the-configuration" title="Permanent link">&para;</a></h3>
+<h4 id="cache-consistency-between-leogateway-and-leostorage">Cache Consistency between LeoGateway and LeoStorage<a class="headerlink" href="#cache-consistency-between-leogateway-and-leostorage" title="Permanent link">&para;</a></h4>
+<p>LeoGateway's cache feature does not depend on the consistency level of a cluster. There is a possibility of object inconsistency.</p>
+<p>LeoGateway requests a storage node to compare a cached object's hash value with its stored object's hash value. LeoGateway selects a LeoStorage's node from RING, <em>a distributed hash table</em> by a target object name, then LeoGateway requests a LeoStorage node of the redundant node. If the requested object is inconsistent in the replicas and LeoGateway cached it, a client may get inconsistent objects.</p>
+<p>If strong consistency is required on your system, you can disable the cache setting.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>cache.cache_ram_capacity = 0
+cache.cache_disc_capacity = 0
+</pre></div>
+</td></tr></table>
+
+<h4 id="configuration-related-to-disk-cache">Configuration related to Disk Cache<a class="headerlink" href="#configuration-related-to-disk-cache" title="Permanent link">&para;</a></h4>
+<p>A total number of directories to store cache files is equal to <code class="codehilite">cache.cache_workers</code>. A maximum size of a cacheable object per a directory has been determined by <code class="codehilite">cache.cache_disc_capacity / cache.cache_workers</code>. If size of a requested object more than the maximum size, LeoFS Gateway avoids storing the object into the disk cache.</p>
+<p>And also, when size of a requested object more than <code class="codehilite">cache.cache_max_content_len</code>, LeoFS Gateway similarly refuses storing the object into the disk cache.</p>
+<p><img alt="Figure: Disk Cache Limits" src="../../../assets/leofs-gateway-disk-cache-size.png" /></p>
+<h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../../architecture/leo_gateway/">Concept and Architecture / LeoGateway's Architecture</a></li>
+<li><a href="../../protocols/s3/">For Administrators / Interface / S3-API</a></li>
+<li><a href="../../protocols/rest/">For Administrators / Interface / REST-API</a></li>
+<li><a href="../../protocols/nfs_v3/">For Administrators / Interface / NFS v3</a></li>
+<li><a href="../../system_operations/s3/">For Administrators / System Operations / S3-API related Operations</a></li>
+</ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 API</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://de.wikipedia.org/wiki/Network_File_System" target="_blank">Wikipedia: Network File System</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../leo_storage/" title="LeoStroage Settings" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                LeoStroage Settings
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../protocols/s3/" title="S3-API" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                S3-API
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            (c) 2012-2017 LeoProject. All rights reserved.
+          </div>
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application-0b7df094bf.js"></script>
+      <script>app.initialize({url:{base:"../../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>
