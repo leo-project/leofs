@@ -15,12 +15,12 @@
 5. 10Gbps network is recommended
 
 ## Reference Platform
-| Hardware | Detail                    |
-|----------|---------------------------|
-| CPU      | 16C32T (Intel E5-2630 v3) |
-| Memory   | 32 GB                     |
-| Network  | 10 GbE                    |
-| Disk     | SSD (Crucial BX100)       |
+| Hardware | Detail                   |
+|----------|--------------------------|
+| CPU      | 8C16T (Intel E5-2630 v3) |
+| Memory   | 32 GB                    |
+| Network  | 10 GbE                   |
+| Disk     | SSD (Crucial BX100)      |
 
 ### Performance
 | Data Set           | Read      | Write     | Resource Usage |
