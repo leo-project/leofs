@@ -54,3 +54,8 @@ $ curl -X GET https://hostname:8080/_test/_image/test_2.jpg
 ```bash
 $ curl -X DELETE https://hostname:8080/_test/_image/file.png
 ```
+
+
+## Related Links
+
+* [For Administrators / Settings / LeoGateway Settings](/admin/settings/leo_gateway.md)

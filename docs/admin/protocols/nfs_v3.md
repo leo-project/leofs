@@ -201,3 +201,8 @@ Other basic file OR directory operations also should work except controlling own
 
 ## Limits
 Since LeoFS NFS implementation is still the beta version, there are some limitations. The details are described at [LeoFS Limits](../../faq/limits.md)
+
+
+## Related Links
+
+* [For Administrators / Settings / LeoGateway Settings](/admin/settings/leo_gateway.md)

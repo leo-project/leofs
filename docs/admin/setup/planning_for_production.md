@@ -12,9 +12,6 @@ For installation instructions on different platforms, see:
 
 ## Related Links
 
-* [Supported Platforms](./supported_platforms.md)
-    * LeoFS is supported on popular operating systems and virtual environments.
-* [Hardware Requirements](./hardware_requirements.md)
-    * Follow the recommendations for minimum and recommended hardware and software specifications.
-* [Network Configuration](./network_config.md)
-    * LeoFS uses specific network ports for communication between server components and with the clients accessing the data stored in the LeoFS' cluster.
+- [For Administrators / Setup / Supported Platforms](supported_platforms.md)
+- [For Administrators / Setup / Hardware Requirements](hardware_requirements.md)
+- [For Administrators / Setup / Network Configuration](network_config.md)

@@ -73,5 +73,5 @@ The default setting is to launch a LeoFS system on one node, whose setting canno
 
 ## Related Links
 
-* [Concept and Architecture / LeoManager's Architecture](../../architecture/leo_manager.md)
+* [Concept and Architecture / LeoManager's Architecture](/architecture/leo_manager.md)
 * [For Administrators / Settings / Cluster Settings](cluster.md)

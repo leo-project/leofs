@@ -15,12 +15,12 @@
 5. 10Gbps network is recommended
 
 ## Reference Platform
-| Hardware | Detail                   |
-|----------|--------------------------|
-| CPU      | 8C16T (Intel E5-2630 v3) |
-| Memory   | 32 GB                    |
-| Network  | 10 GbE                   |
-| Disk     | SSD (Crucial BX100)      |
+| Hardware | Detail                    |
+|----------|---------------------------|
+| CPU      | 16C32T (Intel E5-2630 v3) |
+| Memory   | 32 GB                     |
+| Network  | 10 GbE                    |
+| Disk     | SSD (Crucial BX100)       |
 
 ### Performance
 | Data Set           | Read      | Write     | Resource Usage |
@@ -28,5 +28,8 @@
 | Image (32KB)       | 20000 OPS | 20000 OPS | High CPU Usage |
 | Small Mixed (<2MB) | 1200 OPS  | 1500 OPS  | High Disk I/O  |
 
+
 ## Related Links
-- [Benchmark Report](https://github.com/leo-project/notes/tree/master/leofs/benchmark/leofs)
+
+- [For Administrators / Setup / Planning for Production](planning_for_production.md)
+- <a href="https://github.com/leo-project/notes/tree/master/leofs/benchmark/leofs" target="_blank">leo-project/notes - LeoFS Benchmark Report</a>

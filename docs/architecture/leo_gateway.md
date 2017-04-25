@@ -10,3 +10,12 @@ A client requests an object or a bucket operation to a node of LeoGateway, then 
 A destination storage node is decided by RING (routing table), which is generated and distributed at nodes of LeoManager.
 
 LeoGateway also provides built-in support for the object cache to realize keeping high performance and reduction of traffic between LeoGateway's nodes and LeoStorage's nodes.
+
+
+## Related Links
+
+- [For Administrators / Settings / LeoGateway Settings](/admin/settings/leo_gateway.md)
+- [For Administrators / Interface / S3-API](/admin/protocols/s3.md)
+- [For Administrators / Interface / REST-API](/admin/protocols/rest.md)
+- [For Administrators / Interface / NFS v3](/admin/protocols/nfs_v3.md)
+- [For Administrators / System Operations / S3-API related Operations](/admin/system_operations/s3.md)

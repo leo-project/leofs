@@ -197,4 +197,6 @@ When the each value reached the min value, the auto-compaction changes the statu
 
 ## Related Links
 
-* [Concept and Architecture / LeoStorage's Architecture](../../architecture/leo_storage.md)
+- [Concept and Architecture / LeoStorage's Architecture](../../architecture/leo_storage.md)
+- [For Administrators / System Operations / Cluster Operations](/admin/system_operations/cluster.md)
+- [For Administrators / System Operations / Data Operations](/admin/system_operations/data.md)

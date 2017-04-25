@@ -9,7 +9,8 @@ LeoManager manages configurations of a system and information of every node to b
 
 LeoManager provides [leofs-adm as a LeoFS administration commands](../admin/index_of_commands.md) to be able to easily operate LeoFS. The administration commands already cover entire LeoFS features.
 
+
 ## Related Links
 
-- [admin / Index of LeoFS' Command Lines](../admin/index_of_commands.md)
-- [admin / settings/ LeoManager Settings](../admin/settings/leo_manager.md)
+- [For Administrators / Index of LeoFS' Commands](/admin/index_of_commands.md)
+- [For Administrators / Settings / LeoManager Settings](/admin/settings/leo_manager.md)

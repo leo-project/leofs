@@ -62,4 +62,4 @@ $ leofs-adm update-consistency-level 2 2 1
 
 ## Related Links
 
-* [Settings / LeoManager Settings](leo_manager.md)
+* [For Administrators / Settings / LeoManager Settings](leo_manager.md)

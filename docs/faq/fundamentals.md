@@ -9,7 +9,7 @@ LeoFS is a highly scalable, fault-tolerant <a href="" target="_blank">object_sto
 Operationally, LeoFS features multi-master replication with automated failover and built-in horizontal scaling via ConsistentHashing.
 
 * Related Links:
-    * [LeoFS Overview](../introduction/README.md)
+    * [LeoFS Introduction](/)
 
 
 ## What are typical uses for LeoFS?
@@ -19,7 +19,7 @@ If you are searching a storage system that is able to store huge amount and vari
 This is because LeoFS is a highly available, distributed storage system. Also, LeoFS can be used to store a lot of data efficiently, safely, and inexpensively.
 
 * Related Links:
-    * [LeoFS Overview](../introduction/README.md)
+    * [LeoFS Introduction](/)
 
 
 ## What is benefit for LeoFS users?
@@ -95,6 +95,6 @@ We've published LeoFS milestones on [LeoFS' GitHub](https://github.com/leo-proje
 LeoFS depends on <a href="https://www.erlang.org/" target="_blank">Erlang</a>,  and some LeoFS' libraries are implemented by C/C++.
 
 * Related Links:
-	* [LeoFS Overview](../introduction/README.md)
-	* [LeoFS' GitHub](https://github.com/leo-project/leofs#milestones)
+	* [LeoFS Introduction](/)
+	* <a href="https://github.com/leo-project/leofs#milestones" target="_blank">LeoFS Repository on GitHub</a>
 

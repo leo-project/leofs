@@ -256,4 +256,9 @@ delete: 's3://<BUCKET>/<OBJECT>'
 
 ## Wrap up
 
-You now know how to setup a stand-alone LeoFS storage system, and make sure to have a look at [Building a LeoFS' cluster with Ansible](./cluster.md) to learn how to setup a LeoFS cluster.
+You now know how to setup a stand-alone LeoFS storage system, and make sure to have a look at [Building a LeoFS' cluster with Ansible](cluster.md) to learn how to setup a LeoFS cluster.
+
+
+## Related Links
+
+- [Getting Started / Building a LeoFS' cluster with Ansible](cluster.md)

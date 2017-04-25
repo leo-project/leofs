@@ -16,4 +16,4 @@ LeoFS is supported on popular operating systems and virtual environments.
 
 ## Related Links
 
-* [Planning for Production](./planning_for_production.md)
+- [For Administrators / Setup / Planning for Production](planning_for_production.md)
