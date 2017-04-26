@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.6.1">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-4d0d3f2fbf.css">
       
     
     
@@ -95,11 +95,12 @@
           <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
           
 <div class="md-search" data-md-component="search">
-  <div class="md-search__overlay"></div>
+  <label class="md-search__overlay" for="search"></label>
   <div class="md-search__inner">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
       <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -435,7 +436,7 @@
     <label class="md-nav__link" for="nav-5-2">
       Settings
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
       <label class="md-nav__title" for="nav-5-2">
         Settings
       </label>
@@ -507,7 +508,7 @@
     <label class="md-nav__link" for="nav-5-3">
       Interface
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="4">
       <label class="md-nav__title" for="nav-5-3">
         Interface
       </label>
@@ -569,7 +570,7 @@
     <label class="md-nav__link" for="nav-5-4">
       System Operations
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="5">
       <label class="md-nav__title" for="nav-5-4">
         System Operations
       </label>
@@ -645,23 +646,111 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#data-compaction" title="Data Compaction" class="md-nav__link">
-    Data Compaction
+  <a href="#storage-architecture" title="Storage Architecture" class="md-nav__link">
+    Storage Architecture
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#append-only-for-content-avs" title="Append-Only for Content (AVS)" class="md-nav__link">
+    Append-Only for Content (AVS)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kvs-for-metadata" title="KVS for Metadata" class="md-nav__link">
+    KVS for Metadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#queue-for-async-operations" title="Queue for Async Operations" class="md-nav__link">
+    Queue for Async Operations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-structure" title="File Structure" class="md-nav__link">
+    File Structure
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compaction" title="Compaction" class="md-nav__link">
+    Compaction
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-diagnosis" title="Data Diagnosis" class="md-nav__link">
-    Data Diagnosis
+  <a href="#compaction_1" title="Compaction" class="md-nav__link">
+    Compaction
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-transition" title="State Transition" class="md-nav__link">
+    State Transition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands" title="Commands" class="md-nav__link">
+    Commands
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnosis" title="Diagnosis" class="md-nav__link">
+    Diagnosis
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#recover-a-object" title="Recover a Object" class="md-nav__link">
-    Recover a Object
+  <a href="#recover-objects" title="Recover Objects" class="md-nav__link">
+    Recover Objects
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands_1" title="Commands" class="md-nav__link">
+    Commands
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" title="Use Cases" class="md-nav__link">
+    Use Cases
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -715,7 +804,7 @@
     <label class="md-nav__link" for="nav-5-5">
       System Administration
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="6">
       <label class="md-nav__title" for="nav-5-5">
         System Administration
       </label>
@@ -933,23 +1022,111 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#data-compaction" title="Data Compaction" class="md-nav__link">
-    Data Compaction
+  <a href="#storage-architecture" title="Storage Architecture" class="md-nav__link">
+    Storage Architecture
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#append-only-for-content-avs" title="Append-Only for Content (AVS)" class="md-nav__link">
+    Append-Only for Content (AVS)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kvs-for-metadata" title="KVS for Metadata" class="md-nav__link">
+    KVS for Metadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#queue-for-async-operations" title="Queue for Async Operations" class="md-nav__link">
+    Queue for Async Operations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-structure" title="File Structure" class="md-nav__link">
+    File Structure
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compaction" title="Compaction" class="md-nav__link">
+    Compaction
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-diagnosis" title="Data Diagnosis" class="md-nav__link">
-    Data Diagnosis
+  <a href="#compaction_1" title="Compaction" class="md-nav__link">
+    Compaction
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-transition" title="State Transition" class="md-nav__link">
+    State Transition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands" title="Commands" class="md-nav__link">
+    Commands
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnosis" title="Diagnosis" class="md-nav__link">
+    Diagnosis
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#recover-a-object" title="Recover a Object" class="md-nav__link">
-    Recover a Object
+  <a href="#recover-objects" title="Recover Objects" class="md-nav__link">
+    Recover Objects
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands_1" title="Commands" class="md-nav__link">
+    Commands
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" title="Use Cases" class="md-nav__link">
+    Use Cases
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -971,9 +1148,404 @@
                 
                 
                 <h1 id="data-operations">Data Operations<a class="headerlink" href="#data-operations" title="Permanent link">&para;</a></h1>
-<h2 id="data-compaction">Data Compaction<a class="headerlink" href="#data-compaction" title="Permanent link">&para;</a></h2>
-<h2 id="data-diagnosis">Data Diagnosis<a class="headerlink" href="#data-diagnosis" title="Permanent link">&para;</a></h2>
-<h2 id="recover-a-object">Recover a Object<a class="headerlink" href="#recover-a-object" title="Permanent link">&para;</a></h2>
+<p>This section provides information to operate data stored in LeoFS as well as the prior knowledge that give you better understanding about what will happen behind the scene when you invoke a command for a data operation.</p>
+<h2 id="storage-architecture">Storage Architecture<a class="headerlink" href="#storage-architecture" title="Permanent link">&para;</a></h2>
+<p>A brief introduction how LeoFS organize data into actual OS files.</p>
+<h3 id="append-only-for-content-avs">Append-Only for Content (AVS)<a class="headerlink" href="#append-only-for-content-avs" title="Permanent link">&para;</a></h3>
+<p>Once a PUT/DELETE remote procedure call (<strong>RPC</strong>) arrives on leo_storage, leo_object_storage appends new blocks including the object information such as the key, data itself and also various associated metadata to the end of a file. This Append-Only file we call <strong>AVS</strong> is referenced when retrieving the data through GET RPCs. With its inherent nature of the Append-Only file, a compaction process is needed to clean up the orphaned space in an AVS.</p>
+<h3 id="kvs-for-metadata">KVS for Metadata<a class="headerlink" href="#kvs-for-metadata" title="Permanent link">&para;</a></h3>
+<p>After having succeeded in appending new blocks to an AVS, then leo_object_storage updates a corresponding <strong>KVS</strong> file with the key and its associated metadata (same information stored in the AVS except the data itself) and its offset where the new blocks stored in AVS as a value. This KVS file is referenced when retrieving the data/metadata through GET/HEAD RPCs.</p>
+<h3 id="queue-for-async-operations">Queue for Async Operations<a class="headerlink" href="#queue-for-async-operations" title="Permanent link">&para;</a></h3>
+<p>Some data can be stored into a <strong>Queue</strong> for processing later in case</p>
+<ul>
+<li>A PUT/DELETE operation failed.</li>
+<li>A Multi DC Replication (<strong>MDCR</strong>) failed.</li>
+<li>rebalance/recover-(file|node|cluster) invoked through leofs-adm.</li>
+</ul>
+<h3 id="file-structure">File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h3>
+<p>Multiple AVS/KVS pairs can be placed on one node to enable LeoFS handling as much use cases and hardware requirements as possible.</p>
+<ul>
+<li>Container : AVS/KVS pair = 1 : N<ul>
+<li>Multiple AVS/KVS pairs can be stored under one OS directory (We call it <strong>Container</strong>).</li>
+<li>N can be specified through leo_storage.conf.</li>
+<li>How to choose optimal N<ul>
+<li>As a Compaction is executed per AVS/KVS pair, at least the size of a AVS/KVS pair is needed to run Compaction so that the larger N, the less disk space LeoFS uses for Compaction.</li>
+<li>However the larger N, the more disk seeks LeoFS suffers.</li>
+<li>Tha said, the optimal N is determined by setting the largest value that doesn't affect the online throughput you would expect.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Node : Container = 1 : N<ul>
+<li>Each Container can be stored under a different OS directory.</li>
+<li>N can be specified through leo_storage.conf.</li>
+<li>Setting N &gt; 1 can be useful when there are multiple JBOD disks on the node. The one JBOD disk array can be map to the one container.</li>
+</ul>
+</li>
+</ul>
+<h3 id="compaction">Compaction<a class="headerlink" href="#compaction" title="Permanent link">&para;</a></h3>
+<p>This section provides information about what/how Compaction can affect the online performance. </p>
+<ul>
+<li>Parallelism<ul>
+<li>A Compaction can be executed across multiple AVS/KVS pairs in parallel.</li>
+<li>The number of compaction processes can be specified through an argument of leofs-adm.</li>
+<li>Increasing the number can be useful when the load coming from online is relatively low and want the compaction process to boost as much as possible.</li>
+<li>Be careful that too much number can make the compaction process slow down.</li>
+</ul>
+</li>
+<li>Concurrent with any operation coming from online.<ul>
+<li>GET/HEAD never be blocked by the Compaction.</li>
+<li>PUT/DELETE can be blocked while a Compaction is processing the tail part of an AVS.</li>
+<li>Given that the above limitation, We would recommend suspending a node you are supposed to run a Compaction if your LeoFS cluster handles write intensive workload.</li>
+</ul>
+</li>
+</ul>
+<h2 id="compaction_1">Compaction<a class="headerlink" href="#compaction_1" title="Permanent link">&para;</a></h2>
+<p>As described at the previous section, A compaction process is needed to remove logical deleted objects and its corresponding metadatas.</p>
+<h3 id="state-transition">State Transition<a class="headerlink" href="#state-transition" title="Permanent link">&para;</a></h3>
+<p><img alt="State Transition" src="http://leo-project.net/leofs/docs/_images/leofs-compaction-state-transition.png" /></p>
+<h3 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h3>
+<p>Commands related to Compaction as well as Disk Usage.</p>
+<table>
+<thead>
+<tr>
+<th>Shell</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compaction Commands</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>leofs-adm compact-start \&lt;storage-node> (all|\&lt;num-of-targets>) [\&lt;num-of-compaction-proc>]</td>
+<td>Start Compaction (Transfer its state to <strong>running</strong>).<p>num-of-targets: How many AVS/KVS pairs are compacted.<p>num-of-compaction-pro: How many processes are run in parallel.</td>
+</tr>
+<tr>
+<td>leofs-adm compact-suspend \&lt;storage-node></td>
+<td>Suspend Compaction (Transfer its state to <strong>suspend</strong> from running).</td>
+</tr>
+<tr>
+<td>leofs-adm compact-resume \&lt;storage-node></td>
+<td>Resume Compaction (Transfer its state to <strong>running</strong> from suspend).</td>
+</tr>
+<tr>
+<td>leofs-adm compact-status \&lt;storage-node></td>
+<td>See the Current Compaction Status.</td>
+</tr>
+<tr>
+<td>leofs-adm diagnose-start \&lt;storage-node></td>
+<td>Start Diagnose (Not actually doing Compaction but scanning all AVS/KVS pairs and reporting what objects/metadatas exist as a file).</td>
+</tr>
+<tr>
+<td><strong>Disk Usage</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>leofs-adm du \&lt;storage-node></td>
+<td>See the Current Disk Usage.</td>
+</tr>
+<tr>
+<td>leofs-adm du detail \&lt;storage-node></td>
+<td>See the Current Disk Usage in detail.</td>
+</tr>
+</tbody>
+</table>
+<p>Examples.</p>
+<ul>
+<li>compact-start</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## All AVS/KVS pairs on storage_0@127.0.0.1 will be compacted with 3 concurrent processes</span>
+<span class="c1">## (default concurrency is 3)</span>
+$ leofs-adm compact-start storage_0@127.0.0.1 all
+OK
+
+<span class="c1">## 5 AVS/KVS pairs on storage_0@127.0.0.1 will be compacted with 2 concurrent processes</span>
+$ leofs-adm compact-start storage_0@127.0.0.1 <span class="m">5</span> <span class="m">2</span>
+OK
+</pre></div>
+</td></tr></table>
+
+<ul>
+<li>compact-suspend</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm compact-suspend storage_0@127.0.0.1
+OK
+</pre></div>
+</td></tr></table>
+
+<ul>
+<li>compact-resume</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm compact-resume storage_0@127.0.0.1
+OK
+</pre></div>
+</td></tr></table>
+
+<ul>
+<li>compact-status</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm compact-status storage_0@127.0.0.1
+        current status: running
+ last compaction start: <span class="m">2013</span>-03-04 <span class="m">12</span>:39:47 +0900
+         total targets: <span class="m">64</span>
+  <span class="c1"># of pending targets: 5</span>
+  <span class="c1"># of ongoing targets: 3</span>
+  <span class="c1"># of out of targets : 56</span>
+</pre></div>
+</td></tr></table>
+
+<ul>
+<li>diagnose-start</li>
+<li>See also: <strong>diagnosis-log format</strong> to understand the output log format</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm diagnose-start storage_0@127.0.0.1
+OK
+</pre></div>
+</td></tr></table>
+
+<ul>
+<li>du</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm du storage_0@127.0.0.1
+ active number of objects: <span class="m">19968</span>
+  total number of objects: <span class="m">39936</span>
+   active size of objects: <span class="m">198256974</span>.0
+    total size of objects: <span class="m">254725020</span>.0
+     ratio of active size: <span class="m">77</span>.83%
+    last compaction start: <span class="m">2013</span>-03-04 <span class="m">12</span>:39:47 +0900
+      last compaction end: <span class="m">2013</span>-03-04 <span class="m">12</span>:39:55 +0900
+</pre></div>
+</td></tr></table>
+
+<ul>
+<li>du detail</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm du detail storage_0@127.0.0.1
+<span class="o">[</span>du<span class="o">(</span>storage stats<span class="o">)]</span>
+                file path: /home/leofs/dev/leofs/package/leofs/storage/avs/object/0.avs
+ active number of objects: <span class="m">320</span>
+  total number of objects: <span class="m">640</span>
+   active size of objects: <span class="m">3206378</span>.0
+    total size of objects: <span class="m">4082036</span>.0
+     ratio of active size: <span class="m">78</span>.55%
+    last compaction start: <span class="m">2013</span>-03-04 <span class="m">12</span>:39:47 +0900
+      last compaction end: <span class="m">2013</span>-03-04 <span class="m">12</span>:39:55 +0900
+.
+.
+.
+                file path: /home/leofs/dev/leofs/package/leofs/storage/avs/object/63.avs
+ active number of objects: <span class="m">293</span>
+  total number of objects: <span class="m">586</span>
+   active size of objects: <span class="m">2968909</span>.0
+    total size of objects: <span class="m">3737690</span>.0
+     ratio of active size: <span class="m">79</span>.43%
+    last compaction start: ____-__-__ __:__:__
+      last compaction end: ____-__-__ __:__:__
+</pre></div>
+</td></tr></table>
+
+<h3 id="diagnosis">Diagnosis<a class="headerlink" href="#diagnosis" title="Permanent link">&para;</a></h3>
+<p>This section explains the file format generated by <code class="codehilite">leofs-adm diagnose-start</code> in detail.</p>
+<p>Exmaples.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>------+------------------------------------------+------------------------------------------------------------+-----------+------------+------------------+--------------------------+----
+Offset<span class="p">|</span> RING<span class="err">&#39;</span>s address-id                        <span class="p">|</span> Filename                                                   <span class="p">|</span> Child num <span class="p">|</span> File Size  <span class="p">|</span> Unixtime         <span class="p">|</span> Localtime                <span class="p">|</span>del?
+------+------------------------------------------+------------------------------------------------------------+-----------+------------+------------------+--------------------------+----
+<span class="m">194</span>     <span class="m">296754181484029444656944009564610621293</span>   photo/leo_redundant_manager/Makefile                             <span class="m">0</span>       <span class="m">2034</span>        <span class="m">1413348050768344</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:40:50 +0900   <span class="m">0</span>
+<span class="m">2400</span>    <span class="m">185993533055981727582172380494809056426</span>   photo/leo_redundant_manager/ebin/leo_redundant_manager.beam      <span class="m">0</span>       <span class="m">24396</span>       <span class="m">1413348050869454</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:40:50 +0900   <span class="m">0</span>
+<span class="m">38446</span>   <span class="m">53208912738248114804281793572563205919</span>    photo/leo_rpc/.git/refs/remotes/origin/HEAD                      <span class="m">0</span>       <span class="m">33</span>          <span class="m">1413348057441546</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:40:57 +0900   <span class="m">0</span>
+<span class="m">38658</span>   <span class="m">57520977797167422772945547576980778561</span>    photo/leo_rpc/ebin/leo_rpc_client_utils.beam                     <span class="m">0</span>       <span class="m">2576</span>        <span class="m">1413348057512261</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:40:57 +0900   <span class="m">0</span>
+<span class="m">69506</span>   <span class="m">187294034498591995039607573685274229706</span>   photo/leo_backend_db/src/leo_backend_db_server.erl               <span class="m">0</span>       <span class="m">13911</span>       <span class="m">1413348068031188</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:41:08 +0900   <span class="m">0</span>
+<span class="m">83603</span>   <span class="m">316467020376888598364250682951088839795</span>   photo/leo_backend_db/test/leo_backend_db_api_prop.erl            <span class="m">0</span>       <span class="m">3507</span>        <span class="m">1413348068052219</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:41:08 +0900   <span class="m">1</span>
+</pre></div>
+</td></tr></table>
+
+<p>The file is formatted as Tab Separated Values(TSV) except headers (head 3 lines of a file).
+The detail of each column are described below.</p>
+<table>
+<thead>
+<tr>
+<th>Column Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>byte-wise Offset where the object is located in an AVS.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Address ID on RING (Distribute Hash Routing Table).</td>
+</tr>
+<tr>
+<td>3</td>
+<td>File Name.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>The Number of Children in a File.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>File Size in bytes.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Timestamp in Unix Time.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Timestamp in Local Time.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Flag (0/1) representing whether the object is removed.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recover-objects">Recover Objects<a class="headerlink" href="#recover-objects" title="Permanent link">&para;</a></h2>
+<p>This section provides information about recover commands that can be used in order to recover inconsistencies in a LeoFS cluster according to failures.</p>
+<h3 id="commands_1">Commands<a class="headerlink" href="#commands_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Shell</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>leofs-adm recover-file \&lt;file-path></td>
+<td>Recover an inconsistent object specified by the file-path.</td>
+</tr>
+<tr>
+<td>leofs-adm recover-node \&lt;storage-node></td>
+<td>Recover all inconsistent objects in the specified storage-node.</td>
+</tr>
+<tr>
+<td>leofs-adm recover-cluster \&lt;cluster-id></td>
+<td>Recover all inconsistent objects in the specified cluster-id.</td>
+</tr>
+</tbody>
+</table>
+<p>Examples.</p>
+<ul>
+<li>recover-file</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm recover-file leo/fast/storage.key
+OK
+</pre></div>
+</td></tr></table>
+
+<ul>
+<li>recover-node</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm recover-node storage_0@127.0.0.1
+OK
+</pre></div>
+</td></tr></table>
+
+<ul>
+<li>recover-cluster</li>
+</ul>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm recover-cluster cluster-1
+OK
+</pre></div>
+</td></tr></table>
+
+<h3 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h3>
+<p>When/How to use recover commands.</p>
+<ul>
+<li>AVS/KVS Broken<ul>
+<li>Invoke <code class="codehilite">recover-node</code> with a node having broken AVS/KVS files.</li>
+</ul>
+</li>
+<li>Queue Broken<ul>
+<li>Invoke <code class="codehilite">recover-node</code> with every node except which having broken Queue files.</li>
+<li>The procedure might be improved in future when <a href="https://github.com/leo-project/leofs/issues/618">https://github.com/leo-project/leofs/issues/618</a> solved.</li>
+</ul>
+</li>
+<li>Disk Broken<ul>
+<li>Invoke <code class="codehilite">suspend</code> with a node having broken Disk arrays and subsequently run <code class="codehilite">leo_storage stop</code>.</li>
+<li>Exchange broken Disk arrays.</li>
+<li>Run <code class="codehilite">leo_storage start</code> and subsequently Invoke <code class="codehilite">resume</code> with the node.</li>
+<li>Invoke <code class="codehilite">recover-node</code> with the node.</li>
+</ul>
+</li>
+<li>Node Broken<ul>
+<li>Invoke <code class="codehilite">detach</code> with a broken node.</li>
+<li>Prepare a new node that will take over all objects assigned to a detached node.</li>
+<li>Invoke <code class="codehilite">attach</code> with a new node.</li>
+<li>Invoke <code class="codehilite">rebalance</code>.</li>
+</ul>
+</li>
+<li>Source/Destination Cluster Down<ul>
+<li>Invoke <code class="codehilite">recover-cluster</code> with a downed cluster.</li>
+</ul>
+</li>
+<li>Source/Destination Cluster Down and delete operations on the other side got lost (compacted).<ul>
+<li>Set up the cluster from scratch</li>
+<li>invoke <code class="codehilite">recover-cluster</code> with the new cluster</li>
+<li>See also <a href="https://github.com/leo-project/leofs/issues/636">https://github.com/leo-project/leofs/issues/636</a> for more information.</li>
+</ul>
+</li>
+</ul>
                 
                   
                 
@@ -1047,7 +1619,7 @@
       
     </div>
     
-      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../../assets/javascripts/application-6b599127bc.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
