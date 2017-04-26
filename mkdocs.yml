@@ -51,6 +51,7 @@ pages:
         - Network Configurations: 'admin/setup/network_config.md'
     - Settings:
         - Cluster Settings: 'admin/settings/cluster.md'
+        - Environment Configuration: 'admin/settings/environment_config.md'
         - LeoManager Settings: 'admin/settings/leo_manager.md'
         - LeoStroage Settings: 'admin/settings/leo_storage.md'
         - LeoGateway Settings: 'admin/settings/leo_gateway.md'

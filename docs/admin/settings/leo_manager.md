@@ -4,6 +4,10 @@
 
 The current version, v1.3 of LeoManager depends on <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia, A distributed telecommunications DBMS</a> to manage configurations of a LeoFS system and information of all nodes. LeoManager nodes must keep running to replicate the data for preventing data loss. You need to configure both LeoManager master and the slave.
 
+### Other Configurations
+
+If you want to customize settings like where to place leo_manager.conf, what user starting a leo_manager process and so on,
+Please refer [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md) for more information.
 
 ## Configuration
 
@@ -75,3 +79,4 @@ The default setting is to launch a LeoFS system on one node, whose setting canno
 
 * [Concept and Architecture / LeoManager's Architecture](/architecture/leo_manager.md)
 * [For Administrators / Settings / Cluster Settings](cluster.md)
+* [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)

@@ -23,6 +23,11 @@
 | **Other Directories Settings**         |
 | queue_dir                              | Modifiable with condition | Able to change the MQ's directory but you need to move the MQ's data, which adhere to this configuration. |
 
+### Other Configurations
+
+If you want to customize settings like where to place leo_storage.conf, what user starting a leo_storage process and so on,
+Please refer [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md) for more information.
+
 
 ## Configuration
 
@@ -200,3 +205,4 @@ When the each value reached the min value, the auto-compaction changes the statu
 - [Concept and Architecture / LeoStorage's Architecture](../../architecture/leo_storage.md)
 - [For Administrators / System Operations / Cluster Operations](/admin/system_operations/cluster.md)
 - [For Administrators / System Operations / Data Operations](/admin/system_operations/data.md)
+- [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)

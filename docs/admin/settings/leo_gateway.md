@@ -4,6 +4,10 @@
 
 LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API[^1] and NFS v3[^2]. LeoGateway provides the object cache feature to efficiently and effectively handle requests and to keep high performance of your storage system.
 
+### Other Configurations
+
+If you want to customize settings like where to place leo_gateway.conf, what user starting a leo_gateway process and so on,
+Please refer [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md) for more information.
 
 ## Configuration
 
@@ -134,6 +138,7 @@ And also, when size of a requested object more than `cache.cache_max_content_len
 - [For Administrators / Interface / REST-API](../protocols/rest.md)
 - [For Administrators / Interface / NFS v3](../protocols/nfs_v3.md)
 - [For Administrators / System Operations / S3-API related Operations](../system_operations/s3.md)
+- [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
 
 [^1]: <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 API</a>
 [^2]: <a href="https://de.wikipedia.org/wiki/Network_File_System" target="_blank">Wikipedia: Network File System</a>
