@@ -413,6 +413,12 @@ copy_({Node0, Node1}) ->
                 fun(_) ->
                         {ok, #member{state = ?STATE_RUNNING}}
                 end),
+    meck:expect(leo_redundant_manager_api, get_redundancies_by_addr_id,
+                fun(_) ->
+                        {ok, #redundancies{id = 0,
+                                           nodes = [{Node0,true}, {Node1,true}],
+                                           n = 2, r = 1, w = 1, d = 1}}
+                end),
 
     %% ording-reda
     meck:new(leo_ordning_reda_api, [non_strict]),
