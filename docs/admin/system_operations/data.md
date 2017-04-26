@@ -12,6 +12,7 @@ After having succeeded in appending new blocks to an AVS, then leo_object_storag
 
 ### Queue for Async Operations
 Some data can be stored into a **Queue** for processing later in case
+
 - A PUT/DELETE operation failed.
 - A Multi DC Replication (**MDCR**) failed.
 - rebalance/recover-(file|node|cluster) invoked through leofs-adm.
@@ -20,29 +21,29 @@ Some data can be stored into a **Queue** for processing later in case
 Multiple AVS/KVS pairs can be placed on one node to enable LeoFS handling as much use cases and hardware requirements as possible.
 
 - Container : AVS/KVS pair = 1 : N
-  - Multiple AVS/KVS pairs can be stored under one OS directory (We call it **Container**).
-  - N can be specified through leo_storage.conf.
-  - How to choose optimal N
-    - As a Compaction is executed per AVS/KVS pair, at least the size of a AVS/KVS pair is needed to run Compaction so that the larger N, the less disk space LeoFS uses for Compaction.
-    - However the larger N, the more disk seeks LeoFS suffers.
-    - Tha said, the optimal N is determined by setting the largest value that doesn't affect the online throughput you would expect. 
+    - Multiple AVS/KVS pairs can be stored under one OS directory (We call it **Container**).
+    - N can be specified through leo_storage.conf.
+    - How to choose optimal N
+        - As a Compaction is executed per AVS/KVS pair, at least the size of a AVS/KVS pair is needed to run Compaction so that the larger N, the less disk space LeoFS uses for Compaction.
+        - However the larger N, the more disk seeks LeoFS suffers.
+        - Tha said, the optimal N is determined by setting the largest value that doesn't affect the online throughput you would expect.
 - Node : Container = 1 : N
-  - Each Container can be stored under a different OS directory.
-  - N can be specified through leo_storage.conf.
-  - Setting N > 1 can be useful when there are multiple JBOD disks on the node. The one JBOD disk array can be map to the one container.
+    - Each Container can be stored under a different OS directory.
+    - N can be specified through leo_storage.conf.
+    - Setting N > 1 can be useful when there are multiple JBOD disks on the node. The one JBOD disk array can be map to the one container.
 
 ### Compaction
 This section provides information about what/how Compaction can affect the online performance. 
 
 - Parallelism
-  - A Compaction can be executed across multiple AVS/KVS pairs in parallel.
-  - The number of compaction processes can be specified through an argument of leofs-adm.
-  - Increasing the number can be useful when the load coming from online is relatively low and want the compaction process to boost as much as possible.
-  - Be careful that too much number can make the compaction process slow down. 
+    - A Compaction can be executed across multiple AVS/KVS pairs in parallel.
+    - The number of compaction processes can be specified through an argument of leofs-adm.
+    - Increasing the number can be useful when the load coming from online is relatively low and want the compaction process to boost as much as possible.
+    - Be careful that too much number can make the compaction process slow down.
 - Concurrent with any operation coming from online.
-  - GET/HEAD never be blocked by the Compaction.
-  - PUT/DELETE can be blocked while a Compaction is processing the tail part of an AVS.
-  - Given that the above limitation, We would recommend suspending a node you are supposed to run a Compaction if your LeoFS cluster handles write intensive workload. 
+    - GET/HEAD never be blocked by the Compaction.
+    - PUT/DELETE can be blocked while a Compaction is processing the tail part of an AVS.
+    - Given that the above limitation, We would recommend suspending a node you are supposed to run a Compaction if your LeoFS cluster handles write intensive workload.
 
 ## Compaction
 As described at the previous section, A compaction process is needed to remove logical deleted objects and its corresponding metadatas.
@@ -66,6 +67,7 @@ Commands related to Compaction as well as Disk Usage.
 |leofs-adm du detail \<storage-node\>|See the Current Disk Usage in detail.|
 
 Examples.
+
 - compact-start
 ```bash
 ## All AVS/KVS pairs on storage_0@127.0.0.1 will be compacted with 3 concurrent processes
@@ -175,12 +177,12 @@ This section provides information about recover commands that can be used in ord
 ### Commands
 | Shell | Description |
 |---    |---          |
-|**Compaction Commands**||
 |leofs-adm recover-file \<file-path\>|Recover an inconsistent object specified by the file-path.|
 |leofs-adm recover-node \<storage-node\>|Recover all inconsistent objects in the specified storage-node.|
 |leofs-adm recover-cluster \<cluster-id\>|Recover all inconsistent objects in the specified cluster-id.|
 
 Examples.
+
 - recover-file
 ```bash
 $ leofs-adm recover-file leo/fast/storage.key
@@ -200,23 +202,23 @@ OK
 When/How to use recover commands.
 
 - AVS/KVS Broken
-  - Invoke `recover-node` with a node having broken AVS/KVS files.
+    - Invoke `recover-node` with a node having broken AVS/KVS files.
 - Queue Broken
-  - Invoke `recover-node` with every node except which having broken Queue files.
-  - The procedure might be improved in future when https://github.com/leo-project/leofs/issues/618 solved. 
+    - Invoke `recover-node` with every node except which having broken Queue files.
+    - The procedure might be improved in future when https://github.com/leo-project/leofs/issues/618 solved.
 - Disk Broken
-  - Invoke `suspend` with a node having broken Disk arrays and subsequently run `leo_storage stop`.
-  - Exchange broken Disk arrays.
-  - Run `leo_storage start` and subsequently Invoke `resume` with the node.
-  - Invoke `recover-node` with the node.
+    - Invoke `suspend` with a node having broken Disk arrays and subsequently run `leo_storage stop`.
+    - Exchange broken Disk arrays.
+    - Run `leo_storage start` and subsequently Invoke `resume` with the node.
+    - Invoke `recover-node` with the node.
 - Node Broken
-  - Invoke `detach` with a broken node.
-  - Prepare a new node that will take over all objects assigned to a detached node.
-  - Invoke `attach` with a new node.
-  - Invoke `rebalance`.
+    - Invoke `detach` with a broken node.
+    - Prepare a new node that will take over all objects assigned to a detached node.
+    - Invoke `attach` with a new node.
+    - Invoke `rebalance`.
 - Source/Destination Cluster Down
-  - Invoke `recover-cluster` with a downed cluster.
+    - Invoke `recover-cluster` with a downed cluster.
 - Source/Destination Cluster Down and delete operations on the other side got lost (compacted).
-  - Set up the cluster from scratch
-  - invoke `recover-cluster` with the new cluster
-  - See also https://github.com/leo-project/leofs/issues/636 for more information.
+    - Set up the cluster from scratch
+    - invoke `recover-cluster` with the new cluster
+    - See also https://github.com/leo-project/leofs/issues/636 for more information.
