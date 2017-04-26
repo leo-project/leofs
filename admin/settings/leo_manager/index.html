@@ -461,6 +461,18 @@
           
           
 
+
+  <li class="md-nav__item">
+    <a href="../environment_config/" title="Environment Configuration" class="md-nav__link">
+      Environment Configuration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
   
 
 
@@ -493,6 +505,19 @@
   <a href="#prior-knowledge" title="Prior Knowledge" class="md-nav__link">
     Prior Knowledge
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#other-configurations" title="Other Configurations" class="md-nav__link">
+    Other Configurations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -958,6 +983,19 @@
     Prior Knowledge
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#other-configurations" title="Other Configurations" class="md-nav__link">
+    Other Configurations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1014,6 +1052,9 @@
                 <h1 id="leomanager-settings">LeoManager Settings<a class="headerlink" href="#leomanager-settings" title="Permanent link">&para;</a></h1>
 <h2 id="prior-knowledge">Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permanent link">&para;</a></h2>
 <p>The current version, v1.3 of LeoManager depends on <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia, A distributed telecommunications DBMS</a> to manage configurations of a LeoFS system and information of all nodes. LeoManager nodes must keep running to replicate the data for preventing data loss. You need to configure both LeoManager master and the slave.</p>
+<h3 id="other-configurations">Other Configurations<a class="headerlink" href="#other-configurations" title="Permanent link">&para;</a></h3>
+<p>If you want to customize settings like where to place leo_manager.conf, what user starting a leo_manager process and so on,
+Please refer <a href="../environment_config/">For Administrators / Settings / Environment Configuration</a> for more information.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>There are some condfiguration differences between LeoManager master and LeoManager slave. LeoManager master only has <code class="codehilite">the consistency level</code> and <code class="codehilite">the multi datacenter replication</code>.</p>
 <p>The default setting is to launch a LeoFS system on one node, whose setting cannot replicate data because the total number of replica is one, and data loss could be happened with high probability. You need to modify the configuration suitably before launching the LeoFS system on your production or other environments.</p>
@@ -1231,6 +1272,7 @@
 <ul>
 <li><a href="../../../architecture/leo_manager/">Concept and Architecture / LeoManager's Architecture</a></li>
 <li><a href="../cluster/">For Administrators / Settings / Cluster Settings</a></li>
+<li><a href="../environment_config/">For Administrators / Settings / Environment Configuration</a></li>
 </ul>
                 
                   
@@ -1250,7 +1292,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../cluster/" title="Cluster Settings" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../environment_config/" title="Environment Configuration" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1259,7 +1301,7 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Cluster Settings
+                Environment Configuration
               </span>
             </div>
           </a>
