@@ -2,7 +2,7 @@
 %%
 %% LeoFS Storage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -66,8 +66,13 @@
 %%--------------------------------------------------------------------
 %% @doc get object (from storage-node#1).
 -spec(get(RefAndKey) ->
-             {ok, reference(), binary(), binary(), binary()} |
-             {error, reference(), any()} when RefAndKey::{reference(), binary()}).
+             {ok, Ref, Metadata, Bin} |
+             {error, Ref, Cause} when Ref::reference(),
+                                      Key::binary(),
+                                      RefAndKey::{Ref, Key},
+                                      Metadata::#?METADATA{},
+                                      Bin::binary(),
+                                      Cause::any()).
 get({Ref, Key}) ->
     ?debug("get/1", [{from, storage}, {method, get}, {key, Key}]),
     ok = leo_metrics_req:notify(?STAT_COUNT_GET),
@@ -128,10 +133,12 @@ get(#read_parameter{addr_id = AddrId} = ReadParameter,_Redundancies) ->
 
 %% @doc Retrieve an object which is requested from gateway.
 -spec(get(AddrId, Key, ReqId) ->
-             {ok, #?METADATA{}, binary()} |
+             {ok, Metadata, Bin} |
              {error, any()} when AddrId::integer(),
                                  Key::binary(),
-                                 ReqId::integer()).
+                                 ReqId::integer(),
+                                 Metadata::#?METADATA{},
+                                 Bin::binary()).
 get(AddrId, Key, ReqId) ->
     BeginTime = leo_date:clock(),
     ?debug("get/3", [{from, gateway}, {method, get}, {key, Key}, {req_id, ReqId}]),
@@ -153,12 +160,14 @@ get(AddrId, Key, ReqId) ->
 
 %% @doc Retrieve an object which is requested from gateway w/etag.
 -spec(get(AddrId, Key, ETag, ReqId) ->
-             {ok, #?METADATA{}, binary()} |
+             {ok, Metadata, Bin} |
              {ok, match} |
              {error, any()} when AddrId::integer(),
                                  Key::binary(),
                                  ETag::integer(),
-                                 ReqId::integer()).
+                                 ReqId::integer(),
+                                 Metadata::#?METADATA{},
+                                 Bin::binary()).
 get(AddrId, Key, ETag, ReqId) ->
     BeginTime = leo_date:clock(),
     ?debug("get/4", [{from, gateway}, {method, get}, {key, Key}, {req_id, ReqId}, {etag, ETag}]),
@@ -183,12 +192,14 @@ get(AddrId, Key, ETag, ReqId) ->
 
 %% @doc Retrieve a part of an object.
 -spec(get(AddrId, Key, StartPos, EndPos, ReqId) ->
-             {ok, #?METADATA{}, binary()} |
+             {ok, Metadata, Bin} |
              {error, any()} when AddrId::integer(),
                                  Key::binary(),
                                  StartPos::integer(),
                                  EndPos::integer(),
-                                 ReqId::integer()).
+                                 ReqId::integer(),
+                                 Metadata::#?METADATA{},
+                                 Bin::binary()).
 get(AddrId, Key, StartPos, EndPos, ReqId) ->
     BeginTime = leo_date:clock(),
     ?debug("get/5", [{from, gateway}, {method, get}, {key, Key}, {req_id, ReqId},
@@ -215,62 +226,70 @@ get(AddrId, Key, StartPos, EndPos, ReqId) ->
 %% @doc retrieve UDM and set it back to the meta field
 %%      to fix https://github.com/leo-project/leofs/issues/641
 %% @private
--spec(get_cmeta(Meta) ->
-             {ok, #?METADATA{}} |
-             {error, any()} when Meta::#?METADATA{}).
-get_cmeta(Meta) ->
-    case leo_object_storage_transformer:get_udm_from_cmeta_bin(Meta#?METADATA.meta) of
+-spec(get_cmeta(Metadata) ->
+             {ok, Metadata} |
+             {error, any()} when Metadata::#?METADATA{}).
+get_cmeta(#?METADATA{key = Key,
+                     meta = CMeta} = Metadata) ->
+    case leo_object_storage_transformer:get_udm_from_cmeta_bin(CMeta) of
         {ok, {ok, {ok, UDM}}} ->
             %% match if an object belongs to the destination and already read_repaired.
-            {ok, Meta#?METADATA{meta = term_to_binary(UDM)}};
+            {ok, Metadata#?METADATA{meta = term_to_binary(UDM)}};
         {ok, {ok, UDM}} ->
             %% match if an object belongs to the destination and still not read_repaired.
-            {ok, Meta#?METADATA{meta = term_to_binary(UDM)}};
+            {ok, Metadata#?METADATA{meta = term_to_binary(UDM)}};
         {ok, []} ->
             %% match if an object belongs to the soruce
             %% match with <= 1.3.2.1
-            {ok, Meta};
+            {ok, Metadata};
         {ok, UDM} ->
             %% match if an object belongs to the source
             %% match with >= 1.3.3
-            {ok, Meta#?METADATA{meta = term_to_binary(UDM)}};
+            {ok, Metadata#?METADATA{meta = term_to_binary(UDM)}};
         Other ->
             %% ignore broken custom metadata and just log the error
             ?error("get_cmeta/1", [{from, storage}, {method, get},
-                             {key, Meta#?METADATA.key},
-                             {meta, Meta#?METADATA.meta},
-                             {cause, Other}]),
-            {ok, Meta#?METADATA{meta = <<>>}}
+                                   {key, Key}, {meta, CMeta}, {cause, Other}]),
+            {ok, Metadata#?METADATA{meta = <<>>}}
     end.
 
 %% @doc read data (common).
 %% @private
 -spec(get_fun(AddrId, Key, IsForcedCheck) ->
-             {ok, #?METADATA{}, #?OBJECT{}} |
-             {error, any()} when AddrId::integer(),
+             {ok, Metadata, Object} |
+             {error, Cause} when AddrId::integer(),
                                  Key::binary(),
-                                 IsForcedCheck::boolean()).
+                                 IsForcedCheck::boolean(),
+                                 Metadata::#?METADATA{},
+                                 Object::#?OBJECT{},
+                                 Cause::any()).
 get_fun(AddrId, Key, IsForcedCheck) ->
     get_fun(AddrId, Key, ?DEF_POS_START, ?DEF_POS_END, IsForcedCheck).
 
 %% @private
 -spec(get_fun(AddrId, Key, StartPos, EndPos) ->
-             {ok, #?METADATA{}, #?OBJECT{}} |
-             {error, any()} when AddrId::integer(),
+             {ok, Metadata, Object} |
+             {error, Cause} when AddrId::integer(),
                                  Key::binary(),
                                  StartPos::integer(),
-                                 EndPos::integer()).
+                                 EndPos::integer(),
+                                 Metadata::#?METADATA{},
+                                 Object::#?OBJECT{},
+                                 Cause::any()).
 get_fun(AddrId, Key, StartPos, EndPos) ->
     get_fun(AddrId, Key, StartPos, EndPos, false).
 
 %% @private
 -spec(get_fun(AddrId, Key, StartPos, EndPos, IsForcedCheck) ->
-             {ok, #?METADATA{}, #?OBJECT{}} |
-             {error, any()} when AddrId::integer(),
+             {ok, Metadata, Object} |
+             {error, Cause} when AddrId::integer(),
                                  Key::binary(),
                                  StartPos::integer(),
                                  EndPos::integer(),
-                                 IsForcedCheck::boolean()).
+                                 IsForcedCheck::boolean(),
+                                 Metadata::#?METADATA{},
+                                 Object::#?OBJECT{},
+                                 Cause::any()).
 get_fun(AddrId, Key, StartPos, EndPos, IsForcedCheck) ->
     %% Check state of the node
     case leo_watchdog_state:find_not_safe_items(?WD_EXCLUDE_ITEMS) of
@@ -299,8 +318,12 @@ get_fun(AddrId, Key, StartPos, EndPos, IsForcedCheck) ->
 %%--------------------------------------------------------------------
 %% @doc Insert an object (local replicate).
 -spec(put(ObjAndRef) ->
-             {ok, reference(), tuple()} |
-             {error, reference(), any()} when ObjAndRef::{#?OBJECT{}, reference()}).
+             {ok, Ref, EtagRet} |
+             {error, Ref, Cause} when Ref::reference(),
+                                      Object::#?OBJECT{},
+                                      ObjAndRef::{Object, Ref},
+                                      EtagRet::etag_ret(),
+                                      Cause::any()).
 put({Object, Ref}) ->
     AddrId = Object#?OBJECT.addr_id,
     Key    = Object#?OBJECT.key,
@@ -360,11 +383,13 @@ put(Object, ReqId) ->
 
 %% @doc Insert an  object (request from remote-storage-nodes/replicator).
 -spec(put(Ref, From, Object, ReqId) ->
-             {ok, atom()} |
-             {error, any()} when Ref::reference(),
+             {ok, Etag} |
+             {error, Cause} when Ref::reference(),
                                  From::pid(),
                                  Object::#?OBJECT{},
-                                 ReqId::integer()).
+                                 ReqId::integer(),
+                                 Etag::non_neg_integer(),
+                                 Cause::any()).
 put(Ref, From, Object, ReqId) ->
     BeginTime = leo_date:clock(),
     Method = case Object#?OBJECT.del of
@@ -397,11 +422,13 @@ put(Ref, From, Object, ReqId) ->
 %% Input an object into the object-storage
 %% @private
 -spec(put_fun(Ref, AddrId, Key, Object) ->
-             {ok, reference(), tuple()} |
-             {error, reference(), any()} when Ref::reference(),
-                                              AddrId::integer(),
-                                              Key::binary(),
-                                              Object::#?OBJECT{}).
+             {ok, Ref, EtagRet} |
+             {error, Ref, Cause} when Ref::reference(),
+                                      AddrId::integer(),
+                                      Key::binary(),
+                                      Object::#?OBJECT{},
+                                      EtagRet::etag_ret(),
+                                      Cause::any()).
 put_fun(Ref, AddrId, Key, #?OBJECT{del = ?DEL_TRUE} = Object) ->
     %% Check state of the node
     case leo_watchdog_state:find_not_safe_items(?WD_EXCLUDE_ITEMS) of
@@ -440,12 +467,12 @@ put_fun(Ref, AddrId, Key, Object) ->
     end.
 
 
-
 %% Remove chunked objects from the object-storage
 %% @private
 -spec(delete_chunked_objects(CIndex, ParentKey) ->
-             ok | {error, any()} when CIndex::integer(),
-                                      ParentKey::binary()).
+             ok | {error, Cause} when CIndex::integer(),
+                                      ParentKey::binary(),
+                                      Cause::any()).
 delete_chunked_objects(0,_) ->
     ok;
 delete_chunked_objects(CIndex, ParentKey) ->
@@ -471,8 +498,11 @@ delete_chunked_objects(CIndex, ParentKey) ->
 %%--------------------------------------------------------------------
 %% @doc Remove an object (request from storage)
 -spec(delete(ObjAndRef) ->
-             {ok, reference()} |
-             {error, reference(), any()} when ObjAndRef::{#?OBJECT{}, reference()}).
+             {ok, Ref} |
+             {error, Ref, Cause} when Ref::reference(),
+                                      Object::#?OBJECT{},
+                                      ObjAndRef::{Object, Ref},
+                                      Cause::any()).
 delete({Object, Ref}) ->
     AddrId = Object#?OBJECT.addr_id,
     Key    = Object#?OBJECT.key,
@@ -505,8 +535,9 @@ delete({Object, Ref}) ->
 
 %% @doc Remova an object (request from gateway)
 -spec(delete(Object, ReqId) ->
-             ok | {error, any()} when Object::#?OBJECT{},
-                                      ReqId::integer()|reference()).
+             ok | {error, Cause} when Object::#?OBJECT{},
+                                      ReqId::integer()|reference(),
+                                      Cause::any()).
 delete(Object, ReqId) ->
     delete(Object, ReqId, true).
 
@@ -647,16 +678,24 @@ delete_objects_under_dir_1(Node, [Key|Rest]) ->
 %%--------------------------------------------------------------------
 %% @doc retrieve a meta-data from mata-data-server (file).
 -spec(head(AddrId, Key) ->
-             {ok, #?METADATA{}} | not_found | {error, any} when AddrId::integer(),
-                                                                Key::binary()).
+             {ok, Metadata} |
+             not_found |
+             {error, Cause} when AddrId::integer(),
+                                 Key::binary(),
+                                 Metadata::#?METADATA{},
+                                 Cause::any()).
 head(AddrId, Key) ->
     %% Do retry when being invoked as usual method
     head(AddrId, Key, true).
 
 -spec(head(AddrId, Key, CanRetry) ->
-             {ok, #?METADATA{}} | not_found | {error, any} when AddrId::integer(),
-                                                                Key::binary(),
-                                                                CanRetry::boolean()).
+             {ok, Metadata} |
+             not_found |
+             {error, Cause} when AddrId::integer(),
+                                 Key::binary(),
+                                 CanRetry::boolean(),
+                                 Metadata::#?METADATA{},
+                                 Cause::any()).
 head(AddrId, Key, false) ->
     %% No retry when being invoked from recover/rebalance
     case leo_object_storage_api:head({AddrId, Key}) of
@@ -724,10 +763,13 @@ head_1([_|Rest], AddrId, Key) ->
 %% @doc Retrieve a metada/data from backend_db/object-storage
 %%      AND calc MD5 based on the body data
 -spec(head_with_calc_md5(AddrId, Key, MD5Context) ->
-             {ok, #?METADATA{}, any()} |
-             {error, any()} when AddrId::integer(),
+             {ok, Metadata, NewHashContext} |
+             {error, Cause} when AddrId::integer(),
                                  Key::binary(),
-                                 MD5Context::any()).
+                                 MD5Context::any(),
+                                 Metadata::#?METADATA{},
+                                 NewHashContext::binary(),
+                                 Cause::any()).
 head_with_calc_md5(AddrId, Key, MD5Context) ->
     leo_object_storage_api:head_with_calc_md5({AddrId, Key}, MD5Context).
 
@@ -737,29 +779,55 @@ head_with_calc_md5(AddrId, Key, MD5Context) ->
 %%--------------------------------------------------------------------
 %% @doc Replicate an object, which is requested from remote-cluster
 -spec(replicate(Object) ->
-             ok |
-             {ok, reference()} |
-             {error, reference()|any()} when Object::#?OBJECT{}).
-replicate(Object) ->
+             {ok, Etag} |
+             {error, Cause} when Object::#?OBJECT{},
+                                 Etag::non_neg_integer(),
+                                 Cause::any()).
+replicate(#?OBJECT{num_of_replicas = Preferred_N,
+                   preferred_w = Preferred_W,
+                   preferred_d = Preferred_D,
+                   del = DelFlag} = Object) ->
     %% Transform an object to a metadata
     Metadata = leo_object_storage_transformer:object_to_metadata(Object),
-    Method = case Object#?OBJECT.del of
+    Method = case DelFlag of
                  ?DEL_TRUE ->
                      ?CMD_DELETE;
                  ?DEL_FALSE ->
                      ?CMD_PUT
              end,
-    NumOfReplicas = Object#?OBJECT.num_of_replicas,
     AddrId = Metadata#?METADATA.addr_id,
 
     %% Retrieve redudancies
     case leo_redundant_manager_api:get_redundancies_by_addr_id(AddrId) of
         {ok, #redundancies{nodes = Redundancies,
-                           w = WriteQuorum,
-                           d = DeleteQuorum}} ->
+                           n = N,
+                           w = W,
+                           d = D}} ->
+            %% Retrieve each quorum, 'w' and 'd'.
+            %% If 'object' contains 'preferred_w' and 'preferred_d',
+            %% those quorums are adopted instead of the quorums of the local consistency level.
+            W_1 = case (Preferred_W < 1) of
+                      true ->
+                          W;
+                      false ->
+                          Preferred_W
+                  end,
+            D_1 = case (Preferred_D < 1) of
+                      true ->
+                          D;
+                      false ->
+                          Preferred_D
+                  end,
+
             %% Replicate an object into the storage cluster
-            Redundancies_1 = lists:sublist(Redundancies, NumOfReplicas),
-            Quorum_1 = ?quorum(Method, WriteQuorum, DeleteQuorum),
+            {NumOfReplicas, Redundancies_1} =
+                case (N > Preferred_N andalso Preferred_N > 0) of
+                    true ->
+                        {Preferred_N, lists:sublist(Redundancies, Preferred_N)};
+                    false ->
+                        {N, Redundancies}
+                end,
+            Quorum_1 = ?quorum(Method, W_1, D_1),
             Quorum_2 = case (NumOfReplicas < Quorum_1) of
                            true when NumOfReplicas =< 1 ->
                                1;
@@ -775,43 +843,55 @@ replicate(Object) ->
     end.
 
 
-%% @doc Replicate an object from local to remote
--spec(replicate(DestNodes, AddrId, Key) ->
+%% @doc Fix an inconsistent object
+%%       [leo_storage_mq:correct_redundancies/1
+%%       => leo_storage_api:synchronize/2
+%%       => this function is called]
+-spec(replicate(InconsistentNodes, AddrId, Key) ->
              ok |
              not_found |
-             {error, any()} when DestNodes::[atom()],
+             {error, Cause} when InconsistentNodes::[node()],
                                  AddrId::integer(),
-                                 Key::binary()).
-replicate(DestNodes, AddrId, Key) ->
+                                 Key::binary(),
+                                 Cause::any()).
+replicate(InconsistentNodes, AddrId, Key) ->
     case leo_object_storage_api:head({AddrId, Key}) of
         {ok, MetaBin} ->
-            Ref = make_ref(),
             case binary_to_term(MetaBin) of
-                #?METADATA{del = ?DEL_FALSE} = Metadata ->
-                    case ?MODULE:get({Ref, Key}) of
-                        {ok, Ref, Metadata, Bin} ->
+                #?METADATA{num_of_replicas = Preferred_N,
+                           del = DelFlag} = Metadata ->
+                    Ref = make_ref(),
+                    InconsistentNodes_1 =
+                        get_inconsistent_nodes(AddrId, Preferred_N, InconsistentNodes),
+
+                    case DelFlag of
+                        ?DEL_FALSE ->
+                            case ?MODULE:get({Ref, Key}) of
+                                {ok, Ref, Metadata, Bin} ->
+                                    Ret = leo_sync_local_cluster:stack(
+                                            InconsistentNodes_1, AddrId, Key, Metadata, Bin),
+                                    Object_1 = leo_object_storage_transformer:metadata_to_object(Metadata),
+                                    Object_2 = Object_1#?OBJECT{method = ?CMD_PUT,
+                                                                data = Bin},
+                                    ok = leo_sync_remote_cluster:defer_stack(Object_2),
+                                    Ret;
+                                {error, Ref, Cause} ->
+                                    {error, Cause};
+                                _Other ->
+                                    {error, invalid_response}
+                            end;
+                        ?DEL_TRUE ->
+                            EmptyBin = <<>>,
                             Ret = leo_sync_local_cluster:stack(
-                                    DestNodes, AddrId, Key, Metadata, Bin),
+                                    InconsistentNodes_1, AddrId, Key, Metadata, EmptyBin),
                             Object_1 = leo_object_storage_transformer:metadata_to_object(Metadata),
-                            Object_2 = Object_1#?OBJECT{method = ?CMD_PUT,
-                                                        data = Bin},
+                            Object_2 = Object_1#?OBJECT{method = ?CMD_DELETE,
+                                                        data = EmptyBin,
+                                                        dsize = 0,
+                                                        del = ?DEL_TRUE},
                             ok = leo_sync_remote_cluster:defer_stack(Object_2),
-                            Ret;
-                        {error, Ref, Cause} ->
-                            {error, Cause};
-                        _Other ->
-                            {error, invalid_response}
+                            Ret
                     end;
-                #?METADATA{del = ?DEL_TRUE} = Metadata ->
-                    EmptyBin = <<>>,
-                    Ret = leo_sync_local_cluster:stack(DestNodes, AddrId, Key, Metadata, EmptyBin),
-                    Object_1 = leo_object_storage_transformer:metadata_to_object(Metadata),
-                    Object_2 = Object_1#?OBJECT{method = ?CMD_DELETE,
-                                                data = EmptyBin,
-                                                dsize = 0,
-                                                del = ?DEL_TRUE},
-                    ok = leo_sync_remote_cluster:defer_stack(Object_2),
-                    Ret;
                 _ ->
                     {error, invalid_data_type}
             end;
@@ -819,6 +899,40 @@ replicate(DestNodes, AddrId, Key) ->
             Error;
         {error, Cause} ->
             ok = leo_storage_watchdog_error:push(Cause),
+            {error, Cause}
+    end.
+
+
+%% @private
+-spec(get_inconsistent_nodes(AddrId, Preferred_N, InconsistentNodes) ->
+             [Node] | {error, Cause} when AddrId::integer(),
+                                          Preferred_N::non_neg_integer(),
+                                          Node::node(),
+                                          InconsistentNodes::[Node],
+                                          Cause::any()).
+get_inconsistent_nodes(AddrId, Preferred_N, InconsistentNodes) ->
+    case leo_redundant_manager_api:get_redundancies_by_addr_id(AddrId) of
+        {ok, #redundancies{nodes = Redundancies,
+                           n = N}} ->
+            case (N > Preferred_N andalso Preferred_N > 0) of
+                true ->
+                    lists:reverse(
+                      lists:foldl(
+                        fun(Node, Acc) ->
+                                case lists:filter(
+                                       fun(#redundant_node{node = RedundantNode}) ->
+                                               Node == RedundantNode
+                                       end, lists:sublist(Redundancies, Preferred_N)) of
+                                    [] ->
+                                        Acc;
+                                    _ ->
+                                        [Node|Acc]
+                                end
+                        end, [], InconsistentNodes));
+                false ->
+                    InconsistentNodes
+            end;
+        {error, Cause} ->
             {error, Cause}
     end.
 
@@ -953,8 +1067,9 @@ prefix_search_2(ParentDir, Marker, Key, Meta, Acc) ->
 
 %% @doc Retrieve object of deletion from object-storage by key
 -spec(prefix_search_and_remove_objects(ParentDir) ->
-             {ok, [_]} |
-             not_found when ParentDir::undefined|binary()).
+             {ok, [Metadata]} |
+             not_found when ParentDir::undefined|binary(),
+                            Metadata::#?METADATA{}).
 prefix_search_and_remove_objects(undefined) ->
     not_found;
 prefix_search_and_remove_objects(ParentDir) ->
@@ -994,7 +1109,8 @@ prefix_search_and_remove_objects(ParentDir) ->
 
 %% @doc Find already uploaded objects by original-filename
 -spec(find_uploaded_objects_by_key(OriginalKey) ->
-             {ok, list()} | not_found when OriginalKey::binary()).
+             {ok, [Metadata]} | not_found when OriginalKey::binary(),
+                                               Metadata::#?METADATA{}).
 find_uploaded_objects_by_key(OriginalKey) ->
     Fun = fun(Key, V, Acc) ->
                   Metadata       = binary_to_term(V),
@@ -1030,9 +1146,10 @@ find_uploaded_objects_by_key(OriginalKey) ->
 %% @doc Retrieve active redundancies
 %% @private
 -spec(get_active_redundancies(Quorum, Redundancies) ->
-             {ok, [#redundant_node{}]} |
-             {error, any()} when Quorum::non_neg_integer(),
-                                 Redundancies::[#redundant_node{}]).
+             {ok, Redundancies} |
+             {error, Cause} when Quorum::non_neg_integer(),
+                                 Redundancies::[#redundant_node{}],
+                                 Cause::any()).
 get_active_redundancies(_, []) ->
     {error, ?ERROR_NOT_SATISFY_QUORUM};
 get_active_redundancies(Quorum, Redundancies) ->
@@ -1049,10 +1166,13 @@ get_active_redundancies(Quorum, Redundancies) ->
 %% @doc read reapir - compare with remote-node's meta-data.
 %% @private
 -spec(read_and_repair(ReadParams, Redundancies) ->
-             {ok, #?METADATA{}, binary()} |
+             {ok, Metadata, Bin} |
              {ok, match} |
-             {error, any()} when ReadParams::#read_parameter{},
-                                 Redundancies::[#redundant_node{}]).
+             {error, Cause} when ReadParams::#read_parameter{},
+                                 Redundancies::[#redundant_node{}],
+                                 Metadata::#?METADATA{},
+                                 Bin::binary(),
+                                 Cause::any()).
 read_and_repair(#read_parameter{quorum = Q} = ReadParams, Redundancies) ->
     case get_active_redundancies(Q, Redundancies) of
         {ok, AvailableNodes} ->
@@ -1074,12 +1194,17 @@ read_and_repair_1(ReadParams, [Node|Rest], AvailableNodes, Errors) ->
 
 %% @private
 -spec(read_and_repair_2(ReadParams, Redundancies, Redundancies) ->
-             {ok, #?METADATA{}, binary()} |
+             {ok, Metadata, Bin} |
              {ok, match} |
-             {error, any()} when ReadParams::#read_parameter{},
-                                 Redundancies::[atom()]).
+             {error, Cause} when ReadParams::#read_parameter{},
+                                 Redundancies::[atom()],
+                                 Metadata::#?METADATA{},
+                                 Bin::binary(),
+                                 Cause::any()).
 read_and_repair_2(_, [], _) ->
     {error, not_found};
+
+%% Request retrieving an object to 'LOCAL' (etag == 0)
 read_and_repair_2(#read_parameter{addr_id = AddrId,
                                   key = Key,
                                   etag = 0,
@@ -1087,10 +1212,11 @@ read_and_repair_2(#read_parameter{addr_id = AddrId,
                                   end_pos = EndPos} = ReadParameter,
                   #redundant_node{node = Node}, Redundancies) when Node == erlang:node() ->
     LeftRedundancies = [RedundantNode ||
-                         #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
+                           #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
     read_and_repair_3(
       get_fun(AddrId, Key, StartPos, EndPos), ReadParameter, LeftRedundancies);
 
+%% Request retrieving an object to 'LOCAL' (etag /= 0)
 read_and_repair_2(#read_parameter{addr_id = AddrId,
                                   key = Key,
                                   etag = ETag,
@@ -1122,11 +1248,12 @@ read_and_repair_2(#read_parameter{addr_id = AddrId,
             Reply;
         _ ->
             LeftRedundancies = [RedundantNode ||
-                                #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
+                                   #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
             read_and_repair_3(
               get_fun(AddrId, Key, StartPos, EndPos), ReadParameter, LeftRedundancies)
     end;
 
+%% Request retrieving an object to 'REMOTE'
 read_and_repair_2(ReadParameter, #redundant_node{node = Node}, Redundancies) ->
     Ref = make_ref(),
     Key = ReadParameter#read_parameter.key,
@@ -1147,7 +1274,7 @@ read_and_repair_2(ReadParameter, #redundant_node{node = Node}, Redundancies) ->
                      {error, Cause}
              end,
     LeftRedundancies = [RedundantNode ||
-                        #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
+                           #redundant_node{node = RNode} = RedundantNode <- Redundancies, RNode =/= Node],
     read_and_repair_3(RetRPC, ReadParameter, LeftRedundancies).
 
 %% @private
@@ -1155,8 +1282,22 @@ read_and_repair_3({ok, Metadata, #?OBJECT{data = Bin}}, #read_parameter{}, []) -
     {ok, Metadata, Bin};
 read_and_repair_3({ok, match} = Reply, #read_parameter{},_Redundancies) ->
     Reply;
-read_and_repair_3({ok, Metadata, #?OBJECT{data = Bin}},
+
+read_and_repair_3({ok, Metadata, #?OBJECT{data = Bin,
+                                          num_of_replicas = NumOfReplicas,
+                                          preferred_r = Preferred_R}},
                   #read_parameter{quorum = Quorum} = ReadParameter, Redundancies) ->
+    %% If 'object' contains 'num_of_replicas > 0' and 'preferred_r > 0',
+    %% those params are adopted instead of the parametes of the local consistency level.
+    {Quorum_1, Redundancies_1} =
+        case (NumOfReplicas > 0 andalso
+              Preferred_R > 0) of
+            true ->
+                {Preferred_R, lists:sublist(Redundancies, NumOfReplicas - 1)};
+            false ->
+                {Quorum, Redundancies}
+        end,
+
     Fun = fun(ok) ->
                   {ok, Metadata, Bin};
              ({error, unavailable} = Ret) ->
@@ -1164,8 +1305,8 @@ read_and_repair_3({ok, Metadata, #?OBJECT{data = Bin}},
              ({error,_Cause}) ->
                   {error, ?ERROR_RECOVER_FAILURE}
           end,
-    ReadParameter_1 = ReadParameter#read_parameter{quorum = Quorum},
-    leo_storage_read_repairer:repair(ReadParameter_1, Redundancies, Metadata, Fun);
+    ReadParameter_1 = ReadParameter#read_parameter{quorum = Quorum_1},
+    leo_storage_read_repairer:repair(ReadParameter_1, Redundancies_1, Metadata, Fun);
 
 read_and_repair_3({error, not_found = Cause}, #read_parameter{key = _K}, _Redundancies) ->
     {error, Cause};
@@ -1181,8 +1322,15 @@ read_and_repair_3(_,_,_) ->
 
 %% @doc Replicate an object from local-node to remote node
 %% @private
--spec(replicate_fun(replication(), request_verb(), integer(), #?OBJECT{}, atom()) ->
-             {ok, ETag} | {error, any()} when ETag::{etag, integer()}).
+-spec(replicate_fun(ReplicationMethod, Method, AddrId, Object, From) ->
+             {ok, ETag} |
+             {error, Cause} when ReplicationMethod::replication(),
+                                 Method::request_verb(),
+                                 AddrId::integer(),
+                                 Object::#?OBJECT{},
+                                 From::atom(),
+                                 ETag::{etag, integer()},
+                                 Cause::any()).
 replicate_fun(?REP_LOCAL, Method, AddrId, Object, From) ->
     %% Check state of the node
     case leo_watchdog_state:find_not_safe_items(?WD_EXCLUDE_ITEMS) of
@@ -1245,8 +1393,9 @@ replicate_fun(?REP_REMOTE, Method, Object) ->
 replicate_callback() ->
     replicate_callback(null).
 
--spec(replicate_callback(#?OBJECT{}|null) ->
-             function()).
+-spec(replicate_callback(Object|null) ->
+             Fun when Object::#?OBJECT{},
+                      Fun::function()).
 replicate_callback(Object) ->
     fun({ok, ?CMD_PUT, Checksum}) ->
             ok = leo_sync_remote_cluster:defer_stack(Object),
@@ -1295,10 +1444,10 @@ get_cmeta_test() ->
     %% destination side with broken custom metadata
     %% tuple nested doubly
     CMeta2 = [{?PROP_CMETA_CLUSTER_ID, 'leofs_1'},
-             {?PROP_CMETA_NUM_OF_REPLICAS, 3},
-             {?PROP_CMETA_VER, leo_date:clock()},
-             {?PROP_CMETA_UDM, {ok, UDM}}
-            ],
+              {?PROP_CMETA_NUM_OF_REPLICAS, 3},
+              {?PROP_CMETA_VER, leo_date:clock()},
+              {?PROP_CMETA_UDM, {ok, UDM}}
+             ],
     Meta4 = #?METADATA{meta = term_to_binary(CMeta2)},
     {ok, Meta41} = get_cmeta(Meta4),
     ?assertEqual(term_to_binary(UDM), Meta41#?METADATA.meta),
@@ -1306,10 +1455,10 @@ get_cmeta_test() ->
     %% destination side with broken custom metadata
     %% tuple nested triply
     CMeta3 = [{?PROP_CMETA_CLUSTER_ID, 'leofs_1'},
-             {?PROP_CMETA_NUM_OF_REPLICAS, 3},
-             {?PROP_CMETA_VER, leo_date:clock()},
-             {?PROP_CMETA_UDM, {ok, {ok, UDM}}}
-            ],
+              {?PROP_CMETA_NUM_OF_REPLICAS, 3},
+              {?PROP_CMETA_VER, leo_date:clock()},
+              {?PROP_CMETA_UDM, {ok, {ok, UDM}}}
+             ],
     Meta5 = #?METADATA{meta = term_to_binary(CMeta3)},
     {ok, Meta51} = get_cmeta(Meta5),
     ?assertEqual(term_to_binary(UDM), Meta51#?METADATA.meta),

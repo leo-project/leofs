@@ -2,7 +2,7 @@
 %%
 %% Leo Storage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -340,15 +340,21 @@ stack_fun(ClusterId, #?OBJECT{addr_id = AddrId,
     case leo_cluster_tbl_conf:get() of
         {ok, #?SYSTEM_CONF{
                  cluster_id = MDC_ClusterId,
-                 num_of_dc_replicas = MDC_NumOfReplicas}} ->
+                 num_of_dc_replicas = MDCR_N,
+                 mdcr_r = MDCR_R,
+                 mdcr_w = MDCR_W,
+                 mdcr_d = MDCR_D}} ->
             CMeta_1 = leo_object_storage_transformer:list_to_cmeta_bin(
                          [{?PROP_CMETA_CLUSTER_ID, MDC_ClusterId},
-                          {?PROP_CMETA_NUM_OF_REPLICAS, MDC_NumOfReplicas},
+                          {?PROP_CMETA_NUM_OF_REPLICAS, MDCR_N},
                           {?PROP_CMETA_UDM, leo_object_storage_transformer:get_udm_from_cmeta_bin(CMeta)}
                          ]),
             CMetaLen = byte_size(CMeta_1),
             Object_1 =  Object#?OBJECT{cluster_id = MDC_ClusterId,
-                                       num_of_replicas = MDC_NumOfReplicas,
+                                       num_of_replicas = MDCR_N,
+                                       preferred_r = MDCR_R,
+                                       preferred_w = MDCR_W,
+                                       preferred_d = MDCR_D,
                                        msize = CMetaLen,
                                        meta = CMeta_1},
             ObjBin = term_to_binary(Object_1),
@@ -419,33 +425,48 @@ slice(StackedObjs) ->
     end.
 
 
+%% @TODO
 %% @doc Replicate an object between clusters
 %% @private
--spec(replicate(atom(), #?OBJECT{}) ->
+-spec(replicate(atom(), #object{} | #object_1{} | #?OBJECT{}) ->
              [] | #?METADATA{}).
-replicate(ClusterId, Object) ->
+replicate(ClusterId, #?OBJECT{num_of_replicas = MDCR_N} = Object) ->
     %% Retrieve redundancies of the cluster,
-    %% then overwrite 'n' and 'w' for the mdc-replication
-    Ret = case leo_mdcr_tbl_cluster_info:get(ClusterId) of
-              {ok, #?CLUSTER_INFO{num_of_dc_replicas = NumOfReplicas}} ->
-                  Object_1 = Object#?OBJECT{cluster_id = ClusterId,
-                                            num_of_replicas = NumOfReplicas},
-                  case leo_storage_handler_object:replicate(Object_1) of
-                      {ok, _ETag} ->
-                          {ok, leo_object_storage_transformer:object_to_metadata(Object)};
+    %%   then overwrite 'n' and 'w' for the mdc-replication
+    Ret = case (MDCR_N == 0) of
+              true ->
+                  case leo_mdcr_tbl_cluster_info:get(ClusterId) of
+                      {ok, #?CLUSTER_INFO{num_of_dc_replicas = MDCR_1}} ->
+                          {ok, MDCR_1};
                       {error, Cause} ->
+                          ?warn("replicate/2", [{cause, Cause}]),
                           {error, Cause}
                   end;
-              {error, Cause} ->
-                  ?warn("replicate/2", [{cause, Cause}]),
-                  {error, Cause}
+              false ->
+                  {ok, MDCR_N}
           end,
-    replicate_1(Ret).
+    replicate_1(Ret, Object#?OBJECT{cluster_id = ClusterId});
+replicate(ClusterId, Object) ->
+    replicate(ClusterId, leo_object_storage_transformer:transform_object(Object)).
 
 %% @private
-replicate_1({ok, Metadata}) ->
+replicate_1({ok, MDCR_N}, Object) ->
+    Object_1 = Object#?OBJECT{num_of_replicas = MDCR_N},
+    Ret = case leo_storage_handler_object:replicate(Object_1) of
+              {ok,_ETag} ->
+                  {ok, leo_object_storage_transformer:object_to_metadata(Object_1)};
+              {error, Cause} ->
+                  ?warn("replicate_1/1", [{cause, Cause}]),
+                  {error, Cause}
+          end,
+    replicate_2(Ret);
+replicate_1(Ret,_Object) ->
+    replicate_2(Ret).
+
+%% @private
+replicate_2({ok, Metadata}) ->
     Metadata;
-replicate_1(_Error) ->
+replicate_2(_) ->
     [].
 
 

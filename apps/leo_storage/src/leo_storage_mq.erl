@@ -2,7 +2,7 @@
 %%
 %% LeoFS Storage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -440,16 +440,16 @@ handle_call(_,_,_) ->
 %%--------------------------------------------------------------------
 %% @doc synchronize by vnode-id.
 %% @private
--spec(recover_node(atom()) ->
-             ok).
+-spec(recover_node(Node) ->
+             ok when Node::node()).
 recover_node(Node) ->
     Callback = recover_node_callback(Node),
     _ = leo_object_storage_api:fetch_by_addr_id(0, Callback),
     ok.
 
 %% @private
--spec(recover_node_callback(atom()) ->
-             any()).
+-spec(recover_node_callback(Node) ->
+             any() when Node::node()).
 recover_node_callback(Node) ->
     fun(K, V, Acc) ->
             Metadata_1 = binary_to_term(V),
@@ -533,8 +533,12 @@ send_object_to_remote_node(Node, AddrId, Key) ->
 
 %% @doc synchronize by vnode-id.
 %% @private
--spec(sync_vnodes(atom(), integer(), list()) ->
-             ok).
+-spec(sync_vnodes(Node, RingHash, ListOfFromToAddrId) ->
+             ok when Node::node(),
+                     RingHash::integer(),
+                     FromAddrId::integer(),
+                     ToAddrId::integer(),
+                     ListOfFromToAddrId::[{FromAddrId, ToAddrId}]).
 sync_vnodes(_, _, []) ->
     ok;
 sync_vnodes(Node, RingHash, [{FromAddrId, ToAddrId}|T]) ->
@@ -544,8 +548,10 @@ sync_vnodes(Node, RingHash, [{FromAddrId, ToAddrId}|T]) ->
     sync_vnodes(Node, RingHash, T).
 
 %% @private
--spec(sync_vnodes_callback(atom(), pos_integer(), pos_integer()) ->
-             any()).
+-spec(sync_vnodes_callback(Node, FromAddrId, ToAddrId) ->
+             any() when Node::node(),
+                        FromAddrId::integer(),
+                        ToAddrId::integer()).
 sync_vnodes_callback(Node, FromAddrId, ToAddrId)->
     fun(_K, V, Acc) ->
             %% Note: An object of copy is NOT equal current ring-hash.
@@ -581,8 +587,11 @@ sync_vnodes_callback(Node, FromAddrId, ToAddrId)->
 
 %% @doc Remove a node from redundancies
 %% @private
--spec(delete_node_from_redundancies(list(#redundant_node{}), atom(), list(#redundant_node{})) ->
-             {ok, list(#redundant_node{})}).
+
+-spec(delete_node_from_redundancies(Redundancies, Node, AccRedundancies) ->
+             {ok, AccRedundancies} when Redundancies::[#redundant_node{}],
+                                        Node::node(),
+                                        AccRedundancies::[#redundant_node{}]).
 delete_node_from_redundancies([],_,Acc) ->
     {ok, lists:reverse(Acc)};
 delete_node_from_redundancies([#redundant_node{node = Node}|Rest], Node, Acc) ->
@@ -593,8 +602,10 @@ delete_node_from_redundancies([RedundantNode|Rest], Node, Acc) ->
 
 %% @doc Find a node from redundancies
 %% @private
--spec(find_node_from_redundancies(list(#redundant_node{}), atom()) ->
-             boolean()).
+-spec(find_node_from_redundancies(Redundancies, Node) ->
+             Ret when Redundancies::[#redundant_node{}],
+                      Node::node(),
+                      Ret::boolean()).
 find_node_from_redundancies([],_) ->
     false;
 find_node_from_redundancies([#redundant_node{node = Node}|_], Node) ->
@@ -605,8 +616,11 @@ find_node_from_redundancies([_|Rest], Node) ->
 
 %% @doc Notify a message to manager node(s)
 %% @private
--spec(notify_message_to_manager(list(), integer(), atom()) ->
-             ok | {error, any()}).
+-spec(notify_message_to_manager(ManagerNodes, VNodeId, Node) ->
+             ok | {error, Cause} when ManagerNodes::[node()],
+                                      VNodeId::integer(),
+                                      Node::node(),
+                                      Cause::any()).
 notify_message_to_manager([],_VNodeId,_Node) ->
     {error, 'fail_notification'};
 notify_message_to_manager([Manager|T], VNodeId, Node) ->
@@ -633,8 +647,9 @@ notify_message_to_manager([Manager|T], VNodeId, Node) ->
 
 %% @doc correct_redundancies/1 - first.
 %% @private
--spec(correct_redundancies(binary()) ->
-             ok | {error, any()}).
+-spec(correct_redundancies(Key) ->
+             ok | {error, Cause} when Key::binary(),
+                                      Cause::any()).
 correct_redundancies(Key) ->
     case leo_redundant_manager_api:get_redundancies_by_key(Key) of
         {ok, #redundancies{nodes = Redundancies,
@@ -681,28 +696,33 @@ correct_redundancies_1(Key, AddrId, [#redundant_node{node = Node}|T], Metadatas,
 
 %% @doc correct_redundancies_2/3
 %% @private
--spec(correct_redundancies_2(list(), [any()]) ->
-             ok | {error, any()}).
-correct_redundancies_2(ListOfMetadata, ErrorNodes) ->
-    H = case (erlang:length(ListOfMetadata) == 1) of
+-spec(correct_redundancies_2(ListOfMetadatas, ErrorNodes) ->
+             ok | {error, any()} when ListOfMetadatas::[#?METADATA{}],
+                                      ErrorNodes::[any()]).
+correct_redundancies_2(ListOfMetadatas, ErrorNodes) ->
+    %% Retrieve latest metadata of an object to fix its inconsistency
+    H = case (erlang:length(ListOfMetadatas) == 1) of
             true ->
-                erlang:hd(ListOfMetadata);
+                erlang:hd(ListOfMetadatas);
             false ->
                 MaxClock = lists:max([M#?METADATA.clock
-                                      || {_,M} <- ListOfMetadata]),
+                                      || {_,M} <- ListOfMetadatas]),
                 {_,RetL} = lists:foldl(
                              fun({_,#?METADATA{clock = Clock}} = M,
                                  {MaxClock_1, Acc}) when Clock == MaxClock_1 ->
                                      {MaxClock_1, [M|Acc]};
                                 (_, {MaxClock_1, Acc}) ->
                                      {MaxClock_1, Acc}
-                             end, {MaxClock, []}, ListOfMetadata),
+                             end, {MaxClock, []}, ListOfMetadatas),
                 erlang:hd(RetL)
         end,
-    {_,Metadata} = H,
+    {_, Metadata} = H,
+
+    %% If 'metadata' contains 'num_of_replicas > 0',
+    %% it is adopted instead of the local 'number of replicas'
     {_Dest, CorrectNodes, InconsistentNodes} =
         lists:foldl(
-          fun({Node,_Metadata}, {{DestNode, _Metadata} = Dest, C, R}) when Node =:= DestNode ->
+          fun({Node,_Metadata}, {{DestNode,_Metadata} = Dest, C, R}) when Node =:= DestNode ->
                   {Dest, [Node|C], R};
              ({Node, #?METADATA{clock = Clock}},
               {{DestNode, #?METADATA{clock = DestClock}} = Dest, C, R}) when Node  =/= DestNode,
@@ -712,7 +732,7 @@ correct_redundancies_2(ListOfMetadata, ErrorNodes) ->
               {{DestNode, #?METADATA{clock = DestClock}} = Dest, C, R}) when Node  =/= DestNode,
                                                                              Clock =/= DestClock ->
                   {Dest, C, [Node|R]}
-          end, {H, [], []}, ListOfMetadata),
+          end, {H, [], []}, ListOfMetadatas),
     correct_redundancies_3(ErrorNodes ++ InconsistentNodes, CorrectNodes, Metadata).
 
 
@@ -813,14 +833,22 @@ rebalance_2({ok, Redundancies}, #rebalance_message{node = Node,
                        AddrId, Key, Redundancies),
     case find_node_from_redundancies(Redundancies_1, erlang:node()) of
         true ->
-            send_object_to_remote_node(Node, AddrId, Key);
+            case lists:filter(
+                   fun(#redundant_node{node = RedundantNode}) ->
+                           Node == RedundantNode
+                   end, Redundancies_1) of
+                [] ->
+                    ?MODULE:publish(?QUEUE_ID_PER_OBJECT,
+                                    AddrId, Key, ?ERR_TYPE_RECOVER_DATA);
+                _ ->
+                    send_object_to_remote_node(Node, AddrId, Key)
+            end;
         false ->
             ?warn("rebalance_2/2",
                   [{node, Node}, {addr_id, AddrId},
                    {key, Key}, {cause, 'node_not_found'}]),
-            ok = publish(?QUEUE_ID_PER_OBJECT,
-                         AddrId, Key, ?ERR_TYPE_REPLICATE_DATA),
-            ok
+            publish(?QUEUE_ID_PER_OBJECT,
+                    AddrId, Key, ?ERR_TYPE_REPLICATE_DATA)
     end.
 
 
@@ -911,8 +939,11 @@ fix_consistency_between_clusters(#inconsistent_data_with_dc{
 %%--------------------------------------------------------------------
 %% @doc Lookup rebalance counter
 %% @private
--spec(ets_lookup(atom(), integer()) ->
-             list() | {error, any()}).
+-spec(ets_lookup(Table, Key) ->
+             {ok, Value} | {error, Cause} when Table::atom(),
+                                               Key::binary(),
+                                               Value::integer(),
+                                               Cause::any()).
 ets_lookup(Table, Key) ->
     case catch ets:lookup(Table, Key) of
         [] ->

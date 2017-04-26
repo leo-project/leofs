@@ -48,6 +48,9 @@
                         ?CMD_HEAD
                         ).
 
+-type(etag_ret() :: {etag, non_neg_integer()}).
+
+
 %% @doc queue-related.
 -define(QUEUE_ID_PER_OBJECT, 'leo_per_object_queue').
 -define(QUEUE_ID_SYNC_BY_VNODE_ID, 'leo_sync_by_vnode_id_queue').
