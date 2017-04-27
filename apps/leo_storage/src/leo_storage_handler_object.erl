@@ -916,13 +916,14 @@ get_inconsistent_nodes(AddrId, Preferred_N, InconsistentNodes) ->
                            n = N}} ->
             case (N > Preferred_N andalso Preferred_N > 0) of
                 true ->
+                    Redundancies_1 = lists:sublist(Redundancies, Preferred_N),
                     lists:reverse(
                       lists:foldl(
                         fun(Node, Acc) ->
                                 case lists:filter(
                                        fun(#redundant_node{node = RedundantNode}) ->
                                                Node == RedundantNode
-                                       end, lists:sublist(Redundancies, Preferred_N)) of
+                                       end, Redundancies_1) of
                                     [] ->
                                         Acc;
                                     _ ->
