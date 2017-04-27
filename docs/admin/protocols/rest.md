@@ -24,8 +24,8 @@ protocol = rest
 ### URL format
 
 * URL format: http[s]://`<HOST>`:8080/`<FILEPATH>`
-	* LeoFS will only use the `<FILEPATH>` which part of the URL to identify objects.
-	* You're able to check that an object exists in a LeoFS' cluster by using `leofs-adm whereis` command.
+	* LeoFS only uses the `<FILEPATH>` which part of the URL to identify objects.
+	* You can check that an object exists in a LeoFS' cluster by using `leofs-adm whereis` command.
 
 ```bash
 $ leofs-adm whereis <FILEPATH>

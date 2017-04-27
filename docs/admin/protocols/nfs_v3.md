@@ -49,8 +49,8 @@ $ sudo apt-get install nfs-common
 ## Start LeoFS as a NFS Server with other dependent programs
 
 * Start a LeoFS storage system
-	*  Ref: [Quick Installation and Setup](../../installation/quick.md)
-	*  Ref: [Building a LeoFS' cluster with Ansible](../../installation/cluster.md)
+	*  Ref: [Quick Installation and Setup](/installation/quick.md)
+	*  Ref: [Building a LeoFS' cluster with Ansible](/installation/cluster.md)
 * Start <a href="https://linux.die.net/man/8/rpcbind" target="_blank">rpcbind</a>
 
 ```bash
@@ -200,7 +200,7 @@ Other basic file OR directory operations also should work except controlling own
 
 
 ## Limits
-Since LeoFS NFS implementation is still the beta version, there are some limitations. The details are described at [LeoFS Limits](../../faq/limits.md)
+Since LeoFS NFS implementation is still the beta version, there are some limitations. The details are described at [LeoFS Limits](/faq/limits.md).
 
 
 ## Related Links

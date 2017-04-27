@@ -14,13 +14,14 @@
     - [Suspend a LeoStorage node](/admin/system_operations/cluster/#suspend-a-node)
     - [Resume a LeoStorage node](/admin/system_operations/cluster/#resume-a-node)
 
-![](/assets/leofs-flow-diagram.jpg)
+![](../../assets/leofs-flow-diagram.jpg)
 
-- <a href="/assets/leofs-flow-diagram.jpg" target="_blank">The diagram only</a>
+- <a href="../../../assets/leofs-flow-diagram.jpg" target="_blank">The diagram only</a>
+
 
 ## Launch Order of LeoFS' Components
 
-![](/assets/leofs-order-of-system-launch.png)
+![](../../assets/leofs-order-of-system-launch.png)
 
 | Command                        | Description |
 |--------------------------------|-------------|
