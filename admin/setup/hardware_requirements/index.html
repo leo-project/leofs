@@ -1051,11 +1051,11 @@
 </table>
 <h2 id="hardware-recommendation">Hardware Recommendation<a class="headerlink" href="#hardware-recommendation" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Workload on Manager is low, it does not consume much resource</li>
-<li>Better CPU allows LeoFS to process more operations (OPS)</li>
-<li>Gateway utilizes memory and disk as cache, adding those resources can reduce the workload to Storage</li>
-<li>SSD significantly improves small object read performance</li>
-<li>10Gbps network is recommended</li>
+<li><strong>Workload on Manager is low</strong>, it does not consume much resource</li>
+<li><strong>Better CPU allows LeoGateway</strong> to process more operations (OPS, <em>Operation Per Socond</em>)</li>
+<li>LeoGateway utilizes <strong>memory and disk as cache</strong>, adding those resources can reduce the workload to LeoStorage</li>
+<li><strong>SSD</strong> on a LeoStoage node significantly improves small object read performance</li>
+<li><strong>10Gbps network</strong> is recommended</li>
 </ol>
 <h2 id="reference-platform">Reference Platform<a class="headerlink" href="#reference-platform" title="Permanent link">&para;</a></h2>
 <table>
@@ -1097,14 +1097,14 @@
 <tbody>
 <tr>
 <td>Image (32KB)</td>
-<td>20000 OPS</td>
-<td>20000 OPS</td>
+<td>20,000 OPS</td>
+<td>20,000 OPS</td>
 <td>High CPU Usage</td>
 </tr>
 <tr>
 <td>Small Mixed (&lt;2MB)</td>
-<td>1200 OPS</td>
-<td>1500 OPS</td>
+<td>1,200 OPS</td>
+<td>1,500 OPS</td>
 <td>High Disk I/O</td>
 </tr>
 </tbody>

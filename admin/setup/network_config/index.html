@@ -991,7 +991,7 @@
                 
                 <h1 id="network-configurations">Network Configurations<a class="headerlink" href="#network-configurations" title="Permanent link">&para;</a></h1>
 <h2 id="firewall-rules">Firewall Rules<a class="headerlink" href="#firewall-rules" title="Permanent link">&para;</a></h2>
-<p>To work correctly a LeoFS system, it is necessary to set and check the firewall rules in your environment. LeoFS depends on <a href="http://www.erlang.org/" target="_blank">Erlang/OTP</a>'s RPC, which uses specified ports and provides LeoFS' SNMP agent which also uses a port per a LeoFS' component node - LeoStorage, LeoGateway and LeoManager.</p>
+<p>To work correctly a LeoFS system, it is necessary to set and check the firewall rules in your environment. LeoFS depends on <a href="http://www.erlang.org/" target="_blank">Erlang/OTP</a>'s RPC, which uses specified ports and provides LeoFS' SNMP agent which also uses a port per a LeoFS' component node - LeoStorage, LeoGateway, and LeoManager.</p>
 <table>
 <thead>
 <tr>
@@ -1137,7 +1137,7 @@
 </tbody>
 </table>
 <h3 id="how-to-change-erlangs-port-range">How to Change Erlang's Port Range<a class="headerlink" href="#how-to-change-erlangs-port-range" title="Permanent link">&para;</a></h3>
-<p>Port range can be specified by setting Erlang's kernel variables <code class="codehilite">inet_dist_listen_min</code> and <code class="codehilite">inet_dist_listen_max</code>. If it is necesssary to change those variables, enter the Erlang console of a targe node.</p>
+<p>Port range can be specified by setting Erlang's kernel variables <code class="codehilite">inet_dist_listen_min</code> and <code class="codehilite">inet_dist_listen_max</code>. If it is necessary to change those variables, enter the Erlang console of a target node.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3

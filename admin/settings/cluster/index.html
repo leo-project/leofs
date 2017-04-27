@@ -488,15 +488,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#case-1" title="Case 1" class="md-nav__link">
-    Case 1
+  <a href="#case-1-both-leomanager-nodes-are-unavailable" title="Case 1: Both LeoManager nodes are unavailable" class="md-nav__link">
+    Case 1: Both LeoManager nodes are unavailable
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#case-2" title="Case 2" class="md-nav__link">
-    Case 2
+  <a href="#case-2-one-leomanager-node-is-unavailable" title="Case 2: One LeoManager node is unavailable" class="md-nav__link">
+    Case 2: One LeoManager node is unavailable
   </a>
   
 </li>
@@ -1009,15 +1009,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#case-1" title="Case 1" class="md-nav__link">
-    Case 1
+  <a href="#case-1-both-leomanager-nodes-are-unavailable" title="Case 1: Both LeoManager nodes are unavailable" class="md-nav__link">
+    Case 1: Both LeoManager nodes are unavailable
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#case-2" title="Case 2" class="md-nav__link">
-    Case 2
+  <a href="#case-2-one-leomanager-node-is-unavailable" title="Case 2: One LeoManager node is unavailable" class="md-nav__link">
+    Case 2: One LeoManager node is unavailable
   </a>
   
 </li>
@@ -1087,15 +1087,15 @@
 <p>This document outlines the various configuration items to keep in mind when planning your LeoFS cluster, and this document leads you to be able to correctly configure a LeoFS cluster when planning and launching it.</p>
 <h2 id="prior-knowledge">Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permanent link">&para;</a></h2>
 <p>LeoFS adopts <a href="https://en.wikipedia.org/wiki/Eventual_consistency">eventual consistency</a> of the consistency model, it takes priority over AP <em>(Availability and Partition tolerance)</em> over C <em>(consistency)</em> which depends on <a href="https://en.wikipedia.org/wiki/CAP_theorem">CAP theorem</a>.</p>
-<p>To keep consistency of objects eventually, LeoFS delivers the automated replication and recovery to automatically fix consistency of objects. You can configure the consistency level of your LeoFS system, and the LeoFS system is affected by the configuration.</p>
+<p>To keep the consistency of objects eventually, LeoFS delivers the automated replication and recovery to automatically fix consistency of objects. You can configure the consistency level of your LeoFS system, and the LeoFS system is affected by the configuration.</p>
 <h3 id="how-to-keep-rings-consistency">How to Keep RING's Consistency<a class="headerlink" href="#how-to-keep-rings-consistency" title="Permanent link">&para;</a></h3>
-<h4 id="case-1">Case 1<a class="headerlink" href="#case-1" title="Permanent link">&para;</a></h4>
-<p>If both managers are unavailable, LeoStorage and LeoGateway nodes don't update the RING to keep its consistency into the LeoFS system.</p>
-<h4 id="case-2">Case 2<a class="headerlink" href="#case-2" title="Permanent link">&para;</a></h4>
-<p>If a manager is unavailable, LeoFS can update the RING, and synchronize it into the LeoFS' system eventually. After another LeoManager node is restarted, LeoManager automatically synchronizes the RING between the manager nodes.</p>
+<h4 id="case-1-both-leomanager-nodes-are-unavailable">Case 1: Both LeoManager nodes are unavailable<a class="headerlink" href="#case-1-both-leomanager-nodes-are-unavailable" title="Permanent link">&para;</a></h4>
+<p>If both LeoManager nodes are unavailable, LeoStorage and LeoGateway nodes don't update the RING to keep its consistency into the LeoFS system.</p>
+<h4 id="case-2-one-leomanager-node-is-unavailable">Case 2: One LeoManager node is unavailable<a class="headerlink" href="#case-2-one-leomanager-node-is-unavailable" title="Permanent link">&para;</a></h4>
+<p>If a LeoManager node is unavailable, LeoFS can update the RING, and synchronize it with the LeoFS' system eventually. After another LeoManager node is restarted, LeoManager automatically synchronizes the RING between the manager nodes.</p>
 <h2 id="consistency-level">Consistency Level<a class="headerlink" href="#consistency-level" title="Permanent link">&para;</a></h2>
-<p>The consistency level of your LeoFS storage system is configured at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">LeoManager's configuration file - leo_manager_0.conf</a>. You need to carefully configure the consisteny level because it is not able to change some items after starting the system.</p>
-<p>There're four configuration items at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">leo_manager_0.conf</a>, items of which have a great impact on <strong>data availability</strong> and <strong>storage performance</strong>.</p>
+<p>The consistency level of your LeoFS storage system is configured at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">LeoManager's configuration file - leo_manager_0.conf</a>. You need to carefully configure the consistency level because it is not able to change some items after starting the system.</p>
+<p>There are four configuration items at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">leo_manager_0.conf</a>, items of which have a great impact on <strong>data availability</strong> and <strong>storage performance</strong>.</p>
 <table>
 <thead>
 <tr>
@@ -1188,7 +1188,7 @@
 </tbody>
 </table>
 <h3 id="how-to-change-consistency-level">How To Change Consistency Level<a class="headerlink" href="#how-to-change-consistency-level" title="Permanent link">&para;</a></h3>
-<p>You're able to change <code class="codehilite">consistency.write</code>, <code class="codehilite">consistency.read</code> and <code class="codehilite">consistency.delete</code> of the consistency level that you use the <code class="codehilite">leofs-adm update-consistency-level</code> command, but you cannot update <code class="codehilite">num_of_replicas</code> and <code class="codehilite">rack_aware_replicas</code>.</p>
+<p>You can change <code class="codehilite">consistency.write</code>, <code class="codehilite">consistency.read</code> and <code class="codehilite">consistency.delete</code> of the consistency level that you use the <code class="codehilite">leofs-adm update-consistency-level</code> command, but you cannot update <code class="codehilite">num_of_replicas</code> and <code class="codehilite">rack_aware_replicas</code>.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Changes the consistency level to [w:2, d:2, r:1]</span>
 $ leofs-adm update-consistency-level <span class="m">2</span> <span class="m">2</span> <span class="m">1</span>

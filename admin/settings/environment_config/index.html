@@ -511,6 +511,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -974,6 +981,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -994,44 +1008,54 @@
                 <h1 id="environment-config-files">Environment Config Files<a class="headerlink" href="#environment-config-files" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Starting from version 1.3.3, some environment variables used by launch scripts can be redefined in
-"environment" config files. They have shell syntax and are read by launch scripts. Their names are:</p>
+"environment" config files. They have shell syntax and are read by launch scripts.</p>
+<p><strong>[Environment Files]</strong></p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>leo_gateway/etc/leo_gateway.environment
-leo_manager_0/etc/leo_manager.environment
+4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>leo_manager_0/etc/leo_manager.environment
 leo_manager_1/etc/leo_manager.environment
+leo_gateway/etc/leo_gateway.environment
 leo_storage/etc/leo_storage.environment
 </pre></div>
 </td></tr></table>
 
-<p>Changing settings in these files is completely optional, but can be used to better organize directories
-used by LeoFS nodes and simplify upgrades. Here is highly customized example of <code class="codehilite"><span class="na">.environment</span></code> and <code class="codehilite"><span class="na">.config</span></code> files that allow LeoFS to store all work information and logs outside of default installation tree (<code class="codehilite">/usr/local/leofs/&lt;version&gt;</code>).
-As a result, upgrade process to newer version becomes as simple as placing <code class="codehilite">leo_*.environment</code> files in <code class="codehilite">etc</code> directory of new version, for example (for <code class="codehilite">leo_manager_0</code>):</p>
+<p>Changing settings in these files is completely optional, but can be used to better organize directories used by LeoFS nodes and simplify upgrades. Here is highly customized example of <code class="codehilite"><span class="na">.environment</span></code> and <code class="codehilite"><span class="na">.config</span></code> files that allow LeoFS to store all work information and logs outside of default installation tree (<code class="codehilite">/usr/local/leofs/&lt;version&gt;</code>).</p>
+<p>As a result, upgrade process to newer version becomes as simple as placing <code class="codehilite">leo_*.environment</code> files in <code class="codehilite">etc</code> directory of new version, for example (for <code class="codehilite">leo_manager_0</code>):</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
-3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ /usr/local/leofs/&lt;old_version&gt;/leo_manager_0/bin/leo_manager stop
-$ cp /usr/local/leofs/&lt;old_version&gt;/leo_manager_0/etc/leo_manager.environment /usr/local/leofs/&lt;new_version&gt;/leo_manager_0/etc/
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Stop the process of LeoManager</span>
+$ /usr/local/leofs/&lt;old_version&gt;/leo_manager_0/bin/leo_manager stop
+
+<span class="c1">## Overwrite the environemnt file</span>
+$ cp /usr/local/leofs/&lt;old_version&gt;/leo_manager_0/etc/leo_manager.environment <span class="se">\</span>
+     /usr/local/leofs/&lt;new_version&gt;/leo_manager_0/etc/
+
+<span class="c1">## Restart the process of LeoManager</span>
 $ /usr/local/leofs/&lt;new_version&gt;/leo_manager_0/bin/leo_manager start
 </pre></div>
 </td></tr></table>
 
-<p>With this, users can place actual config files (like <code class="codehilite">leo_manager.conf</code>) to directory of their choice and change them independently of version upgrades, and the <code class="codehilite"><span class="na">.environment</span></code> files that need to be placed into installation tree don't need to be changed between versions.  With the correct setup, since no work/temporary files will be kept in the installation tree, old version can be removed cleanly.</p>
+<p>With this, users can place actual config files (like <code class="codehilite">leo_manager.conf</code>) to the directory of their choice and change them independently of version upgrades, and the <code class="codehilite"><span class="na">.environment</span></code> files that need to be placed into installation tree don't need to be changed between versions. With the correct setup, since no work/temporary files will be kept in the installation tree, old version can be removed cleanly.</p>
 <h2 id="example-configuration">Example Configuration<a class="headerlink" href="#example-configuration" title="Permanent link">&para;</a></h2>
 <p>Contents of <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/etc/leo_manager.environment</code>:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># pick config file from fixed place
-RUNNER_ETC_DIR=/etc/leofs/leo_manager_0
-# store erlang.log.* and run_erl.log in this directory
-RUNNER_LOG_DIR=/var/log/leofs/leo_manager_0
+4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1"># pick config file from fixed place</span>
+<span class="na">RUNNER_ETC_DIR</span><span class="o">=</span><span class="s">/etc/leofs/leo_manager_0</span>
+<span class="c1"># store erlang.log.* and run_erl.log in this directory</span>
+<span class="na">RUNNER_LOG_DIR</span><span class="o">=</span><span class="s">/var/log/leofs/leo_manager_0</span>
 </pre></div>
 </td></tr></table>
 
-<p>Directories defined in RUNNER_ETC_DIR and RUNNER_LOG_DIR (in this example, <code class="codehilite">/etc/leofs/leo_manager_0</code> and
-<code class="codehilite">/var/log/leofs/leo_manager_0</code>) must be writable by <code class="codehilite">leofs</code> user, also <code class="codehilite">$RUNNER_LOG_DIR/sasl</code> (here
-<code class="codehilite">/var/log/leofs/leo_manager_0/sasl</code>) must exist:</p>
+<p>Directories defined in <code class="codehilite">RUNNER_ETC_DIR</code> and <code class="codehilite">RUNNER_LOG_DIR</code> (in this example, <code class="codehilite">/etc/leofs/leo_manager_0</code> and <code class="codehilite">/var/log/leofs/leo_manager_0</code>) must be writable by <code class="codehilite">leofs</code> user, also <code class="codehilite">$RUNNER_LOG_DIR/sasl</code> (here <code class="codehilite">/var/log/leofs/leo_manager_0/sasl</code>) must exist:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /etc/leofs/leo_manager_0/
@@ -1049,15 +1073,15 @@ drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /var/log/leofs/leo_manager_0/sasl/
 6
 7
 8
-9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>sasl.sasl_error_log = /var/log/leofs/leo_manager_0/sasl/sasl-error.log
-sasl.error_logger_mf_dir = /var/log/leofs/leo_manager_0/sasl
-mnesia.dir = /var/local/leofs/leo_manager_0/work/mnesia/127.0.0.1
-queue_dir = /var/local/leofs/leo_manager_0/work/queue
-log.erlang = /var/log/leofs/leo_manager_0/erlang
-log.app = /var/log/leofs/leo_manager_0/app
-log.member_dir = /var/log/leofs/leo_manager_0/ring
-log.ring_dir = /var/log/leofs/leo_manager_0/ring
-erlang.crash_dump = /var/log/leofs/leo_manager_0/erl_crash.dump
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">sasl.sasl_error_log</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_manager_0/sasl/sasl-error.log</span>
+<span class="na">sasl.error_logger_mf_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_manager_0/sasl</span>
+<span class="na">mnesia.dir</span> <span class="o">=</span> <span class="s">/var/local/leofs/leo_manager_0/work/mnesia/127.0.0.1</span>
+<span class="na">queue_dir</span> <span class="o">=</span> <span class="s">/var/local/leofs/leo_manager_0/work/queue</span>
+<span class="na">log.erlang</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_manager_0/erlang</span>
+<span class="na">log.app</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_manager_0/app</span>
+<span class="na">log.member_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_manager_0/ring</span>
+<span class="na">log.ring_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_manager_0/ring</span>
+<span class="na">erlang.crash_dump</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_manager_0/erl_crash.dump</span>
 </pre></div>
 </td></tr></table>
 
@@ -1071,16 +1095,16 @@ erlang.crash_dump = /var/log/leofs/leo_manager_0/erl_crash.dump
  7
  8
  9
-10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>sasl.sasl_error_log = /var/log/leofs/leo_storage/sasl/sasl-error.log
-sasl.error_logger_mf_dir = /var/log/leofs/leo_storage/sasl
-obj_containers.path = [/mnt/avs]
-log.erlang = /var/log/leofs/leo_storage/erlang
-log.app = /var/log/leofs/leo_storage/app
-log.member_dir = /var/log/leofs/leo_storage/ring
-log.ring_dir = /var/log/leofs/leo_storage/ring
-queue_dir  = /var/local/leofs/leo_storage/work/queue
-leo_ordning_reda.temp_stacked_dir = /var/local/leofs/leo_storage/work/ord_reda/
-erlang.crash_dump = /var/log/leofs/leo_storage/erl_crash.dump
+10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">sasl.sasl_error_log</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_storage/sasl/sasl-error.log</span>
+<span class="na">sasl.error_logger_mf_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_storage/sasl</span>
+<span class="na">obj_containers.path</span> <span class="o">=</span> <span class="s">[/mnt/avs]</span>
+<span class="na">log.erlang</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_storage/erlang</span>
+<span class="na">log.app</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_storage/app</span>
+<span class="na">log.member_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_storage/ring</span>
+<span class="na">log.ring_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_storage/ring</span>
+<span class="na">queue_dir</span>  <span class="o">=</span> <span class="s">/var/local/leofs/leo_storage/work/queue</span>
+<span class="na">leo_ordning_reda.temp_stacked_dir</span> <span class="o">=</span> <span class="s">/var/local/leofs/leo_storage/work/ord_reda/</span>
+<span class="na">erlang.crash_dump</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_storage/erl_crash.dump</span>
 </pre></div>
 </td></tr></table>
 
@@ -1094,35 +1118,41 @@ erlang.crash_dump = /var/log/leofs/leo_storage/erl_crash.dump
  7
  8
  9
-10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>sasl.sasl_error_log = /var/log/leofs/leo_gateway/sasl/sasl-error.log
-sasl.error_logger_mf_dir = /var/log/leofs/leo_gateway/sasl
-log.erlang = /var/log/leofs/leo_gateway/erlang
-log.app = /var/log/leofs/leo_gateway/app
-log.member_dir = /var/log/leofs/leo_gateway/ring
-log.ring_dir = /var/log/leofs/leo_gateway/ring
-cache.cache_disc_dir_data = /var/local/leofs/leo_gateway/cache/data
-cache.cache_disc_dir_journal = /var/local/leofs/leo_gateway/cache/journal
-queue_dir = /var/local/leofs/leo_gateway/work/queue
-erlang.crash_dump = /var/log/leofs/leo_gateway/erl_crash.dump
+10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">sasl.sasl_error_log</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_gateway/sasl/sasl-error.log</span>
+<span class="na">sasl.error_logger_mf_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_gateway/sasl</span>
+<span class="na">log.erlang</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_gateway/erlang</span>
+<span class="na">log.app</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_gateway/app</span>
+<span class="na">log.member_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_gateway/ring</span>
+<span class="na">log.ring_dir</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_gateway/ring</span>
+<span class="na">cache.cache_disc_dir_data</span> <span class="o">=</span> <span class="s">/var/local/leofs/leo_gateway/cache/data</span>
+<span class="na">cache.cache_disc_dir_journal</span> <span class="o">=</span> <span class="s">/var/local/leofs/leo_gateway/cache/journal</span>
+<span class="na">queue_dir</span> <span class="o">=</span> <span class="s">/var/local/leofs/leo_gateway/work/queue</span>
+<span class="na">erlang.crash_dump</span> <span class="o">=</span> <span class="s">/var/log/leofs/leo_gateway/erl_crash.dump</span>
 </pre></div>
 </td></tr></table>
 
 <p>Of course, all these directories must exist and have correct ownership/permissions (writable by <code class="codehilite">leofs</code> user, unless set up otherwise)</p>
 <h2 id="additional-settings-snmp-config">Additional settings - SNMP config<a class="headerlink" href="#additional-settings-snmp-config" title="Permanent link">&para;</a></h2>
 <p>When pursuing "pure" system which keeps all the data out of installation tree, one might also decide to move SNMP agent config and SNMP "db" directories to external paths, by setting (example for <code class="codehilite">leo_manager_0</code>) this in <code class="codehilite">leo_manager.config</code>:</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>snmp_conf = /etc/leofs/leo_manager_0/leo_manager_snmp
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">snmp_conf</span> <span class="o">=</span> <span class="s">/etc/leofs/leo_manager_0/leo_manager_snmp</span>
 </pre></div>
 </td></tr></table>
 
-<p>then copying <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config</code> to
-<code class="codehilite">/etc/leofs/leo_manager_0/leo_manager_snmp</code> and setting</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>{db_dir, &quot;/var/local/leofs/leo_manager_0/snmp_db&quot;},
+<p>then copying <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config</code> to <code class="codehilite">/etc/leofs/leo_manager_0/leo_manager_snmp</code> and setting</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="p">{</span><span class="n">db_dir</span><span class="p">,</span> <span class="s">&quot;/var/local/leofs/leo_manager_0/snmp_db&quot;</span><span class="p">},</span>
 </pre></div>
 </td></tr></table>
 
-<p>in <code class="codehilite">/etc/leofs/leo_manager_0/leo_manager_snmp.config</code> to make sure that absolutely no temporary files are created in <code class="codehilite">/usr/local/leofs</code> tree. It shouldn't matter otherwise since there is no need to keep contents of SNMP <code class="codehilite">db</code> directory between upgrades. (Here, copy of leo_manager_snmp.config was made so that original config would be untouched; while it is possible to change <code class="codehilite">db_dir</code> in original <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config</code> as well, doing so would mean that this file needs to be replaced after each upgrade, reducing benefit of only changing <code class="codehilite"><span class="na">.environment</span></code> file after upgrade)</p>
+<p>in <code class="codehilite">/etc/leofs/leo_manager_0/leo_manager_snmp.config</code> to make sure that absolutely no temporary files are created in <code class="codehilite">/usr/local/leofs</code> tree. It shouldn't matter otherwise since there is no need to keep contents of SNMP <code class="codehilite">db</code> directory between upgrades.</p>
+<p>(Here, copy of leo_manager_snmp.config was made so that original config would be untouched; while it is possible to change <code class="codehilite">db_dir</code> in original <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config</code> as well, doing so would mean that this file needs to be replaced after each upgrade, reducing benefit of only changing <code class="codehilite"><span class="na">.environment</span></code> file after upgrade)</p>
 <h2 id="notice">Notice<a class="headerlink" href="#notice" title="Permanent link">&para;</a></h2>
-<p>Please note that this configuration is just an example of how to use <code class="codehilite"><span class="na">.environment</span></code> config features to move all the log files and config files out of the tree so they reside at fixed paths, to simplify configuration changes and upgrades as much as possible. The resulting upgrade process can be less safe than original one suggested at <a href="http://leo-project.net/leofs/docs/admin_guide/admin_guide_10.html">System Maintenance</a>, because new version changes working mnesia and queue directories upon launch and going back to the older version might be not always possible. Users should consider making backups of work directories (<code class="codehilite">/var/local/leofs</code> in this example) before launching the newer version of a node.</p>
+<p>Please note that this configuration is just an example of how to use <code class="codehilite"><span class="na">.environment</span></code> config features to move all the log files and config files out of the tree so they reside at fixed paths, to simplify configuration changes and upgrades as much as possible.</p>
+<p>The resulting upgrade process can be less safe than original one suggested at <a href="../../system_admin/migration/">For Administrators / System Administration / System Migration</a>, because the new version changes working <code class="codehilite">mnesia</code> and <code class="codehilite">queue</code> directories upon launch and going back to the older version might be not always possible.</p>
+<p>Users should consider making backups of work directories (<code class="codehilite">/var/local/leofs</code> in this example) before launching the newer version of a node.</p>
+<h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../system_admin/migration/">For Administrators / System Administration / System Migration</a></li>
+</ul>
                 
                   
                 
