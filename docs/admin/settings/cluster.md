@@ -7,25 +7,25 @@ This document outlines the various configuration items to keep in mind when plan
 
 LeoFS adopts [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency) of the consistency model, it takes priority over AP *(Availability and Partition tolerance)* over C *(consistency)* which depends on [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem).
 
-To keep consistency of objects eventually, LeoFS delivers the automated replication and recovery to automatically fix consistency of objects. You can configure the consistency level of your LeoFS system, and the LeoFS system is affected by the configuration.
+To keep the consistency of objects eventually, LeoFS delivers the automated replication and recovery to automatically fix consistency of objects. You can configure the consistency level of your LeoFS system, and the LeoFS system is affected by the configuration.
 
 
 ### How to Keep RING's Consistency
-#### Case 1
+#### Case 1: Both LeoManager nodes are unavailable
 
-If both managers are unavailable, LeoStorage and LeoGateway nodes don't update the RING to keep its consistency into the LeoFS system.
+If both LeoManager nodes are unavailable, LeoStorage and LeoGateway nodes don't update the RING to keep its consistency into the LeoFS system.
 
-#### Case 2
+#### Case 2: One LeoManager node is unavailable
 
-If a manager is unavailable, LeoFS can update the RING, and synchronize it into the LeoFS' system eventually. After another LeoManager node is restarted, LeoManager automatically synchronizes the RING between the manager nodes.
+If a LeoManager node is unavailable, LeoFS can update the RING, and synchronize it with the LeoFS' system eventually. After another LeoManager node is restarted, LeoManager automatically synchronizes the RING between the manager nodes.
 
 
 ## Consistency Level
 
-The consistency level of your LeoFS storage system is configured at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">LeoManager's configuration file - leo_manager_0.conf</a>. You need to carefully configure the consisteny level because it is not able to change some items after starting the system.
+The consistency level of your LeoFS storage system is configured at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">LeoManager's configuration file - leo_manager_0.conf</a>. You need to carefully configure the consistency level because it is not able to change some items after starting the system.
 
 
-There're four configuration items at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">leo_manager_0.conf</a>, items of which have a great impact on **data availability** and **storage performance**.
+There are four configuration items at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">leo_manager_0.conf</a>, items of which have a great impact on **data availability** and **storage performance**.
 
 | Item                              | Abbr | Modifiable | Default | Description |
 |-----------------------------------|:----:|------------|---------|---|
@@ -52,7 +52,7 @@ This document delivers the relationship of `data availability` and `configuratio
 
 ### How To Change Consistency Level
 
-You're able to change `consistency.write `, `consistency.read` and `consistency.delete` of the consistency level that you use the `leofs-adm update-consistency-level` command, but you cannot update `num_of_replicas` and `rack_aware_replicas`.
+You can change `consistency.write `, `consistency.read` and `consistency.delete` of the consistency level that you use the `leofs-adm update-consistency-level` command, but you cannot update `num_of_replicas` and `rack_aware_replicas`.
 
 ```bash
 ## Changes the consistency level to [w:2, d:2, r:1]
