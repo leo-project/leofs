@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.6.1">
+      <meta name="generator" content="mkdocs-0.16.1, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application-4d0d3f2fbf.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -91,21 +91,15 @@
           <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
           
 <div class="md-search" data-md-component="search">
-  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__overlay"></div>
   <div class="md-search__inner">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
       <label class="md-icon md-search__icon" for="search"></label>
-      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -529,7 +523,7 @@
     <label class="md-nav__link" for="nav-5-2">
       Settings
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
       <label class="md-nav__title" for="nav-5-2">
         Settings
       </label>
@@ -613,7 +607,7 @@
     <label class="md-nav__link" for="nav-5-3">
       Interface
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="4">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
       <label class="md-nav__title" for="nav-5-3">
         Interface
       </label>
@@ -673,7 +667,7 @@
     <label class="md-nav__link" for="nav-5-4">
       System Operations
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="5">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
       <label class="md-nav__title" for="nav-5-4">
         System Operations
       </label>
@@ -769,7 +763,7 @@
     <label class="md-nav__link" for="nav-5-5">
       System Administration
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="6">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
       <label class="md-nav__title" for="nav-5-5">
         System Administration
       </label>
@@ -1073,33 +1067,33 @@
                 
                 <h1 id="leostorages-architecture">LeoStorage's Architecture<a class="headerlink" href="#leostorages-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="fundamentals">Fundamentals<a class="headerlink" href="#fundamentals" title="Permanent link">&para;</a></h2>
-<p>LeoStorage consists of <code class="codehilite">the object storage</code> and <code class="codehilite">the metadata storage</code>, and it includes replicator and repairer realise eventual consistency.</p>
+<p>LeoStorage consists of <code class="codehilite">the object storage</code> and <code class="codehilite">the metadata storage</code>, and it includes replicator and repairer realize eventual consistency.</p>
 <h3 id="write-request-handling">WRITE Request Handling<a class="headerlink" href="#write-request-handling" title="Permanent link">&para;</a></h3>
-<p>LeoStorage accepts a request from LeoGateway then automatically replicate an object into the LeoStorage cluster. Finally, LeoStorage confirms whether a stored object satisfy the consistency rule.</p>
+<p>LeoStorage accepts a request from LeoGateway then automatically replicate an object into the LeoStorage cluster. Finally, LeoStorage confirms whether a stored object satisfies the consistency rule.</p>
 <h3 id="read-request-handling">READ Request Handling<a class="headerlink" href="#read-request-handling" title="Permanent link">&para;</a></h3>
-<p>LeoGateway requests a LeoStorage node, then the LeoStorage node retrieves an object from the local object-storage or a remote LeoStorage node. Finaly, the LeoStorage node responds an object to the gateway. Also, the LeoStorage node checks consistency of the object with the asynchronous processing.</p>
-<p>If the LeoStorage node finds inconsistency of an object, the inconsistency object will be recovered with the backend process. The object eventually keeps consistensy with their functions.</p>
+<p>LeoGateway requests a LeoStorage node, then the LeoStorage node retrieves an object from the local object-storage or a remote LeoStorage node. Finally, the LeoStorage node responds an object to the gateway. Also, the LeoStorage node checks the consistency of the object with the asynchronous processing.</p>
+<p>If the LeoStorage node finds inconsistency of an object, the inconsistency object will be recovered with the backend process. The object eventually keeps consistency with their functions.</p>
 <p><img alt="" src="../../assets/leofs-architecture.003.jpg" /></p>
 <h2 id="data-structure">Data Structure<a class="headerlink" href="#data-structure" title="Permanent link">&para;</a></h2>
-<p>LeoFS’ object consists of 3 layers which are <code class="codehilite">metadata</code>, <code class="codehilite">needle</code> and <code class="codehilite">object container</code>.</p>
+<p>LeoFS’ object consists of three layers which are <code class="codehilite">metadata</code>, <code class="codehilite">needle</code> and <code class="codehilite">object container</code>.</p>
 <ul>
-<li>The object storage manages and stores both an object and a metadata, which merges as a needle.</li>
-<li>The metadata storage manages and stores attributes of an object which includes filename, size, checksum, and others, and it depends of <a href="" target="_blank">leveldb</a>.</li>
+<li>The object storage manages and stores both an object and a metadata which stores as a needle.</li>
+<li>The metadata storage manages and stores attributes of an object which includes filename, size, checksum, and others, and it depends on <a href="" target="_blank">Leveldb</a>.</li>
 <li>The object container adopts a log structured file format.<ul>
-<li>The format is robust and high performance because effect of local file system is just a little part.</li>
-<li>LeoStorage is necessary to remove unnecessary objects from the object-containers, which is realised by the data-compaction feature.</li>
+<li>The format is robust and high performance because an effect of the local file system is just a little part.</li>
+<li>LeoStorage is necessary to remove unnecessary objects from the object containers, which is realized by the data compaction feature.</li>
 </ul>
 </li>
 </ul>
 <p><img alt="" src="../../assets/leofs-architecture.005.jpg" /></p>
 <h2 id="large-object-support">Large Object Support<a class="headerlink" href="#large-object-support" title="Permanent link">&para;</a></h2>
-<p>LeoFS supports handling a large size object since v0.12. The purpose of this feature is 2 things:</p>
+<p>LeoFS supports handling a large size object since v0.12. The purpose of this feature is two things:</p>
 <ul>
 <li>To equalize disk usage of each LeoStorage node.</li>
-<li>To realise high I/O efficiency and high availability.</li>
+<li>To realize high I/O efficiency and high availability.</li>
 </ul>
 <h3 id="write-request-handling_1">WRITE Request Handling<a class="headerlink" href="#write-request-handling_1" title="Permanent link">&para;</a></h3>
-<p>A large size object is divided to plural objects at LeoGateway's node, then those chunks is replicated into the LeoStorage cluster which is similar with handling small size objects, and the default chunk size is 5MB, the configuration of which is able to change a custom chunked object size.</p>
+<p>A large size object is divided into plural objects at LeoGateway's node, then those chunks are replicated into the LeoStorage cluster which is similar to handling small size objects, and the default chunk size is 5MB, the configuration of which is able to change a custom chunked object size.</p>
 <h3 id="read-request-handling_1">READ Request Handling<a class="headerlink" href="#read-request-handling_1" title="Permanent link">&para;</a></h3>
 <p>LeoGateway retrieves a metadata of a requested object, then if it's a large size object, LeoGateway retrieves the chunked objects in order of the chunk object number from the LeoStorage cluster. Finally, LeoGateway responds the objects to the client.</p>
 <p><img alt="" src="../../assets/leofs-architecture.006.jpg" /></p>
@@ -1181,7 +1175,7 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application-6b599127bc.js"></script>
+      <script src="../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../.."}})</script>
       
     
