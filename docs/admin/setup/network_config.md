@@ -1,7 +1,7 @@
 # Network Configurations
 ## Firewall Rules
 
-To work correctly a LeoFS system, it is necessary to set and check the firewall rules in your environment. LeoFS depends on <a href="http://www.erlang.org/" target="_blank">Erlang/OTP</a>'s RPC, which uses specified ports and provides LeoFS' SNMP agent which also uses a port per a LeoFS' component node - LeoStorage, LeoGateway and LeoManager.
+To work correctly a LeoFS system, it is necessary to set and check the firewall rules in your environment. LeoFS depends on <a href="http://www.erlang.org/" target="_blank">Erlang/OTP</a>'s RPC, which uses specified ports and provides LeoFS' SNMP agent which also uses a port per a LeoFS' component node - LeoStorage, LeoGateway, and LeoManager.
 
 
 | Subsystem           | Direction | Ports    | Description               |
@@ -31,7 +31,7 @@ To work correctly a LeoFS system, it is necessary to set and check the firewall 
 
 ### How to Change Erlang's Port Range
 
-Port range can be specified by setting Erlang's kernel variables `inet_dist_listen_min` and `inet_dist_listen_max`. If it is necesssary to change those variables, enter the Erlang console of a targe node.
+Port range can be specified by setting Erlang's kernel variables `inet_dist_listen_min` and `inet_dist_listen_max`. If it is necessary to change those variables, enter the Erlang console of a target node.
 
 ```bash
 ## Example:
