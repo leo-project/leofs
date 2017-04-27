@@ -161,7 +161,7 @@ Without setting `object_storage.is_strict_check ` to true, there is a very littl
 
 #### Configuration related to MQ
 
-LeoStorage's MQ mechanism depends on the watchdog mechanism to reduce costs of a message comsumption. The MQ dinamically updates *a num of batch processes* and *an interval of a message comsumption*.
+LeoStorage's MQ mechanism depends on the watchdog mechanism to reduce costs of a message consumption. The MQ dynamically updates `a number of batch processes` and `an interval of a message consumption`.
 
 
 *Figure: Number-of-batch-processes and interval:*
@@ -169,7 +169,7 @@ LeoStorage's MQ mechanism depends on the watchdog mechanism to reduce costs of a
 ![Figure: Number-of-batch-processes and interval](../../assets/leofs-mq-figure.jpg)
 
 
-As of Figure: Relationship of Watchdog and MQ, the watchdog can automatically adjusts value of *a num of batch processes* between `mq.num_of_batch_process_min` and `mq.num_of_batch_process_max`, which is increased or decreased with `mq.num_of_batch_process_step`.
+As of Figure: Relationship of Watchdog and MQ, the watchdog can automatically adjust value of *a num of batch processes* between `mq.num_of_batch_process_min` and `mq.num_of_batch_process_max`, which is increased or decreased with `mq.num_of_batch_process_step`.
 
 On the other hands value of an interval is adjusted between mq.interval_between_batch_procs_min and mq.interval_between_batch_procs_max, which is increased or decreased with mq.interval_between_batch_procs_step.
 
@@ -181,16 +181,16 @@ When the each value reached the min value, the MQ changes the status to `suspend
 
 #### Configuration related to the auto-compaction
 
-LeoStorage's auto-compaction mechanism also depends on the watchdog mechanism to reduce costs of a the processing. The auto-compaction can dinamically updates *a num of batch processes* and *an interval of a proccesing of seeking an object*. The basic design of the relationship with the watchdog is similar to the MQ.
+LeoStorage's auto-compaction mechanism also depends on the watchdog mechanism to reduce costs of a processing. The auto-compaction can dynamically update `a number of batch processes` and `an interval of a processing of seeking an object`. The basic design of the relationship with the watchdog is similar to the MQ.
 
 
 *Figure: Number-of-batch-processes and interval*
 
 ![Figure: Number-of-batch-processes and interval](../../assets/leofs-auto-compaction-figure.jpg)
 
-As of *Figure: Relationship of the watchdog and the auto-compaction*, the watchdog automatically adjusts value of *a num of batch processes* between `compaction.batch_procs_min` and `compaction.batch_procs_max`, which is increased or decreased with `compaction.batch_procs_step`.
+As of *Figure: Relationship of the watchdog and the auto-compaction*, the watchdog automatically adjusts the value of *a number of batch processes* between `compaction.batch_procs_min` and `compaction.batch_procs_max`, which is increased or decreased with `compaction.batch_procs_step`.
 
-On the other hands value of an interval is adjusted between `compaction.waiting_time_min` and `compaction.waiting_time_max`, which is increased or decreased with `compaction.waiting_time_step`.
+On the other hand, the value of an interval is adjusted between `compaction.waiting_time_min` and `compaction.waiting_time_max`, which is increased or decreased with `compaction.waiting_time_step`.
 
 When the each value reached the min value, the auto-compaction changes the status to `suspending`, after that the node’s processing costs is changed to low, the auto-compaction updates the status to `running`, again.
 

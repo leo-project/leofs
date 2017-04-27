@@ -2,7 +2,7 @@
 
 ## Prior Knowledge
 
-LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API[^1] and NFS v3[^2]. LeoGateway provides the object cache feature to efficiently and effectively handle requests and to keep high performance of your storage system.
+LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API[^1] and NFS v3[^2]. LeoGateway provides the object cache feature to efficiently and effectively handle requests and to keep the high performance of your storage system.
 
 ### Other Configurations
 
@@ -117,16 +117,17 @@ LeoGateway requests a storage node to compare a cached object's hash value with 
 
 If strong consistency is required on your system, you can disable the cache setting.
 
-```
+```ini
 cache.cache_ram_capacity = 0
 cache.cache_disc_capacity = 0
 ```
 
 
 #### Configuration related to Disk Cache
-A total number of directories to store cache files is equal to `cache.cache_workers`. A maximum size of a cacheable object per a directory has been determined by `cache.cache_disc_capacity / cache.cache_workers`. If size of a requested object more than the maximum size, LeoFS Gateway avoids storing the object into the disk cache.
 
-And also, when size of a requested object more than `cache.cache_max_content_len`, LeoFS Gateway similarly refuses storing the object into the disk cache.
+A total number of directories to store cache files is equal to `cache.cache_workers`. A maximum size of a cacheable object per a directory has been determined by `cache.cache_disc_capacity / cache.cache_workers`. If the size of a requested object more than the maximum size, LeoFS Gateway avoids storing the object into the disk cache.
+
+And also, when size of a requested object more than `cache.cache_max_content_len`, LeoFS Gateway similarly refuses to store the object into the disk cache.
 
 ![Figure: Disk Cache Limits](../../assets/leofs-gateway-disk-cache-size.png)
 
