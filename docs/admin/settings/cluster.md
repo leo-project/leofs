@@ -1,13 +1,13 @@
 # Cluster Settings
 
-This document outlines the various configuration items to keep in mind when planning your LeoFS cluster, and this document leads you to be able to correctly configure a LeoFS cluster when planning and launching it.
+This document outlines the various configuration items to keep in mind when planning your LeoFS cluster, and this documentation leads you to be able to configure a LeoFS cluster when planning and launching it correctly.
 
 
 ## Prior Knowledge
 
-LeoFS adopts [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency) of the consistency model, it takes priority over AP *(Availability and Partition tolerance)* over C *(consistency)* which depends on [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem).
+LeoFS adopts [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency) of the consistency model; it takes priority over AP *(Availability and Partition tolerance)* over C *(consistency)* which depends on [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem).
 
-To keep the consistency of objects eventually, LeoFS delivers the automated replication and recovery to automatically fix consistency of objects. You can configure the consistency level of your LeoFS system, and the LeoFS system is affected by the configuration.
+To keep the consistency of objects eventually, LeoFS delivers the replication and recovery feature to automatically fix consistency of objects. You can configure the consistency level of your LeoFS system, and the LeoFS system is affected by the configuration.
 
 
 ### How to Keep RING's Consistency
@@ -17,15 +17,15 @@ If both LeoManager nodes are unavailable, LeoStorage and LeoGateway nodes don't 
 
 #### Case 2: One LeoManager node is unavailable
 
-If a LeoManager node is unavailable, LeoFS can update the RING, and synchronize it with the LeoFS' system eventually. After another LeoManager node is restarted, LeoManager automatically synchronizes the RING between the manager nodes.
+If a LeoManager node is unavailable, LeoFS can update the RING, and synchronize it with the LeoFS' system eventually. After restarting another LeoManager node, LeoManager automatically synchronizes the RING between the manager nodes.
 
 
 ## Consistency Level
 
-The consistency level of your LeoFS storage system is configured at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">LeoManager's configuration file - leo_manager_0.conf</a>. You need to carefully configure the consistency level because it is not able to change some items after starting the system.
+Configure the consistency level of a LeoFS system at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">LeoManager's configuration file - leo_manager_0.conf</a>. You need to carefully configure the consistency level because it is not able to change some items after starting the system.
 
 
-There are four configuration items at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">leo_manager_0.conf</a>, items of which have a great impact on **data availability** and **storage performance**.
+There are four configuration items at <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf" target="_blank">`leo_manager_0.conf`</a>, items of which have a great impact on **data availability** and **storage performance**.
 
 | Item                              | Abbr | Modifiable | Default | Description |
 |-----------------------------------|:----:|------------|---------|---|

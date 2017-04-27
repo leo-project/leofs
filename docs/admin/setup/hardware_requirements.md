@@ -10,8 +10,8 @@
 
 ## Hardware Recommendation
 
-1. **Workload on Manager is low**, it does not consume much resource
-2. **Better CPU allows LeoGateway** to process more operations (OPS, *Operation Per Socond*)
+1. **Workload on Manager is low**, it does not consume many resources
+2. **Better CPU allows LeoGateway** to process more operations (OPS, *Operation Per Second*)
 3. LeoGateway utilizes **memory and disk as cache**, adding those resources can reduce the workload to LeoStorage
 4. **SSD** on a LeoStoage node significantly improves small object read performance
 5. **10Gbps network** is recommended

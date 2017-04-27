@@ -1,6 +1,6 @@
 # Supported Platforms
 
-LeoFS is supported on popular operating systems and virtual environments.
+LeoFS supports popular operating systems and virtual environments.
 
 | Platform                         | Version  | 32/64 bit | Supported                           |
 |---                               |---       |---        |---                                  |

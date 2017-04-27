@@ -7,8 +7,7 @@ LeoManager monitors the state of LeoGateway and LeoStorage nodes to keep the hig
 
 LeoManager manages configurations of a system and information of every node to be able to recover a system reliability, and the data are replicated by <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia</a> to avoid data loss.
 
-LeoManager provides [leofs-adm as a LeoFS administration commands](../admin/index_of_commands.md) to be able to easily operate LeoFS. The administration commands already cover entire LeoFS features.
-
+LeoManager provides [leofs-adm as a LeoFS administration commands](../admin/index_of_commands.md) to be able to operate LeoFS quickly. The administration commands already cover entire LeoFS features.
 
 ## Related Links
 
