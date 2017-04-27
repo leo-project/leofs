@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application-1d1da4857d.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application-76741b64bc.css">
       
     
     
@@ -99,7 +99,12 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result"></div>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
       </div>
     </div>
   </div>
@@ -335,15 +340,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#write-request-handling" title="WRITE Request Handling" class="md-nav__link">
-    WRITE Request Handling
+  <a href="#write-request-handling" title="WRITE-Request Handling" class="md-nav__link">
+    WRITE-Request Handling
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#read-request-handling" title="READ Request Handling" class="md-nav__link">
-    READ Request Handling
+  <a href="#read-request-handling" title="READ-Request Handling" class="md-nav__link">
+    READ-Request Handling
   </a>
   
 </li>
@@ -369,15 +374,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#write-request-handling_1" title="WRITE Request Handling" class="md-nav__link">
-    WRITE Request Handling
+  <a href="#write-request-handling_1" title="WRITE-Request Handling" class="md-nav__link">
+    WRITE-Request Handling
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#read-request-handling_1" title="READ Request Handling" class="md-nav__link">
-    READ Request Handling
+  <a href="#read-request-handling_1" title="READ-Request Handling" class="md-nav__link">
+    READ-Request Handling
   </a>
   
 </li>
@@ -989,15 +994,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#write-request-handling" title="WRITE Request Handling" class="md-nav__link">
-    WRITE Request Handling
+  <a href="#write-request-handling" title="WRITE-Request Handling" class="md-nav__link">
+    WRITE-Request Handling
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#read-request-handling" title="READ Request Handling" class="md-nav__link">
-    READ Request Handling
+  <a href="#read-request-handling" title="READ-Request Handling" class="md-nav__link">
+    READ-Request Handling
   </a>
   
 </li>
@@ -1023,15 +1028,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#write-request-handling_1" title="WRITE Request Handling" class="md-nav__link">
-    WRITE Request Handling
+  <a href="#write-request-handling_1" title="WRITE-Request Handling" class="md-nav__link">
+    WRITE-Request Handling
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#read-request-handling_1" title="READ Request Handling" class="md-nav__link">
-    READ Request Handling
+  <a href="#read-request-handling_1" title="READ-Request Handling" class="md-nav__link">
+    READ-Request Handling
   </a>
   
 </li>
@@ -1067,18 +1072,18 @@
                 
                 <h1 id="leostorages-architecture">LeoStorage's Architecture<a class="headerlink" href="#leostorages-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="fundamentals">Fundamentals<a class="headerlink" href="#fundamentals" title="Permanent link">&para;</a></h2>
-<p>LeoStorage consists of <code class="codehilite">the object storage</code> and <code class="codehilite">the metadata storage</code>, and it includes replicator and repairer realize eventual consistency.</p>
-<h3 id="write-request-handling">WRITE Request Handling<a class="headerlink" href="#write-request-handling" title="Permanent link">&para;</a></h3>
+<p>LeoStorage consists of <strong>the object storage</strong> and <strong>the metadata storage</strong>, and it includes replicator and repairer realize eventual consistency.</p>
+<h3 id="write-request-handling">WRITE-Request Handling<a class="headerlink" href="#write-request-handling" title="Permanent link">&para;</a></h3>
 <p>LeoStorage accepts a request from LeoGateway then automatically replicate an object into the LeoStorage cluster. Finally, LeoStorage confirms whether a stored object satisfies the consistency rule.</p>
-<h3 id="read-request-handling">READ Request Handling<a class="headerlink" href="#read-request-handling" title="Permanent link">&para;</a></h3>
-<p>LeoGateway requests a LeoStorage node, then the LeoStorage node retrieves an object from the local object-storage or a remote LeoStorage node. Finally, the LeoStorage node responds an object to the gateway. Also, the LeoStorage node checks the consistency of the object with the asynchronous processing.</p>
-<p>If the LeoStorage node finds inconsistency of an object, the inconsistency object will be recovered with the backend process. The object eventually keeps consistency with their functions.</p>
+<h3 id="read-request-handling">READ-Request Handling<a class="headerlink" href="#read-request-handling" title="Permanent link">&para;</a></h3>
+<p>LeoGateway requests a LeoStorage node; then the LeoStorage node retrieves an object from the local object-storage or a remote LeoStorage node. Finally, the LeoStorage node responds an object to the gateway. Also, the LeoStorage node checks the consistency with the asynchronous processing.</p>
+<p>If the LeoStorage node finds inconsistency of an object, LeoStorage fixes the inconsistent object with the backend process. The object eventually keeps consistency with the functions.</p>
 <p><img alt="" src="../../assets/leofs-architecture.003.jpg" /></p>
 <h2 id="data-structure">Data Structure<a class="headerlink" href="#data-structure" title="Permanent link">&para;</a></h2>
 <p>LeoFS’ object consists of three layers which are <code class="codehilite">metadata</code>, <code class="codehilite">needle</code> and <code class="codehilite">object container</code>.</p>
 <ul>
 <li>The object storage manages and stores both an object and a metadata which stores as a needle.</li>
-<li>The metadata storage manages and stores attributes of an object which includes filename, size, checksum, and others, and it depends on <a href="" target="_blank">Leveldb</a>.</li>
+<li>The metadata storage handles and stores attributes of an object which includes filename, size, checksum, and others, and it depends on <a href="" target="_blank">Leveldb</a>.</li>
 <li>The object container adopts a log structured file format.<ul>
 <li>The format is robust and high performance because an effect of the local file system is just a little part.</li>
 <li>LeoStorage is necessary to remove unnecessary objects from the object containers, which is realized by the data compaction feature.</li>
@@ -1092,10 +1097,10 @@
 <li>To equalize disk usage of each LeoStorage node.</li>
 <li>To realize high I/O efficiency and high availability.</li>
 </ul>
-<h3 id="write-request-handling_1">WRITE Request Handling<a class="headerlink" href="#write-request-handling_1" title="Permanent link">&para;</a></h3>
-<p>A large size object is divided into plural objects at LeoGateway's node, then those chunks are replicated into the LeoStorage cluster which is similar to handling small size objects, and the default chunk size is 5MB, the configuration of which is able to change a custom chunked object size.</p>
-<h3 id="read-request-handling_1">READ Request Handling<a class="headerlink" href="#read-request-handling_1" title="Permanent link">&para;</a></h3>
-<p>LeoGateway retrieves a metadata of a requested object, then if it's a large size object, LeoGateway retrieves the chunked objects in order of the chunk object number from the LeoStorage cluster. Finally, LeoGateway responds the objects to the client.</p>
+<h3 id="write-request-handling_1">WRITE-Request Handling<a class="headerlink" href="#write-request-handling_1" title="Permanent link">&para;</a></h3>
+<p>LeoGateway divides a large size object into plural objects, then those chunks are replicated into the LeoStorage cluster which is similar to handling small size objects, and the default chunk size is 5MB, the configuration of which can change a custom chunked object size.</p>
+<h3 id="read-request-handling_1">READ-Request Handling<a class="headerlink" href="#read-request-handling_1" title="Permanent link">&para;</a></h3>
+<p>LeoGateway retrieves a metadata of a requested object, then if it's a large size object, LeoGateway retrieves the chunked objects in order of the fragment object number from the LeoStorage cluster. Finally, LeoGateway responds the objects to the client.</p>
 <p><img alt="" src="../../assets/leofs-architecture.006.jpg" /></p>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1175,7 +1180,7 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application-7aa26ad9ec.js"></script>
+      <script src="../../assets/javascripts/application-3964c0cb56.js"></script>
       <script>app.initialize({url:{base:"../.."}})</script>
       
     

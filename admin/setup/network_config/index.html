@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-1d1da4857d.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
       
     
     
@@ -103,7 +103,12 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result"></div>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
       </div>
     </div>
   </div>
@@ -991,7 +996,7 @@
                 
                 <h1 id="network-configurations">Network Configurations<a class="headerlink" href="#network-configurations" title="Permanent link">&para;</a></h1>
 <h2 id="firewall-rules">Firewall Rules<a class="headerlink" href="#firewall-rules" title="Permanent link">&para;</a></h2>
-<p>To work correctly a LeoFS system, it is necessary to set and check the firewall rules in your environment. LeoFS depends on <a href="http://www.erlang.org/" target="_blank">Erlang/OTP</a>'s RPC, which uses specified ports and provides LeoFS' SNMP agent which also uses a port per a LeoFS' component node - LeoStorage, LeoGateway, and LeoManager.</p>
+<p>In order for a LeoFS system to operate correctly, it is necessary to set and check the firewall rules in your environment. LeoFS depends on <a href="http://www.erlang.org/" target="_blank">Erlang/OTP</a>'s RPC, which uses specified ports and provides LeoFS' SNMP agent which also uses a port per a LeoFS' component node - LeoStorage, LeoGateway, and LeoManager.</p>
 <table>
 <thead>
 <tr>
@@ -1137,7 +1142,7 @@
 </tbody>
 </table>
 <h3 id="how-to-change-erlangs-port-range">How to Change Erlang's Port Range<a class="headerlink" href="#how-to-change-erlangs-port-range" title="Permanent link">&para;</a></h3>
-<p>Port range can be specified by setting Erlang's kernel variables <code class="codehilite">inet_dist_listen_min</code> and <code class="codehilite">inet_dist_listen_max</code>. If it is necessary to change those variables, enter the Erlang console of a target node.</p>
+<p>Port range can be specified by setting Erlang's kernel variables <code class="codehilite">inet_dist_listen_min</code> and <code class="codehilite">inet_dist_listen_max</code>. If you need to change those configuration items, you need to enter the Erlang console of a target node.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1235,7 +1240,7 @@ $ bin/leo_storage remote_console
       
     </div>
     
-      <script src="../../../assets/javascripts/application-7aa26ad9ec.js"></script>
+      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
