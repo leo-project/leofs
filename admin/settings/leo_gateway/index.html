@@ -1099,7 +1099,7 @@
                 
                 <h1 id="leogateway-settings">LeoGateway Settings<a class="headerlink" href="#leogateway-settings" title="Permanent link">&para;</a></h1>
 <h2 id="prior-knowledge">Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permanent link">&para;</a></h2>
-<p>LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> and NFS v3<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>. LeoGateway provides the object cache feature to efficiently and effectively handle requests and to keep high performance of your storage system.</p>
+<p>LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> and NFS v3<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>. LeoGateway provides the object cache feature to efficiently and effectively handle requests and to keep the high performance of your storage system.</p>
 <h3 id="other-configurations">Other Configurations<a class="headerlink" href="#other-configurations" title="Permanent link">&para;</a></h3>
 <p>If you want to customize settings like where to place leo_gateway.conf, what user starting a leo_gateway process and so on,
 Please refer <a href="../environment_config/">For Administrators / Settings / Environment Configuration</a> for more information.</p>
@@ -1476,14 +1476,14 @@ Please refer <a href="../environment_config/">For Administrators / Settings / En
 <p>LeoGateway requests a storage node to compare a cached object's hash value with its stored object's hash value. LeoGateway selects a LeoStorage's node from RING, <em>a distributed hash table</em> by a target object name, then LeoGateway requests a LeoStorage node of the redundant node. If the requested object is inconsistent in the replicas and LeoGateway cached it, a client may get inconsistent objects.</p>
 <p>If strong consistency is required on your system, you can disable the cache setting.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>cache.cache_ram_capacity = 0
-cache.cache_disc_capacity = 0
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">cache.cache_ram_capacity</span> <span class="o">=</span> <span class="s">0</span>
+<span class="na">cache.cache_disc_capacity</span> <span class="o">=</span> <span class="s">0</span>
 </pre></div>
 </td></tr></table>
 
 <h4 id="configuration-related-to-disk-cache">Configuration related to Disk Cache<a class="headerlink" href="#configuration-related-to-disk-cache" title="Permanent link">&para;</a></h4>
-<p>A total number of directories to store cache files is equal to <code class="codehilite">cache.cache_workers</code>. A maximum size of a cacheable object per a directory has been determined by <code class="codehilite">cache.cache_disc_capacity / cache.cache_workers</code>. If size of a requested object more than the maximum size, LeoFS Gateway avoids storing the object into the disk cache.</p>
-<p>And also, when size of a requested object more than <code class="codehilite">cache.cache_max_content_len</code>, LeoFS Gateway similarly refuses storing the object into the disk cache.</p>
+<p>A total number of directories to store cache files is equal to <code class="codehilite">cache.cache_workers</code>. A maximum size of a cacheable object per a directory has been determined by <code class="codehilite">cache.cache_disc_capacity / cache.cache_workers</code>. If the size of a requested object more than the maximum size, LeoFS Gateway avoids storing the object into the disk cache.</p>
+<p>And also, when size of a requested object more than <code class="codehilite">cache.cache_max_content_len</code>, LeoFS Gateway similarly refuses to store the object into the disk cache.</p>
 <p><img alt="Figure: Disk Cache Limits" src="../../../assets/leofs-gateway-disk-cache-size.png" /></p>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
