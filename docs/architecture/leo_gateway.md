@@ -5,11 +5,11 @@ LeoGateway consists of the fast HTTP server which is <a href="https://github.com
 
 ![](../assets/leofs-architecture.002.jpg)
 
-A client requests an object or a bucket operation to a node of LeoGateway, then it requests the message of an operation to a node of LeoStorage.
+A client requests an object or a bucket operation to a LeoGateway node, then it requests the message of an operation to a LeoStorage node.
 
-A destination storage node is decided by RING (routing table), which is generated and distributed at nodes of LeoManager.
+A destination LeoStorage node is decided by RING *(distributed hash table)*, which is generated and distributed at LeoManager nodes.
 
-LeoGateway also provides built-in support for the object cache to realize keeping high performance and reduction of traffic between LeoGateway's nodes and LeoStorage's nodes.
+LeoGateway also provides built-in support for the object cache to realize keeping high performance and reduction of traffic between LeoGateway nodes and LeoStorage nodes.
 
 
 ## Related Links

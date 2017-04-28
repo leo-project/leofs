@@ -19,7 +19,7 @@ $ make all
 ### Preparations before testing
 #### Create a test bucket
 
-After starting a LeoFS storage system, you need to create a bucket that will be used for testing. In this example, the bucket name is test. It is owned by the user `_test_leofs` that is already registered internally by LeoFS.
+After starting a LeoFS system, you need to create a bucket before getting started with benchmarks. In this example, the bucket name is `test`. It is owned by the user `_test_leofs` that is already registered internally by LeoFS.
 
 ```bash
 $ leofs-adm add-endpoint <gateway-ip-address>
@@ -40,7 +40,7 @@ OK
 ## Configuration file for basho_bench
 ### An Example
 
-Some examples are included in the LeoFS repository at [leo-project / leofs / test / conf](https://github.com/leo-project/leofs/tree/master/test/conf). If you would like to learn basho_bench's configuration, you can see [BashoBench's Configuration](https://docs.basho.com/riak/kv/2.2.0/using/performance/benchmarking/#configuration).
+Some examples are included in LeoFS' repository at [leo-project / leofs / test / conf](https://github.com/leo-project/leofs/tree/master/test/conf). If you would like to learn basho_bench's configuration, you can see [BashoBench's Configuration](https://docs.basho.com/riak/kv/2.2.0/using/performance/benchmarking/#configuration).
 
 ```erlang
 {mode,      max}.
@@ -75,7 +75,7 @@ Some examples are included in the LeoFS repository at [leo-project / leofs / tes
 
 ## Running basho_bench (1)
 
-In this example, LeoFS and basho_bench are installed locally. The following commands can be used to run `basho_bench`.
+In this example, LeoFS and `basho_bench` are installed locally. The following commands can be used to run `basho_bench`.
 
 ```bash
 ### Loading 1M records of size 16KB
@@ -86,7 +86,7 @@ cd basho_bench
 
 ## Running basho_bench (2)
 
-In this example, LeoFS and basho_bench are installed on different hosts.
+In this example, LeoFS and `basho_bench` are installed on different hosts.
 
 ### Configure the endpoint on LeoManager's console
 
@@ -137,3 +137,9 @@ You need to modify the values for `http_raw_ips` and `http_raw_port`.
 cd basho_bench
 ./basho_bench ../leofs/test/conf/leofs_16K_LOAD1M.config
 ```
+
+## Related Links
+
+- [Getting Started / Quick Installation and Setup](/installation/quick.md)
+- [Getting Started / Building a LeoFS' cluster with Ansible](/installation/cluster.md)
+- [For Administrators / System Operations / S3-API related Operations](/admin/system_operations/s3.md)

@@ -3,7 +3,7 @@
 ## Prior Knowledge
 
 !!! note "Note: Configuration"
-    LeoStroage's features depend on its configuration. If once a LeoFS system is launched, you cannot modify the following LeoStorage's configurations because the algorithm of the data operation strictly adheres to the configurations.
+    LeoStroage's features depend on its configuration. If once a LeoFS system is launched, you cannot modify the following LeoStorage's configurations because the algorithm of the data operation strictly adheres to the settings.
 
 
 #### Irrevocable and Attention Required Items:
@@ -25,8 +25,7 @@
 
 ### Other Configurations
 
-If you want to customize settings like where to place leo_storage.conf, what user starting a leo_storage process and so on,
-Please refer [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md) for more information.
+If you want to modify settings like where to place `leo_storage.conf`, what user is starting a LeoStorage process and so on, refer [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md) for more information.
 
 
 ## Configuration
@@ -157,7 +156,7 @@ obj_containers.num_of_containers = [32, 64]
 
 #### object\_storage.is\_strict\_check
 
-Without setting `object_storage.is_strict_check ` to true, there is a very little possibility your data could be broken without any caution even if your LeoFS is running on a filesystem like ZFS that protect both the metadata and the data blocks through the checksum when bugs of any unexpected or unknown software got AVS files broken.
+Without setting `object_storage.is_strict_check ` to true, there is a little possibility your data could be broken without any caution even if a LeoFS system is running on a filesystem like ZFS[^1] that protect both the metadata and the data blocks through the checksum when bugs of any unexpected or unknown software got AVS files broken.
 
 #### Configuration related to MQ
 
@@ -169,9 +168,9 @@ LeoStorage's MQ mechanism depends on the watchdog mechanism to reduce costs of a
 ![Figure: Number-of-batch-processes and interval](../../assets/leofs-mq-figure.jpg)
 
 
-As of Figure: Relationship of Watchdog and MQ, the watchdog can automatically adjust value of *a num of batch processes* between `mq.num_of_batch_process_min` and `mq.num_of_batch_process_max`, which is increased or decreased with `mq.num_of_batch_process_step`.
+As of Figure: Relationship of Watchdog and MQ, the watchdog can automatically adjust a value of `a number of batch processes` between `mq.num_of_batch_process_min` and `mq.num_of_batch_process_max`, which is increased or decreased with `mq.num_of_batch_process_step`.
 
-On the other hands value of an interval is adjusted between mq.interval_between_batch_procs_min and mq.interval_between_batch_procs_max, which is increased or decreased with mq.interval_between_batch_procs_step.
+On the other hands, a value of an interval is adjusted between `mq.interval_between_batch_procs_min` and `mq.interval_between_batch_procs_max`, which is increased or decreased with `mq.interval_between_batch_procs_step`.
 
 When the each value reached the min value, the MQ changes the status to `suspending`, after that the node’s processing costs is changed to low, the MQ updates the status to `running`, again.
 
@@ -181,7 +180,7 @@ When the each value reached the min value, the MQ changes the status to `suspend
 
 #### Configuration related to the auto-compaction
 
-LeoStorage's auto-compaction mechanism also depends on the watchdog mechanism to reduce costs of a processing. The auto-compaction can dynamically update `a number of batch processes` and `an interval of a processing of seeking an object`. The basic design of the relationship with the watchdog is similar to the MQ.
+LeoStorage's auto-compaction mechanism also depends on the watchdog mechanism to reduce costs of processing. The Auto-compaction can dynamically update `a number of batch processes` and `an interval of a processing of seeking an object`. The basic design of the relationship with the watchdog is similar to the MQ.
 
 
 *Figure: Number-of-batch-processes and interval*
@@ -206,3 +205,6 @@ When the each value reached the min value, the auto-compaction changes the statu
 - [For Administrators / System Operations / Cluster Operations](/admin/system_operations/cluster.md)
 - [For Administrators / System Operations / Data Operations](/admin/system_operations/data.md)
 - [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
+
+
+[^1]: <a href="https://en.wikipedia.org/wiki/ZFS" target="_blank">ZFS</a>

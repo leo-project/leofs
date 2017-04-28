@@ -11,7 +11,7 @@ If you would like to migrate a LeoFS system, you can achieve that by following t
 
 #### Takeover and Adjust Confugurations
 
-Before getting started with the migration of your LeoFS, you need to take over the configuration, then adjust the paths and set the new configurations.
+Before getting started with the migration of a LeoFS system, you need to take over the configuration, then adjust the paths and set the new configurations.
 
 
 #### Added Or Changed LeoFS' Configurations
@@ -65,7 +65,7 @@ For those who have LeoFS configured with:
 #### Procedures
 ##### Migrate Files and Directories
 
-During upgrade of node (of any type), **after** stopping the old version and copying or moving every files to be moved into the new directories, change the owner with the commands below. It has to be done **before** launching the
+During upgrade of node *(of any type)*, **after** stopping the old version and copying or moving every files to be moved into the new directories, change the owner with the commands below. It has to be done **before** launching the
 new version.
 
 ```
@@ -77,7 +77,7 @@ new version.
 
 ##### Remove Unnecessary Directories
 
-Remove old temporary directory used by launch scripts. This step is needed because when earlier version was launched with `root` permissions, it creates a set of temporary directories in `/tmp` which cannot be re-used by non-privileged user as is, and launch scripts will fail with obscure messages - or with no message at all, except for an error in syslog (usually `/var/log/messages`).
+Remove old temporary directory used by launch scripts. This step is needed because when earlier version was launched with `root` permissions, it creates a set of temporary directories in `/tmp` which cannot be re-used by non-privileged user as is, and launch scripts will fail with obscure messages - or with no message at all, except for an error in syslog *(usually `/var/log/messages`)*.
 
 ```
 # rm -rf /tmp/usr
@@ -99,7 +99,7 @@ For those who have LeoFS configured with, for example:
 
 1. Before starting new version of a node, execute `chown -R leofs:leofs <..>` for all these external directories
 
-2. Don't forget to remove temporary directory (`rm -rf /tmp/usr`) as well for the reasons described above.
+2. Don't forget to remove temporary directory *(`rm -rf /tmp/usr`)* as well for the reasons described above.
 
 These users might be interested in new features of `environment config files`, which allow to redefine some environment variables like paths in launch script.
 
@@ -110,7 +110,7 @@ Refer [For Administrators / Settings / Environment Configuration](/admin/setting
 
 For those who have LeoFS already running as non-privileged user.
 
-1. Scripts that are provided by packages generally should be enough to run on most configurations without changes. If needed, change user from `leofs` to some other in "environment" config files (e.g. `RUNNER_USER=localuser`). Please refer to the later section for more details about environment config files.
+1. Scripts that are provided by packages generally should be enough to run on most configurations without changes. If needed, change user from `leofs` to some other in "environment" config files *(e.g. `RUNNER_USER=localuser`)*. Refer to the later section for more details about environment config files.
 
 2. Possible pitfall includes ownership of `/usr/local/leofs/.erlang.cookie` file, which is set to `leofs` during package installation. This should only be a problem when trying to run LeoFS nodes with permissions of some user which is not called `leofs`, but has home directory set to `/usr/local/leofs`. This is not supported due to technical reasons. Home directory of that user must be set to something else.
 

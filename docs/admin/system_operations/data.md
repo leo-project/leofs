@@ -33,14 +33,14 @@ Some data can be stored into a **Queue** for processing later in the case
 
 Multiple AVS/KVS pairs can be placed on one node to enable LeoFS handling as much use cases and hardware requirements as possible. See [Concept and Architecture / LeoStorage's Architecture - Data Structure](/architecture/leo_storage/#data-structure).
 
-- Container : `AVS/KVS pair = 1 : N`
+- **Container : AVS/KVS pair = 1 : N**
     - Multiple AVS/KVS pairs can be stored under one OS directory (We call it **Container**).
     - 'N' can be specified through [leo_storage.conf](https://github.com/leo-project/leofs/blob/master/apps/leo_storage/priv/leo_storage.conf).
     - How to choose optimal 'N'
         - As a data-compaction is executed per AVS/KVS pair, at least the size of a AVS/KVS pair is needed to run data-compaction so that the larger 'N', the less disk space LeoFS uses for data-compaction.
         - However the larger N, the more disk seeks LeoFS suffers.
         - Tha said, the optimal N is determined by setting the largest value that doesn't affect the online throughput you would expect.
-- Node : Container = 1 : N
+- **Node : Container = 1 : N**
     - Each Container can be stored under a different OS directory.
     - N can be specified through leo_storage.conf.
     - Setting `N > 1` can be useful when there are multiple JBOD disks on the node. The one JBOD disk array can be map to the one container.
@@ -58,10 +58,10 @@ This section provides information about what/how data-compaction can affect the 
 - Concurrent with any operation coming from online.
     - GET/HEAD never be blocked by a data-compaction.
     - PUT/DELETE can be blocked while a data-compaction is processing the tail part of an AVS.
-    - Given that the above limitation, We would recommend suspending a node you are supposed to run a data-compaction if your LeoFS cluster handles write intensive workload.
+    - Given that the above limitation, We would recommend suspending a node you are supposed to run a data-compaction if a LeoFS system's cluster handles write intensive workload.
 
 
-## Data Compaction's Operation
+## How To Operate Data Compaction
 
 As described in the previous section, A compaction process is needed to remove logically deleted objects and its corresponding metadata.
 

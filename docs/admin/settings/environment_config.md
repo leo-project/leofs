@@ -1,8 +1,8 @@
 # Environment Config Files
 ## Overview
 
-Starting from version 1.3.3, some environment variables used by launch scripts can be redefined in
-"environment" config files. They have shell syntax and are read by launch scripts.
+Starting from v1.3.3, some environment variables used by launch scripts can be redefined in
+**"environment config files"**. They have shell syntax and are read by launch scripts.
 
 **[Environment Files]**
 
@@ -43,7 +43,7 @@ RUNNER_ETC_DIR=/etc/leofs/leo_manager_0
 RUNNER_LOG_DIR=/var/log/leofs/leo_manager_0
 ```
 
-Directories defined in `RUNNER_ETC_DIR` and `RUNNER_LOG_DIR` (in this example, `/etc/leofs/leo_manager_0` and `/var/log/leofs/leo_manager_0`) must be writable by `leofs` user, also `$RUNNER_LOG_DIR/sasl` (here `/var/log/leofs/leo_manager_0/sasl`) must exist:
+Directories defined in `RUNNER_ETC_DIR` and `RUNNER_LOG_DIR` *(in this example, `/etc/leofs/leo_manager_0` and `/var/log/leofs/leo_manager_0`)* must be writable by `leofs` user, also `$RUNNER_LOG_DIR/sasl` *(here `/var/log/leofs/leo_manager_0/sasl`)* must exist:
 
 ```
 drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /etc/leofs/leo_manager_0/
@@ -95,14 +95,15 @@ queue_dir = /var/local/leofs/leo_gateway/work/queue
 erlang.crash_dump = /var/log/leofs/leo_gateway/erl_crash.dump
 ```
 
-Of course, all these directories must exist and have correct ownership/permissions (writable by `leofs` user, unless set up otherwise)
+All these directories must exist and have correct **ownership/permissions** *(writable by `leofs` user, unless set up otherwise)*
 
 
 ## Additional settings - SNMP config
 
-When pursuing "pure" system which keeps all the data out of installation tree, one might also decide to move SNMP agent config and SNMP "db" directories to external paths, by setting (example for `leo_manager_0`) this in `leo_manager.config`:
+When pursuing "pure" system which keeps all the data out of installation tree, one might also decide to move SNMP agent config and `SNMP db directories` to external paths, by setting it in `leo_manager.config`:
 
 ```ini
+## leo_manager_0.conf
 snmp_conf = /etc/leofs/leo_manager_0/leo_manager_snmp
 ```
 
@@ -112,14 +113,14 @@ then copying `/usr/local/leofs/<version>/leo_manager_0/snmp/snmpa_manager_0/leo_
 {db_dir, "/var/local/leofs/leo_manager_0/snmp_db"},
 ```
 
-in `/etc/leofs/leo_manager_0/leo_manager_snmp.config` to make sure that absolutely no temporary files are created in `/usr/local/leofs` tree. It shouldn't matter otherwise since there is no need to keep contents of SNMP `db` directory between upgrades.
+in `/etc/leofs/leo_manager_0/leo_manager_snmp.config` to make sure that absolutely no temporary files are created in `/usr/local/leofs` tree. It shouldn't matter otherwise since there is no need to keep contents of `SNMP db directory` between upgrades.
 
-(Here, copy of leo_manager_snmp.config was made so that original config would be untouched; while it is possible to change `db_dir` in original `/usr/local/leofs/<version>/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config` as well, doing so would mean that this file needs to be replaced after each upgrade, reducing benefit of only changing `.environment` file after upgrade)
+*(Here, copy of leo_manager_snmp.config was made so that original config would be untouched; while it is possible to change `db_dir` in original `/usr/local/leofs/<version>/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config` as well, doing so would mean that this file needs to be replaced after each upgrade, reducing benefit of only changing `.environment` file after upgrade)*
 
 
 ## Notice
 
-Please note that this configuration is just an example of how to use `.environment` config features to move all the log files and config files out of the tree so they reside at fixed paths, to simplify configuration changes and upgrades as much as possible.
+Note that this configuration is just an example of how to use `.environment` config features to move all the log files and config files out of the tree so they reside at fixed paths, to simplify configuration changes and upgrades as much as possible.
 
 The resulting upgrade process can be less safe than original one suggested at [For Administrators / System Administration / System Migration](/admin/system_admin/migration.md), because the new version changes working `mnesia` and `queue` directories upon launch and going back to the older version might be not always possible.
 

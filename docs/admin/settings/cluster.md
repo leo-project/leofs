@@ -1,13 +1,13 @@
 # Cluster Settings
 
-This document outlines the various configuration items to keep in mind when planning your LeoFS cluster, and this documentation leads you to be able to configure a LeoFS cluster when planning and launching it correctly.
+This document outlines the various configuration items to keep in mind when planning a LeoFS system's cluster, and this documentation leads you to be able to configure its cluster when planning and launching it correctly.
 
 
 ## Prior Knowledge
 
 LeoFS adopts [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency) of the consistency model; it takes priority over AP *(Availability and Partition tolerance)* over C *(consistency)* which depends on [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem).
 
-To keep the consistency of objects eventually, LeoFS delivers the replication and recovery feature to automatically fix consistency of objects. You can configure the consistency level of your LeoFS system, and the LeoFS system is affected by the configuration.
+To keep the consistency of objects eventually, LeoFS delivers the replication and recovery feature to automatically fix consistency of objects. You can configure the consistency level of a LeoFS system, and it is affected by the configuration.
 
 
 ### How to Keep RING's Consistency
