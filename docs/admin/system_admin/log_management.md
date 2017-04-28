@@ -25,7 +25,7 @@ log.is_enable_access_log = true
 | error-log     | /log/app/error.* |
 | info-log      | /log/app/info.* |
 
-```bash
+```text
 log/
 ├── [ 272 Apr 28 14:13]  app
 │   ├── [  98 Apr 28 14:13]  access -> /leofs/package/leo_gateway/log/app/access.20170428.14.1
@@ -40,7 +40,7 @@ log/
 
 ### Example
 
-```
+```text
 --------+-------+--------------------+----------+-------+---------------------------------------+-----------------------+----------
 Method  | Bucket| Path               |Child Num |  Size | Timestamp                             | Unixtime              | Response
 --------+-------+--------------------+----------|-------+---------------------------------------+-----------------------+----------
@@ -102,7 +102,7 @@ log.is_enable_diagnosis_log = true
 | error-log     | /log/app/error.* |
 | info-log      | /log/app/info.* |
 
-```
+```text
 ## diagnosis-log files
 /leofs/package/leo_storage/avs/log/
 ├── [ 106 Apr 28 14:40]  leo_object_storage_0 -> /leofs/package/leo_storage/avs/log/leo_object_storage_0.20170428.14.2
@@ -144,7 +144,7 @@ log.is_enable_diagnosis_log = true
 
 ### Example
 
-```
+```text
 ## Example:
 ------+------------------------------------------+------------------------------------------------------------+-----------+------------+------------------+--------------------------+----
 Offset| RING's address-id                        | Filename                                                   | Child num | File Size  | Unixtime         | Localtime                |del?

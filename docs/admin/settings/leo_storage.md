@@ -11,7 +11,7 @@
 | Item                                   | Irrevocable?   | Description                              |
 |----------------------------------------|----------------|------------------------------------------|
 | **LeoStorage Basic**                   |
-| obj_containers.path                    | Modifiable with condition | Able to change the directory of the container(s) but not able to add or remove the directory(s). You need to move the data files which are `<obj\_containers.path>/avs/object` and `<obj\_containers.path>/avs/metadata`, which adhere to this configuration. |
+| obj_containers.path                    | Modifiable with condition | Able to change the directory of the container(s) but not able to add or remove the directory(s). You need to move the data files which are `<obj_containers.path>/avs/object` and `<obj_containers.path>/avs/metadata`, which adhere to this configuration. |
 | obj_containers.num\_of\_containers     | Yes            | Not able to change the configuration because LeoStorage cannot retrieve objects or metadatas. |
 | obj_containers.metadata\_storage       | Yes            | As above |
 | num_of_vnodes`                         | Yes            | As above |

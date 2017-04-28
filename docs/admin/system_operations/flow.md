@@ -26,17 +26,17 @@
 | Command                        | Description |
 |--------------------------------|-------------|
 | **LeoManager** |
-| 1. `$ leofs_manager start`     | Start LeoManager’s master |
-| 2. `$ leofs_manager start`     | Start LeoManager’s slave  |
+| `$ leofs_manager start` | Start LeoManager’s master |
+| `$ leofs_manager start` | Start LeoManager’s slave  |
 | **LeoManager** |
-| 3. `$ leofs_storage start`     | Start a LeoStorage node   |
+| `$ leofs_storage start` | Start a LeoStorage node   |
 | (*Repeatedly launch LeoStorage nodes*) |
-| 4. `$ leofs-adm start`         | Start Leostorage cluster  |
-| 5. `$ leofs-adm status`        | Confirm the current state of the LeoFS system (1) |
+| `$ leofs-adm start` | Start Leostorage cluster  |
+| `$ leofs-adm status` | Confirm the current state of the LeoFS system (1) |
 | **LeoGateway** |
-| 6. `$ bin/leofs_gateway start` | Start a LeoGateway node |
+| `$ bin/leofs_gateway start` | Start a LeoGateway node |
 | (*Repeatedly launch LeoGateway nodes*) |
-| 7. `$ leofs-adm status`        | Confirm the current state of the LeoFS system (2) |
+| `$ leofs-adm status` | Confirm the current state of the LeoFS system (2) |
 
 
 ## Related Links
