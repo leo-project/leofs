@@ -1330,23 +1330,23 @@
 <td></td>
 </tr>
 <tr>
-<td>leofs-adm compact-start \&lt;storage-node> (all\</td>
-<td>\&lt;num-of-targets>) [\&lt;num-of-compaction-proc>]</td>
+<td><code class="codehilite">leofs-adm compact-start &lt;storage-node&gt; (all/&lt;num-of-targets&gt;) [&lt;num-of-compaction-proc&gt;]</code></td>
+<td>Start Compaction (Transfer its state to <strong>running</strong>).<br/><br/><code class="codehilite">num-of-targets</code>: How many AVS/KVS pairs are compacted.<br/><code class="codehilite">num-of-compaction-pro</code>: How many processes are run in parallel.</td>
 </tr>
 <tr>
-<td>leofs-adm compact-suspend \&lt;storage-node></td>
-<td>Suspend Compaction (Transfer its state to <strong>suspend</strong> from running).</td>
+<td><code class="codehilite">leofs-adm compact-suspend &lt;storage-node&gt;</code></td>
+<td>Suspend Compaction <em>(Transfer its state to 'suspend' from running)</em>.</td>
 </tr>
 <tr>
-<td>leofs-adm compact-resume \&lt;storage-node></td>
-<td>Resume Compaction (Transfer its state to <strong>running</strong> from suspend).</td>
+<td><code class="codehilite">leofs-adm compact-resume &lt;storage-node&gt;</code></td>
+<td>Resume Compaction <em>(Transfer its state to 'running' from suspend)</em>.</td>
 </tr>
 <tr>
-<td>leofs-adm compact-status \&lt;storage-node></td>
+<td><code class="codehilite">leofs-adm compact-status &lt;storage-node&gt;</code></td>
 <td>See the Current Compaction Status.</td>
 </tr>
 <tr>
-<td>leofs-adm diagnose-start \&lt;storage-node></td>
+<td><code class="codehilite">leofs-adm diagnose-start &lt;storage-node&gt;</code></td>
 <td>Start Diagnose (Not actually doing Compaction but scanning all AVS/KVS pairs and reporting what objects/metadatas exist as a file).</td>
 </tr>
 <tr>
@@ -1354,11 +1354,11 @@
 <td></td>
 </tr>
 <tr>
-<td>leofs-adm du \&lt;storage-node></td>
+<td><code class="codehilite">leofs-adm du &lt;storage-node&gt;</code></td>
 <td>See the Current Disk Usage.</td>
 </tr>
 <tr>
-<td>leofs-adm du detail \&lt;storage-node></td>
+<td><code class="codehilite">leofs-adm du detail &lt;storage-node&gt;</code></td>
 <td>See the Current Disk Usage in detail.</td>
 </tr>
 </tbody>
@@ -1510,16 +1510,16 @@ $ leofs-adm du detail storage_0@127.0.0.1
  7
  8
  9
-10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Example:</span>
+10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>## Example:
 ------+------------------------------------------+------------------------------------------------------------+-----------+------------+------------------+--------------------------+----
-Offset<span class="p">|</span> RING<span class="err">&#39;</span>s address-id                        <span class="p">|</span> Filename                                                   <span class="p">|</span> Child num <span class="p">|</span> File Size  <span class="p">|</span> Unixtime         <span class="p">|</span> Localtime                <span class="p">|</span>del?
+Offset| RING&#39;s address-id                        | Filename                                                   | Child num | File Size  | Unixtime         | Localtime                |del?
 ------+------------------------------------------+------------------------------------------------------------+-----------+------------+------------------+--------------------------+----
-<span class="m">194</span>     <span class="m">296754181484029444656944009564610621293</span>   photo/leo_redundant_manager/Makefile                             <span class="m">0</span>       <span class="m">2034</span>        <span class="m">1413348050768344</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:40:50 +0900   <span class="m">0</span>
-<span class="m">2400</span>    <span class="m">185993533055981727582172380494809056426</span>   photo/leo_redundant_manager/ebin/leo_redundant_manager.beam      <span class="m">0</span>       <span class="m">24396</span>       <span class="m">1413348050869454</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:40:50 +0900   <span class="m">0</span>
-<span class="m">38446</span>   <span class="m">53208912738248114804281793572563205919</span>    photo/leo_rpc/.git/refs/remotes/origin/HEAD                      <span class="m">0</span>       <span class="m">33</span>          <span class="m">1413348057441546</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:40:57 +0900   <span class="m">0</span>
-<span class="m">38658</span>   <span class="m">57520977797167422772945547576980778561</span>    photo/leo_rpc/ebin/leo_rpc_client_utils.beam                     <span class="m">0</span>       <span class="m">2576</span>        <span class="m">1413348057512261</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:40:57 +0900   <span class="m">0</span>
-<span class="m">69506</span>   <span class="m">187294034498591995039607573685274229706</span>   photo/leo_backend_db/src/leo_backend_db_server.erl               <span class="m">0</span>       <span class="m">13911</span>       <span class="m">1413348068031188</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:41:08 +0900   <span class="m">0</span>
-<span class="m">83603</span>   <span class="m">316467020376888598364250682951088839795</span>   photo/leo_backend_db/test/leo_backend_db_api_prop.erl            <span class="m">0</span>       <span class="m">3507</span>        <span class="m">1413348068052219</span>   <span class="m">2014</span>-10-15 <span class="m">13</span>:41:08 +0900   <span class="m">1</span>
+194     296754181484029444656944009564610621293   photo/leo_redundant_manager/Makefile                             0       2034        1413348050768344   2014-10-15 13:40:50 +0900   0
+2400    185993533055981727582172380494809056426   photo/leo_redundant_manager/ebin/leo_redundant_manager.beam      0       24396       1413348050869454   2014-10-15 13:40:50 +0900   0
+38446   53208912738248114804281793572563205919    photo/leo_rpc/.git/refs/remotes/origin/HEAD                      0       33          1413348057441546   2014-10-15 13:40:57 +0900   0
+38658   57520977797167422772945547576980778561    photo/leo_rpc/ebin/leo_rpc_client_utils.beam                     0       2576        1413348057512261   2014-10-15 13:40:57 +0900   0
+69506   187294034498591995039607573685274229706   photo/leo_backend_db/src/leo_backend_db_server.erl               0       13911       1413348068031188   2014-10-15 13:41:08 +0900   0
+83603   316467020376888598364250682951088839795   photo/leo_backend_db/test/leo_backend_db_api_prop.erl            0       3507        1413348068052219   2014-10-15 13:41:08 +0900   1
 </pre></div>
 </td></tr></table>
 
