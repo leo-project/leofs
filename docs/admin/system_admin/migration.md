@@ -15,9 +15,9 @@ Before getting started with the migration of a LeoFS system, you need to take ov
 
 
 #### Added Or Changed LeoFS' Configurations
-##### Added the Configurations of LeoManager Master
+##### LeoManager Master
 
-**LeoFS' MDC replication feature** was improved. Some configuration are added in [the configuration of LeoManager's master](https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf).
+**[since v1.3.3]** LeoFS' MDC replication feature was improved. Some configuration are added in [the configuration of LeoManager's master](https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf).
 
 
 ```ini
@@ -45,6 +45,19 @@ mdc_replication.consistency.read = 1
 
 ## MDC replication / A number of replicas needed for a successful DELETE operation
 mdc_replication.consistency.delete = 1
+```
+
+##### LeoStorage
+
+**[since v1.3.3]** Data synchronization configuration are added in [the configuration of LeoStorage](https://github.com/leo-project/leofs/blob/master/apps/leo_storage/priv/leo_storage.conf).
+
+```ini
+## Mode of the data synchronization - [none, periodic, writethrough]
+## - default:none
+obj_containers.sync_mode = none
+
+## Interval in ms of the data synchronization - default: 1000ms
+obj_containers.sync_interval_in_ms = 1000
 ```
 
 
