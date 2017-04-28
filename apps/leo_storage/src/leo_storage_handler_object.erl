@@ -593,7 +593,7 @@ delete(Object, ReqId, CheckUnderDir, leo_mq) ->
         {error, Cause = not_found} ->
             delete_1({error, Cause}, Object, CheckUnderDir);
         {error, Cause} ->
-            ?error("delete/4", [{from, leo_mq}, {method, del},
+            ?debug("delete/4", [{from, leo_mq}, {method, del},
                                 {key, Object#?OBJECT.key}, {req_id, ReqId}, {cause, Cause}]),
             {error, Cause}
     end.
