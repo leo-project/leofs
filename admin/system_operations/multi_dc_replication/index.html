@@ -645,9 +645,103 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Multi Data Center Replication
+      </label>
+    
     <a href="./" title="Multi Data Center Replication" class="md-nav__link md-nav__link--active">
       Multi Data Center Replication
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" title="Configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leomanager-masters-configuration-for-mdcr" title="LeoManager Master's Configuration For MDCR" class="md-nav__link">
+    LeoManager Master's Configuration For MDCR
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-operate-multi-data-center-replication" title="How To Operate Multi Data Center Replication" class="md-nav__link">
+    How To Operate Multi Data Center Replication
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands" title="Commands" class="md-nav__link">
+    Commands
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#join-cluster" title="join-cluster" class="md-nav__link">
+    join-cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-cluster" title="remove-cluster" class="md-nav__link">
+    remove-cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cluster-status" title="cluster-status" class="md-nav__link">
+    cluster-status
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -835,6 +929,87 @@
     
   
   
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" title="Configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leomanager-masters-configuration-for-mdcr" title="LeoManager Master's Configuration For MDCR" class="md-nav__link">
+    LeoManager Master's Configuration For MDCR
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-operate-multi-data-center-replication" title="How To Operate Multi Data Center Replication" class="md-nav__link">
+    How To Operate Multi Data Center Replication
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands" title="Commands" class="md-nav__link">
+    Commands
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#join-cluster" title="join-cluster" class="md-nav__link">
+    join-cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-cluster" title="remove-cluster" class="md-nav__link">
+    remove-cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cluster-status" title="cluster-status" class="md-nav__link">
+    cluster-status
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -848,7 +1023,94 @@
                   <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/system_operations/multi_dc_replication.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
                 
                 
-                <h1 id="multi-data-center-operations">Multi Data Center Operations<a class="headerlink" href="#multi-data-center-operations" title="Permanent link">&para;</a></h1>
+                <h1 id="multi-data-center-replication">Multi Data Center Replication<a class="headerlink" href="#multi-data-center-replication" title="Permanent link">&para;</a></h1>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>LeoFS provides the multi data center replication related configuration items, which contain <code class="codehilite">leo_manager_0.conf</code>. Modify those configuration items to work its feature correctly.</p>
+<h3 id="leomanager-masters-configuration-for-mdcr">LeoManager Master's Configuration For MDCR<a class="headerlink" href="#leomanager-masters-configuration-for-mdcr" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="codehilite">mdc_replication.num_of_replicas_a_dc</code></td>
+<td>A remote cluster of a LeoFS system which receives this cluster's objects, and then replicates them, which adhere to a replication method of each object</td>
+</tr>
+<tr>
+<td><code class="codehilite">mdc_replication.consistency.write</code></td>
+<td>A number of replicas needed for a successful WRITE-operation</td>
+</tr>
+<tr>
+<td><code class="codehilite">mdc_replication.consistency.read</code></td>
+<td>A number of replicas needed for a successful READ-operation</td>
+</tr>
+<tr>
+<td><code class="codehilite">mdc_replication.consistency.delete</code></td>
+<td>A number of replicas needed for a successful DELETE-operation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-operate-multi-data-center-replication">How To Operate Multi Data Center Replication<a class="headerlink" href="#how-to-operate-multi-data-center-replication" title="Permanent link">&para;</a></h2>
+<h3 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h3>
+<p>There are three commands, <code class="codehilite">join-cluster</code>, <code class="codehilite">remove-cluster</code>, and <code class="codehilite">cluster-status</code>. You can control the multi data center repliation by LeoFS' CUI, <code class="codehilite">leofs-adm</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="codehilite">join-cluster &lt;RMM&gt; &lt;RMS&gt;</code></td>
+<td>Begin to communicate between the local cluster and the remote cluster</td>
+</tr>
+<tr>
+<td><code class="codehilite">remove-cluster &lt;RMM&gt; &lt;RMS&gt;</code></td>
+<td>Terminate to communicate between the local cluster and the remote cluster</td>
+</tr>
+<tr>
+<td><code class="codehilite">cluster-status</code></td>
+<td>See the current state of cluster(s)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code class="codehilite">RMM</code>: A Remote cluster's LeoMnager-Master</li>
+<li><code class="codehilite">RMS</code>: A Remote cluster's LeoManager-Slave</li>
+</ul>
+<h4 id="join-cluster">join-cluster<a class="headerlink" href="#join-cluster" title="Permanent link">&para;</a></h4>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm join-cluster manager_10@127.0.0.1:13095 manager_11@127.0.0.1:13096
+OK
+</pre></div>
+</td></tr></table>
+
+<h4 id="remove-cluster">remove-cluster<a class="headerlink" href="#remove-cluster" title="Permanent link">&para;</a></h4>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm remove-cluster manager_10@127.0.0.1:13095 manager_11@127.0.0.1:13096
+OK
+</pre></div>
+</td></tr></table>
+
+<h4 id="cluster-status">cluster-status<a class="headerlink" href="#cluster-status" title="Permanent link">&para;</a></h4>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm cluster-status
+cluster id |   dc id    |    status    | # of storages  |          updated at
+-----------+------------+--------------+----------------+-----------------------------
+leofs_2    | dc_2       | running      |              3 | 2017-04-26 10:23:59 +0900
+</pre></div>
+</td></tr></table>
+
+<h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../settings/leo_manager/">For Administrators / Settings / LeoManager Settings</a></li>
+</ul>
                 
                   
                 

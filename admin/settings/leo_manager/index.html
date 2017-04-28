@@ -1070,11 +1070,23 @@
 </tr>
 <tr>
 <td>mdc_replication.max_targets</td>
-<td>The maximum number of replication targets of clusters OR data centers<br/>( Default: 2 )</td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The maximum number of replication targets of clusters OR data centers<br/>( Default: 2 )</td>
 </tr>
 <tr>
-<td>mdc_replication. num_of_replicas_a_dc</td>
-<td>An object is transmitted to a remote cluster or data center, and the total number of object copies per a data center is this configuration<br/>( Default: 1 )</td>
+<td>mdc_replication.num_of_replicas_a_dc</td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> A remote cluster of a LeoFS system which receives this cluster's objects, and then replicates them, which adhere to a replication method of each object<br/>( Default: 1 )</td>
+</tr>
+<tr>
+<td>mdc_replication.consistency.write</td>
+<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful WRITE-operation<br/>( Default: 1 )</td>
+</tr>
+<tr>
+<td>mdc_replication.consistency.read</td>
+<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful READ-operation<br/>( Default: 1 )</td>
+</tr>
+<tr>
+<td>mdc_replication.consistency.delete</td>
+<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful DELETE-operation<br/>( Default: 1 )</td>
 </tr>
 <tr>
 <td><strong>RPC for Multi Datacenter Replication</strong></td>
@@ -1206,6 +1218,7 @@
 <li><a href="../../../architecture/leo_manager/">Concept and Architecture / LeoManager's Architecture</a></li>
 <li><a href="../cluster/">For Administrators / Settings / Cluster Settings</a></li>
 <li><a href="../environment_config/">For Administrators / Settings / Environment Configuration</a></li>
+<li><a href="../../system_operations/multi_dc_replication/">For Administrators / System Operations / Multi Data Center Replication</a></li>
 </ul>
                 
                   
