@@ -17,7 +17,7 @@ RUNNER_SCHEMA_DIR=${RUNNER_SCHEMA_DIR:-$RUNNER_BASE_DIR/etc}
 RUNNER_LOG_DIR=${RUNNER_LOG_DIR:-$RUNNER_BASE_DIR/log}
 # Note the trailing slash on $PIPE_DIR/
 PIPE_DIR=/tmp/$RUNNER_BASE_DIR/
-RUNNER_USER=${RUNNER_USER:-}
+RUNNER_USER=${RUNNER_USER:-leofs}
 
 # Make sure this script is running as the appropriate user
 if [ ! -z "$RUNNER_USER" ] && [ `whoami` != "$RUNNER_USER" ]; then
