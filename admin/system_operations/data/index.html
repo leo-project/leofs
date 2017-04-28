@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -103,12 +103,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -705,8 +700,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-compactions-operation" title="Data Compaction's Operation" class="md-nav__link">
-    Data Compaction's Operation
+  <a href="#how-to-operate-data-compaction" title="How To Operate Data Compaction" class="md-nav__link">
+    How To Operate Data Compaction
   </a>
   
     <nav class="md-nav">
@@ -868,18 +863,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../others/" title="Others" class="md-nav__link">
-      Others
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -922,44 +905,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
-      LeoManager's Maintenance
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
-      System Monitoring
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
-      Backup and Restore
     </a>
   </li>
 
@@ -989,18 +936,6 @@
   <li class="md-nav__item">
     <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
       Index of LeoFS' Commands
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
-      Troubleshooting
     </a>
   </li>
 
@@ -1163,8 +1098,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-compactions-operation" title="Data Compaction's Operation" class="md-nav__link">
-    Data Compaction's Operation
+  <a href="#how-to-operate-data-compaction" title="How To Operate Data Compaction" class="md-nav__link">
+    How To Operate Data Compaction
   </a>
   
     <nav class="md-nav">
@@ -1341,7 +1276,7 @@
 <h3 id="file-structure">File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h3>
 <p>Multiple AVS/KVS pairs can be placed on one node to enable LeoFS handling as much use cases and hardware requirements as possible. See <a href="../../../architecture/leo_storage/#data-structure">Concept and Architecture / LeoStorage's Architecture - Data Structure</a>.</p>
 <ul>
-<li>Container : <code class="codehilite">AVS/KVS pair = 1 : N</code><ul>
+<li><strong>Container : AVS/KVS pair = 1 : N</strong><ul>
 <li>Multiple AVS/KVS pairs can be stored under one OS directory (We call it <strong>Container</strong>).</li>
 <li>'N' can be specified through <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_storage/priv/leo_storage.conf">leo_storage.conf</a>.</li>
 <li>How to choose optimal 'N'<ul>
@@ -1352,7 +1287,7 @@
 </li>
 </ul>
 </li>
-<li>Node : Container = 1 : N<ul>
+<li><strong>Node : Container = 1 : N</strong><ul>
 <li>Each Container can be stored under a different OS directory.</li>
 <li>N can be specified through leo_storage.conf.</li>
 <li>Setting <code class="codehilite">N &gt; 1</code> can be useful when there are multiple JBOD disks on the node. The one JBOD disk array can be map to the one container.</li>
@@ -1372,11 +1307,11 @@
 <li>Concurrent with any operation coming from online.<ul>
 <li>GET/HEAD never be blocked by a data-compaction.</li>
 <li>PUT/DELETE can be blocked while a data-compaction is processing the tail part of an AVS.</li>
-<li>Given that the above limitation, We would recommend suspending a node you are supposed to run a data-compaction if your LeoFS cluster handles write intensive workload.</li>
+<li>Given that the above limitation, We would recommend suspending a node you are supposed to run a data-compaction if a LeoFS system's cluster handles write intensive workload.</li>
 </ul>
 </li>
 </ul>
-<h2 id="data-compactions-operation">Data Compaction's Operation<a class="headerlink" href="#data-compactions-operation" title="Permanent link">&para;</a></h2>
+<h2 id="how-to-operate-data-compaction">How To Operate Data Compaction<a class="headerlink" href="#how-to-operate-data-compaction" title="Permanent link">&para;</a></h2>
 <p>As described in the previous section, A compaction process is needed to remove logically deleted objects and its corresponding metadata.</p>
 <h3 id="state-transition">State Transition<a class="headerlink" href="#state-transition" title="Permanent link">&para;</a></h3>
 <p><img alt="State Transition" src="http://leo-project.net/leofs/docs/_images/leofs-compaction-state-transition.png" /></p>
@@ -1395,8 +1330,8 @@
 <td></td>
 </tr>
 <tr>
-<td>leofs-adm compact-start \&lt;storage-node> (all|\&lt;num-of-targets>) [\&lt;num-of-compaction-proc>]</td>
-<td>Start Compaction (Transfer its state to <strong>running</strong>).<p>num-of-targets: How many AVS/KVS pairs are compacted.<p>num-of-compaction-pro: How many processes are run in parallel.</td>
+<td>leofs-adm compact-start \&lt;storage-node> (all\</td>
+<td>\&lt;num-of-targets>) [\&lt;num-of-compaction-proc>]</td>
 </tr>
 <tr>
 <td>leofs-adm compact-suspend \&lt;storage-node></td>
@@ -1799,11 +1734,13 @@ OK
       
     </div>
     
-      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-5301881-3","leo-project.net"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>

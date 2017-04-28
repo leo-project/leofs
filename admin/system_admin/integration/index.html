@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -103,12 +103,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -646,18 +641,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_operations/others/" title="Others" class="md-nav__link">
-      Others
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -702,44 +685,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
-      LeoManager's Maintenance
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../monitoring/" title="System Monitoring" class="md-nav__link">
-      System Monitoring
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../migration/" title="System Migration" class="md-nav__link">
       System Migration
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../backup_and_restore/" title="Backup and Restore" class="md-nav__link">
-      Backup and Restore
     </a>
   </li>
 
@@ -781,11 +728,72 @@
     CDN Integration
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-integrate-leofs-with-cdn" title="How To Integrate LeoFS With CDN" class="md-nav__link">
+    How To Integrate LeoFS With CDN
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-http_custom_headerconf" title="How To Use http_custom_header.conf" class="md-nav__link">
+    How To Use http_custom_header.conf
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-write-http_custom_headerconf" title="How To Write http_custom_header.conf" class="md-nav__link">
+    How To Write http_custom_header.conf
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" title="Use Cases" class="md-nav__link">
+    Use Cases
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appendix" title="Appendix" class="md-nav__link">
+    Appendix
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#syntax-for-the-expire-field" title="Syntax for the expire field" class="md-nav__link">
+    Syntax for the expire field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-of-verified-cdn-services" title="List of verified CDN services" class="md-nav__link">
+    List of verified CDN services
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#hadoop-integration" title="Hadoop Integration" class="md-nav__link">
-    Hadoop Integration
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
   </a>
   
 </li>
@@ -812,18 +820,6 @@
   <li class="md-nav__item">
     <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
       Index of LeoFS' Commands
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
-      Troubleshooting
     </a>
   </li>
 
@@ -942,11 +938,72 @@
     CDN Integration
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-integrate-leofs-with-cdn" title="How To Integrate LeoFS With CDN" class="md-nav__link">
+    How To Integrate LeoFS With CDN
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-http_custom_headerconf" title="How To Use http_custom_header.conf" class="md-nav__link">
+    How To Use http_custom_header.conf
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-write-http_custom_headerconf" title="How To Write http_custom_header.conf" class="md-nav__link">
+    How To Write http_custom_header.conf
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" title="Use Cases" class="md-nav__link">
+    Use Cases
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appendix" title="Appendix" class="md-nav__link">
+    Appendix
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#syntax-for-the-expire-field" title="Syntax for the expire field" class="md-nav__link">
+    Syntax for the expire field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-of-verified-cdn-services" title="List of verified CDN services" class="md-nav__link">
+    List of verified CDN services
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#hadoop-integration" title="Hadoop Integration" class="md-nav__link">
-    Hadoop Integration
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
   </a>
   
 </li>
@@ -970,7 +1027,98 @@
                 
                 <h1 id="system-integration">System Integration<a class="headerlink" href="#system-integration" title="Permanent link">&para;</a></h1>
 <h2 id="cdn-integration">CDN Integration<a class="headerlink" href="#cdn-integration" title="Permanent link">&para;</a></h2>
-<h2 id="hadoop-integration">Hadoop Integration<a class="headerlink" href="#hadoop-integration" title="Permanent link">&para;</a></h2>
+<h3 id="how-to-integrate-leofs-with-cdn">How To Integrate LeoFS With CDN<a class="headerlink" href="#how-to-integrate-leofs-with-cdn" title="Permanent link">&para;</a></h3>
+<p>There is nothing special to do for integrating LeoFS with CDN<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>. Since almost CDN service providers take care of a CacheControl Header received from an origin to determine how long a file should be cached on their edge servers, so if you want to modify TTL according to URLs, you can do it by using <code class="codehilite">http_custom_header.conf</code>.</p>
+<h3 id="how-to-use-http_custom_headerconf">How To Use <code class="codehilite">http_custom_header.conf</code><a class="headerlink" href="#how-to-use-http_custom_headerconf" title="Permanent link">&para;</a></h3>
+<p>Append the following line to <code class="codehilite">leo_gateway.conf</code> which contains a LeoGateway's directory. Arrange the <code class="codehilite">http_custom_header.conf</code> into the path specified at <code class="codehilite">leo_gateway.conf</code>.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## HTTP custom header configuration file path</span>
+<span class="na">http.headers_config_file</span> <span class="o">=</span> <span class="s">./etc/http_custom_header.conf</span>
+</pre></div>
+</td></tr></table>
+
+<h3 id="how-to-write-http_custom_headerconf">How To Write <code class="codehilite">http_custom_header.conf</code><a class="headerlink" href="#how-to-write-http_custom_headerconf" title="Permanent link">&para;</a></h3>
+<p>The syntax is a subset of <strong>Nginx<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup> configuration</strong>. You can use location contexts to specify TTL and add any headers to the path.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>location bucket/static {
+    expires    12h;
+    add_header Cache-Control public;
+    add_header X-OriginalHeader OriginalValue;
+}
+</pre></div>
+</td></tr></table>
+
+<p>In this case, assuming that a CDN service already has been enabled, and there is a file at <code class="codehilite">bucket/static/path_to_file</code>, if a user browses that file via the CDN. The CDN will receive a response from a LeoFS system with customized Http headers.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="nt">Cache-Control</span><span class="o">:</span> <span class="nt">public</span><span class="o">,</span> <span class="nt">max-age</span><span class="o">=</span><span class="nt">43200</span><span class="o">;</span>
+<span class="nt">X-OriginalHeader</span><span class="o">:</span> <span class="nt">OriginalValue</span><span class="o">;</span>
+</pre></div>
+</td></tr></table>
+
+<h3 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h3>
+<p>Specify TTL by the bucket.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>location bucket1 {
+    expires    1h;
+    add_header Cache-Control public;
+}
+location bucket2 {
+    expires    1d;
+    add_header Cache-Control public;
+}
+location bucket3 {
+    expires    1h30m;
+    add_header Cache-Control private;
+}
+</pre></div>
+</td></tr></table>
+
+<h3 id="appendix">Appendix<a class="headerlink" href="#appendix" title="Permanent link">&para;</a></h3>
+<h4 id="syntax-for-the-expire-field">Syntax for the expire field<a class="headerlink" href="#syntax-for-the-expire-field" title="Permanent link">&para;</a></h4>
+<p>LeoFS supports a part of measurement units which can be used in Nginx configuration. Following time intervals can be specified.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="n">s</span><span class="o">:</span> <span class="n">seconds</span>
+<span class="n">m</span><span class="o">:</span> <span class="n">minutes</span>
+<span class="n">h</span><span class="o">:</span> <span class="n">hours</span>
+<span class="n">d</span><span class="o">:</span> <span class="n">days</span>
+</pre></div>
+</td></tr></table>
+
+<h4 id="list-of-verified-cdn-services">List of verified CDN services<a class="headerlink" href="#list-of-verified-cdn-services" title="Permanent link">&para;</a></h4>
+<p>LeoFS Team tested the following CDN services with LeoFS. We recognize that other CDN services also should work.</p>
+<ul>
+<li><a href="https://aws.amazon.com/cloudfront/" target="_blank">Amazon CloudFront – Content Delivery Network (CDN)</a></li>
+</ul>
+<h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../settings/leo_gateway/">For Administrators / Settings / LeoGateway Settings</a></li>
+</ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="https://en.wikipedia.org/wiki/Content_delivery_network" target="_blank">CDN, Content delivery network</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://nginx.org/" target="_blank">Nginx, An HTTP and reverse proxy server</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
                 
                   
                 
@@ -989,7 +1137,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../backup_and_restore/" title="Backup and Restore" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../migration/" title="System Migration" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -998,7 +1146,7 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Backup and Restore
+                System Migration
               </span>
             </div>
           </a>
@@ -1044,11 +1192,13 @@
       
     </div>
     
-      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-5301881-3","leo-project.net"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>

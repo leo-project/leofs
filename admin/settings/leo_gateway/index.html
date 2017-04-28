@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -103,12 +103,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -758,18 +753,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_operations/others/" title="Others" class="md-nav__link">
-      Others
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -812,44 +795,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
-      LeoManager's Maintenance
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
-      System Monitoring
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
-      Backup and Restore
     </a>
   </li>
 
@@ -879,18 +826,6 @@
   <li class="md-nav__item">
     <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
       Index of LeoFS' Commands
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
-      Troubleshooting
     </a>
   </li>
 
@@ -1104,10 +1039,9 @@
                 
                 <h1 id="leogateway-settings">LeoGateway Settings<a class="headerlink" href="#leogateway-settings" title="Permanent link">&para;</a></h1>
 <h2 id="prior-knowledge">Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permanent link">&para;</a></h2>
-<p>LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> and NFS v3<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>. LeoGateway provides the object cache feature to efficiently and effectively handle requests and to keep the high performance of your storage system.</p>
+<p>LeoGateway is a multi-protocols storage proxy, which supports REST-API over HTTP, Amazon S3-API<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> and NFS v3<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>. LeoGateway provides the object cache feature to handle requests efficiently and to keep the high performance of your storage system.</p>
 <h3 id="other-configurations">Other Configurations<a class="headerlink" href="#other-configurations" title="Permanent link">&para;</a></h3>
-<p>If you want to customize settings like where to place leo_gateway.conf, what user starting a leo_gateway process and so on,
-Please refer <a href="../environment_config/">For Administrators / Settings / Environment Configuration</a> for more information.</p>
+<p>If you want to customize settings like where to place <code class="codehilite">leo_gateway.conf</code>, what user is starting a LeoGateway process and so on, refer <a href="../environment_config/">For Administrators / Settings / Environment Configuration</a> for more information.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="leogateway-configurations">LeoGateway Configurations<a class="headerlink" href="#leogateway-configurations" title="Permanent link">&para;</a></h3>
 <table>
@@ -1479,7 +1413,7 @@ Please refer <a href="../environment_config/">For Administrators / Settings / En
 <h4 id="cache-consistency-between-leogateway-and-leostorage">Cache Consistency between LeoGateway and LeoStorage<a class="headerlink" href="#cache-consistency-between-leogateway-and-leostorage" title="Permanent link">&para;</a></h4>
 <p>LeoGateway's cache feature does not depend on the consistency level of a cluster. There is a possibility of object inconsistency.</p>
 <p>LeoGateway requests a storage node to compare a cached object's hash value with its stored object's hash value. LeoGateway selects a LeoStorage's node from RING, <em>a distributed hash table</em> by a target object name, then LeoGateway requests a LeoStorage node of the redundant node. If the requested object is inconsistent in the replicas and LeoGateway cached it, a client may get inconsistent objects.</p>
-<p>If strong consistency is required on your system, you can disable the cache setting.</p>
+<p>If you need strong consistency on a LeoFS system, you can disable the cache setting.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">cache.cache_ram_capacity</span> <span class="o">=</span> <span class="s">0</span>
 <span class="na">cache.cache_disc_capacity</span> <span class="o">=</span> <span class="s">0</span>
@@ -1487,8 +1421,8 @@ Please refer <a href="../environment_config/">For Administrators / Settings / En
 </td></tr></table>
 
 <h4 id="configuration-related-to-disk-cache">Configuration related to Disk Cache<a class="headerlink" href="#configuration-related-to-disk-cache" title="Permanent link">&para;</a></h4>
-<p>A total number of directories to store cache files is equal to <code class="codehilite">cache.cache_workers</code>. A maximum size of a cacheable object per a directory has been determined by <code class="codehilite">cache.cache_disc_capacity / cache.cache_workers</code>. If the size of a requested object more than the maximum size, LeoFS Gateway avoids storing the object into the disk cache.</p>
-<p>And also, when size of a requested object more than <code class="codehilite">cache.cache_max_content_len</code>, LeoFS Gateway similarly refuses to store the object into the disk cache.</p>
+<p>A total number of directories to store cache files is equal to <code class="codehilite">cache.cache_workers</code>. A maximum size of a cacheable object per a directory has been determined by <code class="codehilite">cache.cache_disc_capacity / cache.cache_workers</code>. If the size of a requested object more than the maximum size, LeoGateway avoids storing the object into the disk cache.</p>
+<p>And also, when size of a requested object more than <code class="codehilite">cache.cache_max_content_len</code>, LeoGateway similarly refuses to store the object into the disk cache.</p>
 <p><img alt="Figure: Disk Cache Limits" src="../../../assets/leofs-gateway-disk-cache-size.png" /></p>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1583,11 +1517,13 @@ Please refer <a href="../environment_config/">For Administrators / Settings / En
       
     </div>
     
-      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-5301881-3","leo-project.net"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>

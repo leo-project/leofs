@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -103,12 +103,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -646,18 +641,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_operations/others/" title="Others" class="md-nav__link">
-      Others
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -692,30 +675,6 @@
   <li class="md-nav__item">
     <a href="../log_management/" title="Log Management" class="md-nav__link">
       Log Management
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
-      LeoManager's Maintenance
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../monitoring/" title="System Monitoring" class="md-nav__link">
-      System Monitoring
     </a>
   </li>
 
@@ -916,18 +875,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../backup_and_restore/" title="Backup and Restore" class="md-nav__link">
-      Backup and Restore
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../integration/" title="System Integration" class="md-nav__link">
       System Integration
     </a>
@@ -947,18 +894,6 @@
   <li class="md-nav__item">
     <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
       Index of LeoFS' Commands
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
-      Troubleshooting
     </a>
   </li>
 
@@ -1247,7 +1182,7 @@
 <li><a href="../../../assets/leofs-upgrade-flow-diagram.jpg" target="_blank">See the large diagram</a></li>
 </ul>
 <h4 id="takeover-and-adjust-confugurations">Takeover and Adjust Confugurations<a class="headerlink" href="#takeover-and-adjust-confugurations" title="Permanent link">&para;</a></h4>
-<p>Before getting started with the migration of your LeoFS, you need to take over the configuration, then adjust the paths and set the new configurations.</p>
+<p>Before getting started with the migration of a LeoFS system, you need to take over the configuration, then adjust the paths and set the new configurations.</p>
 <h4 id="added-or-changed-leofs-configurations">Added Or Changed LeoFS' Configurations<a class="headerlink" href="#added-or-changed-leofs-configurations" title="Permanent link">&para;</a></h4>
 <h5 id="added-the-configurations-of-leomanager-master">Added the Configurations of LeoManager Master<a class="headerlink" href="#added-the-configurations-of-leomanager-master" title="Permanent link">&para;</a></h5>
 <p><strong>LeoFS' MDC replication feature</strong> was improved. Some configuration are added in <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf">the configuration of LeoManager's master</a>.</p>
@@ -1313,7 +1248,7 @@
 </ul>
 <h4 id="procedures">Procedures<a class="headerlink" href="#procedures" title="Permanent link">&para;</a></h4>
 <h5 id="migrate-files-and-directories">Migrate Files and Directories<a class="headerlink" href="#migrate-files-and-directories" title="Permanent link">&para;</a></h5>
-<p>During upgrade of node (of any type), <strong>after</strong> stopping the old version and copying or moving every files to be moved into the new directories, change the owner with the commands below. It has to be done <strong>before</strong> launching the
+<p>During upgrade of node <em>(of any type)</em>, <strong>after</strong> stopping the old version and copying or moving every files to be moved into the new directories, change the owner with the commands below. It has to be done <strong>before</strong> launching the
 new version.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -1326,7 +1261,7 @@ new version.</p>
 </td></tr></table>
 
 <h5 id="remove-unnecessary-directories">Remove Unnecessary Directories<a class="headerlink" href="#remove-unnecessary-directories" title="Permanent link">&para;</a></h5>
-<p>Remove old temporary directory used by launch scripts. This step is needed because when earlier version was launched with <code class="codehilite">root</code> permissions, it creates a set of temporary directories in <code class="codehilite">/tmp</code> which cannot be re-used by non-privileged user as is, and launch scripts will fail with obscure messages - or with no message at all, except for an error in syslog (usually <code class="codehilite">/var/log/messages</code>).</p>
+<p>Remove old temporary directory used by launch scripts. This step is needed because when earlier version was launched with <code class="codehilite">root</code> permissions, it creates a set of temporary directories in <code class="codehilite">/tmp</code> which cannot be re-used by non-privileged user as is, and launch scripts will fail with obscure messages - or with no message at all, except for an error in syslog <em>(usually <code class="codehilite">/var/log/messages</code>)</em>.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># rm -rf /tmp/usr
 </pre></div>
 </td></tr></table>
@@ -1345,7 +1280,7 @@ new version.</p>
 <p>Before starting new version of a node, execute <code class="codehilite">chown -R leofs:leofs &lt;..&gt;</code> for all these external directories</p>
 </li>
 <li>
-<p>Don't forget to remove temporary directory (<code class="codehilite">rm -rf /tmp/usr</code>) as well for the reasons described above.</p>
+<p>Don't forget to remove temporary directory <em>(<code class="codehilite">rm -rf /tmp/usr</code>)</em> as well for the reasons described above.</p>
 </li>
 </ul>
 <p>These users might be interested in new features of <code class="codehilite">environment config files</code>, which allow to redefine some environment variables like paths in launch script.</p>
@@ -1354,7 +1289,7 @@ new version.</p>
 <p>For those who have LeoFS already running as non-privileged user.</p>
 <ol>
 <li>
-<p>Scripts that are provided by packages generally should be enough to run on most configurations without changes. If needed, change user from <code class="codehilite">leofs</code> to some other in "environment" config files (e.g. <code class="codehilite">RUNNER_USER=localuser</code>). Please refer to the later section for more details about environment config files.</p>
+<p>Scripts that are provided by packages generally should be enough to run on most configurations without changes. If needed, change user from <code class="codehilite">leofs</code> to some other in "environment" config files <em>(e.g. <code class="codehilite">RUNNER_USER=localuser</code>)</em>. Refer to the later section for more details about environment config files.</p>
 </li>
 <li>
 <p>Possible pitfall includes ownership of <code class="codehilite">/usr/local/leofs/.erlang.cookie</code> file, which is set to <code class="codehilite">leofs</code> during package installation. This should only be a problem when trying to run LeoFS nodes with permissions of some user which is not called <code class="codehilite">leofs</code>, but has home directory set to <code class="codehilite">/usr/local/leofs</code>. This is not supported due to technical reasons. Home directory of that user must be set to something else.</p>
@@ -1399,7 +1334,7 @@ In <code class="codehilite">environment config file</code>, set <code class="cod
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../monitoring/" title="System Monitoring" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../log_management/" title="Log Management" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1408,19 +1343,19 @@ In <code class="codehilite">environment config file</code>, set <code class="cod
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                System Monitoring
+                Log Management
               </span>
             </div>
           </a>
         
         
-          <a href="../backup_and_restore/" title="Backup and Restore" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../integration/" title="System Integration" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Backup and Restore
+                System Integration
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -1454,11 +1389,13 @@ In <code class="codehilite">environment config file</code>, set <code class="cod
       
     </div>
     
-      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-5301881-3","leo-project.net"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>

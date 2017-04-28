@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -99,12 +99,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -678,18 +673,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/system_operations/others/" title="Others" class="md-nav__link">
-      Others
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -732,44 +715,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../admin/system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
-      LeoManager's Maintenance
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
-      System Monitoring
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../admin/system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
-      Backup and Restore
     </a>
   </li>
 
@@ -799,18 +746,6 @@
   <li class="md-nav__item">
     <a href="../../admin/index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
       Index of LeoFS' Commands
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/troubleshooting/" title="Troubleshooting" class="md-nav__link">
-      Troubleshooting
     </a>
   </li>
 
@@ -951,9 +886,9 @@
                 <h1 id="leogateways-architecture">LeoGateway's Architecture<a class="headerlink" href="#leogateways-architecture" title="Permanent link">&para;</a></h1>
 <p>LeoGateway consists of the fast HTTP server which is <a href="https://github.com/ninenines/cowboy" target="_blank">Cowboy</a>, the multi-protocols handler, and the object cache. It provides multi-protocols which are the RESTful API, <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3-API</a>, and NFS v3. If you adopt using Amazon S3-API, you can easily access LeoFS with S3 clients which include <a href="http://s3tools.org/s3cmd" target="_blank">s3cmd</a>, <a href="http://www.s3-client.com/" target="_blank">DragonDisk</a> and AWS SDKs - <a href="https://aws.amazon.com/sdk-for-java/" target="_blank">Java</a>, <a href="https://aws.amazon.com/sdk-for-ruby/" target="_blank">Ruby</a>, <a href="https://docs.aws.amazon.com/sdk-for-go/api/service/s3/" target="_blank">Go</a>, <a href="https://aws.amazon.com/sdk-for-python/" target="_balnk">Python (Boto3)</a> and others.</p>
 <p><img alt="" src="../../assets/leofs-architecture.002.jpg" /></p>
-<p>A client requests an object or a bucket operation to a node of LeoGateway, then it requests the message of an operation to a node of LeoStorage.</p>
-<p>A destination storage node is decided by RING (routing table), which is generated and distributed at nodes of LeoManager.</p>
-<p>LeoGateway also provides built-in support for the object cache to realize keeping high performance and reduction of traffic between LeoGateway's nodes and LeoStorage's nodes.</p>
+<p>A client requests an object or a bucket operation to a LeoGateway node, then it requests the message of an operation to a LeoStorage node.</p>
+<p>A destination LeoStorage node is decided by RING <em>(distributed hash table)</em>, which is generated and distributed at LeoManager nodes.</p>
+<p>LeoGateway also provides built-in support for the object cache to realize keeping high performance and reduction of traffic between LeoGateway nodes and LeoStorage nodes.</p>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../admin/settings/leo_gateway/">For Administrators / Settings / LeoGateway Settings</a></li>
@@ -1035,11 +970,13 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../.."}})</script>
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-5301881-3","leo-project.net"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>

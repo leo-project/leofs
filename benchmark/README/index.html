@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -95,12 +95,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -636,18 +631,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/system_operations/others/" title="Others" class="md-nav__link">
-      Others
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -690,44 +673,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../admin/system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
-      LeoManager's Maintenance
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
-      System Monitoring
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../admin/system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
-      Backup and Restore
     </a>
   </li>
 
@@ -757,18 +704,6 @@
   <li class="md-nav__item">
     <a href="../../admin/index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
       Index of LeoFS' Commands
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/troubleshooting/" title="Troubleshooting" class="md-nav__link">
-      Troubleshooting
     </a>
   </li>
 
@@ -915,6 +850,13 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
   
 </li>
       
@@ -1127,6 +1069,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1168,7 +1117,7 @@ $ make all
 
 <h3 id="preparations-before-testing">Preparations before testing<a class="headerlink" href="#preparations-before-testing" title="Permanent link">&para;</a></h3>
 <h4 id="create-a-test-bucket">Create a test bucket<a class="headerlink" href="#create-a-test-bucket" title="Permanent link">&para;</a></h4>
-<p>After starting a LeoFS storage system, you need to create a bucket that will be used for testing. In this example, the bucket name is test. It is owned by the user <code class="codehilite">_test_leofs</code> that is already registered internally by LeoFS.</p>
+<p>After starting a LeoFS system, you need to create a bucket before getting started with benchmarks. In this example, the bucket name is <code class="codehilite">test</code>. It is owned by the user <code class="codehilite">_test_leofs</code> that is already registered internally by LeoFS.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -1199,7 +1148,7 @@ OK
 
 <h2 id="configuration-file-for-basho_bench">Configuration file for basho_bench<a class="headerlink" href="#configuration-file-for-basho_bench" title="Permanent link">&para;</a></h2>
 <h3 id="an-example">An Example<a class="headerlink" href="#an-example" title="Permanent link">&para;</a></h3>
-<p>Some examples are included in the LeoFS repository at <a href="https://github.com/leo-project/leofs/tree/master/test/conf">leo-project / leofs / test / conf</a>. If you would like to learn basho_bench's configuration, you can see <a href="https://docs.basho.com/riak/kv/2.2.0/using/performance/benchmarking/#configuration">BashoBench's Configuration</a>.</p>
+<p>Some examples are included in LeoFS' repository at <a href="https://github.com/leo-project/leofs/tree/master/test/conf">leo-project / leofs / test / conf</a>. If you would like to learn basho_bench's configuration, you can see <a href="https://docs.basho.com/riak/kv/2.2.0/using/performance/benchmarking/#configuration">BashoBench's Configuration</a>.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -1266,7 +1215,7 @@ OK
 </tbody>
 </table>
 <h2 id="running-basho_bench-1">Running basho_bench (1)<a class="headerlink" href="#running-basho_bench-1" title="Permanent link">&para;</a></h2>
-<p>In this example, LeoFS and basho_bench are installed locally. The following commands can be used to run <code class="codehilite">basho_bench</code>.</p>
+<p>In this example, LeoFS and <code class="codehilite">basho_bench</code> are installed locally. The following commands can be used to run <code class="codehilite">basho_bench</code>.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">### Loading 1M records of size 16KB</span>
@@ -1276,7 +1225,7 @@ OK
 </td></tr></table>
 
 <h2 id="running-basho_bench-2">Running basho_bench (2)<a class="headerlink" href="#running-basho_bench-2" title="Permanent link">&para;</a></h2>
-<p>In this example, LeoFS and basho_bench are installed on different hosts.</p>
+<p>In this example, LeoFS and <code class="codehilite">basho_bench</code> are installed on different hosts.</p>
 <h3 id="configure-the-endpoint-on-leomanagers-console">Configure the endpoint on LeoManager's console<a class="headerlink" href="#configure-the-endpoint-on-leomanagers-console" title="Permanent link">&para;</a></h3>
 <p>Allows basho_bench’s requests to reach <code class="codehilite"><span class="cp">${</span><span class="n">HOST_NAME_OF_LEOFS_GATEWAY</span><span class="cp">}</span></code>.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -1347,6 +1296,13 @@ s3.amazonaws.com              <span class="p">|</span> <span class="m">2013</spa
 ./basho_bench ../leofs/test/conf/leofs_16K_LOAD1M.config
 </pre></div>
 </td></tr></table>
+
+<h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../installation/quick/">Getting Started / Quick Installation and Setup</a></li>
+<li><a href="../../installation/cluster/">Getting Started / Building a LeoFS' cluster with Ansible</a></li>
+<li><a href="../../admin/system_operations/s3/">For Administrators / System Operations / S3-API related Operations</a></li>
+</ul>
                 
                   
                 
@@ -1365,7 +1321,7 @@ s3.amazonaws.com              <span class="p">|</span> <span class="m">2013</spa
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../../admin/troubleshooting/" title="Troubleshooting" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../admin/index_of_commands/" title="Index of LeoFS' Commands" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1374,7 +1330,7 @@ s3.amazonaws.com              <span class="p">|</span> <span class="m">2013</spa
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Troubleshooting
+                Index of LeoFS' Commands
               </span>
             </div>
           </a>
@@ -1420,11 +1376,13 @@ s3.amazonaws.com              <span class="p">|</span> <span class="m">2013</spa
       
     </div>
     
-      <script src="../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../.."}})</script>
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-5301881-3","leo-project.net"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>

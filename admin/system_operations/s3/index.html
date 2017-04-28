@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -103,12 +103,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -847,18 +842,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../others/" title="Others" class="md-nav__link">
-      Others
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -901,44 +884,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
-      LeoManager's Maintenance
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
-      System Monitoring
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
-      Backup and Restore
     </a>
   </li>
 
@@ -968,18 +915,6 @@
   <li class="md-nav__item">
     <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
       Index of LeoFS' Commands
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
-      Troubleshooting
     </a>
   </li>
 
@@ -1283,17 +1218,17 @@
                 <h1 id="s3-api-related-operations">S3-API Related Operations<a class="headerlink" href="#s3-api-related-operations" title="Permanent link">&para;</a></h1>
 <h2 id="prior-knowledge">Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permanent link">&para;</a></h2>
 <p>When choosing Amazon S3 API<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> as LeoGateway's protocol, you need LeoFS' S3-API related operations including <a href="#endpoint">Endpoint</a>, <a href="#user">User</a>, and <a href="#bucket">Bucket</a> operations.</p>
-<p>You can access your LeoFS system whose LeoGateway's protocol is S3-API by following the flow.</p>
+<p>You can access a LeoFS system whose LeoGateway's protocol is S3-API by following the flow.</p>
 <ol>
-<li><strong>Create an endpoint</strong> to be able to access your LeoFS' resources.</li>
+<li><strong>Create an endpoint</strong> to be able to access a LeoFS system's resources.</li>
 <li><strong>Create a user</strong> to separately manage the user's buckets and objects.</li>
-<li>After creating a bucket, If you need to <strong>change ACL of a bucket</strong>, you can set it as an administrator of your LeoFS system. The current version, v1.3 of LeoFS does not support</li>
+<li>After creating a bucket, If you need to <strong>change ACL of a bucket</strong>, you can set it as an administrator of a LeoFS system. The current version, v1.3 of LeoFS does not support</li>
 </ol>
 <h2 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h2>
 <h3 id="endpoint">Endpoint<a class="headerlink" href="#endpoint" title="Permanent link">&para;</a></h3>
-<p>You can continue to use your LeoFS' DNS name to access your LeoFS' resources after you've set up an endpoint, which has a policy that controls the use of the endpoint to access the resources.</p>
+<p>You can continue to use a LeoFS system's DNS name to access its resources after you've set up an endpoint, which has a policy that controls the use of the endpoint to access the resources.</p>
 <h4 id="create-an-endpoint-add-endpoint">Create an endpoint, <code class="codehilite">add-endpoint</code><a class="headerlink" href="#create-an-endpoint-add-endpoint" title="Permanent link">&para;</a></h4>
-<p>Creates an endpoint so users can access your LeoFS' resources.</p>
+<p>Creates an endpoint so users can access a LeoFS system's resources.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1307,7 +1242,7 @@ OK
 </td></tr></table>
 
 <h4 id="remove-an-endpoint-delete-endpoint">Remove an endpoint, <code class="codehilite">delete-endpoint</code><a class="headerlink" href="#remove-an-endpoint-delete-endpoint" title="Permanent link">&para;</a></h4>
-<p>Removes an endpoint if your LeoFS' system does not need it.</p>
+<p>Removes an endpoint if a LeoFS system's system does not need it.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1343,9 +1278,9 @@ s3.amazonaws.com <span class="p">|</span> <span class="m">2017</span>-04-07 <spa
 </td></tr></table>
 
 <h3 id="user">User<a class="headerlink" href="#user" title="Permanent link">&para;</a></h3>
-<p>To access your LeoFS system, its system's users need to create an account and retrieve <code class="codehilite">AccessKeyID</code> and <code class="codehilite">SecretAccessKey</code>.</p>
+<p>To access a LeoFS system, its system's users need to create an account and retrieve <code class="codehilite">AccessKeyID</code> and <code class="codehilite">SecretAccessKey</code>.</p>
 <h4 id="create-a-user-create-user">Create a user, <code class="codehilite">create-user</code><a class="headerlink" href="#create-a-user-create-user" title="Permanent link">&para;</a></h4>
-<p>Creates a user's account so its user can access your LeoFS system.</p>
+<p>Creates a user's account so its user can access a LeoFS system.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1361,7 +1296,7 @@ secret-access-key: b74f9ae91dd0de81f71e19f8d455a7c081f34c57
 </td></tr></table>
 
 <h4 id="remove-a-user-delete-user">Remove a user, <code class="codehilite">delete-user</code><a class="headerlink" href="#remove-a-user-delete-user" title="Permanent link">&para;</a></h4>
-<p>Removes a user account if your LeoFS' system does not need it.</p>
+<p>Removes a user account if a LeoFS system does not need it.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1395,7 +1330,7 @@ leofs-user-2 <span class="p">|</span> <span class="m">1</span>       <span class
 </td></tr></table>
 
 <h4 id="change-role-of-a-user-update-user-role">Change role of a user, <code class="codehilite">update-user-role</code><a class="headerlink" href="#change-role-of-a-user-update-user-role" title="Permanent link">&para;</a></h4>
-<p>Updates a user's role if you need to change the role of your LeoFS system. You can choose a role from <code class="codehilite">Administrator</code> or <code class="codehilite">General user</code>.</p>
+<p>Updates a user's role if you need to change the role of a LeoFS system. You can choose a role from <code class="codehilite">Administrator</code> or <code class="codehilite">General user</code>.</p>
 <table>
 <thead>
 <tr>
@@ -1445,7 +1380,7 @@ leofs-user-2 <span class="p">|</span> <span class="m">9</span>       <span class
 <h3 id="bucket">Bucket<a class="headerlink" href="#bucket" title="Permanent link">&para;</a></h3>
 <p>To manage objects under a bucket, you need to create a bucket with <code class="codehilite">leofs-adm</code> or any client for Amazon S3 such as s3cmd<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup> and DragonDisk<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup>.</p>
 <h4 id="create-a-bucket-add-bucket">Create a bucket, <code class="codehilite">add-bucket</code><a class="headerlink" href="#create-a-bucket-add-bucket" title="Permanent link">&para;</a></h4>
-<p>Creates a bucket so your LeoFS' users can manage resources under its bucket.</p>
+<p>Creates a bucket so a LeoFS system' users can manage resources under its bucket.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1681,11 +1616,13 @@ ok
       
     </div>
     
-      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-5301881-3","leo-project.net"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>

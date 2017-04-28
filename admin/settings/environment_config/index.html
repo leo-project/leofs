@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-1d1da4857d.css">
       
     
     
@@ -103,12 +103,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
+        <div class="md-search-result" data-md-component="result"></div>
       </div>
     </div>
   </div>
@@ -712,18 +707,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_operations/others/" title="Others" class="md-nav__link">
-      Others
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -766,44 +749,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/leo_manager/" title="LeoManager's Maintenance" class="md-nav__link">
-      LeoManager's Maintenance
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
-      System Monitoring
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../system_admin/backup_and_restore/" title="Backup and Restore" class="md-nav__link">
-      Backup and Restore
     </a>
   </li>
 
@@ -833,18 +780,6 @@
   <li class="md-nav__item">
     <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-nav__link">
       Index of LeoFS' Commands
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
-      Troubleshooting
     </a>
   </li>
 
@@ -1012,8 +947,8 @@
                 
                 <h1 id="environment-config-files">Environment Config Files<a class="headerlink" href="#environment-config-files" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Starting from version 1.3.3, some environment variables used by launch scripts can be redefined in
-"environment" config files. They have shell syntax and are read by launch scripts.</p>
+<p>Starting from v1.3.3, some environment variables used by launch scripts can be redefined in
+<strong>"environment config files"</strong>. They have shell syntax and are read by launch scripts.</p>
 <p><strong>[Environment Files]</strong></p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -1060,7 +995,7 @@ $ /usr/local/leofs/&lt;new_version&gt;/leo_manager_0/bin/leo_manager start
 </pre></div>
 </td></tr></table>
 
-<p>Directories defined in <code class="codehilite">RUNNER_ETC_DIR</code> and <code class="codehilite">RUNNER_LOG_DIR</code> (in this example, <code class="codehilite">/etc/leofs/leo_manager_0</code> and <code class="codehilite">/var/log/leofs/leo_manager_0</code>) must be writable by <code class="codehilite">leofs</code> user, also <code class="codehilite">$RUNNER_LOG_DIR/sasl</code> (here <code class="codehilite">/var/log/leofs/leo_manager_0/sasl</code>) must exist:</p>
+<p>Directories defined in <code class="codehilite">RUNNER_ETC_DIR</code> and <code class="codehilite">RUNNER_LOG_DIR</code> <em>(in this example, <code class="codehilite">/etc/leofs/leo_manager_0</code> and <code class="codehilite">/var/log/leofs/leo_manager_0</code>)</em> must be writable by <code class="codehilite">leofs</code> user, also <code class="codehilite">$RUNNER_LOG_DIR/sasl</code> <em>(here <code class="codehilite">/var/log/leofs/leo_manager_0/sasl</code>)</em> must exist:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /etc/leofs/leo_manager_0/
@@ -1136,10 +1071,12 @@ drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /var/log/leofs/leo_manager_0/sasl/
 </pre></div>
 </td></tr></table>
 
-<p>Of course, all these directories must exist and have correct ownership/permissions (writable by <code class="codehilite">leofs</code> user, unless set up otherwise)</p>
+<p>All these directories must exist and have correct <strong>ownership/permissions</strong> <em>(writable by <code class="codehilite">leofs</code> user, unless set up otherwise)</em></p>
 <h2 id="additional-settings-snmp-config">Additional settings - SNMP config<a class="headerlink" href="#additional-settings-snmp-config" title="Permanent link">&para;</a></h2>
-<p>When pursuing "pure" system which keeps all the data out of installation tree, one might also decide to move SNMP agent config and SNMP "db" directories to external paths, by setting (example for <code class="codehilite">leo_manager_0</code>) this in <code class="codehilite">leo_manager.config</code>:</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">snmp_conf</span> <span class="o">=</span> <span class="s">/etc/leofs/leo_manager_0/leo_manager_snmp</span>
+<p>When pursuing "pure" system which keeps all the data out of installation tree, one might also decide to move SNMP agent config and <code class="codehilite">SNMP db directories</code> to external paths, by setting it in <code class="codehilite">leo_manager.config</code>:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## leo_manager_0.conf</span>
+<span class="na">snmp_conf</span> <span class="o">=</span> <span class="s">/etc/leofs/leo_manager_0/leo_manager_snmp</span>
 </pre></div>
 </td></tr></table>
 
@@ -1148,10 +1085,10 @@ drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /var/log/leofs/leo_manager_0/sasl/
 </pre></div>
 </td></tr></table>
 
-<p>in <code class="codehilite">/etc/leofs/leo_manager_0/leo_manager_snmp.config</code> to make sure that absolutely no temporary files are created in <code class="codehilite">/usr/local/leofs</code> tree. It shouldn't matter otherwise since there is no need to keep contents of SNMP <code class="codehilite">db</code> directory between upgrades.</p>
-<p>(Here, copy of leo_manager_snmp.config was made so that original config would be untouched; while it is possible to change <code class="codehilite">db_dir</code> in original <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config</code> as well, doing so would mean that this file needs to be replaced after each upgrade, reducing benefit of only changing <code class="codehilite"><span class="na">.environment</span></code> file after upgrade)</p>
+<p>in <code class="codehilite">/etc/leofs/leo_manager_0/leo_manager_snmp.config</code> to make sure that absolutely no temporary files are created in <code class="codehilite">/usr/local/leofs</code> tree. It shouldn't matter otherwise since there is no need to keep contents of <code class="codehilite">SNMP db directory</code> between upgrades.</p>
+<p><em>(Here, copy of leo_manager_snmp.config was made so that original config would be untouched; while it is possible to change <code class="codehilite">db_dir</code> in original <code class="codehilite">/usr/local/leofs/&lt;version&gt;/leo_manager_0/snmp/snmpa_manager_0/leo_manager_snmp.config</code> as well, doing so would mean that this file needs to be replaced after each upgrade, reducing benefit of only changing <code class="codehilite"><span class="na">.environment</span></code> file after upgrade)</em></p>
 <h2 id="notice">Notice<a class="headerlink" href="#notice" title="Permanent link">&para;</a></h2>
-<p>Please note that this configuration is just an example of how to use <code class="codehilite"><span class="na">.environment</span></code> config features to move all the log files and config files out of the tree so they reside at fixed paths, to simplify configuration changes and upgrades as much as possible.</p>
+<p>Note that this configuration is just an example of how to use <code class="codehilite"><span class="na">.environment</span></code> config features to move all the log files and config files out of the tree so they reside at fixed paths, to simplify configuration changes and upgrades as much as possible.</p>
 <p>The resulting upgrade process can be less safe than original one suggested at <a href="../../system_admin/migration/">For Administrators / System Administration / System Migration</a>, because the new version changes working <code class="codehilite">mnesia</code> and <code class="codehilite">queue</code> directories upon launch and going back to the older version might be not always possible.</p>
 <p>Users should consider making backups of work directories (<code class="codehilite">/var/local/leofs</code> in this example) before launching the newer version of a node.</p>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
@@ -1231,11 +1168,13 @@ drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /var/log/leofs/leo_manager_0/sasl/
       
     </div>
     
-      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
+      <script src="../../../assets/javascripts/application-7aa26ad9ec.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-5301881-3","leo-project.net"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>
