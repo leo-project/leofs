@@ -38,8 +38,11 @@ The default setting is to launch a LeoFS system on one node, whose setting canno
 | consistency.delete                | `only LeoManager's master`<br/> The total number of object copies needed for a successful DELETE operation<br/>( Default: 1 ) |
 | consistency.rack\_aware\_replicas | `only LeoManager's master`<br/> The total number of object copies of rack-aware<br/>( Default: 0 ) |
 | **Multi Data Center Replication** |
-| mdc_replication.max\_targets              | The maximum number of replication targets of clusters OR data centers<br/>( Default: 2 ) |
-| mdc_replication. num\_of\_replicas\_a\_dc | An object is transmitted to a remote cluster or data center, and the total number of object copies per a data center is this configuration<br/>( Default: 1 ) |
+| mdc_replication.max\_targets              | `only LeoManager's master`<br/> The maximum number of replication targets of clusters OR data centers<br/>( Default: 2 ) |
+| mdc\_replication.num\_of\_replicas\_a\_dc | `only LeoManager's master`<br/> A remote cluster of a LeoFS system which receives this cluster's objects, and then replicates them, which adhere to a replication method of each object<br/>( Default: 1 )|
+| mdc\_replication.consistency.write  | `only LeoManager's master` `[since 1.3.3]` <br/> A number of replicas needed for a successful WRITE-operation<br/>( Default: 1 ) |
+| mdc\_replication.consistency.read   | `only LeoManager's master` `[since 1.3.3]` <br/> A number of replicas needed for a successful READ-operation<br/>( Default: 1 ) |
+| mdc\_replication.consistency.delete | `only LeoManager's master` `[since 1.3.3]` <br/> A number of replicas needed for a successful DELETE-operation<br/>( Default: 1 ) |
 | **RPC for Multi Datacenter Replication** |
 | rpc.server.acceptors                | The total number of acceptor of the RPC server<br/>( Default: 16 ) |
 | rpc.server.listen\_port             | The listening port of the RPC server<br/>( Default: 13075 ) |
@@ -81,3 +84,4 @@ The default setting is to launch a LeoFS system on one node, whose setting canno
 * [Concept and Architecture / LeoManager's Architecture](/architecture/leo_manager.md)
 * [For Administrators / Settings / Cluster Settings](cluster.md)
 * [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
+* [For Administrators / System Operations / Multi Data Center Replication](/admin/system_operations/multi_dc_replication.md)
