@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.4.1">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-1d1da4857d.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-76741b64bc.css">
       
     
     
@@ -103,7 +103,12 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result"></div>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
       </div>
     </div>
   </div>
@@ -743,8 +748,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added-the-configurations-of-leomanager-master" title="Added the Configurations of LeoManager Master" class="md-nav__link">
-    Added the Configurations of LeoManager Master
+  <a href="#leomanager-master" title="LeoManager Master" class="md-nav__link">
+    LeoManager Master
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leostorage" title="LeoStorage" class="md-nav__link">
+    LeoStorage
   </a>
   
 </li>
@@ -1039,8 +1051,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added-the-configurations-of-leomanager-master" title="Added the Configurations of LeoManager Master" class="md-nav__link">
-    Added the Configurations of LeoManager Master
+  <a href="#leomanager-master" title="LeoManager Master" class="md-nav__link">
+    LeoManager Master
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leostorage" title="LeoStorage" class="md-nav__link">
+    LeoStorage
   </a>
   
 </li>
@@ -1184,8 +1203,8 @@
 <h4 id="takeover-and-adjust-confugurations">Takeover and Adjust Confugurations<a class="headerlink" href="#takeover-and-adjust-confugurations" title="Permanent link">&para;</a></h4>
 <p>Before getting started with the migration of a LeoFS system, you need to take over the configuration, then adjust the paths and set the new configurations.</p>
 <h4 id="added-or-changed-leofs-configurations">Added Or Changed LeoFS' Configurations<a class="headerlink" href="#added-or-changed-leofs-configurations" title="Permanent link">&para;</a></h4>
-<h5 id="added-the-configurations-of-leomanager-master">Added the Configurations of LeoManager Master<a class="headerlink" href="#added-the-configurations-of-leomanager-master" title="Permanent link">&para;</a></h5>
-<p><strong>LeoFS' MDC replication feature</strong> was improved. Some configuration are added in <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf">the configuration of LeoManager's master</a>.</p>
+<h5 id="leomanager-master">LeoManager Master<a class="headerlink" href="#leomanager-master" title="Permanent link">&para;</a></h5>
+<p><strong>[since v1.3.3]</strong> LeoFS' MDC replication feature was improved. Some configuration are added in <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf">the configuration of LeoManager's master</a>.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -1233,6 +1252,22 @@
 
 <span class="c1">## MDC replication / A number of replicas needed for a successful DELETE operation</span>
 <span class="na">mdc_replication.consistency.delete</span> <span class="o">=</span> <span class="s">1</span>
+</pre></div>
+</td></tr></table>
+
+<h5 id="leostorage">LeoStorage<a class="headerlink" href="#leostorage" title="Permanent link">&para;</a></h5>
+<p><strong>[since v1.3.3]</strong> Data synchronization configuration are added in <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_storage/priv/leo_storage.conf">the configuration of LeoStorage</a>.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Mode of the data synchronization - [none, periodic, writethrough]</span>
+<span class="c1">## - default:none</span>
+<span class="na">obj_containers.sync_mode</span> <span class="o">=</span> <span class="s">none</span>
+
+<span class="c1">## Interval in ms of the data synchronization - default: 1000ms</span>
+<span class="na">obj_containers.sync_interval_in_ms</span> <span class="o">=</span> <span class="s">1000</span>
 </pre></div>
 </td></tr></table>
 
@@ -1389,7 +1424,7 @@ In <code class="codehilite">environment config file</code>, set <code class="cod
       
     </div>
     
-      <script src="../../../assets/javascripts/application-7aa26ad9ec.js"></script>
+      <script src="../../../assets/javascripts/application-3964c0cb56.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
