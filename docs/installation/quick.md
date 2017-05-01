@@ -8,7 +8,7 @@ This section is a step by step guide to setting up LeoFS for the first time. By 
 
 In this section, you install LeoStorage, LeoGateway and LeoManager on a single system with no clustering to quickly understand LeoFS.
 
-## Installation
+## Installation v1.3.3 or Later
 ### Ubuntu
 
 For Ubuntu distributions, perform the following steps:
@@ -23,7 +23,7 @@ $ sudo dpkg -i leofs_{VERSION}-1_ubuntu-16.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
-$ chown -R {USER}:{GROUP} /usr/local/leofs/{VERSION}
+$ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 ```
 
 #### For Ubuntu 14.04
@@ -33,7 +33,7 @@ $ sudo dpkg -i leofs_{VERSION}-1_ubuntu-14.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
-$ chown -R {USER}:{GROUP} /usr/local/leofs/{VERSION}
+$ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 ```
 
 ### CentOS
@@ -51,7 +51,7 @@ $ sudo rpm -ivh leofs-{VERSION}-1.el6.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
-$ chown -R {USER}:{GROUP} /usr/local/leofs/{VERSION}
+$ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 ```
 
 #### For CentOS 7.x
@@ -62,7 +62,7 @@ $ sudo rpm -ivh leofs-{VERSION}-1.el7.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
-$ chown -R {USER}:{GROUP} /usr/local/leofs/{VERSION}
+$ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 ```
 
 ## Configuration
@@ -80,7 +80,7 @@ $ sudo vi /etc/hosts
 127.0.0.1 localhost {BUCKET_NAME}.localhost
 ```
 
-## Launches each node of LeoManager, LeoStorage and LeoGateway
+## Launches LeoManager, LeoStorage, and LeoGateway node(s)
 
 You launch the LeoFS storage system by the following steps:
 
@@ -107,7 +107,7 @@ $ leofs-adm status
 -----------------------------------+----------
  Basic/Consistency level
 -----------------------------------+----------
-                    system version | 1.3.2
+                    system version | 1.3.3
                         cluster Id | leofs_1
                              DC Id | dc_1
                     Total replicas | 1
@@ -119,20 +119,23 @@ $ leofs-adm status
 -----------------------------------+----------
  Multi DC replication settings
 -----------------------------------+----------
-        max number of joinable DCs | 2
-           number of replicas a DC | 1
+ [mdcr] max number of joinable DCs | 2
+ [mdcr] total replicas per a DC    | 1
+ [mdcr] number of successes of R   | 1
+ [mdcr] number of successes of W   | 1
+ [mdcr] number of successes of D   | 1
 -----------------------------------+----------
  Manager RING hash
 -----------------------------------+----------
-                 current ring-hash |
-                previous ring-hash |
+                 current ring-hash | 433fe365
+                previous ring-hash | 433fe365
 -----------------------------------+----------
 
  [State of Node(s)]
 -------+--------------------------+--------------+----------------+----------------+----------------------------
  type  |           node           |    state     |  current ring  |   prev ring    |          updated at
 -------+--------------------------+--------------+----------------+----------------+----------------------------
-  S    | storage_0@127.0.0.1      | attached     |                |                | 2017-01-30 11:01:35 +0900
+  S    | storage_0@127.0.0.1      | attached     |                |                | 2017-05-01 00:43:06 +0000
 -------+--------------------------+--------------+----------------+----------------+----------------------------
 ```
 
@@ -155,7 +158,7 @@ $ leofs-adm status
 -----------------------------------+----------
  Basic/Consistency level
 -----------------------------------+----------
-                    system version | 1.3.2
+                    system version | 1.3.3
                         cluster Id | leofs_1
                              DC Id | dc_1
                     Total replicas | 1
@@ -167,8 +170,11 @@ $ leofs-adm status
 -----------------------------------+----------
  Multi DC replication settings
 -----------------------------------+----------
-        max number of joinable DCs | 2
-           number of replicas a DC | 1
+ [mdcr] max number of joinable DCs | 2
+ [mdcr] total replicas per a DC    | 1
+ [mdcr] number of successes of R   | 1
+ [mdcr] number of successes of W   | 1
+ [mdcr] number of successes of D   | 1
 -----------------------------------+----------
  Manager RING hash
 -----------------------------------+----------
@@ -180,8 +186,8 @@ $ leofs-adm status
 -------+--------------------------+--------------+----------------+----------------+----------------------------
  type  |           node           |    state     |  current ring  |   prev ring    |          updated at
 -------+--------------------------+--------------+----------------+----------------+----------------------------
-  S    | storage_0@127.0.0.1      | running      | 433fe365       | 433fe365       | 2017-01-30 11:03:16 +0900
-  G    | gateway_0@127.0.0.1      | running      | 433fe365       | 433fe365       | 2017-01-30 11:03:17 +0900
+  S    | storage_0@127.0.0.1      | running      | 433fe365       | 433fe365       | 2017-05-01 00:43:06 +0000
+  G    | gateway_0@127.0.0.1      | running      | 433fe365       | 433fe365       | 2017-05-01 00:43:08 +0000
 -------+--------------------------+--------------+----------------+----------------+----------------------------
 ```
 
@@ -262,3 +268,7 @@ You now know how to setup a stand-alone LeoFS storage system, and make sure to h
 ## Related Links
 
 - [Getting Started / Building a LeoFS' cluster with Ansible](cluster.md)
+- [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
+- [For Administrators / Settings / LeoManager Settings](/admin/settings/leo_manager.md)
+- [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
+- [For Administrators / Settings / LeoGateway Settings](/admin/settings/leo_gateway.md)

@@ -191,6 +191,7 @@ You now have a working LeoFS cluster. Make sure to have a look at [Administrator
 
 - [Getting Started / Quick Installation and Setup](quick.md)
 - [For Administrators / Setup / Planning for Production](/admin/setup/planning_for_production.md)
+- [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
 - [For Administrators / Settings / Cluster Settings](/admin/settings/cluster.md)
 - [For Administrators / Settings / LeoManager Settings](/admin/settings/leo_manager.md)
 - [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
