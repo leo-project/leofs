@@ -27,7 +27,6 @@ The default setting is to launch a LeoFS system on one node, whose setting canno
 | console.port.json                | The port number of LeoManager's console for JSON format<br/>( Default: 10020 ) |
 | console.acceptors.cui            | The maximum number of acceptors of LeoManager's console for text format<br/>( Default: 3 ) |
 | console.acceptors.json           | The maximum number of acceptors of LeoManager's console for JSON format<br/>( Default:16 ) |
-| console.histories.num_of_display | The maximum number of histories to display at once<br/>( Default: 200 ) |
 | **System** |
 | system.dc_id      | `Datacenter ID` is necessary for using the data center replication<br/>( Default: dc_1 ) |
 | system.cluster_id | `Cluster ID` is also necessary for using the data center replication<br/>( Default: leofs_1 ) |

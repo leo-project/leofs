@@ -269,7 +269,6 @@ When/How to use recover commands.
 - Node Broken
     - Invoke `detach` with a broken node.
     - Prepare a new node that will take over all objects assigned to a detached node.
-    - Invoke `attach` with a new node.
     - Invoke `rebalance`.
 - Source/Destination Cluster Down
     - Invoke `recover-cluster` with a downed cluster.

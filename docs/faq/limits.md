@@ -24,14 +24,12 @@
 
 ## NFS Support
 
-* NFS implemantation with `LeoFS v1.1` is a subset of <a href="https://tools.ietf.org/html/rfc1813" target="_blank">NFS v3</a>. Lock manager protocol, ``Authentication``, and ``Owner/Permission`` management are NOT covered.
-* The `ls` command may take too much time when the target directory have lots of child. We're planning to provide better performance with LeoFS v.1.4.
+* NFS implemantation with `LeoFS v1.1` is a subset of <a href="https://tools.ietf.org/html/rfc1813" target="_blank">NFS v3</a>. ``Authentication``, and ``Owner/Permission`` management are NOT covered.
+* The `ls` command may take too much time when the target directory have lots of child. We're planning to provide better performance with LeoFS v.2.0.
 * If you use LeoFS with NFS, you should set the size of a chunked object in LeoFS to 1MB (1048576Bytes) - ``large_object.chunked_obj_len = 1048576`` *(leo_gateway.conf)*, otherwise the efficiency of disk utilization can be decreased.
 * What are the requirements to run LeoFS with NFS?
 	* LeoGateway (NFS Server):
 		* We've supporeted the targets Debian 6, Ubuntu-Server 14.04 LTS or Higher and CentOS 6.5/7.0 as LeoFS does, but should work on most linux platforms. In addition, We've confirmed LeoFS with NFS works properly on the latest FreeBSD and SmartOS by using <a href="https://github.com/leo-project/leo_gateway/blob/develop/test/leo_nfs_integration_tests.sh" target="_blank">NFS Integration Test Tool</a>.
-	* NFS Client:
-		* Since we still have not implemented NFS Lock Manager, you can only use NFS Clients which support disabling lock option(the linux client might be the only option for now). After we will finish implementing NFS Lock Manager, You can use NFS Client on other xnix platforms as well.
 
 * Related Links:
     * [Configuration]()
