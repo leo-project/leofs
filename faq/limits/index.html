@@ -950,18 +950,14 @@
 </ul>
 <h2 id="nfs-support">NFS Support<a class="headerlink" href="#nfs-support" title="Permanent link">&para;</a></h2>
 <ul>
-<li>NFS implemantation with <code class="codehilite">LeoFS v1.1</code> is a subset of <a href="https://tools.ietf.org/html/rfc1813" target="_blank">NFS v3</a>. Lock manager protocol, <code class="codehilite">Authentication</code>, and <code class="codehilite">Owner/Permission</code> management are NOT covered.</li>
-<li>The <code class="codehilite">ls</code> command may take too much time when the target directory have lots of child. We're planning to provide better performance with LeoFS v.1.4.</li>
+<li>NFS implemantation with <code class="codehilite">LeoFS v1.1</code> is a subset of <a href="https://tools.ietf.org/html/rfc1813" target="_blank">NFS v3</a>. <code class="codehilite">Authentication</code>, and <code class="codehilite">Owner/Permission</code> management are NOT covered.</li>
+<li>The <code class="codehilite">ls</code> command may take too much time when the target directory have lots of child. We're planning to provide better performance with LeoFS v.2.0.</li>
 <li>If you use LeoFS with NFS, you should set the size of a chunked object in LeoFS to 1MB (1048576Bytes) - <code class="codehilite">large_object.chunked_obj_len = 1048576</code> <em>(leo_gateway.conf)</em>, otherwise the efficiency of disk utilization can be decreased.</li>
 <li>
 <p>What are the requirements to run LeoFS with NFS?</p>
 <ul>
 <li>LeoGateway (NFS Server):<ul>
 <li>We've supporeted the targets Debian 6, Ubuntu-Server 14.04 LTS or Higher and CentOS 6.5/7.0 as LeoFS does, but should work on most linux platforms. In addition, We've confirmed LeoFS with NFS works properly on the latest FreeBSD and SmartOS by using <a href="https://github.com/leo-project/leo_gateway/blob/develop/test/leo_nfs_integration_tests.sh" target="_blank">NFS Integration Test Tool</a>.</li>
-</ul>
-</li>
-<li>NFS Client:<ul>
-<li>Since we still have not implemented NFS Lock Manager, you can only use NFS Clients which support disabling lock option(the linux client might be the only option for now). After we will finish implementing NFS Lock Manager, You can use NFS Client on other xnix platforms as well.</li>
 </ul>
 </li>
 </ul>
