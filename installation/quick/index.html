@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -15,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.6.1">
     
     
       
@@ -26,7 +26,7 @@
       <script src="../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application-1d1da4857d.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application-4d0d3f2fbf.css">
       
     
     
@@ -91,15 +91,21 @@
           <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
           
 <div class="md-search" data-md-component="search">
-  <div class="md-search__overlay"></div>
+  <label class="md-search__overlay" for="search"></label>
   <div class="md-search__inner">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
       <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result"></div>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
       </div>
     </div>
   </div>
@@ -610,7 +616,7 @@
     <label class="md-nav__link" for="nav-5-2">
       Settings
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
       <label class="md-nav__title" for="nav-5-2">
         Settings
       </label>
@@ -694,7 +700,7 @@
     <label class="md-nav__link" for="nav-5-3">
       Interface
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="4">
       <label class="md-nav__title" for="nav-5-3">
         Interface
       </label>
@@ -754,7 +760,7 @@
     <label class="md-nav__link" for="nav-5-4">
       System Operations
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="5">
       <label class="md-nav__title" for="nav-5-4">
         System Operations
       </label>
@@ -838,7 +844,7 @@
     <label class="md-nav__link" for="nav-5-5">
       System Administration
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="6">
       <label class="md-nav__title" for="nav-5-5">
         System Administration
       </label>
@@ -1197,8 +1203,8 @@
 3
 4
 5
-6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_ubuntu-16.04_amd64.deb
-$ sudo dpkg -i leofs_{VERSION}-1_ubuntu-16.04_amd64.deb
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_erl-18.3_ubuntu-16.04_amd64.deb
+$ sudo dpkg -i leofs_{VERSION}-1_erl-18.3_ubuntu-16.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
@@ -1212,8 +1218,8 @@ $ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 3
 4
 5
-6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_ubuntu-14.04_amd64.deb
-$ sudo dpkg -i leofs_{VERSION}-1_ubuntu-14.04_amd64.deb
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_erl-18.3_ubuntu-14.04_amd64.deb
+$ sudo dpkg -i leofs_{VERSION}-1_erl-18.3_ubuntu-14.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
@@ -1233,8 +1239,8 @@ $ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 3
 4
 5
-6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.el6.x86_64.rpm
-$ sudo rpm -ivh leofs-{VERSION}-1.el6.x86_64.rpm
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.erl-18.3.el6.x86_64.rpm
+$ sudo rpm -ivh leofs-{VERSION}-1.erl-18.3.el6.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
@@ -1248,8 +1254,8 @@ $ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 3
 4
 5
-6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.el7.x86_64.rpm
-$ sudo rpm -ivh leofs-{VERSION}-1.el7.x86_64.rpm
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.erl-18.3.el7.x86_64.rpm
+$ sudo rpm -ivh leofs-{VERSION}-1.erl-18.3.el7.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
@@ -1630,7 +1636,7 @@ delete: <span class="s1">&#39;s3://&lt;BUCKET&gt;/&lt;OBJECT&gt;&#39;</span>
       
     </div>
     
-      <script src="../../assets/javascripts/application-7aa26ad9ec.js"></script>
+      <script src="../../assets/javascripts/application-6b599127bc.js"></script>
       <script>app.initialize({url:{base:"../.."}})</script>
       
     
