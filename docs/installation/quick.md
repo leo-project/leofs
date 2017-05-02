@@ -18,8 +18,8 @@ For Ubuntu distributions, perform the following steps:
 
 #### For Ubuntu 16.04
 ```text
-$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_ubuntu-16.04_amd64.deb
-$ sudo dpkg -i leofs_{VERSION}-1_ubuntu-16.04_amd64.deb
+$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_erl-18.3_ubuntu-16.04_amd64.deb
+$ sudo dpkg -i leofs_{VERSION}-1_erl-18.3_ubuntu-16.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
@@ -28,8 +28,8 @@ $ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 
 #### For Ubuntu 14.04
 ```text
-$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_ubuntu-14.04_amd64.deb
-$ sudo dpkg -i leofs_{VERSION}-1_ubuntu-14.04_amd64.deb
+$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_erl-18.3_ubuntu-14.04_amd64.deb
+$ sudo dpkg -i leofs_{VERSION}-1_erl-18.3_ubuntu-14.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
@@ -46,8 +46,8 @@ For CentOS distributions, perform the following steps:
 #### For CentOS 6.x
 
 ```text
-$ https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.el6.x86_64.rpm
-$ sudo rpm -ivh leofs-{VERSION}-1.el6.x86_64.rpm
+$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.erl-18.3.el6.x86_64.rpm
+$ sudo rpm -ivh leofs-{VERSION}-1.erl-18.3.el6.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
@@ -57,8 +57,8 @@ $ chown -R leofs:leofs /usr/local/leofs/{VERSION}
 #### For CentOS 7.x
 
 ```text
-$ https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.el7.x86_64.rpm
-$ sudo rpm -ivh leofs-{VERSION}-1.el7.x86_64.rpm
+$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.erl-18.3.el7.x86_64.rpm
+$ sudo rpm -ivh leofs-{VERSION}-1.erl-18.3.el7.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
 drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
