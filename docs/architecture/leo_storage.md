@@ -12,7 +12,7 @@ A LeoStorage node accepts a request from a LeoGateway node then automatically re
 
 ### READ-Request Handling
 
-A LeoGateway node requests a LeoStorage node; then its LeoStorage node retrieves an object from the local object-storage or a remote LeoStorage node. Finally, its LeoStorage node responds an object to its LeoGateway node. Also, its LeoStorage node checks the consistency with the asynchronous processing.
+A LeoGateway node requests a LeoStorage node; then its LeoStorage node retrieves an object from the local object-storage or a remote LeoStorage node. Finally, its LeoStorage node responds an object to its LeoGateway node. Also, its LeoStorage node checks the consistency with the asynchronous processing. Please note that [LeoGateway cache settings](/admin/settings/leo_gateway/#cache-consistency-between-leogateway-and-leostorage) can affect requests handling.
 
 If its LeoStorage node finds inconsistency of an object, its node fixes the inconsistent object with the backend process. Its object eventually keeps consistency with the functions.
 
