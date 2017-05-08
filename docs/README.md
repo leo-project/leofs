@@ -48,14 +48,14 @@ To try LeoFS, see our [Getting Started guides](installation/quick.md), and to le
 We have been aiming to achieve three things:
 
 * High reliability and availability
-  * Operating ratios is 99.9999999%, nine nines
-  * Keeps maintaining high data and system availability while some node downed in a LeoFS' cluster
+    * Operating ratios is 99.9999999%, nine nines
+    * Keeps maintaining high data and system availability while some node downed in a LeoFS' cluster
 * High scalability
-  * Builds a huge capacity cluster at low cost
-  * Supports a multi data center/cluster replication
+    * Builds a huge capacity cluster at low cost
+    * Supports a multi data center/cluster replication
 * High cost performance ratio
-  * High performance with minimum resources
-  * Provides easy management and easy operation to users
+    * High performance with minimum resources
+    * Provides easy management and easy operation to users
 
 
 ## Resources
