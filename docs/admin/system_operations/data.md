@@ -68,7 +68,7 @@ As described in the previous section, A compaction process is needed to remove l
 
 ### State Transition
 
-![State Transition](http://leo-project.net/leofs/docs/_images/leofs-compaction-state-transition.png)
+![State Transition](../../assets/leofs-compaction-state-transition.png)
 
 
 ### Commands
