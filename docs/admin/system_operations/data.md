@@ -260,7 +260,7 @@ When/How to use recover commands.
     - Invoke `recover-node` with a node having broken AVS/KVS files.
 - Queue Broken
     - Invoke `recover-node` with every node except which having broken Queue files.
-    - The procedure might be improved in future when https://github.com/leo-project/leofs/issues/618 solved.
+    - The procedure might be improved in future when [issue#618](https://github.com/leo-project/leofs/issues/618) solved.
 - Disk Broken
     - Invoke `suspend` with a node having broken Disk arrays and subsequently run `leo_storage stop`.
     - Exchange broken Disk arrays.
@@ -275,7 +275,7 @@ When/How to use recover commands.
 - Source/Destination Cluster Down and delete operations on the other side got lost (compacted).
     - Set up the cluster from scratch
     - invoke `recover-cluster` with the new cluster
-    - See also https://github.com/leo-project/leofs/issues/636 for more information.
+    - See also [issue#636](https://github.com/leo-project/leofs/issues/636) for more information.
 
 
 ## Related Links
