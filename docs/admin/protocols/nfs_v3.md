@@ -57,7 +57,7 @@ $ sudo apt-get install nfs-common
 $ sudo service rpcbind start
 ```
 
-* Create a bucket and a token for LeoFS' NFSv3 server with `leofs-adm -nfs-mnt-key <BUCKET> <ACCESS-KEY-ID> <CLIENT-IP_ADDRESS>`
+* Create a bucket and a token for LeoFS' NFSv3 server with `leofs-adm gen-nfs-mnt-key <BUCKET> <ACCESS-KEY-ID> <CLIENT-IP_ADDRESS>`
 
 ```bash
 $ ./leofs-adm add-bucket test 05236
