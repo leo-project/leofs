@@ -412,9 +412,9 @@ nfsproc3_fsstat_3(_1, Clnt, State) ->
                         Total,         %% total size
                         Free,          %% free size
                         Free,          %% free size(for auth user)
-                        16,            %% # of files
-                        8,             %% # of free file slots
-                        8,             %% # of free file slots(for auth user)
+                        4294967296,    %% # of files (erlang:round(math:pow(2, 32)))
+                        4294967296,    %% # of free file slots
+                        4294967296,    %% # of free file slots(for auth user)
                         10             %% invarsec
                        }}, State}.
 
