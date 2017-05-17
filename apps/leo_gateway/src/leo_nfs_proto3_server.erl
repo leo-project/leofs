@@ -433,7 +433,7 @@ nfsproc3_fsinfo_3(_1, Clnt, {RTMAX, WTMAX} = State) ->
                         5242880,     %% dperf (limited at client up to 32768)
                         MaxFileSize, %% max file size
                         {1, 0},      %% time_delta
-                        0            %% properties
+                        ?FSF3_HOMOGENEOUS %% properties
                        }}, State}.
 
 
