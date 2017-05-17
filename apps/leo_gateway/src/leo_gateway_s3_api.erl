@@ -946,13 +946,15 @@ handle_2({ok,_AccessKeyId}, Req, ?HTTP_DELETE,_Key,
          #req_params{bucket_info = BucketInfo,
                      path = Path,
                      upload_id = UploadId}, State) when UploadId /= <<>> ->
-    _ = leo_gateway_rpc_handler:put(#put_req_params{path = Path,
-                                                    body = ?BIN_EMPTY,
-                                                    dsize = 0,
-                                                    bucket_info = BucketInfo}),
-    _ = leo_gateway_rpc_handler:delete(Path),
-    _ = leo_gateway_rpc_handler:delete(<< Path/binary, ?STR_NEWLINE >>),
-    {ok, Req_2} = ?reply_no_content([?SERVER_HEADER], Req),
+    {ok, Req_2} =
+        case abort_multipart_upload(Path, BucketInfo) of
+            ok ->
+                ?reply_no_content([?SERVER_HEADER], Req);
+            {error, not_found} ->
+                ?reply_no_content([?SERVER_HEADER], Req);
+            _Error ->
+                ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req)
+        end,
     {ok, Req_2, State};
 
 %% For Multipart Upload - Completion
@@ -998,6 +1000,28 @@ handle_2({ok, AccessKeyId}, Req, HTTPMethod, Path, Params, State) ->
             {ok, Req_3, State}
     end.
 
+%% @private
+-spec(abort_multipart_upload(Path, BucketInfo) ->
+             ok | {error, Cause} when Path::binary(),
+                                      BucketInfo::#?BUCKET{},
+                                      Cause::any()).
+abort_multipart_upload(Path, BucketInfo) ->
+    Ret = leo_gateway_rpc_handler:put(#put_req_params{path = Path,
+                                                    body = ?BIN_EMPTY,
+                                                    dsize = 0,
+                                                    bucket_info = BucketInfo}),
+    abort_multipart_upload_1(Ret, Path).
+abort_multipart_upload_1({ok, _}, Path) ->
+    Ret = leo_gateway_rpc_handler:delete(Path),
+    abort_multipart_upload_2(Ret, Path);
+abort_multipart_upload_1({error, _} = Error, _Path) ->
+    Error.
+abort_multipart_upload_2(ok, Path) ->
+    leo_gateway_rpc_handler:delete(<< Path/binary, ?STR_NEWLINE >>);
+abort_multipart_upload_2({error, not_found}, Path) ->
+    leo_gateway_rpc_handler:delete(<< Path/binary, ?STR_NEWLINE >>);
+abort_multipart_upload_2({error, _} = Error, _Path) ->
+    Error.
 
 %% @private
 -spec(aws_chunk_decode(Bin, State) ->
