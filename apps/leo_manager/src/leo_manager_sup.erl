@@ -371,7 +371,7 @@ create_mnesia_tables_2(Mode) ->
                   ?error("create_mnesia_tables_2/1", [{cause, Reason}]),
                   {error, ?ERROR_MNESIA_GET_TABLE_INFO_ERROR};
               Tbls when length(Tbls) > 1 ->
-                  case mnesia:wait_for_tables(Tbls, timer:seconds(180)) of
+                  case load_tables(Tbls) of
                       ok ->
                           try
                               %% Execute to migrate data
@@ -413,6 +413,40 @@ create_mnesia_tables_2(Mode) ->
             ok;
         _ ->
             init:stop()
+    end.
+
+%% @doc Force load tables when the mnesia won't load due to the possibility split brain could happen
+%% @private
+-spec(force_load_tables(Tables) ->
+             ok | {error, Cause} when Tables::list(atom()),
+                                      Cause::any()).
+force_load_tables([]) ->
+    ok;
+force_load_tables([schema|Rest]) ->
+    %% must skip the schema itself
+    force_load_tables(Rest);
+force_load_tables([H|Rest]) ->
+    case mnesia:force_load_table(H) of
+        yes ->
+            force_load_tables(Rest);
+        Error ->
+            Error
+    end.
+
+%% @doc Wrapper function to load tables
+%% @private
+-spec(load_tables(Tables) ->
+             ok | {error, Cause} | {timeout, BadTabList} when Tables::list(atom()),
+                                                              Cause::any(),
+                                                              BadTabList::list(atom())).
+load_tables(Tables) ->
+    Args = init:get_plain_arguments(),
+    Last = lists:last(Args),
+    case Last of
+        "force_load" ->
+            force_load_tables(Tables);
+        _ ->
+            mnesia:wait_for_tables(Tables, timer:seconds(180))
     end.
 
 %% @doc Function migrating datas
