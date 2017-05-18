@@ -38,6 +38,8 @@
 | (*Repeatedly launch LeoGateway nodes*) |
 | `$ leofs-adm status` | Confirm the current state of the LeoFS system (2) |
 
+!!! note "Note: Restart a LeoManager when both of them are down"
+    When both of the LeoManagers are down and you try to restart a LeoManager that is NOT the one terminated at last, you can not restart the LeoManager because a sprit-brain could happen. If you make sure there is no case the data inconsistency could happen due to a sprit-brain then do `leo_manager start force_load` that allows you to restart a LeoManager in such cases. Please refer [What is the significance of a Mnesia Master Node in a cluster](http://stackoverflow.com/questions/3573404/what-is-the-significance-of-a-mnesia-master-node-in-a-cluster) for more information.
 
 ## Related Links
 
