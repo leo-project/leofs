@@ -83,6 +83,23 @@ release:
 	cp -r rel/leo_gateway/leo_gateway/* package/leo_gateway/
 	cp README.md package/
 	cp leofs-adm package/
+release_for_test: release
+	( echo "# Directories used by launch script can be re-defined here, if needed"; \
+	  echo "# Default values will be picked for commented or empty parameters"; \
+	  echo ""; \
+	  echo "# Directory with main .conf file. It must be writable by $RUNNER_USER"; \
+	  echo "# RUNNER_ETC_DIR="; \
+	  echo ""; \
+	  echo "# Directory for .schema file."; \
+	  echo "# RUNNER_SCHEMA_DIR="; \
+	  echo ""; \
+	  echo "# Directory for erlang log files (erlang.log.* and run_erl.log)"; \
+	  echo "# RUNNER_LOG_DIR="; \
+	  echo ""; \
+	  echo "# Defaults to "leofs""; \
+	  echo "RUNNER_USER=${USER}"; \
+	) > rel/common/launch.environment
+	sudo rm -rf /tmp/home
 
 pkgsrc: release
 	make -C pkg

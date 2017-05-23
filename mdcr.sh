@@ -95,7 +95,7 @@ deploy()
 
     echo "Deploying mdcr..."
 
-    make release
+    make release_for_test
 
     for i in `seq 0 $((NCLUSTERS - 1))`
     do
