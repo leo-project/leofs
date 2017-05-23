@@ -3,7 +3,7 @@
 #
 # LeoFS
 #
-# Copyright (c) 2012-2015 Rakuten, Inc.
+# Copyright (c) 2012-2017 Rakuten, Inc.
 #
 # This file is provided to you under the Apache License,
 # Version 2.0 (the "License"); you may not use this file
@@ -54,7 +54,7 @@ if [ $1 = "stop" ]; then
 fi
 
 ## Generate the packages
-make release
+make release_for_test
 
 ## Copy the storage-files
 cp -r package/leo_storage package/leo_storage_0
