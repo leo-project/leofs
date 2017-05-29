@@ -17,7 +17,7 @@
 
 LeoFS Storage consists of object and the metadata storage. In addition, it includes replicator and repairer in order to realise Eventual consistency.
 
-![leo-storage-architecture](http://leo-project.net/leofs/docs/_images/leofs-architecture.003.jpg)
+![leo-storage-architecture](https://raw.githubusercontent.com/leo-project/leofs/master/docs/assets/leofs-architecture.003.jpg)
 
 In case of a write operation, LeoFS Storage accepts a request from LeoFS Gateway then automatically replicate an object into the LeoFS Storage cluster. Finally, LeoFS Storage confirms whether a stored object satisfy the consistency rule or NOT.
 
@@ -29,7 +29,7 @@ If the LeoFS Storage node finds inconsistency of an object, it will be recovered
 
 LeoFS’s object consists of 3 layers which are metadata, needle and object container.
 
-![leo-storage-data-structure](http://leo-project.net/leofs/docs/_images/leofs-architecture.005.jpg)
+![leo-storage-data-structure](https://raw.githubusercontent.com/leo-project/leofs/master/docs/assets/leofs-architecture.005.jpg)
 
 * The object storage manages and stores both an object and a metadata, which merges as a needle.
 * The metadata storage manages and stores attributes of an object which includes filename, size, checksum, and so on. And it depends of bitcask or leveldb.
@@ -37,9 +37,9 @@ LeoFS’s object consists of 3 layers which are metadata, needle and object cont
 	* This format is robust and high performance because effect of local file system is just a little part.
 	* LeoFS Storage is necessary to GC - the compaction mechanism in order to remove unnecessary objects from the object container.
 
-### Large object support
+### Large Size Object Support
 
-![leo-storage-large-object-support](http://leo-project.net/leofs/docs/_images/leofs-architecture.006.jpg)
+![leo-storage-large-object-support](https://raw.githubusercontent.com/leo-project/leofs/master/docs/assets/leofs-architecture.006.jpg)
 
 LeoFS supports to handle a large size object since v0.12. The purpose of this function is 2 things:
 
