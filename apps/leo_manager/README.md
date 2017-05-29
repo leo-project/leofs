@@ -18,7 +18,7 @@ LeoFS Manager generates and manages a routing table, which is called RING and ba
 
 LeoFS Manager always monitors every [LeoFS Storage](https://github.com/leo-project/leo_storage) and [LeoFS Gateway](https://github.com/leo-project/leo_gateway) of status and RING in order to keep running LeoFS and consistency of a RING. And also, it distributes RING to LeoFS Storage and LeoFS Gateway.
 
-![leo-manager-architecture](http://leo-project.net/leofs/docs/_images/leofs-architecture.007.jpg)
+![leo-manager-architecture](https://raw.githubusercontent.com/leo-project/leofs/master/docs/assets/leofs-architecture.007.jpg)
 
 In addition, LeoFS Manager provides LeoFS administration commands - [leofs-adm](https://raw.githubusercontent.com/leo-project/leofs/master/leofs-adm) to be able to easily operate LeoFS. LeoFS administration commands already cover entire LeoFS functions.
 
