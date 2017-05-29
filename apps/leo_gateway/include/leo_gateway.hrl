@@ -390,99 +390,135 @@
         begin
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[GET]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       _OrgPath,
-                                       _ChildNum,
-                                       _Size,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       _Cache
-                                      ]}
-              })
+            _Format = "[GET]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                       _OrgPath,
+                       _ChildNum,
+                       _Size,
+                       leo_date:date_format(),
+                       leo_date:clock(),
+                       _Response,
+                       _Latency,
+                       _Cache
+                      ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
             %% ?notify_metrics(<<"GET">>,_Bucket,_Size)
         end).
 -define(access_log_get_acl(_Bucket,_Path,_Response,_Begin),
         begin
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[GET-ACL]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       _OrgPath,
-                                       _ChildNum,
-                                       0,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       ""
-                                      ]}
-              })
+            _Format = "[GET-ACL]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                       _OrgPath,
+                       _ChildNum,
+                       0,
+                       leo_date:date_format(),
+                       leo_date:clock(),
+                       _Response,
+                       _Latency,
+                       ""
+                      ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
         end).
 -define(access_log_put(_Bucket,_Path,_Size,_Response,_Begin),
         begin
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[PUT]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       _OrgPath,
-                                       _ChildNum,
-                                       _Size,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       ""
-                                      ]}
-              })
+            _Format = "[PUT]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                        _OrgPath,
+                        _ChildNum,
+                        _Size,
+                        leo_date:date_format(),
+                        leo_date:clock(),
+                        _Response,
+                        _Latency,
+                        ""
+                       ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
             %% ?notify_metrics(<<"PUT">>,_Bucket,_Size)
         end).
 -define(access_log_delete(_Bucket,_Path,_Size,_Response,_Begin),
         begin
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[DELETE]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       _OrgPath,
-                                       _ChildNum,
-                                       _Size,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       ""
-                                      ]}
-              })
+            _Format = "[DELETE]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                        _OrgPath,
+                        _ChildNum,
+                        _Size,
+                        leo_date:date_format(),
+                        leo_date:clock(),
+                        _Response,
+                        _Latency,
+                        ""
+                       ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
             %% ?notify_metrics(<<"DELETE">>,_Bucket,_Size)
         end).
 -define(access_log_head(_Bucket,_Path,_Response,_Begin),
         begin
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[HEAD]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       _OrgPath,
-                                       _ChildNum,
-                                       0,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       ""
-                                      ]}
-              })
+            _Format = "[HEAD]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                        _OrgPath,
+                        _ChildNum,
+                        0,
+                        leo_date:date_format(),
+                        leo_date:clock(),
+                        _Response,
+                        _Latency,
+                        ""
+                       ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
+
         end).
 
 -define(access_log(_Method,_Bucket,_Path,_Size,_Response,_Begin),
@@ -505,76 +541,104 @@
 -define(access_log_bucket_put(_Bucket,_Response,_Begin),
         begin
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[BUCKET-PUT]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       "",
-                                       0,
-                                       0,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       ""
-                                      ]}
-              })
+            _Format = "[BUCKET-PUT]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                        "",
+                        0,
+                        0,
+                        leo_date:date_format(),
+                        leo_date:clock(),
+                        _Response,
+                        _Latency,
+                        ""
+                       ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
             %% ?notify_metrics(<<"PUT">>,_Bucket,_Size)
         end).
 -define(access_log_bucket_delete(_Bucket,_Response,_Begin),
         begin
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[BUCKET-DELETE]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       "",
-                                       0,
-                                       0,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       ""
-                                      ]}
-              })
+            _Format = "[BUCKET-DELETE]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                        "",
+                        0,
+                        0,
+                        leo_date:date_format(),
+                        leo_date:clock(),
+                        _Response,
+                        _Latency,
+                        ""
+                       ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
             %% ?notify_metrics(<<"DELETE">>,_Bucket,_Size)
         end).
 -define(access_log_bucket_head(_Bucket,_Response,_Begin),
         begin
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[BUCKET-HEAD]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       "",
-                                       0,
-                                       0,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       ""
-                                      ]}
-              })
+            _Format =  "[BUCKET-HEAD]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                        "",
+                        0,
+                        0,
+                        leo_date:date_format(),
+                        leo_date:clock(),
+                        _Response,
+                        _Latency,
+                        ""
+                       ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
         end).
 -define(access_log_bucket_get(_Bucket, _Prefix, _Response,_Begin),
         begin
             _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-            leo_logger_client_base:append(
-              {?LOG_ID_ACCESS,
-               #message_log{format  = "[BUCKET-GET]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
-                            message = [binary_to_list(_Bucket),
-                                       binary_to_list(_Prefix),
-                                       0,
-                                       0,
-                                       leo_date:date_format(),
-                                       leo_date:clock(),
-                                       _Response,
-                                       _Latency,
-                                       ""
-                                      ]}
-              })
+            _Format = "[BUCKET-GET]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+            _Message = [binary_to_list(_Bucket),
+                        binary_to_list(_Prefix),
+                        0,
+                        0,
+                        leo_date:date_format(),
+                        leo_date:clock(),
+                        _Response,
+                        _Latency,
+                        ""
+                       ],
+            case application:get_env(leo_logger, log_backend) of
+                {ok, lager} ->
+                    access:info(_Format, _Message);
+                _ ->
+                    leo_logger_client_base:append(
+                      {?LOG_ID_ACCESS,
+                       #message_log{format  = _Format,
+                                    message = _Message}
+                      })
+            end
         end).
 
 -define(reply_fun(_Cause,_Method,_Bucket,_Key,_Len,_Begin),

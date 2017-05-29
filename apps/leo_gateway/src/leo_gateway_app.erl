@@ -24,6 +24,7 @@
 %% @end
 %%======================================================================
 -module(leo_gateway_app).
+-compile([{parse_transform, lager_transform}]).
 
 -include("leo_gateway.hrl").
 -include("leo_nfs_mount3.hrl").
@@ -100,16 +101,18 @@ start(_Type, _StartArgs) ->
                     _ ->
                         DefLogDir
                 end,
-    ok = leo_logger_client_message:new(LogDir, ?env_log_level(App), log_file_appender()),
 
-    %% access-logger (file-appender)
-    case application:get_env(leo_gateway, is_enable_access_log) of
-        {ok, true} ->
-            ok = leo_logger_client_base:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                            LogDir, ?LOG_FILENAME_ACCESS);
-        _ ->
-            void
-    end,
+    LogLevel = ?env_log_level(App),
+    LogBackend = case application:get_env(leo_logger, log_backend) of
+                     {ok, lager} -> lager;
+                     _ -> leo_logger
+                 end,
+    EnableAccessLog = case application:get_env(leo_gateway, is_enable_access_log) of
+                          {ok, true} -> true;
+                          _ -> false
+                      end,
+
+    ok = start_logger(LogBackend, LogDir, LogLevel, EnableAccessLog),
 
     %% Launch Supervisor
     Res = leo_gateway_sup:start_link(),
@@ -121,7 +124,10 @@ start(_Type, _StartArgs) ->
 prep_stop(_State) ->
     catch leo_redundant_manager_sup:stop(),
     catch leo_mq_sup:stop(),
-    catch leo_logger_sup:stop(),
+    case application:get_env(leo_logger, log_backend) of
+        {ok, lager} -> void;
+        _ -> catch leo_logger_sup:stop()
+    end,
 
     case catch get_options() of
         {ok, HttpOptions} ->
@@ -705,3 +711,59 @@ cast_type_list_to_binary(List) ->
                           Bin         -> Bin
                       end
               end, List).
+
+%% @doc Start Logger
+%% @private
+start_logger(lager, LogDir, LogLevel, EnableAccessLog) ->
+    application:set_env(lager, log_root, LogDir),
+    application:set_env(lager, crash_log, "crash.log"),
+
+    ok = application:set_env(lager, handlers,
+                             [{lager_file_backend, [{file, "info.log"}, {level, debug},
+                                                    {size, 10485760}, {date, "$D0"}, {count, 100},
+                                                    {formatter, lager_leofs_formatter},
+                                                    {formatter_config, ["[", sev, "]\t", atom_to_list(node()), "\t", leodate, "\t", leotime, "\t", {module, "null"}, ":", {function, "null"}, "\t", {line, "0"}, "\t", message, "\n"]}
+                                                   ]},
+                              {lager_file_backend, [{file, "error.log"}, {level, warning},
+                                                    {size, 10485760}, {date, "$D0"}, {count, 100},
+                                                    {formatter, lager_leofs_formatter},
+                                                    {formatter_config, ["[", sev, "]\t", atom_to_list(node()), "\t", leodate, "\t", leotime, "\t", {module, "null"}, ":", {function, "null"}, "\t", {line, "0"}, "\t", message, "\n"]}
+                                                   ]}]),
+
+    ok = application:set_env(lager, extra_sinks,
+                             [{access_lager_event,
+                               [{handlers,
+                                 [{lager_file_backend, [{file, ?LOG_FILENAME_ACCESS}, {level, info},
+                                                        {size, 10485760}, {date, "$D0"}, {count, 100},
+                                                        {formatter, lager_default_formatter},
+                                                        {formatter_config, [message, "\n"]}
+                                                       ]}]
+                                },
+                                {async_threshold, 500},
+                                {async_threshold_window, 50}]
+                              }]),
+
+    {ok, Handlers} = ?lager_handlers(LogLevel),
+
+    lager:start(),
+    lists:foreach(fun({File, Level}) ->
+                          lager:set_loglevel(lager_file_backend, File, Level)
+                  end, Handlers),
+
+    case EnableAccessLog of
+        true ->
+            lager:set_loglevel(access_lager_event, lager_file_backend, ?LOG_FILENAME_ACCESS, info);
+        _ ->
+            void
+    end,
+    ok;
+start_logger(leo_logger, LogDir, LogLevel, EnableAccessLog) ->
+    ok = leo_logger_client_message:new(LogDir, LogLevel, log_file_appender()),
+    case EnableAccessLog of
+        true ->
+            ok = leo_logger_client_base:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
+                                            LogDir, ?LOG_FILENAME_ACCESS);
+        _ ->
+            void
+    end,
+    ok.
