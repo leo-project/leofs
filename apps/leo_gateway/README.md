@@ -13,7 +13,7 @@
 
 LeoFS Gateway consists of the fast HTTP-Server - [Cowboy](https://github.com/ninenines/cowboy), the API handler and [the cache mecanism](https://github.com/leo-project/leo_cache). It provides the REST-API and Amazon S3-API. You’re able to easily access LeoFS with S3-Clients such as `s3cmd`, `DragonDisk`, program languages - `Erlang`, `Java`, `Ruby`, `Python`, `Go` and so on.
 
-![leo_gateway_architecture](http://leo-project.net/leofs/docs/_images/leofs-architecture.002.jpg)
+![leo_gateway_architecture](https://raw.githubusercontent.com/leo-project/leofs/master/docs/assets/leofs-architecture.002.jpg)
 
 A client requests an object or a bucket operation to LeoFS Gateway then LeoFS Gateway requests the message of operation to a storage-node.
 
