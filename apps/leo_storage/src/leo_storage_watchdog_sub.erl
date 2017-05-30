@@ -84,7 +84,7 @@ handle_notify(?WD_SUB_ID_1 = Id,_Alarm,_Unixtime) ->
     case is_active_watchdog() of
         true ->
             ?debug("handle_notify/3",
-                   "received an alart - id:~p, alarm:~p", [Id, _Alarm]),
+                   "received an alarm - id:~p, alarm:~p", [Id, _Alarm]),
             leo_compact_fsm_controller:decrease(),
             leo_mq_api:decrease(?QUEUE_ID_PER_OBJECT),
             leo_mq_api:decrease(?QUEUE_ID_SYNC_BY_VNODE_ID),
