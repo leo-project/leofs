@@ -98,6 +98,7 @@
 -define(HTTP_QS_BIN_MAXKEYS,     <<"max-keys">>).
 -define(HTTP_QS_BIN_MULTI_DELETE,<<"delete">>).
 -define(HTTP_QS_BIN_DELIMITER,   <<"delimiter">>).
+-define(HTTP_QS_BIN_VERSIONING,  <<"versioning">>).
 
 -define(HTTP_ST_OK,                  200).
 -define(HTTP_ST_NO_CONTENT,          204).
@@ -453,6 +454,9 @@
         lists:append(["<Error><Key>",
                       "~s",
                       "</Key><Code>AccessDenied</Code><Message>Access Denied</Message></Error>"])).
+
+-define(XML_BUCKET_VERSIONING,
+        <<"<VersioningConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"/>">>).
 
 %% Records
 -type aws_chunk_state() ::  wait_size | wait_head | read_chunk | error | done.
