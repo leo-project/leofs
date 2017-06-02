@@ -144,7 +144,7 @@ $ ./git_checkout.sh develop
 Then, build LeoFS with the following commands.
 
 ```bash
-$ make && make release
+$ make && make release_for_test
 ```
 
 Now, you can find the LeoFS package as follow.
@@ -168,10 +168,10 @@ $ ./leofs-adm status
 -----------------------------------+----------
  Basic/Consistency level
 -----------------------------------+----------
-                    system version | 1.2.16
+                    system version | 1.3.4
                         cluster Id | leofs_1
                              DC Id | dc_1
-                    Total replicas | 2
+                    Total replicas | 1
           number of successes of R | 1
           number of successes of W | 1
           number of successes of D | 1
@@ -180,35 +180,39 @@ $ ./leofs-adm status
 -----------------------------------+----------
  Multi DC replication settings
 -----------------------------------+----------
-        max number of joinable DCs | 2
-           number of replicas a DC | 1
+ [mdcr] max number of joinable DCs | 2
+ [mdcr] total replicas per a DC    | 1
+ [mdcr] number of successes of R   | 1
+ [mdcr] number of successes of W   | 1
+ [mdcr] number of successes of D   | 1
 -----------------------------------+----------
  Manager RING hash
 -----------------------------------+----------
-                 current ring-hash | 3923d007
-                previous ring-hash | 3923d007
+                 current ring-hash |
+                previous ring-hash |
 -----------------------------------+----------
 
  [State of Node(s)]
 -------+--------------------------+--------------+----------------+----------------+----------------------------
  type  |           node           |    state     |  current ring  |   prev ring    |          updated at
 -------+--------------------------+--------------+----------------+----------------+----------------------------
-  S    | storage_0@127.0.0.1      | running      | 3923d007       | 3923d007       | 2015-10-30 09:44:11 +0900
+  S    | storage_0@127.0.0.1      | attached     |                |                | 2017-06-02 14:59:20 +0900
 -------+--------------------------+--------------+----------------+----------------+----------------------------
 
 $ ./leofs-adm start
 OK
 
 $ ./leofs-adm status
+ [System Confiuration]
 -----------------------------------+----------
  Item                              | Value
 -----------------------------------+----------
  Basic/Consistency level
 -----------------------------------+----------
-                    system version | 1.2.16
+                    system version | 1.3.4
                         cluster Id | leofs_1
                              DC Id | dc_1
-                    Total replicas | 2
+                    Total replicas | 1
           number of successes of R | 1
           number of successes of W | 1
           number of successes of D | 1
@@ -217,24 +221,25 @@ $ ./leofs-adm status
 -----------------------------------+----------
  Multi DC replication settings
 -----------------------------------+----------
-        max number of joinable DCs | 2
-           number of replicas a DC | 1
+ [mdcr] max number of joinable DCs | 2
+ [mdcr] total replicas per a DC    | 1
+ [mdcr] number of successes of R   | 1
+ [mdcr] number of successes of W   | 1
+ [mdcr] number of successes of D   | 1
 -----------------------------------+----------
  Manager RING hash
 -----------------------------------+----------
-                 current ring-hash | 3923d007
-                previous ring-hash | 3923d007
+                 current ring-hash | 433fe365
+                previous ring-hash | 433fe365
 -----------------------------------+----------
 
  [State of Node(s)]
 -------+--------------------------+--------------+----------------+----------------+----------------------------
  type  |           node           |    state     |  current ring  |   prev ring    |          updated at
 -------+--------------------------+--------------+----------------+----------------+----------------------------
-  S    | storage_0@127.0.0.1      | running      | 3923d007       | 3923d007       | 2015-10-30 09:44:11 +0900
-  G    | gateway_0@127.0.0.1      | running      | 3923d007       | 3923d007       | 2015-10-30 09:45:27 +0900
+  S    | storage_0@127.0.0.1      | running      | 433fe365       | 433fe365       | 2017-06-02 15:00:10 +0900
+  G    | gateway_0@127.0.0.1      | running      | 433fe365       | 433fe365       | 2017-06-02 15:00:12 +0900
 -------+--------------------------+--------------+----------------+----------------+----------------------------
-
-
 ```
 
 ## Build a LeoFS Cluster
