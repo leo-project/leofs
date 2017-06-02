@@ -264,7 +264,7 @@ get_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
 
     Versioning = case cowboy_req:qs_val(?HTTP_QS_BIN_VERSIONING, Req) of
                     {undefined, _} -> false;
-                    {Val_3, _} ->
+                    {_Val_3, _} ->
                         true
                 end,
 
@@ -1209,15 +1209,11 @@ handle_multi_upload_1(true, Req, Path, UploadId,
                        end,
             Ret = cowboy_req:body(Req, BodyOpts),
             handle_multi_upload_2(Ret, Req, Path, ChunkedLen, BucketInfo, CMetaBin);
-        {error, unavailable} ->
-            ?reply_service_unavailable_error([?SERVER_HEADER], Path, <<>>, Req);
         _ ->
-            ?reply_forbidden([?SERVER_HEADER], ?XML_ERROR_CODE_AccessDenied,
-                             ?XML_ERROR_MSG_AccessDenied, Path, <<>>, Req)
+            ?reply_service_unavailable_error([?SERVER_HEADER], Path, <<>>, Req)
     end;
 handle_multi_upload_1(false, Req, Path,_UploadId,_ChunkedLen,_,_,_) ->
-    ?reply_forbidden([?SERVER_HEADER], ?XML_ERROR_CODE_AccessDenied,
-                     ?XML_ERROR_MSG_AccessDenied, Path, <<>>, Req).
+    ?reply_service_unavailable_error([?SERVER_HEADER], Path, <<>>, Req).
 
 %% @private
 -spec(handle_multi_upload_2({ok, Bin, Req}|{error, Cause}, Req, Path, ChunkedLen, BucketInfo, CMetaBin) ->
