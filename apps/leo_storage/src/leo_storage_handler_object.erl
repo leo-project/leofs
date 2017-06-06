@@ -1075,29 +1075,34 @@ prefix_search_and_remove_objects(undefined) ->
     not_found;
 prefix_search_and_remove_objects(ParentDir) ->
     Fun = fun(Key, V, Acc) ->
-                  Metadata = binary_to_term(V),
-                  AddrId = Metadata#?METADATA.addr_id,
-                  Pos_1 = case binary:match(Key, [ParentDir]) of
-                              nomatch ->
-                                  -1;
-                              {Pos,_} ->
-                                  Pos
-                          end,
-
-                  case (Pos_1 == 0) of
-                      true when Metadata#?METADATA.del == ?DEL_FALSE ->
-                          QId = ?QUEUE_ID_ASYNC_DELETION,
-                          case leo_storage_mq:publish(QId, AddrId, Key) of
-                              ok ->
-                                  void;
-                              {error, Cause} ->
-                                  ?warn("prefix_search_and_remove_objects/1",
-                                        [{qid, QId}, {addr_id, AddrId},
-                                         {key, Key}, {cause, Cause}])
-                          end,
+                  Meta_Pre = binary_to_term(V),
+                  case leo_object_storage_transformer:transform_metadata(Meta_Pre) of
+                      {error, Cause} ->
+                          ?error("prefix_search_and_remove_objects/1", [{key, Key}, {error, Cause}]),
                           Acc;
-                      _ ->
-                          Acc
+                      Metadata ->
+                          AddrId = Metadata#?METADATA.addr_id,
+                          Pos_1 = case binary:match(Key, [ParentDir]) of
+                                      nomatch ->
+                                           -1;
+                                      {Pos,_} ->
+                                          Pos
+                                  end,
+                          case (Pos_1 == 0) of
+                              true when Metadata#?METADATA.del == ?DEL_FALSE ->
+                                  QId = ?QUEUE_ID_ASYNC_DELETION,
+                                  case leo_storage_mq:publish(QId, AddrId, Key) of
+                                      ok ->
+                                          void;
+                                      {error, Cause} ->
+                                          ?warn("prefix_search_and_remove_objects/1",
+                                                  [{qid, QId}, {addr_id, AddrId},
+                                                  {key, Key}, {cause, Cause}])
+                                  end,
+                                  Acc;
+                              _ ->
+                                  Acc
+                          end
                   end
           end,
     case catch leo_object_storage_api:fetch_by_key(ParentDir, Fun) of
