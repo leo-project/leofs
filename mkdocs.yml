@@ -82,4 +82,5 @@ pages:
     - LeoFS Fundamentals: 'faq/fundamentals.md'
     - LeoFS Limits: 'faq/limits.md'
     - LeoFS Administration: 'faq/administration.md'
+    - LeoFS Clients: 'faq/client.md'
 - Production Checklist: 'production_checklist/README.md'
