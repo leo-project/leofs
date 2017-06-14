@@ -2,7 +2,7 @@
 #
 # LeoFS
 #
-# Copyright (c) 2012-2015 Rakuten, Inc.
+# Copyright (c) 2012-2017 Rakuten, Inc.
 #
 # This file is provided to you under the Apache License,
 # Version 2.0 (the "License"); you may not use this file
@@ -23,8 +23,6 @@
 
 all: deps compile
 compile:
-	# compile leofs w/erlang/otp 19
-	# find . -name rebar.config|xargs sed -i 's/require_otp_vsn,\s\+"\(.\+\)"/require_otp_vsn, "R16B*|17|18|19"/g'
 	@./rebar compile
 deps:
 	@./rebar get-deps
