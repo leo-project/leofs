@@ -102,7 +102,16 @@ gen_config() {
     rm -f $RUNNER_ETC_DIR/app.*.config
     rm -f $RUNNER_ETC_DIR/vm.*.args
     ERTS_PATH=$RUNNER_BASE_DIR/erts-$ERTS_VSN/bin
-    RES_CUTTLEFISH=`PATH=$ERTS_PATH:$PATH $RUNNER_BASE_DIR/bin/cuttlefish -i $RUNNER_SCHEMA_DIR/$NODE_TYPE.schema -c $RUNNER_ETC_DIR/$NODE_TYPE.conf -d $RUNNER_ETC_DIR/`
+    # Check for presence of extra config files and process them in alphabetical order, if they exist
+    ADDITIONAL_CONFIG_CMD=""
+    if [ -d $RUNNER_ETC_DIR/$NODE_TYPE.d ] && ls -A $RUNNER_ETC_DIR/$NODE_TYPE.d/*.conf > /dev/null 2>&1
+    then
+        for config_name in $RUNNER_ETC_DIR/$NODE_TYPE.d/*.conf
+        do
+            ADDITIONAL_CONFIG_CMD="$ADDITIONAL_CONFIG_CMD -c $config_name"
+        done
+    fi
+    RES_CUTTLEFISH=`PATH=$ERTS_PATH:$PATH $RUNNER_BASE_DIR/bin/cuttlefish -i $RUNNER_SCHEMA_DIR/$NODE_TYPE.schema -c $RUNNER_ETC_DIR/$NODE_TYPE.conf $ADDITIONAL_CONFIG_CMD -d $RUNNER_ETC_DIR/`
 
     APP_CONFIG=`find $RUNNER_ETC_DIR/ -type f | grep app.*[0-9].config`
     mv $APP_CONFIG $RUNNER_ETC_DIR/app.config
