@@ -24,7 +24,8 @@ LeoFS' configuration files are located in the following directories:
 
 
 The `*.conf` file is used to set various attributes of a LeoFS storage system. It also used to pass parameters to the Erlang node such as the name and cookie of the node.
-Optional configuration files in `*.d/*.conf` are for additional configuration, in case system administrator prefers to keep all the changed settings in separate config and keep config with default settings unchanged (so that config merging is not required during version upgrade which changes default config files). If these files exist, they are processed (in alphabetical order) after the main configuration file. For each option in config files, the last defined value is used.
+
+Optional configuration files in `*.d/*.conf` are for additional configuration, in case system administrator prefers to keep all the changed settings in separate config and keep config with default settings unchanged (so that config merging is not required during version upgrade which changes default config files). If these files exist, they are processed (in alphabetical order) after the main configuration file. For each option in config files, the last defined value is used. Due to technical reasons, config file names or full paths to them shouldn't contain whitespace characters (spaces, tabs, etc).
 
 
 ## Contents of Settings
