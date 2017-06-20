@@ -106,3 +106,34 @@ If you changed a WRONG node name before stopping the daemon, As a result, when a
 stop command did not work too.
 
 Since you can notice this kind of mistake in `error.log` with `LeoFS v1.2.9`, we'd recommend you upgrading to the v1.2.9 or higher one.
+
+## What should I do when a **timeout** error happen during upload a very large file?
+
+There are two configurations that could affect how often **timeout** could happen in leo_gateway.conf.
+
+- http.timeout_for_body (in msecs)
+- large_object.reading_chunked_obj_len (in bytes)
+
+As **timeout** during upload could happen when `http.timeout_for_body` passed during every `large_object.reading_chunked_obj_len` bytes read, assuming we have `http.timeout_for_body` set to 1000 and `large_object.reading_chunked_obj_len` set to 1048576, we could expect any upload to be succeeded in if we ensured at least 8Mbps(1MB/sec) stable network bandwidth.
+
+Also taking the concurrent uploads into account, we can define the expression that enables us to check whether each configuration is valid as below.
+
+```ini
+EXPECTED_BANDWIDTH_IN_BYTES = large_object.reading_chunked_obj_len / (http.timeout_for_body / 1000) * MAX_CONCURRENT_UPLOADS
+```
+
+For example, say we have 1Gbps(128MB/sec) stable bandwidth and 128 concurrent uploads at most then we could be ready to 1MB per connection so the below is considered as a valid configuration.
+
+```ini
+http.timeout_for_body = 1000
+large_object.reading_chunked_obj_len = 1048576
+# EXPECTED_BANDWIDTH_IN_BYTES = 1048576 / (1000 / 1000) * 128 = 134217728(128MB)
+```
+
+Also there is one important thing you have to care.
+To decrease the bandwidth and odds timeout could happen, you have two options.
+
+- Decrease `large_object.reading_chunked_obj_len`
+- Increase `http.timeout_for_body`
+
+Logically it's same between decreasing the buffer size and increasing the timeout. However there is one benefit using the former one rather than the latter. As the memory allocation request in Erlang VM happen in `large_object.reading_chunked_obj_len` unit, the larger buffer size we set, the more memory footprint the host running LeoGateway needs at once so that if LeoGateway accepts lots of connections and those try to upload very large files in parallel then the odds OOM could happen increase. That said, decreasing the buffer size should be the first try in terms of safety(less memory usages).
