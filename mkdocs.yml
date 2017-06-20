@@ -55,7 +55,7 @@ pages:
         - Cluster Settings: 'admin/settings/cluster.md'
         - Environment Configuration: 'admin/settings/environment_config.md'
         - LeoManager Settings: 'admin/settings/leo_manager.md'
-        - LeoStroage Settings: 'admin/settings/leo_storage.md'
+        - LeoStorage Settings: 'admin/settings/leo_storage.md'
         - LeoGateway Settings: 'admin/settings/leo_gateway.md'
     - Interface:
         - S3-API: 'admin/protocols/s3.md'

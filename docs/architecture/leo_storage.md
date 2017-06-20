@@ -53,5 +53,5 @@ A LeoGateway node retrieves a metadata of a requested object, then if it's a lar
 
 ## Related Links
 
-- [For Administrators / Settings / LeoStroage Settings](/admin/settings/leo_storage.md)
+- [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
 - [For Administrators / System Operations / Cluster Operations](/admin/system_operations/cluster.md)

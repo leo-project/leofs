@@ -80,7 +80,7 @@ LeoStorage provides `diagnosis-log` output feature so that you can investigate a
 
 Modify `diagnosis-log` configuration item which include `leo_storage.conf`. After executing the `diagnose-start` command, a specified node outputs `diagnosis-log` into the local disk, which is under each LeoStorage’s AVS directory. See more detail [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md).
 
-Execute the `diagnose-start` command with a specified LeoStroage node, then its LeoStorage output diagnosis-log(s) into the local disk, which is under its LeoStorage’s log directory. You can configure its log directory. See more detail [For Administrators / System Operations / Data Operations - Diagnosis](/admin/system_operations/data/#diagnosis) and [For Administrators / Settings / LeoStroage Settings](/admin/settings/leo_storage.md).
+Execute the `diagnose-start` command with a specified LeoStorage node, then its LeoStorage output diagnosis-log(s) into the local disk, which is under its LeoStorage’s log directory. You can configure its log directory. See more detail [For Administrators / System Operations / Data Operations - Diagnosis](/admin/system_operations/data/#diagnosis) and [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md).
 
 ```bash
 $ leofs-adm diagnose-start <storage-node>
@@ -176,5 +176,5 @@ A diagnose-log's format is TSV, *Tab Separated Values*.
 ## Related Links
 
 - [For Administrators / Settings / LeoGateway Settings](/admin/settings/leo_gateway.md)
-- [For Administrators / Settings / LeoStroage Settings](/admin/settings/leo_storage.md)
+- [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
 - [For Administrators / System Operations / Data Operations - Diagnosis](/admin/system_operations/data/#diagnosis)

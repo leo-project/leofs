@@ -902,7 +902,7 @@ And also, load of a primary of storage-node became high by this issue.
       ## disk target devices for checking disk utilization
       watchdog.disk.target_devices = []
       ```
-      * Improved MQ's confurations for LeoFS Stroage in order to be able to control system load
+      * Improved MQ's confurations for LeoFS Storage in order to be able to control system load
       ```bash
       ## [Number of bach processes of message]
       ##
