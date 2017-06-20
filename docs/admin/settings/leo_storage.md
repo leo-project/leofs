@@ -1,4 +1,4 @@
-# LeoStroage Settings
+# LeoStorage Settings
 
 ## Prior Knowledge
 
