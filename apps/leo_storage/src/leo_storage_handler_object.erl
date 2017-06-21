@@ -622,6 +622,8 @@ delete_objects_under_dir(Object) ->
             ok;
         ?BIN_SLASH ->
             leo_storage_mq:publish(?QUEUE_ID_DEL_DIR, Key);
+        ?BIN_NL ->
+            leo_storage_mq:publish(?QUEUE_ID_DEL_DIR, Key);
         _ ->
             ok
     end.

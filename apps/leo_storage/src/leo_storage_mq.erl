@@ -422,8 +422,8 @@ handle_call({consume, ?QUEUE_ID_DEL_DIR, MessageBin}) ->
                    [Node], Ref, [ParentDir]) of
                 {ok, Ref} ->
                     ok;
-                _Other ->
-                    ok
+                Cause ->
+                    {error, Cause}
             end;
         _ ->
             ?warn("handle_call/1 - consume",
