@@ -1,9 +1,9 @@
-# LeoStroage Settings
+# LeoStorage Settings
 
 ## Prior Knowledge
 
 !!! note "Note: Configuration"
-    LeoStroage's features depend on its configuration. If once a LeoFS system is launched, you cannot modify the following LeoStorage's configurations because the algorithm of the data operation strictly adheres to the settings.
+    LeoStorage's features depend on its configuration. If once a LeoFS system is launched, you cannot modify the following LeoStorage's configurations because the algorithm of the data operation strictly adheres to the settings.
 
 
 #### Irrevocable and Attention Required Items:
@@ -42,7 +42,7 @@ If you want to modify settings like where to place `leo_storage.conf`, what user
 | obj\_containers.sync\_mode             | Mode of the data synchronization. There're three modes:<ul><li>`none`: Not synchronization every time *(default)*</li><li>`periodic`: Periodic synchronization which depends on `obj_containers.sync_interval_in_ms`</li><li>`writethrough`: Ensures that any buffers kept by the OS are written to disk every time</li></ul><p>( Default: none )</p> |
 | obj\_containers.sync\_interval\_in\_ms | Interval in ms of the data synchronization<p>( Default: 1000, Unit: `msec` )</p> |
 | obj\_containers.metadata\_storage      | The metadata storage feature is pluggable which depends on <a href="https://github.com/basho/bitcask" target="_blank">bitcask</a> and <a href="https://github.com/basho/eleveldb" target="blank">leveldb</a>.<p>( Default: leveldb )</p> |
-| num\_of\_vnodes                        | The total number of virtual-nodes of a LeoStroage node for generating the distributed hashtable (RING)<p>( Default: 168 )</p> |
+| num\_of\_vnodes                        | The total number of virtual-nodes of a LeoStorage node for generating the distributed hashtable (RING)<p>( Default: 168 )</p> |
 | object_storage.is\_strict\_check       | Enable strict check between checksum of a metadata and checksum of an object.<p>( Default: false )</p> |
 | object_storage.threshold\_of\_slow\_processing |Threshold of slow processing<p>( Default: 1000, Unit: `msec` )</p> |
 | seeking\_timeout\_per\_metadata        | Timeout of seeking metadatas per a metadata<p>( Default: 10, Unit: `msec` )</p> |
@@ -89,7 +89,7 @@ If you want to modify settings like where to place `leo_storage.conf`, what user
 | autonomic_op.compaction.parallel_procs              | Total number of parallel processes<p>( Default: 1 )</p> |
 | autonomic_op.compaction.interval                    | An interval time of between auto-comcations<p>( Default: 3600, Unit: `sec` )</p> |
 | autonomic_op.compaction.warn_active_size_ratio      | Warning ratio of active size<p>( Default: 70, Unit: `percent` )</p> |
-| autonomic_op.compaction.threshold_active_size_ratio | Threshold ratio of active size. LeoStroage start data-comaction after reaching it<p>( Default: 60, `percent` )</p> |
+| autonomic_op.compaction.threshold_active_size_ratio | Threshold ratio of active size. LeoStorage start data-comaction after reaching it<p>( Default: 60, `percent` )</p> |
 | **MQ**                                              |
 | mq.backend_db | The MQ storage feature is pluggable which depends on <a href="https://github.com/basho/bitcask" target="_blank">bitcask</a> and <a href="https://github.com/basho/eleveldb" target="blank">leveldb</a>.<p>( Default: leveldb )</p> |
 | mq.num_of_mq_procs                      | A number of mq-server's processes<p>( Default: 8 )</p> |

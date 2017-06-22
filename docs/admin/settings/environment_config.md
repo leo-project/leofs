@@ -21,7 +21,7 @@ As a result, upgrade process to newer version becomes as simple as placing `leo_
 ## Stop the process of LeoManager
 $ /usr/local/leofs/<old_version>/leo_manager_0/bin/leo_manager stop
 
-## Overwrite the environemnt file
+## Overwrite the environment file
 $ cp /usr/local/leofs/<old_version>/leo_manager_0/etc/leo_manager.environment \
      /usr/local/leofs/<new_version>/leo_manager_0/etc/
 
@@ -50,6 +50,8 @@ drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /etc/leofs/leo_manager_0/
 drwxr-xr-x. 4 leofs leofs 4096 Apr  5 20:00 /var/log/leofs/leo_manager_0/
 drwxr-xr-x. 2 leofs leofs 4096 Apr  4 20:40 /var/log/leofs/leo_manager_0/sasl/
 ```
+
+Paths containing whitespace characters (spaces, tabs, etc) aren't allowed in environment files due to technical reasons.
 
 In `leo_manager.conf`, all options related to directories should point to external paths:
 
