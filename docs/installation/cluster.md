@@ -127,6 +127,36 @@ secret-access-key: <SECRET-ACCESS-KEY-ID>
 
 After that, you use S3-client(s) with those keys when you access the LeoFS storage system.
 
+## Configure an endpoint
+
+To make buckets and objects available from a host running S3-client(s), you need to add an endpoint also tweak settings for the name resolution.
+
+### Assign a name to LeoGateway through DNS or /etc/hosts
+
+In this example, we take the latter way.
+
+```bash
+$ sudo vi /etc/hosts
+# Add the below line on every host you are supposed to run S3-client(s)
+10.0.0.103 leo_gateway
+```
+
+### Add an endpoint through leofs-adm
+
+```bash
+$ leofs-adm add-endpoint leo_gateway
+```
+
+### Make a specific bucket and objects under the bucket available
+
+You need to resolve the domain name `test.leo_gateway` into the IP address of LeoGateway if you are going to have a bucket named `test`.
+
+```bash
+$ sudo vi /etc/hosts
+# Add the below line on every host you are supposed to run S3-client(s)
+10.0.0.103 test.leo_gateway
+```
+
 ### Uses`s3cmd` to access it
 
 If you'd like to use <a href="http://s3tools.org/s3cmd" target="_blank">s3cmd</a> to access the LeoFS storage system, perform the following steps:
@@ -142,7 +172,7 @@ $ s3cmd --configure
 ...
 ## access_key = <access-key-id>
 ## secret_key = <secret-access-key>
-## proxy_host = localhost
+## proxy_host = leo_gateway
 ## proxy_port = 8080
 ```
 
@@ -197,3 +227,4 @@ You now have a working LeoFS cluster. Make sure to have a look at [Administrator
 - [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
 - [For Administrators / Settings / LeoGateway Settings](/admin/settings/leo_gateway.md)
 - [For Administrators / System Operations / Cluster Operations](/admin/system_operations/cluster.md)
+- [FAQ / LeoFS Clients](/faq/client.md)
