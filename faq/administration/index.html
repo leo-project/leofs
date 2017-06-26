@@ -1,10 +1,11 @@
 
 <!DOCTYPE html>
-<html class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
       
         <meta name="description" content="LeoProject makes LeoFS, which is an open source distributed object storage system and a highly available, distributed, eventually consistent storage system. LeoFS is supporting the following features:Multi-protocol Support - S3-API, REST-API and NFS v3, Large Object Support, Multi Data Center Replication and others.">
       
@@ -15,7 +16,7 @@
       
         <link rel="shortcut icon" href="../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.3.0">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.7.4">
     
     
       
@@ -23,10 +24,10 @@
       
     
     
-      <script src="../../assets/javascripts/modernizr-56ade86843.js"></script>
+      <script src="../../assets/javascripts/modernizr-1df76c4e58.js"></script>
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application-1d1da4857d.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application-769c285a91.css">
       
     
     
@@ -91,24 +92,30 @@
           <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
           
 <div class="md-search" data-md-component="search">
-  <div class="md-search__overlay"></div>
+  <label class="md-search__overlay" for="search"></label>
   <div class="md-search__inner">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
       <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result"></div>
+        <div class="md-search-result" data-md-component="result" data-md-lang-search="">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
       </div>
     </div>
   </div>
 </div>
         
       </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <div class="md-header-nav__source">
-          
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
             
 
 
@@ -128,9 +135,9 @@
     </div>
   </a>
 
-          
+          </div>
         </div>
-      </div>
+      
     </div>
   </nav>
 </header>
@@ -473,8 +480,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../admin/settings/leo_storage/" title="LeoStroage Settings" class="md-nav__link">
-      LeoStroage Settings
+    <a href="../../admin/settings/leo_storage/" title="LeoStorage Settings" class="md-nav__link">
+      LeoStorage Settings
     </a>
   </li>
 
@@ -916,6 +923,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#what-should-i-do-when-a-timeout-error-happen-during-upload-a-very-large-file" title="What should I do when a timeout error happen during upload a very large file?" class="md-nav__link">
+    What should I do when a timeout error happen during upload a very large file?
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1084,6 +1098,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#what-should-i-do-when-a-timeout-error-happen-during-upload-a-very-large-file" title="What should I do when a timeout error happen during upload a very large file?" class="md-nav__link">
+    What should I do when a timeout error happen during upload a very large file?
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1175,6 +1196,34 @@ erlang.smp <span class="o">=</span> <span class="nb">enable</span>
 <p>If you changed a WRONG node name before stopping the daemon, As a result, when a new daemon was starting, it failed to detect that the previous was still running and
 stop command did not work too.</p>
 <p>Since you can notice this kind of mistake in <code class="codehilite">error.log</code> with <code class="codehilite">LeoFS v1.2.9</code>, we'd recommend you upgrading to the v1.2.9 or higher one.</p>
+<h2 id="what-should-i-do-when-a-timeout-error-happen-during-upload-a-very-large-file">What should I do when a <strong>timeout</strong> error happen during upload a very large file?<a class="headerlink" href="#what-should-i-do-when-a-timeout-error-happen-during-upload-a-very-large-file" title="Permanent link">&para;</a></h2>
+<p>There are two configurations that could affect how often <strong>timeout</strong> could happen in leo_gateway.conf.</p>
+<ul>
+<li>http.timeout_for_body (in msecs)</li>
+<li>large_object.reading_chunked_obj_len (in bytes)</li>
+</ul>
+<p>As <strong>timeout</strong> during upload could happen when <code class="codehilite">http.timeout_for_body</code> passed during every <code class="codehilite">large_object.reading_chunked_obj_len</code> bytes read, assuming we have <code class="codehilite">http.timeout_for_body</code> set to 1000 and <code class="codehilite">large_object.reading_chunked_obj_len</code> set to 1048576, we could expect any upload to be succeeded in if we ensured at least 8Mbps(1MB/sec) stable network bandwidth.</p>
+<p>Also taking the concurrent uploads into account, we can define the expression that enables us to check whether each configuration is valid as below.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">EXPECTED_BANDWIDTH_IN_BYTES</span> <span class="o">=</span> <span class="s">large_object.reading_chunked_obj_len / (http.timeout_for_body / 1000) * MAX_CONCURRENT_UPLOADS</span>
+</pre></div>
+</td></tr></table>
+
+<p>For example, say we have 1Gbps(128MB/sec) stable bandwidth and 128 concurrent uploads at most then we could be ready to 1MB per connection so the below is considered as a valid configuration.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="na">http.timeout_for_body</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="na">large_object.reading_chunked_obj_len</span> <span class="o">=</span> <span class="s">1048576</span>
+<span class="c1"># EXPECTED_BANDWIDTH_IN_BYTES = 1048576 / (1000 / 1000) * 128 = 134217728(128MB)</span>
+</pre></div>
+</td></tr></table>
+
+<p>Also there is one important thing you have to care.
+To decrease the bandwidth and odds timeout could happen, you have two options.</p>
+<ul>
+<li>Decrease <code class="codehilite">large_object.reading_chunked_obj_len</code></li>
+<li>Increase <code class="codehilite">http.timeout_for_body</code></li>
+</ul>
+<p>Logically it's same between decreasing the buffer size and increasing the timeout. However there is one benefit using the former one rather than the latter. As the memory allocation request in Erlang VM happen in <code class="codehilite">large_object.reading_chunked_obj_len</code> unit, the larger buffer size we set, the more memory footprint the host running LeoGateway needs at once so that if LeoGateway accepts lots of connections and those try to upload very large files in parallel then the odds OOM could happen increase. That said, decreasing the buffer size should be the first try in terms of safety(less memory usages).</p>
                 
                   
                 
@@ -1248,7 +1297,9 @@ stop command did not work too.</p>
       
     </div>
     
-      <script src="../../assets/javascripts/application-7aa26ad9ec.js"></script>
+      <script src="../../assets/javascripts/application-c35428f87f.js"></script>
+      
+      
       <script>app.initialize({url:{base:"../.."}})</script>
       
     
