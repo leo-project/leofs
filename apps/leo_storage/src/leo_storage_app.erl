@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -193,6 +193,22 @@ after_proc_1(true, Pid, Managers) ->
         %% Launch statistics/mnesia-related processes
         ok = start_mnesia(),
         ok = start_statistics(),
+
+        %% Launch del-bucket-state's db
+        case erlang:whereis(leo_backend_db_sup) of
+            undefined ->
+                error_logger:error_msg(
+                  "~p,~p,~p,~p~n",
+                  [{module, ?MODULE_STRING},
+                   {function, "after_proc_1/3"},
+                   {line, ?LINE},
+                   {body, "Could NOT start backend-db sup"}]),
+                exit("Not initialize leo_backend_db_sup");
+            _Pid ->
+                void
+        end,
+        leo_backend_db_sup:start_child(leo_backend_db_sup, ?DEL_DIR_STATE_DB_ID,
+                                       2, 'leveldb', ?env_del_dir_state_dir()),
         {ok, Pid}
     catch
         _:Cause ->

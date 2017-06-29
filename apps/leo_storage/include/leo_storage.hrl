@@ -1,8 +1,8 @@
 %%====================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -62,6 +62,27 @@
 -define(QUEUE_ID_COMP_META_WITH_DC, 'leo_comp_meta_with_dc_queue').
 -define(QUEUE_ID_DEL_DIR, 'leo_delete_dir_queue').
 -define(QUEUE_ID_REQ_DEL_DIR, 'leo_req_delete_dir_queue').
+%% -define(QUEUE_ID_DEL_BUCKET, 'leo_delete_bucket_queue'). %% @NEW
+-type(mq_id() :: ?QUEUE_ID_PER_OBJECT |
+                 ?QUEUE_ID_SYNC_BY_VNODE_ID |
+                 ?QUEUE_ID_DIRECTORY |
+                 ?QUEUE_ID_REBALANCE |
+                 ?QUEUE_ID_ASYNC_DELETION |
+                 ?QUEUE_ID_RECOVERY_NODE |
+                 ?QUEUE_ID_SYNC_OBJ_WITH_DC |
+                 ?QUEUE_ID_COMP_META_WITH_DC |
+                 ?QUEUE_ID_REQ_DEL_DIR |
+                 ?QUEUE_ID_DEL_DIR).
+
+-define(MSG_PATH_PER_OBJECT,        "1").
+-define(MSG_PATH_SYNC_VNODE_ID,     "2").
+-define(MSG_PATH_REBALANCE,         "3").
+-define(MSG_PATH_ASYNC_DELETION,    "4").
+-define(MSG_PATH_RECOVERY_NODE,     "5").
+-define(MSG_PATH_SYNC_OBJ_WITH_DC,  "6").
+-define(MSG_PATH_COMP_META_WITH_DC, "7").
+-define(MSG_PATH_REQ_DEL_DIR,       "11").
+-define(MSG_PATH_DEL_DIR,           "12").
 
 -define(ERR_TYPE_REPLICATE_DATA, 'error_msg_replicate_data').
 -define(ERR_TYPE_RECOVER_DATA, 'error_msg_recover_data').
@@ -71,6 +92,7 @@
 -define(ERR_TYPE_DELETE_INDEX, 'error_msg_delete_index').
 
 -define(TBL_REBALANCE_COUNTER, 'leo_rebalance_counter').
+
 
 %% @doc error messages.
 -define(ERROR_COULD_NOT_GET_DATA, "Could not get data").
@@ -86,6 +108,7 @@
 -define(ERROR_NOT_SATISFY_QUORUM, "Could not satisfy the quorum of the consistency level").
 -define(ERROR_SYSTEM_HIGH_LOAD, "System High load").
 -define(ERROR_COULD_NOT_UPDATE_LOG_LEVEL, "Could not update a log-level").
+-define(ERROR_ENQUEUE_FAILURE, "Enqueue failure").
 
 
 %% @doc notified message items
@@ -216,6 +239,14 @@
 
 
 %% @doc macros.
+-define(env_manager_nodes(),
+        case application:get_env(leo_storage, managers) of
+            {ok, EnvManagerNodes} ->
+                EnvManagerNodes;
+            _ ->
+                []
+        end).
+
 -define(env_storage_device(),
         case application:get_env(leo_storage, obj_containers) of
             {ok, EnvStorageDevice} ->
@@ -224,16 +255,12 @@
                 []
         end).
 
--define(env_num_of_replicators(),
-        case application:get_env(leo_storage, num_of_replicators) of
-            {ok, NumOfReplicators} -> NumOfReplicators;
-            _ -> 8
-        end).
-
--define(env_num_of_repairers(),
-        case application:get_env(leo_storage, num_of_repairers) of
-            {ok, NumOfRepairers} -> NumOfRepairers;
-            _ -> 8
+-define(env_del_dir_state_dir(),
+        case application:get_env(leo_storage, queue_dir) of
+            {ok,_EnvQueueDir} ->
+                filename:join([_EnvQueueDir, "del_dir", "state"]);
+            _ ->
+                []
         end).
 
 -define(env_mq_backend_db(),
@@ -327,6 +354,14 @@
             _ -> 168
         end).
 
+-define(env_del_dir_workers(),
+        case application:get_env(leo_storage, mq_num_of_del_dir_workers) of
+            {ok, EnvDelDirWorkers} ->
+                EnvDelDirWorkers;
+            _ ->
+                ?DEF_NUM_OF_DEL_DIR_WORKERS
+        end).
+
 
 -define(DEF_MQ_NUM_OF_BATCH_PROC, 1).
 -define(DEF_MQ_INTERVAL_MAX, 32).
@@ -389,17 +424,6 @@
         end).
 -endif.
 
-
--type(queue_id():: ?QUEUE_ID_PER_OBJECT |
-                   ?QUEUE_ID_SYNC_BY_VNODE_ID |
-                   ?QUEUE_ID_REBALANCE |
-                   ?QUEUE_ID_ASYNC_DELETION |
-                   ?QUEUE_ID_RECOVERY_NODE |
-                   ?QUEUE_ID_SYNC_OBJ_WITH_DC |
-                   ?QUEUE_ID_COMP_META_WITH_DC |
-                   ?QUEUE_ID_DEL_DIR |
-                   ?QUEUE_ID_REQ_DEL_DIR
-                   ).
 
 -define(mq_id_and_alias, [{leo_delete_dir_queue,        "remove directories"},
                           {leo_req_delete_dir_queue,    "request removing directories"},
@@ -737,4 +761,73 @@
                 false ->
                     ok
             end
+        end).
+
+
+%%----------------------------------------------------------------------
+%% FOR DELETION-DIR/BUCKET
+%%----------------------------------------------------------------------
+-define(DEF_NUM_OF_DEL_DIR_WORKERS, 8).
+-define(DEL_DIR_STATE_DB_ID, 'leo_del_dir_state').
+-define(DEL_DIR_STATE_DB_ID_STR, atom_to_list(?DEL_DIR_STATE_DB_ID)).
+-define(PREFIX_DEL_DIR_MQ, "leo_del_dir_mq_").
+
+-define(STATE_PENDING, 0).
+-define(STATE_ONGOING, 1).
+-define(STATE_MONITORING, 2).
+-define(STATE_FINISHED, 3).
+-type(del_dir_state() :: ?STATE_PENDING |
+                         ?STATE_ONGOING |
+                         ?STATE_MONITORING |
+                         ?STATE_FINISHED).
+
+-define(TYPE_DEL_BUCKET, 0).
+-define(TYPE_DEL_DIR, 1).
+-type(del_dir_type() :: ?TYPE_DEL_BUCKET |
+                        ?TYPE_DEL_DIR).
+
+-define(del_dir_state_to_atom(_DelDirState),
+        begin
+            case _DelDirState of
+                ?STATE_PENDING ->
+                    'pending';
+                ?STATE_ONGOING ->
+                    'ongoing';
+                ?STATE_MONITORING ->
+                    'monitoring';
+                ?STATE_FINISHED ->
+                    'finished'
+            end
+        end).
+
+-record(del_dir_state, {
+          mq_id = null :: atom(),
+          type = ?TYPE_DEL_BUCKET :: del_dir_type(),
+          directory = <<>> :: binary(),
+          state = ?STATE_PENDING :: del_dir_state(),
+          is_notification_successful = false :: boolean(), %% for del-buclet (communication w/leo_manager)
+          timestamp = 1 :: pos_integer()
+         }).
+
+-define(del_dir_queue_list(),
+        begin
+            lists:map(
+              fun(N) ->
+                      %% Pair: {id, dir}
+                      {list_to_atom(
+                         lists:append(
+                           [atom_to_list(?QUEUE_ID_DEL_DIR), "_", integer_to_list(N)])),
+                       lists:append(
+                         [?MSG_PATH_DEL_DIR, "/", integer_to_list(N)])}
+              end, lists:seq(1, ?env_del_dir_workers()))
+        end).
+
+-define(del_dir_id_list(),
+        begin
+            lists:map(
+              fun(N) ->
+                      list_to_atom(
+                        lists:append(
+                          [atom_to_list(?QUEUE_ID_DEL_DIR), "_", integer_to_list(N)]))
+              end, lists:seq(1, ?env_del_dir_workers()))
         end).

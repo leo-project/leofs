@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -61,12 +61,20 @@ stop() ->
 %% @end
 %% @private
 init([]) ->
-    ChildProcs = [
-                  {leo_storage_msg_collector,
-                   {leo_storage_msg_collector, start_link, []},
-                   permanent,
-                   ?SHUTDOWN_WAITING_TIME,
-                   worker,
-                   [leo_storage_msg_collector]}
-                 ],
-    {ok, {_SupFlags = {one_for_one, ?MAX_RESTART, ?MAX_TIME}, ChildProcs}}.
+    %% Norify finishing a del-bucket processing to LeoManager(s)
+    Children = [
+                {leo_storage_msg_collector,
+                 {leo_storage_msg_collector, start_link, []},
+                 permanent,
+                 ?SHUTDOWN_WAITING_TIME,
+                 worker,
+                 [leo_storage_msg_collector]},
+
+                {leo_storage_handler_del_directory,
+                 {leo_storage_handler_del_directory, start_link, []},
+                 permanent,
+                 ?SHUTDOWN_WAITING_TIME,
+                 worker,
+                 [leo_storage_handler_del_directory]}
+               ],
+    {ok, {_SupFlags = {one_for_one, ?MAX_RESTART, ?MAX_TIME}, Children}}.

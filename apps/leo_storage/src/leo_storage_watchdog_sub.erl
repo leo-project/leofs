@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -93,7 +93,7 @@ handle_notify(?WD_SUB_ID_1 = Id,_Alarm,_Unixtime) ->
             leo_mq_api:decrease(?QUEUE_ID_RECOVERY_NODE),
             leo_mq_api:decrease(?QUEUE_ID_SYNC_OBJ_WITH_DC),
             leo_mq_api:decrease(?QUEUE_ID_COMP_META_WITH_DC),
-            leo_mq_api:decrease(?QUEUE_ID_DEL_DIR),
+            %% leo_mq_api:decrease(?QUEUE_ID_DEL_DIR),
             ok;
         false ->
             ok
@@ -122,7 +122,7 @@ handle_notify(?WD_SUB_ID_2, #watchdog_alarm{state = #watchdog_state{
 
                             case leo_object_storage_api:compact_data(
                                    PendingTargets, ProcsOfParallelProcessing,
-                                   fun leo_redundant_manager_api:has_charge_of_node/2) of
+                                   fun leo_storage_handler_object:can_compact_object/2) of
                                 ok ->
                                     Ratio = leo_misc:get_value('ratio', Props),
                                     ?debug("handle_notify/3",
@@ -224,8 +224,8 @@ is_candidates([#member{node = Node}|Rest], CntRunningNode, MaxNumOfNodes, Acc) -
 is_candidates_1(MaxNumOfNodes, Candidates) ->
     %% Count running nodes
     RunningNodes = length([_N || #compaction_info{
-                                   node = _N,
-                                   state = #compaction_stats{status = ?ST_RUNNING}
+                                    node = _N,
+                                    state = #compaction_stats{status = ?ST_RUNNING}
                                    } <- Candidates]),
     case (RunningNodes >= MaxNumOfNodes) of
         true ->

@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -298,9 +298,10 @@ compact(start, NumOfTargets, MaxProc) ->
                             _Other ->
                                 lists:sublist(TargetPids1, NumOfTargets)
                         end,
+
                     leo_object_storage_api:compact_data(
                       TargetPids2, MaxProc,
-                      fun leo_redundant_manager_api:has_charge_of_node/2)
+                      fun leo_storage_handler_object:can_compact_object/2)
             end;
         _ ->
             {error,'not_running'}
@@ -498,13 +499,13 @@ get_info(_) ->
 rebalance(RebalanceList) ->
     %% To reduce manager access
     %% from storage-nods at the same time
-    MaxInterval = 20,
-    MinInterval = 5,
-    Interval = erlang:phash2(leo_date:clock(), MaxInterval),
-    Interval_1 = case (Interval < MinInterval) of
+    DEF_MAX_INTERVAL = 20,
+    DEF_MIN_INTERVAL = 5,
+    Interval = erlang:phash2(leo_date:clock(), DEF_MAX_INTERVAL),
+    Interval_1 = case (Interval < DEF_MIN_INTERVAL) of
                      true ->
-                         MinInterval +
-                             erlang:phash2(leo_date:clock(), MinInterval);
+                         DEF_MIN_INTERVAL +
+                             erlang:phash2(leo_date:clock(), DEF_MIN_INTERVAL);
                      false ->
                          Interval
                  end,
@@ -654,17 +655,25 @@ get_mq_consumer_state() ->
         {ok,  []} ->
             not_found;
         {ok, StateList} ->
+            MQIdList = ?mq_id_and_alias ++
+                lists:map(fun(DelBucketId) ->
+                                  DelBucketId_1 = atom_to_list(DelBucketId),
+                                  Index = string:sub_string(
+                                            DelBucketId_1, string:rchr(DelBucketId_1, $_) + 1),
+                                  {DelBucketId, "deletion bucket #" ++ Index}
+                          end, ?del_dir_id_list()),
             StateList_1 =
-                lists:flatten(
-                  lists:map(
-                    fun(#mq_state{id = MQId} = S) ->
-                            case leo_misc:get_value(MQId, ?mq_id_and_alias, []) of
-                                [] ->
-                                    [];
-                                Desc ->
-                                    S#mq_state{desc = Desc}
-                            end
-                    end, StateList)),
+                lists:sort(
+                  lists:flatten(
+                    lists:map(
+                      fun(#mq_state{id = MQId} = S) ->
+                              case leo_misc:get_value(MQId, MQIdList, []) of
+                                  [] ->
+                                      [];
+                                  Desc ->
+                                      S#mq_state{desc = Desc}
+                              end
+                      end, StateList))),
             {ok, StateList_1}
     end.
 
