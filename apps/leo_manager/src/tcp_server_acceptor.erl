@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -32,6 +32,7 @@
 -include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
+
 %%-----------------------------------------------------------------------
 %% External API
 %%-----------------------------------------------------------------------
@@ -39,10 +40,11 @@ start_link({Locale, Name}, Socket, State, Module, Option) ->
     {ok, Pid} = proc_lib:start_link(
                   ?MODULE, init,
                   [self(), Socket, State, Module, Option]),
-
     case Locale of
-        local -> register(Name, Pid);
-        _ -> global:register_name(Name, Pid)
+        local ->
+            register(Name, Pid);
+        _ ->
+            global:register_name(Name, Pid)
     end,
     {ok, Pid}.
 
@@ -54,6 +56,7 @@ init(Parent, Socket, State, Module, Option) ->
     accept(Socket, State, Module, Option).
 
 
+%% @private
 accept(ListenSocket, State, Module, Option) ->
     case gen_tcp:accept(ListenSocket, Option#tcp_server_params.accept_timeout) of
         {ok, Socket} ->
@@ -63,18 +66,19 @@ accept(ListenSocket, State, Module, Option) ->
             catch
                 Type:Reason ->
                     io:format("[error] ~p:~p - ~p,~p,~p~n",
-                              [?MODULE, "accept/5a", Module, Type, Reason])
+                              [?MODULE, "accept/4", Module, Type, Reason])
             after
                 gen_tcp:close(Socket)
             end;
         {error, Reason} ->
             io:format("[error] ~p:~p - ~p,~p~n",
-                      [?MODULE, "accept/5b", Module, Reason]),
+                      [?MODULE, "accept/4", Module, Reason]),
             timer:sleep(Option#tcp_server_params.accept_error_sleep_time)
     end,
     accept(ListenSocket, State, Module, Option).
 
 
+%% @private
 recv(false, Socket, #state{auth = ?AUTH_NOT_YET,
                            formatter =?MOD_TEXT_FORMATTER} = State, Module, Option) ->
     call(false, Socket, ?USER_ID, State#state{auth = ?AUTH_USERID_1}, Module, Option);
@@ -83,19 +87,19 @@ recv(false, Socket, #state{auth = ?AUTH_USERID_2,
     call(false, Socket, ?PASSWORD, State#state{auth = ?AUTH_PASSWORD}, Module, Option);
 
 recv(false, Socket, State, Module, Option) ->
-    AuthSt    = State#state.auth,
+    AuthSt = State#state.auth,
     Formatter = State#state.formatter,
 
     case gen_tcp:recv(Socket,
                       Option#tcp_server_params.recv_length,
                       Option#tcp_server_params.recv_timeout) of
-        {ok, Data} when AuthSt    == ?AUTH_USERID_1 andalso
+        {ok, Data} when AuthSt == ?AUTH_USERID_1 andalso
                         Formatter == ?MOD_TEXT_FORMATTER ->
             UserId = hd(string:tokens(
                           binary_to_list(Data), ?COMMAND_DELIMITER)),
             recv(false, Socket, State#state{user_id = list_to_binary(UserId),
                                             auth    = 2}, Module, Option);
-        {ok, Data} when AuthSt    == ?AUTH_PASSWORD andalso
+        {ok, Data} when AuthSt == ?AUTH_PASSWORD andalso
                         Formatter == ?MOD_TEXT_FORMATTER ->
             UserId   = State#state.user_id,
             Password = hd(string:tokens(
@@ -107,7 +111,7 @@ recv(false, Socket, State, Module, Option) ->
                          State#state{auth = ?AUTH_DONE}, Module, Option);
                 {error, _} ->
                     recv(false, Socket, State#state{user_id = UserId,
-                                                    auth    = ?AUTH_NOT_YET}, Module, Option)
+                                                    auth = ?AUTH_NOT_YET}, Module, Option)
             end;
         {ok, Data} ->
             call(false, Socket, Data, State, Module, Option);
@@ -131,6 +135,8 @@ recv(true, _DummySocket, State, Module, Option) ->
             tcp_timeout
     end.
 
+
+%% @private
 call(Active, Socket, Data, #state{plugin_mod = PluginMod} = State, Module, Option) ->
     Ret = case PluginMod of
               undefined ->
@@ -177,5 +183,5 @@ call_1(HasCommand, Active, Socket, Data, State, Module, Option) ->
         {close, DataToSend, State} ->
             gen_tcp:send(Socket, DataToSend);
         Other ->
-            ?warn("recv/5", [{cause, Other}])
+            ?warn("call_1/7", [{cause, Other}])
     end.

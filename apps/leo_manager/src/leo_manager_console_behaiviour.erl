@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -24,11 +24,10 @@
 -include("leo_manager.hrl").
 
 %% @doc Request from 'tcp_server_acceptor'
-%%
 -callback(handle_call(Socket::port(), Command::binary(), #state{}) ->
                  {reply, any(), #state{}} | {noreply, #state{}}).
 
+
 %% @doc Check to have a command
-%%
 -callback(has_command(Command::binary()) ->
                  boolean()).

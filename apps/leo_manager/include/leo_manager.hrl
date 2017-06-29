@@ -2,7 +2,7 @@
 %%
 %% Leo Manager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -64,6 +64,7 @@
 -define(TBL_REBALANCE_INFO, 'leo_rebalance_info').
 -define(TBL_HISTORIES, 'leo_histories').
 -define(TBL_AVAILABLE_CMDS, 'leo_available_commands').
+-define(TBL_DEL_BUCKET_STATE, 'leo_del_bucket_state').
 
 %% server-type
 -define(SERVER_TYPE_STORAGE, "S").
@@ -109,6 +110,7 @@
 -define(CMD_GET_BUCKET_BY_ACCESS_KEY, "get-bucket").
 -define(CMD_SET_RED_METHOD, "set-redundancy-method").
 -define(CMD_DELETE_BUCKET, "delete-bucket").
+-define(CMD_DELETE_BUCKET_STATS, "delete-bucket-stats").
 -define(CMD_CHANGE_BUCKET_OWNER, "chown-bucket").
 -define(CMD_UPDATE_ACL, "update-acl").
 
@@ -208,6 +210,7 @@
                    %% - bucket-related
                    {?CMD_ADD_BUCKET, "add-bucket <bucket> <access-key-id>"},
                    {?CMD_DELETE_BUCKET, "delete-bucket <bucket> <access-key-id>"},
+                   {?CMD_DELETE_BUCKET_STATS, "delete-bucket-stats <bucket>"},
                    {?CMD_GET_BUCKETS, "get-buckets"},
                    {?CMD_GET_BUCKET_BY_ACCESS_KEY, "get-bucket <access-key-id>"},
                    {?CMD_CHANGE_BUCKET_OWNER, "chown-bucket <bucket> <new-access-key-id>"},
@@ -274,7 +277,8 @@
 -define(ERROR_COULD_NOT_UPDATE_MANAGER, "Could not update manager(s)").
 -define(ERROR_COULD_NOT_UPDATE_CONF, "Could not update the system conf").
 -define(ERROR_COULD_NOT_CREATE_RING, "Could not create RING").
--define(ERROR_MNESIA_PROC_FAILURE, "Mnesia processing failure").
+-define(ERROR_COULD_NOT_GET_REC, "Could not get records").
+-define(ERROR_MNESIA_PROC_FAILURE, "Mnesia: processing failure").
 -define(ERROR_MNESIA_WAIT_FOR_TABLE_TIMEOUT, "Mnesia: timeout of waiting for table").
 -define(ERROR_MNESIA_WAIT_FOR_TABLE_ERROR, "Mnesia: failure of waiting for table").
 -define(ERROR_MNESIA_GET_TABLE_INFO_ERROR, "Mnesia: failure of retrieving table-info").
@@ -286,8 +290,10 @@
 -define(ERROR_COULD_NOT_STORE, "Could not store value").
 -define(ERROR_INVALID_BUCKET_FORMAT, "Invalid bucket format").
 -define(ERROR_BUCKET_NOT_FOUND, "Bucket not found").
+-define(ERROR_DEL_BUCKET_STATS_NOT_FOUND, "Delete-bucket's stats not found").
 -define(ERROR_COULD_NOT_GET_BUCKET, "Could not get bucket(s)").
 -define(ERROR_COULD_NOT_UPDATE_BUCKET, "Could not update bucket(s)").
+-define(ERROR_SAME_BUCKET_EXISTS, "Same bucket exists").
 -define(ERROR_NOT_STARTED, "Storage cluster is not running, yet").
 -define(ERROR_ALREADY_STARTED, "Storage cluster already started").
 -define(ERROR_STILL_RUNNING, "still running").
@@ -301,6 +307,7 @@
 -define(ERROR_MEMBER_NOT_FOUND, "Member not found").
 -define(ERROR_COULD_NOT_GET_MEMBER, "Could not get members (storage-nodes)").
 -define(ERROR_COULD_NOT_GET_GATEWAY, "Could not get gateway(s)").
+-define(ERROR_COULD_NOT_ACCESS_GATEWAY, "Could not access gateway(s)").
 -define(ERROR_NOT_NEED_REBALANCE, "Not need rebalance").
 -define(ERROR_FAIL_REBALANCE, "Fail rebalance").
 -define(ERROR_FAIL_TO_ASSIGN_NODE, "Fail to assign node(s)").
@@ -314,6 +321,8 @@
 -define(ERROR_UPDATED_SYSTEM_CONF, "Updated the system configuration").
 -define(ERROR_FAILED_UPDATE_LOG_LEVEL, "Failed to update the log-level").
 -define(ERROR_FAILED_GET_VERSION, "Failed to get the version").
+-define(ERROR_FAILED_REGISTERING_DEL_BUCKET_MSG, "Failed to register a del-bucket's message").
+-define(ERROR_FAILED_REMOVING_DEL_BUCKET_MSG, "Failed to remove a del-bucket's message").
 
 %% type of console
 -define(CONSOLE_CUI, 'cui').
@@ -354,6 +363,22 @@
 
 %% MQ related:
 -define(QUEUE_ID_FAIL_REBALANCE, 'mq_fail_rebalance').
+-define(QUEUE_ID_REQ_DEL_BUCKET, 'mq_req_del_bucket').
+
+
+-define(dequeue_interval(),
+        begin
+            _DEQUEUE_INTERVAL_MIN = ?env_dequeue_interval_min(),
+            _DEQUEUE_INTERVAL_MAX = ?env_dequeue_interval_max(),
+
+            case erlang:phash2(
+                   term_to_binary({node(), leo_date:clock()}), _DEQUEUE_INTERVAL_MAX) of
+                _Interval when _Interval < _DEQUEUE_INTERVAL_MIN ->
+                    _DEQUEUE_INTERVAL_MIN;
+                _Interval ->
+                    _Interval
+            end
+        end).
 
 
 %% ---------------------------------------------------------
@@ -404,8 +429,76 @@
           id = 1 :: pos_integer(),
           node :: atom(),
           rebalance_info = [] :: list(tuple()),
-          timestamp = 0 :: pos_integer()
+          timestamp = 1 :: pos_integer()
          }).
+
+
+-define(STATE_INVALID, 0).
+-define(STATE_PENDING, 1).
+-define(STATE_ONGOING, 2).
+-define(STATE_MONITORING, 3).
+-define(STATE_FINISHED, 9).
+-type(del_bucket_state() :: ?STATE_PENDING |
+                            ?STATE_ONGOING |
+                            ?STATE_MONITORING |
+                            ?STATE_FINISHED).
+-record(del_bucket_queue, {
+          bucket_name = <<>> :: binary(),
+          access_key_bin = <<>> :: binary(),
+          state = ?STATE_PENDING :: del_bucket_state(),
+          timestamp = 1 :: pos_integer()
+         }).
+
+-record(del_bucket_state, {
+          id = <<>> :: binary(),
+          bucket_name = <<>> :: binary(),
+          node :: atom(),
+          state = ?STATE_PENDING :: del_bucket_state(),
+          timestamp = 1 :: pos_integer()
+         }).
+
+-define(NODE_TYPE_GATEWAY, 0).
+-define(NODE_TYPE_STORAGE, 1).
+-type(dest_node_type() :: ?NODE_TYPE_GATEWAY |
+                          ?NODE_TYPE_STORAGE).
+-record(del_bucket_request, {
+          id = 1 :: pos_integer(),
+          node_type = ?NODE_TYPE_GATEWAY :: dest_node_type(),
+          bucket_name = <<>> :: binary(),
+          node :: node(),
+          timestamp = 1 :: pos_integer()
+         }).
+
+
+-define(del_bucket_state(_State),
+        begin
+            case _State of
+                'pending' ->
+                    ?STATE_PENDING;
+                'ongoing' ->
+                    ?STATE_ONGOING;
+                'monitoring' ->
+                    ?STATE_MONITORING;
+                'finished' ->
+                    ?STATE_FINISHED
+            end
+        end).
+
+-define(del_bucket_state_str(_State),
+        begin
+            case _State of
+                ?STATE_PENDING ->
+                    "pending";
+                ?STATE_ONGOING ->
+                    "ongoing";
+                ?STATE_MONITORING ->
+                    "monitoring";
+                ?STATE_FINISHED ->
+                    "finished"
+            end
+        end).
+
+
 
 %% ---------------------------------------------------------
 %% MACROS
@@ -510,6 +603,20 @@
             _ ->
                 ?DEF_QUEUE_DIR
         end).
+
+
+-define(env_dequeue_interval_min(),
+        case application:get_env(leo_manager, dequeue_interval_min) of
+            {ok, EnvDequeueIntervalMin} -> EnvDequeueIntervalMin;
+            _ -> timer:seconds(10)
+        end).
+
+-define(env_dequeue_interval_max(),
+        case application:get_env(leo_manager, dequeue_interval_max) of
+            {ok, EnvDequeueIntervalMax} -> EnvDequeueIntervalMax;
+            _ -> timer:seconds(30)
+        end).
+
 
 
 %% @doc Plugin-related macros

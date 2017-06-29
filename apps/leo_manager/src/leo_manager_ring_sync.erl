@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -26,6 +26,7 @@
 -include("leo_manager.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").
+
 
 %% API
 -export([start_link/0,

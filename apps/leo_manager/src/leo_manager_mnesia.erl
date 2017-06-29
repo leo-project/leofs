@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -33,6 +33,7 @@
          create_gateway_nodes/2,
          create_rebalance_info/2,
          create_available_commands/2,
+         create_del_bucket_state/2,
 
          get_storage_nodes_all/0,
          get_storage_node_by_name/1,
@@ -43,16 +44,25 @@
          get_rebalance_info_by_node/1,
          get_available_commands_all/0,
          get_available_command_by_name/1,
+         get_del_bucket_state_all/0,
+         get_del_bucket_state_by_bucket_name/1,
+         get_del_bucket_state_by_bucket_name_and_node/2,
+         get_del_bucket_state_by_state/1,
 
          update_storage_node_status/1,
          update_storage_node_status/2,
          update_gateway_node/1,
          update_rebalance_info/1,
+         update_del_bucket_state/1,
 
          insert_available_command/2,
+         insert_del_bucket_state/1,
+         bulk_insert_del_bucket_info/1,
 
          delete_storage_node/1,
          delete_gateway_node/1,
+         delete_del_bucket_state/1,
+         bulk_delete_del_bucket_info/1,
 
          delete_all/0,
          backup/1,
@@ -66,23 +76,16 @@
 %% Create Table
 %%-----------------------------------------------------------------------
 %% @doc Create storage-nodes table
--spec(create_storage_nodes(atom(), list()) ->
-             ok | {error, any()}).
+-spec(create_storage_nodes(Mode, Nodes) ->
+             ok | {error, any()} when Mode::ram_copies|disc_copies,
+                                      Nodes::[node()]).
 create_storage_nodes(Mode, Nodes) ->
     case mnesia:create_table(
            ?TBL_STORAGE_NODES,
            [{Mode, Nodes},
             {type, set},
             {record_name, node_state},
-            {attributes, record_info(fields, node_state)},
-            {user_properties,
-             [{node,          {varchar,  undefined},  false, primary,   undefined, undefined, atom     },
-              {state,         {varchar,  undefined},  false, undefined, undefined, undefined, atom     },
-              {ring_hash_new, {varchar,  undefined},  false, undefined, undefined, undefined, undefined},
-              {ring_hash_old, {varchar,  undefined},  false, undefined, undefined, undefined, undefined},
-              {when_is,       {integer,  undefined},  false, undefined, undefined, undefined, integer  },
-              {error,         {integer,  undefined},  false, undefined, undefined, undefined, integer  }
-             ]}
+            {attributes, record_info(fields, node_state)}
            ]) of
         {atomic, ok} ->
             ok;
@@ -92,23 +95,16 @@ create_storage_nodes(Mode, Nodes) ->
 
 
 %% @doc Create gateway-nodes table
--spec(create_gateway_nodes(atom(), list()) ->
-             ok | {error, any()}).
+-spec(create_gateway_nodes(Mode, Nodes) ->
+             ok | {error, any()} when Mode::ram_copies|disc_copies,
+                                      Nodes::[node()]).
 create_gateway_nodes(Mode, Nodes) ->
     case mnesia:create_table(
            ?TBL_GATEWAY_NODES,
            [{Mode, Nodes},
             {type, set},
             {record_name, node_state},
-            {attributes, record_info(fields, node_state)},
-            {user_properties,
-             [{node,          {varchar,  undefined},  false, primary,   undefined, undefined, atom     },
-              {state,         {varchar,  undefined},  false, undefined, undefined, undefined, atom     },
-              {ring_hash_new, {varchar,  undefined},  false, undefined, undefined, undefined, undefined},
-              {ring_hash_old, {varchar,  undefined},  false, undefined, undefined, undefined, undefined},
-              {when_is,       {integer,  undefined},  false, undefined, undefined, undefined, integer  },
-              {error,         {integer,  undefined},  false, undefined, undefined, undefined, integer  }
-             ]}
+            {attributes, record_info(fields, node_state)}
            ]) of
         {atomic, ok} ->
             ok;
@@ -118,22 +114,16 @@ create_gateway_nodes(Mode, Nodes) ->
 
 
 %% @doc Create rebalance-info table
--spec(create_rebalance_info(atom(), list()) ->
-             ok | {error, any()}).
+-spec(create_rebalance_info(Mode, Nodes) ->
+             ok | {error, any()} when Mode::ram_copies|disc_copies,
+                                      Nodes::[node()]).
 create_rebalance_info(Mode, Nodes) ->
     case mnesia:create_table(
            ?TBL_REBALANCE_INFO,
            [{Mode, Nodes},
             {type, set},
             {record_name, rebalance_info},
-            {attributes, record_info(fields, rebalance_info)},
-            {user_properties,
-             [{vnode_id,         {integer,   undefined},  false, primary,   undefined, identity,  integer},
-              {node,             {varchar,   undefined},  false, undefined, undefined, undefined, atom   },
-              {total_of_objects, {integer,   undefined},  false, undefined, undefined, undefined, integer},
-              {num_of_remains,   {integer,   undefined},  false, undifined, undefined, undefined, integer},
-              {when_is,          {integer,   undefined},  false, undifined, undefined, undefined, integer}
-             ]}
+            {attributes, record_info(fields, rebalance_info)}
            ]) of
         {atomic, ok} ->
             ok;
@@ -143,20 +133,35 @@ create_rebalance_info(Mode, Nodes) ->
 
 
 %% @doc Create available commands table
--spec(create_available_commands(atom(), list()) ->
-             ok | {error, any()}).
+-spec(create_available_commands(Mode, Nodes) ->
+             ok | {error, any()} when Mode::ram_copies|disc_copies,
+                                      Nodes::[node()]).
 create_available_commands(Mode, Nodes) ->
     case mnesia:create_table(
            ?TBL_AVAILABLE_CMDS,
            [{Mode, Nodes},
             {type, set},
             {record_name, cmd_state},
-            {attributes, record_info(fields, cmd_state)},
-            {user_properties,
-             [{name,  {varchar,   undefined},  false, primary,   undefined, identity,  string },
-              {help,  {varchar,   undefined},  false, undefined, undefined, identity,  string },
-              {state, {boolean,   undefined},  false, undifined, undefined, undefined, boolean}
-             ]}
+            {attributes, record_info(fields, cmd_state)}
+           ]) of
+        {atomic, ok} ->
+            ok;
+        {aborted, Reason} ->
+            {error, Reason}
+    end.
+
+
+%% @doc Create del-bucket-state table
+-spec(create_del_bucket_state(Mode, Nodes) ->
+             ok | {error, any()} when Mode::ram_copies|disc_copies,
+                                      Nodes::[node()]).
+create_del_bucket_state(Mode, Nodes) ->
+    case mnesia:create_table(
+           ?TBL_DEL_BUCKET_STATE,
+           [{Mode, Nodes},
+            {type, set},
+            {record_name, del_bucket_state},
+            {attributes, record_info(fields, del_bucket_state)}
            ]) of
         {atomic, ok} ->
             ok;
@@ -354,10 +359,131 @@ get_available_command_by_name(Name) ->
     end.
 
 
+%% @doc Retrieve a list of del-bucket-state
+-spec(get_del_bucket_state_all() ->
+             {ok, [#del_bucket_state{}]} |
+             not_found |
+             {error, any()}).
+get_del_bucket_state_all() ->
+    Tbl = ?TBL_DEL_BUCKET_STATE,
+
+    case catch mnesia:table_info(Tbl, all) of
+        {'EXIT', _Cause} ->
+            {error, ?ERROR_MNESIA_NOT_START};
+        _ ->
+            F = fun() ->
+                        Q1 = qlc:q([X || X <- mnesia:table(Tbl)]),
+                        Q2 = qlc:sort(Q1, [{order, ascending}]),
+                        qlc:e(Q2)
+                end,
+            case leo_mnesia:read(F) of
+                {ok, List} ->
+                    ListBucketName = get_del_bucket_state_all_1(List, sets:new()),
+                    get_del_bucket_state_all_2(ListBucketName, []);
+                Other ->
+                    Other
+            end
+    end.
+
+%% @private
+get_del_bucket_state_all_1([], Sets) ->
+    lists:sort(sets:to_list(Sets));
+get_del_bucket_state_all_1([#del_bucket_state{bucket_name = BucketName}|Acc], Sets) ->
+    Sets_1 = sets:add_element(BucketName, Sets),
+    get_del_bucket_state_all_1(Acc, Sets_1).
+
+%% @private
+get_del_bucket_state_all_2([], Acc) ->
+    {ok, lists:reverse(Acc)};
+get_del_bucket_state_all_2([BucketName|ListBucketName], Acc) ->
+    case get_del_bucket_state_by_bucket_name(BucketName) of
+        {ok, List} ->
+            get_del_bucket_state_all_2(ListBucketName, [{BucketName, List}|Acc]);
+        not_found ->
+            get_del_bucket_state_all_2(ListBucketName, Acc);
+        Error ->
+            Error
+    end.
+
+
+%% @doc Retrieve a list of del-bucket-state by bucket-name
+-spec(get_del_bucket_state_by_bucket_name(BucketName) ->
+             {ok, [#del_bucket_state{}]} |
+             not_found |
+             {error, any()} when BucketName::binary()).
+get_del_bucket_state_by_bucket_name(BucketName) ->
+    Tbl = ?TBL_DEL_BUCKET_STATE,
+
+    case catch mnesia:table_info(Tbl, all) of
+        {'EXIT', _Cause} ->
+            {error, ?ERROR_MNESIA_NOT_START};
+        _ ->
+            F = fun() ->
+                        Q1 = qlc:q([X || X <- mnesia:table(Tbl),
+                                         X#del_bucket_state.bucket_name =:= BucketName]),
+                        Q2 = qlc:sort(Q1, [{order, ascending}]),
+                        qlc:e(Q2)
+                end,
+            leo_mnesia:read(F)
+    end.
+
+
+%% @doc Retrieve a list of del-bucket-state by bucket-name and node
+-spec(get_del_bucket_state_by_bucket_name_and_node(BucketName, Node) ->
+             {ok, [#del_bucket_state{}]} |
+             not_found |
+             {error, any()} when BucketName::binary(),
+                                 Node::node()).
+get_del_bucket_state_by_bucket_name_and_node(BucketName, Node) ->
+    Tbl = ?TBL_DEL_BUCKET_STATE,
+
+    case catch mnesia:table_info(Tbl, all) of
+        {'EXIT', _Cause} ->
+            {error, ?ERROR_MNESIA_NOT_START};
+        _ ->
+            F = fun() ->
+                        Q1 = qlc:q([X ||
+                                       X <- mnesia:table(Tbl),
+                                       (X#del_bucket_state.bucket_name =:= BucketName andalso
+                                        X#del_bucket_state.node =:= Node)]),
+                        Q2 = qlc:sort(Q1, [{order, ascending}]),
+                        qlc:e(Q2)
+                end,
+            case leo_mnesia:read(F) of
+                {ok, [H|_]} ->
+                    {ok, H};
+                Other ->
+                    Other
+            end
+    end.
+
+
+%% @doc Retrieve a list of del-bucket-state by state
+-spec(get_del_bucket_state_by_state(State) ->
+             {ok, [#del_bucket_state{}]} |
+             not_found |
+             {error, any()} when State::del_bucket_state()).
+get_del_bucket_state_by_state(State) ->
+    Tbl = ?TBL_DEL_BUCKET_STATE,
+
+    case catch mnesia:table_info(Tbl, all) of
+        {'EXIT', _Cause} ->
+            {error, ?ERROR_MNESIA_NOT_START};
+        _ ->
+            F = fun() ->
+                        Q1 = qlc:q([X || X <- mnesia:table(Tbl),
+                                         X#del_bucket_state.state =:= State]),
+                        Q2 = qlc:sort(Q1, [{order, ascending}]),
+                        qlc:e(Q2)
+                end,
+            leo_mnesia:read(F)
+    end.
+
+
 %%-----------------------------------------------------------------------
 %% UPDATE
 %%-----------------------------------------------------------------------
-%% @doc Modify storage-node status
+%% @doc Modify a storage-node's status
 -spec(update_storage_node_status(#node_state{}) ->
              ok | {error, any()}).
 update_storage_node_status(NodeState) ->
@@ -427,7 +553,7 @@ update_storage_node_status(_, _) ->
     {error, badarg}.
 
 
-%% @doc Modify gateway-node status
+%% @doc Modify a gateway-node's status
 -spec(update_gateway_node(#node_state{}) ->
              ok | {error, any()}).
 update_gateway_node(NodeState) ->
@@ -442,7 +568,7 @@ update_gateway_node(NodeState) ->
     end.
 
 
-%% @doc Modify rebalance-info
+%% @doc Modify a rebalance-info
 -spec(update_rebalance_info(#rebalance_info{}) ->
              ok | {error, any()}).
 update_rebalance_info(RebalanceInfo) ->
@@ -453,6 +579,36 @@ update_rebalance_info(RebalanceInfo) ->
             {error, ?ERROR_MNESIA_NOT_START};
         _ ->
             F = fun()-> mnesia:write(Tbl, RebalanceInfo, write) end,
+            leo_mnesia:write(F)
+    end.
+
+
+%% %% @doc Modify a del-bucket-queue
+%% -spec(update_del_bucket_queue(DelBucketQueue) ->
+%%              ok | {error, any()} when DelBucketQueue::#del_bucket_queue{}).
+%% update_del_bucket_queue(DelBucketQueue) ->
+%%     Tbl = ?TBL_DEL_BUCKET_QUEUE,
+
+%%     case catch mnesia:table_info(Tbl, all) of
+%%         {'EXIT', _Cause} ->
+%%             {error, ?ERROR_MNESIA_NOT_START};
+%%         _ ->
+%%             F = fun()-> mnesia:write(Tbl, DelBucketQueue, write) end,
+%%             leo_mnesia:write(F)
+%%     end.
+
+
+%% @doc Modify a del-bucket-state
+-spec(update_del_bucket_state(DelBucketState) ->
+             ok | {error, any()} when DelBucketState::#del_bucket_state{}).
+update_del_bucket_state(DelBucketState) ->
+    Tbl = ?TBL_DEL_BUCKET_STATE,
+
+    case catch mnesia:table_info(Tbl, all) of
+        {'EXIT', _Cause} ->
+            {error, ?ERROR_MNESIA_NOT_START};
+        _ ->
+            F = fun()-> mnesia:write(Tbl, DelBucketState, write) end,
             leo_mnesia:write(F)
     end.
 
@@ -473,6 +629,39 @@ insert_available_command(Command, Help) ->
     end.
 
 
+%% @doc Add a del-bucket-state
+-spec(insert_del_bucket_state(DelBucketState) ->
+             ok | {error, any()} when DelBucketState::#del_bucket_state{}).
+insert_del_bucket_state(DelBucketState) ->
+    update_del_bucket_state(DelBucketState).
+
+
+%% @doc Add a list of del-bucket-state
+-spec(bulk_insert_del_bucket_info(DelBucketStateList) ->
+             ok | {error, any()} when DelBucketStateList::[#del_bucket_state{}]).
+bulk_insert_del_bucket_info(DelBucketStateList) ->
+    case mnesia:sync_transaction(
+           fun() ->
+                   bulk_insert_del_bucket_info_1(DelBucketStateList)
+           end) of
+        {atomic, ok} ->
+            ok;
+        {aborted, Reason} ->
+            {error, Reason}
+    end.
+
+%% @private
+bulk_insert_del_bucket_info_1([]) ->
+    ok;
+bulk_insert_del_bucket_info_1([DelBucketState|Acc]) ->
+    case mnesia:write(?TBL_DEL_BUCKET_STATE, DelBucketState, write) of
+        ok ->
+            bulk_insert_del_bucket_info_1(Acc);
+        _ ->
+            {error, transaction_abort}
+    end.
+
+
 %%-----------------------------------------------------------------------
 %% DELETE
 %%-----------------------------------------------------------------------
@@ -483,6 +672,8 @@ delete_storage_node(Node) when is_atom(Node) ->
     case get_storage_node_by_name(Node) of
         {ok, NodeInfo} ->
             delete_storage_node(NodeInfo);
+        not_found ->
+            ok;
         Error ->
             Error
     end;
@@ -507,10 +698,12 @@ delete_gateway_node(Node) when is_atom(Node) ->
     case get_gateway_node_by_name(Node) of
         {ok, NodeInfo} ->
             delete_gateway_node(NodeInfo);
+        not_found ->
+            ok;
         Error ->
             Error
     end;
-delete_gateway_node(Node) ->
+delete_gateway_node(NodeInfo) ->
     Tbl = ?TBL_GATEWAY_NODES,
 
     case catch mnesia:table_info(Tbl, all) of
@@ -518,9 +711,59 @@ delete_gateway_node(Node) ->
             {error, ?ERROR_MNESIA_NOT_START};
         _ ->
             F = fun() ->
-                        mnesia:delete_object(Tbl, Node, write)
+                        mnesia:delete_object(Tbl, NodeInfo, write)
                 end,
             leo_mnesia:delete(F)
+    end.
+
+
+%% @doc Remove a del-bucket-state
+-spec(delete_del_bucket_state(BucketName) ->
+             ok | {error, any()} when BucketName::binary()).
+delete_del_bucket_state(BucketName) ->
+    case get_del_bucket_state_by_bucket_name(BucketName) of
+        {ok, DelBucketState} ->
+            Tbl = ?TBL_DEL_BUCKET_STATE,
+
+            case catch mnesia:table_info(Tbl, all) of
+                {'EXIT', _Cause} ->
+                    {error, ?ERROR_MNESIA_NOT_START};
+                _ ->
+                    F = fun() ->
+                                mnesia:delete_object(Tbl, DelBucketState, write)
+                        end,
+                    leo_mnesia:delete(F)
+            end;
+        not_found ->
+            ok;
+        Error ->
+            Error
+    end.
+
+
+%% @doc Remove a list of del-bucket-state
+-spec(bulk_delete_del_bucket_info(DelBucketStateList) ->
+             ok | {error, any()} when DelBucketStateList::[#del_bucket_state{}]).
+bulk_delete_del_bucket_info(DelBucketStateList) ->
+    case mnesia:sync_transaction(
+           fun() ->
+                   bulk_delete_del_bucket_info_1(DelBucketStateList)
+           end) of
+        {atomic, ok} ->
+            ok;
+        {aborted, Reason} ->
+            {error, Reason}
+    end.
+
+%% @private
+bulk_delete_del_bucket_info_1([]) ->
+    ok;
+bulk_delete_del_bucket_info_1([DelBucketState|Acc]) ->
+    case mnesia:delete_object(?TBL_DEL_BUCKET_STATE, DelBucketState, write) of
+        ok ->
+            bulk_delete_del_bucket_info_1(Acc);
+        _ ->
+            {error, transaction_abort}
     end.
 
 
@@ -533,6 +776,7 @@ delete_all() ->
     {atomic, ok} = mnesia:delete_table(?TBL_STORAGE_NODES),
     {atomic, ok} = mnesia:delete_table(?TBL_AVAILABLE_CMDS),
     {atomic, ok} = mnesia:delete_table(?TBL_REBALANCE_INFO),
+    {atomic, ok} = mnesia:delete_table(?TBL_DEL_BUCKET_STATE),
     ok.
 
 %% @doc Backup mnesia tables
@@ -547,6 +791,7 @@ backup(DstFilePath) ->
                                   ?TBL_STORAGE_NODES,
                                   ?TBL_AVAILABLE_CMDS,
                                   ?TBL_REBALANCE_INFO,
+                                  ?TBL_DEL_BUCKET_STATE,
                                   ?ENDPOINT_TABLE,
                                   ?AUTH_TABLE,
                                   ?BUCKET_TABLE,
@@ -577,12 +822,13 @@ validate_restored_tables(RestoredTabs) ->
     TableSet4 = sets:add_element(?TBL_STORAGE_NODES, TableSet3),
     TableSet5 = sets:add_element(?TBL_AVAILABLE_CMDS, TableSet4),
     TableSet6 = sets:add_element(?TBL_REBALANCE_INFO, TableSet5),
-    TableSet7 = sets:add_element(?ENDPOINT_TABLE, TableSet6),
-    TableSet8 = sets:add_element(?AUTH_TABLE, TableSet7),
-    TableSet9 = sets:add_element(?BUCKET_TABLE, TableSet8),
-    TableSet10 = sets:add_element(?USERS_TABLE, TableSet9),
-    TableSet11 = sets:add_element(?USER_CREDENTIAL_TABLE, TableSet10),
-    validate_restored_tables(RestoredTabs, TableSet11).
+    TableSet7 = sets:add_element(?TBL_DEL_BUCKET_STATE, TableSet6),
+    TableSet8 = sets:add_element(?ENDPOINT_TABLE, TableSet7),
+    TableSet9 = sets:add_element(?AUTH_TABLE, TableSet8),
+    TableSet10 = sets:add_element(?BUCKET_TABLE, TableSet9),
+    TableSet11 = sets:add_element(?USERS_TABLE, TableSet10),
+    TableSet12 = sets:add_element(?USER_CREDENTIAL_TABLE, TableSet11),
+    validate_restored_tables(RestoredTabs, TableSet12).
 
 validate_restored_tables([], ExpectedTableSet) ->
     case sets:size(ExpectedTableSet) of

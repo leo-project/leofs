@@ -1,6 +1,6 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
 %% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
@@ -73,13 +73,18 @@
          mq_stats/1, mq_suspend/2, mq_resume/2,
          synchronize/1, synchronize/2, synchronize/3,
          set_endpoint/1, delete_endpoint/1,
-         add_bucket/2, add_bucket/3, delete_bucket/2, update_bucket/1,
-         update_acl/3, gen_nfs_mnt_key/3
+         add_bucket/2, add_bucket/3, delete_bucket/2,
+         delete_bucket_stats/1, delete_bucket_stats_all/0,
+         update_bucket/1,
+         update_acl/3, gen_nfs_mnt_key/3,
+         call_gateway_api/2
         ]).
 
 -export([join_cluster/2,
          sync_mdc_tables/2, update_cluster_manager/2,
          remove_cluster/1]).
+
+-export([notify_del_dir_state/3]).
 
 
 -type(system_status() :: ?STATE_RUNNING | ?STATE_STOP).
@@ -946,12 +951,12 @@ rebalance(Socket) ->
 
                                     case get_members_of_all_versions() of
                                         {ok, {MembersCur, MembersPrev}} ->
-                                        ok = rebalance_4(self(), MembersCur,
-                                                         RebalanceProcInfo#rebalance_proc_info{
-                                                           members_cur = MembersCur,
-                                                           members_prev = MembersPrev}),
-                                        rebalance_4_loop(Socket, 0, length(MembersCur),
-                                                         {CanTakeover, TookOverNode});
+                                            ok = rebalance_4(self(), MembersCur,
+                                                             RebalanceProcInfo#rebalance_proc_info{
+                                                               members_cur = MembersCur,
+                                                               members_prev = MembersPrev}),
+                                            rebalance_4_loop(Socket, 0, length(MembersCur),
+                                                             {CanTakeover, TookOverNode});
                                         {error,_Cause} ->
                                             {error, ?ERROR_COULD_NOT_GET_MEMBER}
                                     end;
@@ -1364,7 +1369,7 @@ notify_3({error,_Cause},_State,_Node) ->
 -spec(purge(string()) ->
              ok | {error, any()}).
 purge(Path) ->
-    rpc_call_for_gateway(purge, [Path]).
+    call_gateway_api(purge, [Path]).
 
 %% @doc remove a gateway-node
 -spec(remove(atom()|string()) ->
@@ -2195,7 +2200,7 @@ compare_local_chksum_with_remote_chksum( Type, Node, Checksum_1, Checksum_2)
 set_endpoint(EndPoint) ->
     case leo_s3_endpoint:set_endpoint(EndPoint) of
         ok ->
-            rpc_call_for_gateway(set_endpoint, [EndPoint]);
+            call_gateway_api(set_endpoint, [EndPoint]);
         {error, Cause} ->
             ?error("set_endpoint/1", [{cause ,Cause}]),
             {error, ?ERROR_COULD_NOT_SET_ENDPOINT}
@@ -2208,7 +2213,7 @@ set_endpoint(EndPoint) ->
 delete_endpoint(EndPoint) ->
     case leo_s3_endpoint:delete_endpoint(EndPoint) of
         ok ->
-            rpc_call_for_gateway(delete_endpoint, [EndPoint]);
+            call_gateway_api(delete_endpoint, [EndPoint]);
         {error, Cause} ->
             ?error("delete_endpoint/1", [{cause, Cause}]),
             {error, ?ERROR_COULD_NOT_REMOVE_ENDPOINT}
@@ -2224,17 +2229,41 @@ add_bucket(AccessKey, Bucket) ->
              ok | {error, any()}).
 add_bucket(AccessKey, Bucket, CannedACL) ->
     AccessKeyBin = leo_misc:any_to_binary(AccessKey),
-    BucketBin    = leo_misc:any_to_binary(Bucket),
+    BucketBin = leo_misc:any_to_binary(Bucket),
 
-    case leo_s3_bucket:head(AccessKeyBin, BucketBin) of
-        ok ->
-            {error, already_yours};
-        {error, forbidden} ->
-            {error, already_exists};
-        not_found ->
-            add_bucket_1(AccessKeyBin, BucketBin, CannedACL);
-        {error, _} ->
-            {error, ?ERROR_INVALID_ARGS}
+    %% Does the bucket with the same name exist?
+    Ret = case leo_manager_mnesia:get_del_bucket_state_by_bucket_name(BucketBin) of
+              {ok, StateL} ->
+                  lists:foldl(
+                    fun(#del_bucket_state{node = _Node,
+                                          state = State},_)
+                          when State == ?STATE_FINISHED ->
+                            true;
+                       (_,_) ->
+                            false
+                    end, false, StateL);
+              not_found ->
+                  true;
+              {error, Cause} ->
+                  ?error("add_bucket/2", [{cause, Cause}]),
+                  {error, ?ERROR_FAIL_ACCESS_MNESIA}
+          end,
+    case Ret of
+        {error, Reason} ->
+            {error, Reason};
+        true ->
+            case leo_s3_bucket:head(AccessKeyBin, BucketBin) of
+                ok ->
+                    {error, already_yours};
+                {error, forbidden} ->
+                    {error, already_exists};
+                not_found ->
+                    add_bucket_1(AccessKeyBin, BucketBin, CannedACL);
+                {error, _} ->
+                    {error, ?ERROR_INVALID_ARGS}
+            end;
+        false ->
+            {error, ?ERROR_SAME_BUCKET_EXISTS}
     end.
 
 add_bucket_1(AccessKeyBin, BucketBin, CannedACL) ->
@@ -2249,8 +2278,8 @@ add_bucket_1(AccessKeyBin, BucketBin, CannedACL) ->
     case leo_s3_bucket:put(AccessKeyBin, BucketBin,
                            CannedACL, ClusterId_1) of
         ok ->
-            _ = rpc_call_for_gateway(add_bucket,
-                                     [AccessKeyBin, BucketBin, CannedACL, undefined]),
+            _ = call_gateway_api(add_bucket,
+                                 [AccessKeyBin, BucketBin, CannedACL, undefined]),
             ok;
         {error, badarg} ->
             {error, invalid_bucket_format};
@@ -2264,14 +2293,14 @@ add_bucket_1(AccessKeyBin, BucketBin, CannedACL) ->
              ok | {error, any()}).
 delete_bucket(AccessKey, Bucket) ->
     AccessKeyBin = leo_misc:any_to_binary(AccessKey),
-    BucketBin    = leo_misc:any_to_binary(Bucket),
+    BucketBin = leo_misc:any_to_binary(Bucket),
 
     %% Check preconditions
     case is_allow_to_distribute_command() of
         {true, _}->
             case leo_s3_bucket:head(AccessKeyBin, BucketBin) of
                 ok ->
-                    delete_bucket_1(AccessKeyBin, BucketBin);
+                    leo_manager_del_bucket_handler:enqueue(AccessKeyBin, BucketBin);
                 not_found ->
                     {error, ?ERROR_BUCKET_NOT_FOUND};
                 {error, _} ->
@@ -2281,35 +2310,28 @@ delete_bucket(AccessKey, Bucket) ->
             {error, ?ERROR_NOT_STARTED}
     end.
 
-delete_bucket_1(AccessKeyBin, BucketBin) ->
-    case leo_redundant_manager_api:get_members_by_status(?STATE_RUNNING) of
-        {ok, Members} ->
-            Nodes = lists:map(fun(#member{node = Node}) ->
 
-                                      Node
-                              end, Members),
-            case rpc:multicall(Nodes, leo_storage_handler_directory,
-                               delete_objects_in_parent_dir,
-                               [BucketBin], ?DEF_TIMEOUT) of
-                {_, []} -> void;
-                {_, BadNodes} ->
-                    ?error("delete_bucket_1/2",
-                           [{bad_nodes, BadNodes}])
-            end,
-            delete_bucket_2(AccessKeyBin, BucketBin);
-        _ ->
-            {error, ?ERROR_NOT_STARTED}
+%% @doc Retrieve the state of a deletion bucket from the manager
+delete_bucket_stats(BucketBin) ->
+    case leo_manager_mnesia:get_del_bucket_state_by_bucket_name(BucketBin) of
+        {ok, Stats} ->
+            {ok, Stats};
+        not_found ->
+            {error, ?ERROR_DEL_BUCKET_STATS_NOT_FOUND};
+        _Error ->
+            {error, ?ERROR_COULD_NOT_GET_REC}
     end.
 
-delete_bucket_2(AccessKeyBin, BucketBin) ->
-    case leo_s3_bucket:delete(AccessKeyBin, BucketBin) of
-        ok ->
-            _ = rpc_call_for_gateway(delete_bucket, [AccessKeyBin, BucketBin, undefined]),
-            ok;
-        {error, badarg} ->
-            {error, ?ERROR_INVALID_BUCKET_FORMAT};
-        {error, _Cause} ->
-            {error, ?ERROR_COULD_NOT_STORE}
+
+%% @doc Retrieve the state of a deletion bucket from the manager
+delete_bucket_stats_all() ->
+    case leo_manager_mnesia:get_del_bucket_state_all() of
+        {ok, Stats} ->
+            {ok, Stats};
+        not_found ->
+            {error, ?ERROR_DEL_BUCKET_STATS_NOT_FOUND};
+        _Error ->
+            {error, ?ERROR_COULD_NOT_GET_REC}
     end.
 
 
@@ -2320,7 +2342,7 @@ delete_bucket_2(AccessKeyBin, BucketBin) ->
 update_bucket(BucketName) ->
     case leo_s3_bucket:find_bucket_by_name(BucketName) of
         {ok, #?BUCKET{} = Bucket} ->
-            rpc_call_for_gateway(update_bucket, [Bucket]);
+            call_gateway_api(update_bucket, [Bucket]);
         not_found = Cause ->
             {error, Cause};
         Error ->
@@ -2334,7 +2356,7 @@ update_bucket(BucketName) ->
 update_acl(?CANNED_ACL_PRIVATE = Permission, AccessKey, Bucket) ->
     case leo_s3_bucket:update_acls2private(AccessKey, Bucket) of
         ok ->
-            rpc_call_for_gateway(update_acl, [Permission, AccessKey, Bucket]);
+            call_gateway_api(update_acl, [Permission, AccessKey, Bucket]);
         {error, Cause} ->
             ?error("update_acl/3", [{cause, Cause}]),
             {error, ?ERROR_FAIL_TO_UPDATE_ACL}
@@ -2342,7 +2364,7 @@ update_acl(?CANNED_ACL_PRIVATE = Permission, AccessKey, Bucket) ->
 update_acl(?CANNED_ACL_PUBLIC_READ = Permission, AccessKey, Bucket) ->
     case leo_s3_bucket:update_acls2public_read(AccessKey, Bucket) of
         ok ->
-            rpc_call_for_gateway(update_acl, [Permission, AccessKey, Bucket]);
+            call_gateway_api(update_acl, [Permission, AccessKey, Bucket]);
         {error, Cause} ->
             ?error("update_acl/3", [{cause, Cause}]),
             {error, ?ERROR_FAIL_TO_UPDATE_ACL}
@@ -2350,7 +2372,7 @@ update_acl(?CANNED_ACL_PUBLIC_READ = Permission, AccessKey, Bucket) ->
 update_acl(?CANNED_ACL_PUBLIC_READ_WRITE = Permission, AccessKey, Bucket) ->
     case leo_s3_bucket:update_acls2public_read_write(AccessKey, Bucket) of
         ok ->
-            rpc_call_for_gateway(update_acl, [Permission, AccessKey, Bucket]);
+            call_gateway_api(update_acl, [Permission, AccessKey, Bucket]);
         {error, Cause} ->
             ?error("update_acl/3", [{cause, Cause}]),
             {error, ?ERROR_FAIL_TO_UPDATE_ACL}
@@ -2358,7 +2380,7 @@ update_acl(?CANNED_ACL_PUBLIC_READ_WRITE = Permission, AccessKey, Bucket) ->
 update_acl(?CANNED_ACL_AUTHENTICATED_READ = Permission, AccessKey, Bucket) ->
     case leo_s3_bucket:update_acls2authenticated_read(AccessKey, Bucket) of
         ok ->
-            rpc_call_for_gateway(update_acl, [Permission, AccessKey, Bucket]);
+            call_gateway_api(update_acl, [Permission, AccessKey, Bucket]);
         {error, Cause} ->
             ?error("update_acl/3", [{cause, Cause}]),
             {error, ?ERROR_FAIL_TO_UPDATE_ACL}
@@ -2369,11 +2391,11 @@ update_acl(_,_,_) ->
 gen_nfs_mnt_key(Bucket, AccessKey, IP) ->
     leo_s3_bucket:gen_nfs_mnt_key(Bucket, AccessKey, IP).
 
+
 %% @doc RPC call for Gateway-nodes
-%% @private
--spec(rpc_call_for_gateway(atom(), [_]) ->
+-spec(call_gateway_api(atom(), [_]) ->
              ok | {error, any()}).
-rpc_call_for_gateway(Method, Args) ->
+call_gateway_api(Method, Args) ->
     case catch leo_manager_mnesia:get_gateway_nodes_all() of
         {ok, Nodes_0} ->
             case [Node || #node_state{node  = Node,
@@ -2580,3 +2602,14 @@ call_remote_node_fun_1([#node_state{node = Node,
     end;
 call_remote_node_fun_1([_|Rest], NodeStr, Method, Args) ->
     call_remote_node_fun_1(Rest, NodeStr, Method, Args).
+
+
+%% Notification of a del-bucket's state
+-spec(notify_del_dir_state(Node, BucketName, State) ->
+             ok | {error, Cause} when Node::node(),
+                                      BucketName::binary(),
+                                      State::pending|ongoing|finished,
+                                      Cause::any()).
+notify_del_dir_state(Node, BucketName, State) ->
+    leo_manager_del_bucket_handler:change_status(
+      Node, BucketName, ?del_bucket_state(State)).
