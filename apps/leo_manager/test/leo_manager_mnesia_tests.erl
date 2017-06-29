@@ -55,7 +55,6 @@ all_(_) ->
     ok = leo_manager_mnesia:create_gateway_nodes(ram_copies, [node()]),
     ok = leo_manager_mnesia:create_rebalance_info(ram_copies, [node()]),
     ok = leo_manager_mnesia:create_available_commands(ram_copies, [node()]),
-    ok = leo_manager_mnesia:create_del_bucket_queue(ram_copies, [node()]),
     ok = leo_manager_mnesia:create_del_bucket_state(ram_copies, [node()]),
     ok = leo_s3_auth:create_table(ram_copies, [node()]),
     ok = leo_s3_bucket:create_table(ram_copies, [node()]),
