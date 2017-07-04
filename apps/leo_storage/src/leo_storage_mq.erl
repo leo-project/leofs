@@ -178,6 +178,7 @@ publish(?QUEUE_ID_DEL_DIR = Id, Node, Dir) ->
                            dir = Dir,
                            node = Node,
                            timestamp = leo_date:now()}),
+    ?debug("leo_mq delete directory", [{dir, Dir}]),
     leo_mq_api:publish(Id, KeyBin, MsgBin);
 publish(_,_,_) ->
     {error, badarg}.
@@ -412,12 +413,14 @@ handle_call({consume, ?QUEUE_ID_DEL_DIR, MessageBin}) ->
         %% A destination node is NOT specified
         #delete_dir{dir = ParentDir,
                     node = undefined} ->
+            ?debug("leo_mq delete directory", [{dir, ParentDir}]),
             publish(?QUEUE_ID_DEL_DIR, ParentDir);
 
         %% A destination node is specified
         #delete_dir{dir = ParentDir,
                     node = Node} ->
             Ref = make_ref(),
+            ?debug("leo_mq handle delete directory", [{dir, ParentDir}]),
             case leo_storage_handler_object:delete_objects_under_dir(
                    [Node], Ref, [ParentDir]) of
                 {ok, Ref} ->

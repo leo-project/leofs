@@ -445,6 +445,25 @@
               })
             %% ?notify_metrics(<<"PUT">>,_Bucket,_Size)
         end).
+-define(access_log_copy(_Bucket,_Path,_Size,_Response,_Begin),
+        begin
+            _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
+            leo_logger_client_base:append(
+              {?LOG_ID_ACCESS,
+               #message_log{format  = "[COPY]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+                            message = [binary_to_list(_Bucket),
+                                       _Path,
+                                       0,
+                                       _Size,
+                                       leo_date:date_format(),
+                                       leo_date:clock(),
+                                       _Response,
+                                       _Latency,
+                                       ""
+                                      ]}
+              })
+            %% ?notify_metrics(<<"PUT">>,_Bucket,_Size)
+        end).
 -define(access_log_delete(_Bucket,_Path,_Size,_Response,_Begin),
         begin
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
@@ -566,6 +585,42 @@
                #message_log{format  = "[BUCKET-GET]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
                             message = [binary_to_list(_Bucket),
                                        binary_to_list(_Prefix),
+                                       0,
+                                       0,
+                                       leo_date:date_format(),
+                                       leo_date:clock(),
+                                       _Response,
+                                       _Latency,
+                                       ""
+                                      ]}
+              })
+        end).
+-define(access_log_bucket_getacl(_Bucket, _Response, _Begin),
+        begin
+            _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
+            leo_logger_client_base:append(
+              {?LOG_ID_ACCESS,
+               #message_log{format  = "[BUCKET-GETACL]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+                            message = [binary_to_list(_Bucket),
+                                       "",
+                                       0,
+                                       0,
+                                       leo_date:date_format(),
+                                       leo_date:clock(),
+                                       _Response,
+                                       _Latency,
+                                       ""
+                                      ]}
+              })
+        end).
+-define(access_log_bucket_getacl(_Bucket, _CannedACL, _Response, _Begin),
+        begin
+            _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
+            leo_logger_client_base:append(
+              {?LOG_ID_ACCESS,
+               #message_log{format  = "[BUCKET-PUTACL]\t~s\t~s\t~w\t~w\t~s\t~w\t~w\t~w\t~s\n",
+                            message = [binary_to_list(_Bucket),
+                                       _CannedACL,
                                        0,
                                        0,
                                        leo_date:date_format(),
