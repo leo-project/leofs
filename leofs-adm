@@ -959,6 +959,7 @@ usage() {
     output ""
     usage_add_bucket min
     usage_delete_bucket min
+    usage_delete_bucket_stats min
     usage_get_bucket min
     usage_get_buckets min
     usage_chown_bucket min
