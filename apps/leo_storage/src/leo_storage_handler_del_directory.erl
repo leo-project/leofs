@@ -115,8 +115,9 @@ get_cached_items() ->
 %% @doc Initiates the server
 init([]) ->
     erlang:send_after(?INTERVAL, self(), trigger),
-    {ok, #state{num_of_workers = ?env_del_dir_workers(),
-                manager_nodes = ?env_manager_nodes()}}.
+    State = get_current_state(#state{num_of_workers = ?env_del_dir_workers(),
+                                     manager_nodes = ?env_manager_nodes()}),
+    {ok, State}.
 
 %% @doc gen_server callback - Module:handle_call(Request, From, State) -> Result
 handle_call(stop,_From, State) ->
@@ -180,19 +181,7 @@ handle_info(trigger, State) ->
     {_, State_1} = dequeue(State),
 
     %% Retrieve the latest items
-    State_2 = case leo_backend_db_api:fetch(
-                     ?DEL_DIR_STATE_DB_ID, <<>>,
-                     fun(K,_V, Acc) ->
-                             [K| Acc]
-                     end) of
-                  {ok, Dirs} ->
-                      State_1#state{cached_items = Dirs};
-                  not_found ->
-                      State_1#state{cached_items = []};
-                  {error, Cause} ->
-                      ?error("handle_info/2 - trigger", [{cause, Cause}]),
-                      State_1
-              end,
+    State_2 = get_current_state(State_1),
     erlang:send_after(?INTERVAL, self(), trigger),
     {noreply, State_2};
 
@@ -226,8 +215,8 @@ handle_info({failed, MQId, Type, Directory}, State) ->
                     timestamp = leo_date:now()}),
     {noreply, State};
 
-handle_info({ongoing, MQId, Type, Directory}, State) ->
-    {ok, State_1} = run(Type, ?STATE_ONGOING, MQId, Directory, State),
+handle_info({enqueuing, MQId, Type, Directory}, State) ->
+    {ok, State_1} = run(Type, ?STATE_ENQUEUING, MQId, Directory, State),
     {noreply, State_1};
 
 handle_info({enqueued, MQId, Type, Directory}, State) ->
@@ -253,6 +242,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%====================================================================
 %% Private Functions
 %%====================================================================
+%% @doc Retrieve a candidate del-bucket message whose current state is 'PENDING',
+%%      then assign it to one del-buclet-queue  in case of existing unoccupied workers
 %% @private
 -spec(dequeue(State) ->
              {ok, State} when State::#state{}).
@@ -266,8 +257,9 @@ dequeue(#state{num_of_workers = NumOfWorkers} = State) ->
                          fun({_, DelBucketStateBin}, Acc) ->
                                  case catch binary_to_term(DelBucketStateBin) of
                                      #del_dir_state{mq_id = MQId,
-                                                    state = ProcState} when ProcState == ?STATE_ONGOING;
-                                                                            ProcState == ?STATE_MONITORING ->
+                                                    state = ProcState}
+                                       when ProcState == ?STATE_ENQUEUING;
+                                            ProcState == ?STATE_MONITORING ->
                                          [MQId|Acc];
                                      _ ->
                                          Acc
@@ -323,7 +315,7 @@ dequeue_1([{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
                                       Directory::binary(),
                                       Cause::any()).
 insert_messages(From, MQId, Type, Directory) ->
-    erlang:send(From, {ongoing, MQId, Type, Directory}),
+    erlang:send(From, {enqueuing, MQId, Type, Directory}),
 
     case leo_storage_handler_object:prefix_search_and_remove_objects(
            MQId, Directory) of
@@ -335,7 +327,7 @@ insert_messages(From, MQId, Type, Directory) ->
     end.
 
 
-%% @doc Retrieve available wokers (not ongoingg and monitoring workers)
+%% @doc Retrieve the records whose state is pending/ongoing/monitoring.
 %% @private
 get_ongoing_workers(NumOfWorkers) ->
     %% Retrieve ongoing workers
@@ -343,7 +335,7 @@ get_ongoing_workers(NumOfWorkers) ->
                    case catch binary_to_term(V) of
                        #del_dir_state{state = ProcState}
                          when ProcState == ?STATE_PENDING;
-                              ProcState == ?STATE_ONGOING;
+                              ProcState == ?STATE_ENQUEUING;
                               ProcState == ?STATE_MONITORING ->
                            true;
                        _ ->
@@ -420,8 +412,8 @@ check_stats_2(#del_dir_state{mq_id = MQId,
 check_stats_2(#del_dir_state{mq_id = MQId,
                              type = Type,
                              directory = Directory,
-                             state = ?STATE_ONGOING},_From, State) ->
-    run(Type, ?STATE_ONGOING, MQId, Directory, State);
+                             state = ?STATE_ENQUEUING},_From, State) ->
+    run(Type, ?STATE_ENQUEUING, MQId, Directory, State);
 check_stats_2(#del_dir_state{mq_id = MQId,
                              type = Type,
                              directory = Directory,
@@ -462,6 +454,26 @@ update_state(#del_dir_state{directory = Directory} = DelDirState) ->
     end.
 
 
+%% @private
+-spec(get_current_state(State) ->
+             State when State::#state{}).
+get_current_state(State) ->
+    %% Retrieve the latest items
+    case catch leo_backend_db_api:fetch(
+           ?DEL_DIR_STATE_DB_ID, <<>>,
+           fun(K,_V, Acc) ->
+                   [K| Acc]
+           end) of
+        {ok, Dirs} ->
+            State#state{cached_items = Dirs};
+        not_found ->
+            State#state{cached_items = []};
+        {_, Cause} ->
+            ?error("get_current_state/1", [{cause, Cause}]),
+            State
+    end.
+
+
 %% @doc A callback function
 %% @private
 -spec(run(Type, State, MQId, Directory, State) ->
@@ -475,7 +487,7 @@ run(?TYPE_DEL_BUCKET, ProcState,_MQId,_Directory, State) when ProcState == ?STAT
     {ok, State};
 
 run(?TYPE_DEL_BUCKET = Type, ProcState, MQId, Directory,
-    #state{manager_nodes = ManagerNodes} = State) when ProcState == ?STATE_ONGOING ->
+    #state{manager_nodes = ManagerNodes} = State) when ProcState == ?STATE_ENQUEUING ->
     case notify_current_state_to_manager(
            ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)) of
         true ->
@@ -582,7 +594,7 @@ run(?TYPE_DEL_DIR = Type, ProcState,_MQId, Directory, State) when ProcState == ?
     end,
     {ok, State};
 
-run(?TYPE_DEL_DIR = Type, ProcState, MQId, Directory, State) when ProcState == ?STATE_ONGOING;
+run(?TYPE_DEL_DIR = Type, ProcState, MQId, Directory, State) when ProcState == ?STATE_ENQUEUING;
                                                                   ProcState == ?STATE_MONITORING ->
     case leo_mq_api:count(MQId) of
         {ok, 0} ->

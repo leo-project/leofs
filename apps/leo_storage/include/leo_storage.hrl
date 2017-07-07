@@ -773,11 +773,11 @@
 -define(PREFIX_DEL_DIR_MQ, "leo_del_dir_mq_").
 
 -define(STATE_PENDING, 0).
--define(STATE_ONGOING, 1).
+-define(STATE_ENQUEUING, 1).
 -define(STATE_MONITORING, 2).
 -define(STATE_FINISHED, 3).
 -type(del_dir_state() :: ?STATE_PENDING |
-                         ?STATE_ONGOING |
+                         ?STATE_ENQUEUING |
                          ?STATE_MONITORING |
                          ?STATE_FINISHED).
 
@@ -791,8 +791,8 @@
             case _DelDirState of
                 ?STATE_PENDING ->
                     'pending';
-                ?STATE_ONGOING ->
-                    'ongoing';
+                ?STATE_ENQUEUING ->
+                    'enqueuing';
                 ?STATE_MONITORING ->
                     'monitoring';
                 ?STATE_FINISHED ->

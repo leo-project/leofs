@@ -68,13 +68,6 @@ init([]) ->
                  permanent,
                  ?SHUTDOWN_WAITING_TIME,
                  worker,
-                 [leo_storage_msg_collector]},
-
-                {leo_storage_handler_del_directory,
-                 {leo_storage_handler_del_directory, start_link, []},
-                 permanent,
-                 ?SHUTDOWN_WAITING_TIME,
-                 worker,
-                 [leo_storage_handler_del_directory]}
+                 [leo_storage_msg_collector]}
                ],
     {ok, {_SupFlags = {one_for_one, ?MAX_RESTART, ?MAX_TIME}, Children}}.

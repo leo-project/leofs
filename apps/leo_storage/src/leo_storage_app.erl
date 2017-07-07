@@ -147,9 +147,20 @@ after_proc(Error) ->
 %% @private
 after_proc_1(true, Pid, Managers) ->
     try
+        %% Launch MQ-servers
         QueueDir = ?env_queue_dir(leo_storage),
         ok = launch_redundant_manager(Pid, Managers, QueueDir),
         ok = leo_storage_mq:start(Pid, QueueDir),
+
+        %% Launch del_directory_handler:
+        {ok, _} = supervisor:start_child(
+                    leo_storage_sup,
+                    {leo_storage_handler_del_directory,
+                     {leo_storage_handler_del_directory, start_link, []},
+                     permanent,
+                     ?SHUTDOWN_WAITING_TIME,
+                     worker,
+                     [leo_storage_handler_del_directory]}),
 
         %% After processing
         ensure_started(rex, rpc, start_link, worker, 2000),

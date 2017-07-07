@@ -1134,10 +1134,10 @@ is_key_under_del_dir([Dir|Acc], Key) ->
                     << Dir/binary, "/" >>
             end,
     case binary:match(Key, [Dir_1],[]) of
-        nomatch ->
-            is_key_under_del_dir(Acc, Key);
-        {_,_} ->
-            true
+        {0,_} ->
+            true;
+        _ ->
+            is_key_under_del_dir(Acc, Key)
     end.
 
 

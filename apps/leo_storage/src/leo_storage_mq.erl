@@ -408,7 +408,8 @@ handle_call({consume, ?QUEUE_ID_REQ_DEL_DIR, MessageBin}) ->
 handle_call({consume, MQId, MessageBin}) ->
     case lists:member(MQId, ?del_dir_id_list()) of
         true ->
-            %% 'replcation-failurre' whoch is fixed by 'leo_async_deletion_queue'
+            %% Not handle the returun value of 'remove_objects_under_dir/1'
+            %% because 'replcation-failurre' which is fixed by 'leo_async_deletion_queue'
             remove_objects_under_dir(MessageBin),
             ok;
         false ->
