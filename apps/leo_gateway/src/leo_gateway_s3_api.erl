@@ -632,9 +632,9 @@ put_object(Directive, Req, Key, #req_params{handler = ?PROTO_HANDLER_S3,
                                end,
                     case Meta#?METADATA.cnumber of
                         0 ->
-                            put_object_1(Directive, Req, CS2, Key, Meta, RespObject, Params#req_params{custom_metadata = CMetaBin});
+                            put_object_1(Req, CS2, Key, Meta, RespObject, Params#req_params{custom_metadata = CMetaBin});
                         _TotalChunkedObjs ->
-                            put_large_object_1(Directive, Req, Key, Meta, Params#req_params{custom_metadata = CMetaBin})
+                            put_large_object_1(Req, CS2, Key, Meta, Params#req_params{custom_metadata = CMetaBin})
                     end;
                 {error, not_found} ->
                     ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_NOT_FOUND, BeginTime),
@@ -653,10 +653,10 @@ put_object(Directive, Req, Key, #req_params{handler = ?PROTO_HANDLER_S3,
 
 %% @doc POST/PUT operation on Objects. COPY
 %% @private
-put_object_1(Directive, Req, Src, Key, Meta, Bin, #req_params{bucket_name = BucketName,
-                                                              bucket_info = BucketInfo,
-                                                              custom_metadata = CMetaBin,
-                                                              begin_time = BeginTime} = Params) ->
+put_object_1(Req, Src, Key, Meta, Bin, #req_params{bucket_name = BucketName,
+                                                   bucket_info = BucketInfo,
+                                                   custom_metadata = CMetaBin,
+                                                   begin_time = BeginTime}) ->
     Size = size(Bin),
     SrcDst = <<Src/binary, " -> ", Key/binary>>,
     case leo_gateway_rpc_handler:put(#put_req_params{path = Key,
@@ -665,12 +665,9 @@ put_object_1(Directive, Req, Src, Key, Meta, Bin, #req_params{bucket_name = Buck
                                                      dsize = Size,
                                                      msize = byte_size(CMetaBin),
                                                      bucket_info = BucketInfo}) of
-        {ok, _ETag} when Directive == ?HTTP_HEAD_X_AMZ_META_DIRECTIVE_COPY ->
+        {ok, _ETag} ->
             ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_OK, BeginTime),
             resp_copy_obj_xml(Req, Meta);
-        {ok, _ETag} when Directive == ?HTTP_HEAD_X_AMZ_META_DIRECTIVE_REPLACE ->
-            ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_OK, BeginTime),
-            put_object_2(Req, Key, Meta, Params);
         {error, unavailable} ->
             ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
             ?reply_service_unavailable_error([?SERVER_HEADER], Key, <<>>, Req);
@@ -682,63 +679,20 @@ put_object_1(Directive, Req, Src, Key, Meta, Bin, #req_params{bucket_name = Buck
             ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req)
     end.
 
-%% @doc POST/PUT operation on Objects. REPLACE
-%% @private
-put_object_2(Req, Key, Meta, Params) ->
-    case Key == Meta#?METADATA.key of
-        true ->
-            resp_copy_obj_xml(Req, Meta);
-        false ->
-            put_object_3(Req, Meta, Params)
-    end.
-
-%% @private
-put_object_3(Req, #?METADATA{key = Key, dsize = Size} = Meta, #req_params{bucket_name = BucketName}) ->
-    BeginTime = leo_date:clock(),
-    case leo_gateway_rpc_handler:delete(Meta#?METADATA.key) of
-        ok ->
-            ?access_log_delete(BucketName, Key, Size, ?HTTP_ST_NO_CONTENT, BeginTime),
-            resp_copy_obj_xml(Req, Meta);
-        {error, not_found} ->
-            resp_copy_obj_xml(Req, Meta);
-        {error, unavailable} ->
-            ?reply_service_unavailable_error([?SERVER_HEADER], Meta#?METADATA.key, <<>>, Req);
-        {error, ?ERR_TYPE_INTERNAL_ERROR} ->
-            ?reply_internal_error([?SERVER_HEADER], Meta#?METADATA.key, <<>>, Req);
-        {error, timeout} ->
-            ?reply_timeout([?SERVER_HEADER], Meta#?METADATA.key, <<>>, Req)
-    end.
-
 %% @doc POST/PUT operation on `Large` Objects. COPY
 %% @private
-put_large_object_1(Directive, Req, Key, Meta, Params) ->
+put_large_object_1(Req, Src, Key, Meta, #req_params{bucket_name = BucketName,
+                                                    begin_time = BeginTime} = Params) ->
+    SrcDst = <<Src/binary, " -> ", Key/binary>>,
     case leo_gateway_http_commons:move_large_object(Meta, Key, Params) of
-        ok when Directive == ?HTTP_HEAD_X_AMZ_META_DIRECTIVE_COPY ->
+        ok ->
+            ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_OK, BeginTime),
             resp_copy_obj_xml(Req, Meta);
-        ok when Directive == ?HTTP_HEAD_X_AMZ_META_DIRECTIVE_REPLACE ->
-            put_large_object_2(Req, Key, Meta);
         {error, timeout} ->
             ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req);
         {error, _Other} ->
             ?reply_internal_error([?SERVER_HEADER], Key, <<>>, Req)
     end.
-
-%% @doc POST/PUT operation on Objects. REPLACE
-%% @private
-put_large_object_2(Req, Key, Meta) ->
-    case Key == Meta#?METADATA.key of
-        true ->
-            resp_copy_obj_xml(Req, Meta);
-        false ->
-            put_large_object_3(Req, Meta)
-    end.
-
-%% @private
-put_large_object_3(Req, Meta) ->
-    leo_large_object_commons:delete_chunked_objects(Meta#?METADATA.key),
-    catch leo_gateway_rpc_handler:delete(Meta#?METADATA.key),
-    resp_copy_obj_xml(Req, Meta).
-
 
 %% @doc DELETE operation on Objects
 -spec(delete_object(cowboy_req:req(), binary(), #req_params{}) ->
