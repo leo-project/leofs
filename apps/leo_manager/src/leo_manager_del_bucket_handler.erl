@@ -257,7 +257,7 @@ dequeue([#del_bucket_state{bucket_name = BucketName,
 
 
 %% @private
-notify_fun(?NODE_TYPE_STORAGE = NodeType, Node, BucketName) ->
+notify_fun(?NODE_TYPE_STORAGE, Node, BucketName) ->
     case rpc:call(Node, leo_storage_handler_del_directory, enqueue,
                   [BucketName], ?DEF_TIMEOUT) of
         ok ->
@@ -270,18 +270,6 @@ notify_fun(?NODE_TYPE_STORAGE = NodeType, Node, BucketName) ->
                     ?error("notify_fun/3", [{cause, Cause}]);
                 timeout = Cause->
                     ?error("notify_fun/3", [{cause, Cause}])
-            end,
-
-            SummaryCause = ?ERROR_FAILED_REGISTERING_DEL_BUCKET_MSG,
-            case leo_manager_mq_client:publish(
-                   ?QUEUE_ID_REQ_DEL_BUCKET, NodeType, Node, BucketName) of
-                ok ->
-                    {error, SummaryCause};
-                {error, Reason} ->
-                    SummaryCause = ?ERROR_FAILED_REGISTERING_DEL_BUCKET_MSG,
-                    ?error("notify_fun/3", [{summary_cause, SummaryCause},
-                                            {cause, Reason}]),
-                    {error, SummaryCause}
             end
     end;
 notify_fun(?NODE_TYPE_GATEWAY,_Node,_BucketName) ->
@@ -294,13 +282,9 @@ notify_fun(_,_,_) ->
 after_completion([]) ->
     ok;
 after_completion([{BucketName, DelBucketStateList}|Acc]) ->
-    Ret = lists:foldl(
-            fun(#del_bucket_state{state = State},_)
-                  when State == ?STATE_FINISHED ->
-                    true;
-               (_,_) ->
-                    false
-            end, false, DelBucketStateList),
+    Ret = lists:all(fun(#del_bucket_state{state = State}) ->
+                            State == ?STATE_FINISHED
+                    end, DelBucketStateList),
     case Ret of
         true ->
             case leo_manager_mnesia:bulk_delete_del_bucket_info(DelBucketStateList) of

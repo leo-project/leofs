@@ -379,7 +379,7 @@ get_del_bucket_state_all() ->
             case leo_mnesia:read(F) of
                 {ok, List} ->
                     ListBucketName = get_del_bucket_state_all_1(List, sets:new()),
-                    get_del_bucket_state_all_2(ListBucketName, []);
+                    get_del_bucket_state_all_2(ListBucketName, List, []);
                 Other ->
                     Other
             end
@@ -393,16 +393,20 @@ get_del_bucket_state_all_1([#del_bucket_state{bucket_name = BucketName}|Acc], Se
     get_del_bucket_state_all_1(Acc, Sets_1).
 
 %% @private
-get_del_bucket_state_all_2([], Acc) ->
+get_del_bucket_state_all_2([],_StateL, Acc) ->
     {ok, lists:reverse(Acc)};
-get_del_bucket_state_all_2([BucketName|ListBucketName], Acc) ->
-    case get_del_bucket_state_by_bucket_name(BucketName) of
-        {ok, List} ->
-            get_del_bucket_state_all_2(ListBucketName, [{BucketName, List}|Acc]);
-        not_found ->
-            get_del_bucket_state_all_2(ListBucketName, Acc);
-        Error ->
-            Error
+get_del_bucket_state_all_2([BucketName|ListBucketName], StateL, Acc) ->
+    StateL_1 = lists:foldl(
+                 fun(#del_bucket_state{bucket_name = B} = S, SAcc) when B == BucketName ->
+                         [S|SAcc];
+                    (_, SAcc) ->
+                         SAcc
+                 end, [], StateL),
+    case StateL_1 of
+        [] ->
+            get_del_bucket_state_all_2(ListBucketName, StateL, Acc);
+        _ ->
+            get_del_bucket_state_all_2(ListBucketName, StateL, [{BucketName, StateL_1}|Acc])
     end.
 
 
@@ -581,21 +585,6 @@ update_rebalance_info(RebalanceInfo) ->
             F = fun()-> mnesia:write(Tbl, RebalanceInfo, write) end,
             leo_mnesia:write(F)
     end.
-
-
-%% %% @doc Modify a del-bucket-queue
-%% -spec(update_del_bucket_queue(DelBucketQueue) ->
-%%              ok | {error, any()} when DelBucketQueue::#del_bucket_queue{}).
-%% update_del_bucket_queue(DelBucketQueue) ->
-%%     Tbl = ?TBL_DEL_BUCKET_QUEUE,
-
-%%     case catch mnesia:table_info(Tbl, all) of
-%%         {'EXIT', _Cause} ->
-%%             {error, ?ERROR_MNESIA_NOT_START};
-%%         _ ->
-%%             F = fun()-> mnesia:write(Tbl, DelBucketQueue, write) end,
-%%             leo_mnesia:write(F)
-%%     end.
 
 
 %% @doc Modify a del-bucket-state

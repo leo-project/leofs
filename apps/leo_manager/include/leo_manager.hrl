@@ -435,11 +435,11 @@
 
 -define(STATE_INVALID, 0).
 -define(STATE_PENDING, 1).
--define(STATE_ONGOING, 2).
+-define(STATE_ENQUEUING, 2).
 -define(STATE_MONITORING, 3).
 -define(STATE_FINISHED, 9).
 -type(del_bucket_state() :: ?STATE_PENDING |
-                            ?STATE_ONGOING |
+                            ?STATE_ENQUEUING |
                             ?STATE_MONITORING |
                             ?STATE_FINISHED).
 -record(del_bucket_queue, {
@@ -475,8 +475,8 @@
             case _State of
                 'pending' ->
                     ?STATE_PENDING;
-                'ongoing' ->
-                    ?STATE_ONGOING;
+                'enqueuing' ->
+                    ?STATE_ENQUEUING;
                 'monitoring' ->
                     ?STATE_MONITORING;
                 'finished' ->
@@ -489,8 +489,8 @@
             case _State of
                 ?STATE_PENDING ->
                     "pending";
-                ?STATE_ONGOING ->
-                    "ongoing";
+                ?STATE_ENQUEUING ->
+                    "enqueuing";
                 ?STATE_MONITORING ->
                     "monitoring";
                 ?STATE_FINISHED ->

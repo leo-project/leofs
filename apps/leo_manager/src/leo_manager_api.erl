@@ -2234,14 +2234,10 @@ add_bucket(AccessKey, Bucket, CannedACL) ->
     %% Does the bucket with the same name exist?
     Ret = case leo_manager_mnesia:get_del_bucket_state_by_bucket_name(BucketBin) of
               {ok, StateL} ->
-                  lists:foldl(
-                    fun(#del_bucket_state{node = _Node,
-                                          state = State},_)
-                          when State == ?STATE_FINISHED ->
-                            true;
-                       (_,_) ->
-                            false
-                    end, false, StateL);
+                  lists:all(
+                    fun(#del_bucket_state{state = State}) ->
+                            State == ?STATE_FINISHED
+                    end, StateL);
               not_found ->
                   true;
               {error, Cause} ->
@@ -2608,7 +2604,7 @@ call_remote_node_fun_1([_|Rest], NodeStr, Method, Args) ->
 -spec(notify_del_dir_state(Node, BucketName, State) ->
              ok | {error, Cause} when Node::node(),
                                       BucketName::binary(),
-                                      State::pending|ongoing|finished,
+                                      State::pending|ongoing|monitoring|finished,
                                       Cause::any()).
 notify_del_dir_state(Node, BucketName, State) ->
     leo_manager_del_bucket_handler:change_status(

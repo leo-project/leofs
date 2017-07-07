@@ -36,6 +36,7 @@
          mq_stats/1,
          credential/2, users/1, endpoints/1,
          buckets/1, bucket_by_access_key/1,
+         del_bucket_stats/1, del_bucket_stats_all/1,
          acls/1, cluster_status/1,
          whereis/1, nfs_mnt_key/1,
          histories/1,
@@ -559,6 +560,57 @@ bucket_by_access_key(Buckets) ->
                               ]}
                      end, Buckets),
     gen_json({[{<<"buckets">>, JSON}]}).
+
+
+%% @doc Format the states of a deletion-bucket
+-spec(del_bucket_stats(Stats) ->
+             binary() when Stats::[#del_bucket_state{}]).
+del_bucket_stats(Stats) ->
+    JSON = lists:map(fun(#del_bucket_state{node = Node,
+                                           state = State,
+                                           timestamp = TS}) ->
+                             TS_1  = case (TS > 1) of
+                                         true ->
+                                             leo_date:date_format(TS);
+                                         false ->
+                                             []
+                                     end,
+
+
+                             {[{<<"node">>, leo_misc:any_to_binary(Node)},
+                               {<<"state">>, leo_misc:any_to_binary(State)},
+                               {<<"state_str">>, leo_misc:any_to_binary(?del_bucket_state_str(State))},
+                               {<<"timestamp">>,  leo_misc:any_to_binary(TS_1)}
+                              ]}
+                     end, Stats),
+    gen_json({[{<<"de_bucket_state">>, JSON}]}).
+
+
+%% @doc Format the states of a deletion-bucket
+-spec(del_bucket_stats_all(Stats) ->
+             binary() when BucketName::binary(),
+                           Stats::[ {BucketName, [#del_bucket_state{}]} ]).
+del_bucket_stats_all(Stats) ->
+    JSON = lists:map(fun({BucketName, NodeStateList}) ->
+                             SubJSON = lists:map(
+                                         fun(#del_bucket_state{node = Node,
+                                                               state = State,
+                                                               timestamp = TS}) ->
+                                                 TS_1  = case (TS > 1) of
+                                                             true ->
+                                                                 leo_date:date_format(TS);
+                                                             false ->
+                                                                 []
+                                                         end,
+                                                 {[{<<"node">>, leo_misc:any_to_binary(Node)},
+                                                   {<<"state">>, leo_misc:any_to_binary(State)},
+                                                   {<<"timestamp">>,  leo_misc:any_to_binary(TS_1)}
+                                                  ]}
+                                         end, NodeStateList),
+                             {[{BucketName, SubJSON}]}
+                     end, Stats),
+    gen_json({[{<<"de_bucket_state_all">>, JSON}]}).
+
 
 
 %% @doc Format the result of a list of acls
