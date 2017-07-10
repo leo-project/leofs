@@ -546,7 +546,9 @@
           reading_chunked_obj_len = 0  :: non_neg_integer(),    %% creading hunked object length for large object (byte)
           threshold_of_chunk_len = 0   :: non_neg_integer(),    %% threshold of chunk length for large-object (byte)
           transfer_decode_fun       :: function() | undefined,  %% transfer decode function
-          transfer_decode_state     :: #aws_chunk_decode_state{} | undefined    %% transfer decode state
+          transfer_decode_state     :: #aws_chunk_decode_state{} | undefined,   %% transfer decode state
+          %% For Latency Measurement
+          begin_time = 0               :: non_neg_integer()     %% Handle Start Time
          }).
 
 -record(put_req_params, {

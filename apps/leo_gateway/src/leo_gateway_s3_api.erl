@@ -220,8 +220,8 @@ onresponse(CacheCondition) ->
                             ReqParams::#req_params{}).
 get_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                                  is_acl = false,
-                                 qs_prefix = Prefix}) ->
-    BeginTime = leo_date:clock(),
+                                 qs_prefix = Prefix,
+                                 begin_time = BeginTime}) ->
     NormalizedMarker = case cowboy_req:qs_val(?HTTP_QS_BIN_MARKER, Req) of
                            {undefined,_} ->
                                <<>>;
@@ -300,17 +300,21 @@ get_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
             end
     end;
 get_bucket(Req, Bucket, #req_params{access_key_id = _AccessKeyId,
-                                    is_acl = true}) ->
+                                    is_acl = true,
+                                    begin_time = BeginTime}) ->
     Bucket_2 = formalize_bucket(Bucket),
     case leo_s3_bucket:find_bucket_by_name(Bucket_2) of
         {ok, BucketInfo} ->
+            ?access_log_bucket_getacl(Bucket, ?HTTP_ST_OK, BeginTime),
             XML = generate_acl_xml(BucketInfo),
             Header = [?SERVER_HEADER,
                       {?HTTP_HEAD_RESP_CONTENT_TYPE, ?HTTP_CTYPE_XML}],
             ?reply_ok(Header, XML, Req);
         not_found ->
+            ?access_log_bucket_getacl(Bucket, ?HTTP_ST_NOT_FOUND, BeginTime),
             ?reply_not_found([?SERVER_HEADER], Bucket_2, <<>>, Req);
         {error, _Cause} ->
+            ?access_log_bucket_getacl(Bucket, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
             ?reply_internal_error([?SERVER_HEADER], Bucket_2, <<>>, Req)
     end.
 
@@ -321,8 +325,8 @@ get_bucket(Req, Bucket, #req_params{access_key_id = _AccessKeyId,
                             Key::binary(),
                             ReqParams::#req_params{}).
 put_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
-                                 is_acl = false}) ->
-    BeginTime = leo_date:clock(),
+                                 is_acl = false,
+                                 begin_time = BeginTime}) ->
     Bucket = formalize_bucket(Key),
     CannedACL = string:to_lower(binary_to_list(?http_header(Req, ?HTTP_HEAD_X_AMZ_ACL))),
     %% Consume CreateBucketConfiguration
@@ -338,36 +342,47 @@ put_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
             ?access_log_bucket_put(Bucket, ?HTTP_ST_OK, BeginTime),
             ?reply_ok([?SERVER_HEADER], Req_1);
         {error, ?ERR_TYPE_INTERNAL_ERROR} ->
+            ?access_log_bucket_put(Bucket, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
             ?reply_internal_error([?SERVER_HEADER], Key, <<>>, Req_1);
         {error, invalid_bucket_format} ->
+            ?access_log_bucket_put(Bucket, ?HTTP_ST_BAD_REQ, BeginTime),
             ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidBucketName,
                                ?XML_ERROR_MSG_InvalidBucketName, Key, <<>>, Req_1);
         {error, invalid_access} ->
+            ?access_log_bucket_put(Bucket, ?HTTP_ST_FORBIDDEN, BeginTime),
             ?reply_forbidden([?SERVER_HEADER], ?XML_ERROR_CODE_AccessDenied,
                              ?XML_ERROR_MSG_AccessDenied, Key, <<>>, Req);
         {error, already_exists} ->
+            ?access_log_bucket_put(Bucket, ?HTTP_ST_CONFLICT, BeginTime),
             ?reply_conflict([?SERVER_HEADER], ?XML_ERROR_CODE_BucketAlreadyExists,
                             ?XML_ERROR_MSG_BucketAlreadyExists, Key, <<>>, Req_1);
         {error, already_yours} ->
+            ?access_log_bucket_put(Bucket, ?HTTP_ST_CONFLICT, BeginTime),
             ?reply_conflict([?SERVER_HEADER], ?XML_ERROR_CODE_BucketAlreadyOwnedByYou,
                             ?XML_ERROR_MSG_BucketAlreadyOwnedByYou, Key, <<>>, Req_1);
         {error, timeout} ->
+            ?access_log_bucket_put(Bucket, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
             ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req_1)
     end;
 put_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
-                                 is_acl = true}) ->
+                                 is_acl = true,
+                                 begin_time = BeginTime}) ->
     Bucket = formalize_bucket(Key),
     CannedACL = string:to_lower(binary_to_list(?http_header(Req, ?HTTP_HEAD_X_AMZ_ACL))),
     case put_bucket_acl_1(CannedACL, AccessKeyId, Bucket) of
         ok ->
+            ?access_log_bucket_getacl(Bucket, CannedACL, ?HTTP_ST_OK, BeginTime),
             ?reply_ok([?SERVER_HEADER], Req);
         {error, not_supported} ->
+            ?access_log_bucket_getacl(Bucket, CannedACL, ?HTTP_ST_BAD_REQ, BeginTime),
             ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidArgument,
                                ?XML_ERROR_MSG_InvalidArgument, Key, <<>>, Req);
         {error, invalid_access} ->
+            ?access_log_bucket_getacl(Bucket, CannedACL, ?HTTP_ST_BAD_REQ, BeginTime),
             ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_AccessDenied,
                                ?XML_ERROR_MSG_AccessDenied, Key, <<>>, Req);
         {error, _} ->
+            ?access_log_bucket_getacl(Bucket, CannedACL, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
             ?reply_internal_error([?SERVER_HEADER], Key, <<>>, Req)
     end.
 
@@ -377,8 +392,8 @@ put_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
              {ok, Req} when Req::cowboy_req:req(),
                             Key::binary(),
                             ReqParams::#req_params{}).
-delete_bucket(Req, Key, #req_params{access_key_id = AccessKeyId}) ->
-    BeginTime = leo_date:clock(),
+delete_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
+                                    begin_time = BeginTime}) ->
     Bucket = formalize_bucket(Key),
     case delete_bucket_1(AccessKeyId, Key) of
         ok ->
@@ -401,8 +416,8 @@ delete_bucket(Req, Key, #req_params{access_key_id = AccessKeyId}) ->
              {ok, Req} when Req::cowboy_req:req(),
                             Key::binary(),
                             ReqParams::#req_params{}).
-head_bucket(Req, Key, #req_params{access_key_id = AccessKeyId}) ->
-    BeginTime = leo_date:clock(),
+head_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
+                                  begin_time = BeginTime}) ->
     Bucket = formalize_bucket(Key),
     case head_bucket_1(AccessKeyId, Bucket) of
         ok ->
@@ -415,7 +430,7 @@ head_bucket(Req, Key, #req_params{access_key_id = AccessKeyId}) ->
             ?access_log_bucket_head(Bucket, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
             ?reply_timeout_without_body([?SERVER_HEADER], Req);
         {error, _} ->
-            ?access_log_bucket_delete(Bucket, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
+            ?access_log_bucket_head(Bucket, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
             ?reply_internal_error_without_body([?SERVER_HEADER], Req)
     end.
 
@@ -433,8 +448,8 @@ head_bucket(Req, Key, #req_params{access_key_id = AccessKeyId}) ->
 %% As we only support bucket level ACL, reply bucket ACL here
 %% Related Issue: leo-project/leofs#490
 get_object(Req, Key, #req_params{is_acl = true,
-                                 bucket_name = Bucket}) ->
-    BeginTime = leo_date:clock(),
+                                 bucket_name = Bucket,
+                                 begin_time = BeginTime}) ->
     case leo_gateway_rpc_handler:head(Key) of
         {ok, #?METADATA{del = 0}} ->
             case leo_s3_bucket:find_bucket_by_name(Bucket) of
@@ -529,9 +544,11 @@ put_object(?BIN_EMPTY, Req, _Key, #req_params{is_multi_delete = true,
             ?reply_malformed_xml([?SERVER_HEADER], Req)
     end;
 
-put_object(?BIN_EMPTY, Req, Key, Params) ->
+put_object(?BIN_EMPTY, Req, Key, #req_params{bucket_name = BucketName,
+                                             begin_time = BeginTime} = Params) ->
     case catch cowboy_req:body_length(Req) of
         {'EXIT', _} ->
+            ?access_log_put(BucketName, Key, 0, ?HTTP_ST_BAD_REQ, BeginTime),
             ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidArgument,
                                ?XML_ERROR_MSG_InvalidArgument, Key, <<>>, Req);
         {BodySize, _} ->
@@ -543,6 +560,7 @@ put_object(?BIN_EMPTY, Req, Key, Params) ->
                    end,
             case (Size >= Params#req_params.threshold_of_chunk_len) of
                 true when Size >= Params#req_params.max_len_of_obj ->
+                    ?access_log_put(BucketName, Key, Size, ?HTTP_ST_BAD_REQ, BeginTime),
                     ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_EntityTooLarge,
                                        ?XML_ERROR_MSG_EntityTooLarge, Key, <<>>, Req);
                 true when Params#req_params.is_upload == false ->
@@ -569,14 +587,23 @@ put_object(?BIN_EMPTY, Req, Key, Params) ->
                               false ->
                                   {ok, {0, ?BIN_EMPTY, Req}}
                           end,
-                    leo_gateway_http_commons:put_small_object(Ret, Key, Params)
+                    case Ret of
+                        {ok, _} ->
+                            leo_gateway_http_commons:put_small_object(Ret, Key, Params);
+                        {error, _} ->
+                            ?access_log_put(BucketName, Key, Size, ?HTTP_ST_BAD_REQ, BeginTime),
+                            ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidArgument,
+                                               ?XML_ERROR_MSG_InvalidArgument, Key, <<>>, Req)
+                    end
             end
     end;
 
 %% @doc POST/PUT operation on Objects. COPY/REPLACE
 %% @private
 put_object(Directive, Req, Key, #req_params{handler = ?PROTO_HANDLER_S3,
-                                            custom_metadata = CMetaBin1} = Params) ->
+                                            bucket_name = BucketName,
+                                            custom_metadata = CMetaBin1,
+                                            begin_time = BeginTime} = Params) ->
     CS = cow_qs:urldecode(?http_header(Req, ?HTTP_HEAD_X_AMZ_COPY_SOURCE)),
 
     %% need to trim head '/' when cooperating with s3fs(-c)
@@ -587,9 +614,11 @@ put_object(Directive, Req, Key, #req_params{handler = ?PROTO_HANDLER_S3,
                   CS
           end,
 
+    SrcDst = <<Key/binary, " -> ", CS2/binary>>,
     case (Key =:= CS2) of
         true ->
             %% 400
+            ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_BAD_REQ, BeginTime),
             ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidRequest,
                                ?XML_ERROR_MSG_InvalidRequest, Key, <<>>, Req);
         false ->
@@ -603,104 +632,67 @@ put_object(Directive, Req, Key, #req_params{handler = ?PROTO_HANDLER_S3,
                                end,
                     case Meta#?METADATA.cnumber of
                         0 ->
-                            put_object_1(Directive, Req, Key, Meta, RespObject, Params#req_params{custom_metadata = CMetaBin});
+                            put_object_1(Req, CS2, Key, Meta, RespObject, Params#req_params{custom_metadata = CMetaBin});
                         _TotalChunkedObjs ->
-                            put_large_object_1(Directive, Req, Key, Meta, Params#req_params{custom_metadata = CMetaBin})
+                            put_large_object_1(Req, CS2, Key, Meta, Params#req_params{custom_metadata = CMetaBin})
                     end;
                 {error, not_found} ->
+                    ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_NOT_FOUND, BeginTime),
                     ?reply_not_found([?SERVER_HEADER], Key, <<>>, Req);
                 {error, unavailable} ->
+                    ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
                     ?reply_service_unavailable_error([?SERVER_HEADER], Key, <<>>, Req);
                 {error, ?ERR_TYPE_INTERNAL_ERROR} ->
+                    ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
                     ?reply_internal_error([?SERVER_HEADER], Key, <<>>, Req);
                 {error, timeout} ->
+                    ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
                     ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req)
             end
     end.
 
 %% @doc POST/PUT operation on Objects. COPY
 %% @private
-put_object_1(Directive, Req, Key, Meta, Bin, #req_params{bucket_name = BucketName,
-                                                         bucket_info = BucketInfo,
-                                                         custom_metadata = CMetaBin} = Params) ->
-    BeginTime = leo_date:clock(),
+put_object_1(Req, Src, Key, Meta, Bin, #req_params{bucket_name = BucketName,
+                                                   bucket_info = BucketInfo,
+                                                   custom_metadata = CMetaBin,
+                                                   begin_time = BeginTime}) ->
     Size = size(Bin),
+    SrcDst = <<Src/binary, " -> ", Key/binary>>,
     case leo_gateway_rpc_handler:put(#put_req_params{path = Key,
                                                      body = Bin,
                                                      meta = CMetaBin,
                                                      dsize = Size,
                                                      msize = byte_size(CMetaBin),
                                                      bucket_info = BucketInfo}) of
-        {ok, _ETag} when Directive == ?HTTP_HEAD_X_AMZ_META_DIRECTIVE_COPY ->
-            ?access_log_put(BucketName, Key, Size, ?HTTP_ST_OK, BeginTime),
+        {ok, _ETag} ->
+            ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_OK, BeginTime),
             resp_copy_obj_xml(Req, Meta);
-        {ok, _ETag} when Directive == ?HTTP_HEAD_X_AMZ_META_DIRECTIVE_REPLACE ->
-            put_object_2(Req, Key, Meta, Params);
         {error, unavailable} ->
+            ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
             ?reply_service_unavailable_error([?SERVER_HEADER], Key, <<>>, Req);
         {error, ?ERR_TYPE_INTERNAL_ERROR} ->
+            ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
             ?reply_internal_error([?SERVER_HEADER], Key, <<>>, Req);
         {error, timeout} ->
+            ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
             ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req)
-    end.
-
-%% @doc POST/PUT operation on Objects. REPLACE
-%% @private
-put_object_2(Req, Key, Meta, Params) ->
-    case Key == Meta#?METADATA.key of
-        true ->
-            resp_copy_obj_xml(Req, Meta);
-        false ->
-            put_object_3(Req, Meta, Params)
-    end.
-
-%% @private
-put_object_3(Req, #?METADATA{key = Key, dsize = Size} = Meta, #req_params{bucket_name = BucketName}) ->
-    BeginTime = leo_date:clock(),
-    case leo_gateway_rpc_handler:delete(Meta#?METADATA.key) of
-        ok ->
-            ?access_log_delete(BucketName, Key, Size, ?HTTP_ST_NO_CONTENT, BeginTime),
-            resp_copy_obj_xml(Req, Meta);
-        {error, not_found} ->
-            resp_copy_obj_xml(Req, Meta);
-        {error, unavailable} ->
-            ?reply_service_unavailable_error([?SERVER_HEADER], Meta#?METADATA.key, <<>>, Req);
-        {error, ?ERR_TYPE_INTERNAL_ERROR} ->
-            ?reply_internal_error([?SERVER_HEADER], Meta#?METADATA.key, <<>>, Req);
-        {error, timeout} ->
-            ?reply_timeout([?SERVER_HEADER], Meta#?METADATA.key, <<>>, Req)
     end.
 
 %% @doc POST/PUT operation on `Large` Objects. COPY
 %% @private
-put_large_object_1(Directive, Req, Key, Meta, Params) ->
+put_large_object_1(Req, Src, Key, Meta, #req_params{bucket_name = BucketName,
+                                                    begin_time = BeginTime} = Params) ->
+    SrcDst = <<Src/binary, " -> ", Key/binary>>,
     case leo_gateway_http_commons:move_large_object(Meta, Key, Params) of
-        ok when Directive == ?HTTP_HEAD_X_AMZ_META_DIRECTIVE_COPY ->
+        ok ->
+            ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_OK, BeginTime),
             resp_copy_obj_xml(Req, Meta);
-        ok when Directive == ?HTTP_HEAD_X_AMZ_META_DIRECTIVE_REPLACE ->
-            put_large_object_2(Req, Key, Meta);
         {error, timeout} ->
             ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req);
         {error, _Other} ->
             ?reply_internal_error([?SERVER_HEADER], Key, <<>>, Req)
     end.
-
-%% @doc POST/PUT operation on Objects. REPLACE
-%% @private
-put_large_object_2(Req, Key, Meta) ->
-    case Key == Meta#?METADATA.key of
-        true ->
-            resp_copy_obj_xml(Req, Meta);
-        false ->
-            put_large_object_3(Req, Meta)
-    end.
-
-%% @private
-put_large_object_3(Req, Meta) ->
-    leo_large_object_commons:delete_chunked_objects(Meta#?METADATA.key),
-    catch leo_gateway_rpc_handler:delete(Meta#?METADATA.key),
-    resp_copy_obj_xml(Req, Meta).
-
 
 %% @doc DELETE operation on Objects
 -spec(delete_object(cowboy_req:req(), binary(), #req_params{}) ->
@@ -757,6 +749,7 @@ get_bucket_and_path(Req, Path) ->
                                    Path::binary()).
 handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                HasInnerCache, CustomHeaderSettings, Props] = State, BucketName, Path) ->
+    BeginTime = leo_date:clock(),
     BinPart = binary:part(Path, {byte_size(Path)-1, 1}),
     TokenLen = length(binary:split(Path, [?BIN_SLASH], [global, trim])),
     HTTPMethod = cowboy_req:get(method, Req),
@@ -802,7 +795,8 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                                   timeout_for_body = Props#http_options.timeout_for_body,
                                   sending_chunked_obj_len = Props#http_options.sending_chunked_obj_len,
                                   reading_chunked_obj_len = Props#http_options.reading_chunked_obj_len,
-                                  threshold_of_chunk_len = Props#http_options.threshold_of_chunk_len}),
+                                  threshold_of_chunk_len = Props#http_options.threshold_of_chunk_len,
+                                  begin_time = BeginTime}),
     case ReqParams of
         {error, metadata_too_large} ->
             {ok, Req_3} = ?reply_metadata_too_large([?SERVER_HEADER], Path_1, <<>>, Req_2),
@@ -1006,6 +1000,11 @@ handle_2({ok, AccessKeyId}, Req, HTTPMethod, Path, Params, State) ->
                              ?XML_ERROR_MSG_AccessDenied, Path, <<>>, Req),
             {ok, Req_2, State};
         {'EXIT', Cause} ->
+            ?error("handle_2/6", [{key, binary_to_list(Path)},
+                                  {cause, Cause}]),
+            {ok, Req_2} = ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req),
+            {ok, Req_2, State};
+        {error, Cause} ->
             ?error("handle_2/6", [{key, binary_to_list(Path)},
                                   {cause, Cause}]),
             {ok, Req_2} = ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req),
@@ -1664,8 +1663,8 @@ get_bucket_1(_AccessKeyId, BucketName, _Delimiter, _Marker, 0, Prefix) ->
     Path = << BucketName/binary, Prefix_1/binary >>,
     {ok, generate_bucket_xml(Path, Prefix_1, [], 0)};
 get_bucket_1(_AccessKeyId, BucketName, none, Marker, MaxKeys, Prefix) ->
-    ?debug("get_bucket_1/6", "BucketName: ~p, Marker: ~p, MaxKeys: ~p",
-           [BucketName, Marker, MaxKeys]),
+    ?debug("get_bucket_1/6", "BucketName: ~p, Marker: ~p, MaxKeys: ~p, Prefix: ~p",
+           [BucketName, Marker, MaxKeys, Prefix]),
     Prefix_1 = case Prefix of
                    none ->
                        <<>>;
@@ -1700,8 +1699,8 @@ get_bucket_1(_AccessKeyId, BucketName, none, Marker, MaxKeys, Prefix) ->
             Error
     end;
 get_bucket_1(_AccessKeyId, BucketName, Delimiter, Marker, MaxKeys, Prefix) ->
-    ?debug("get_bucket_1/6", "BucketName: ~p, Delimiter: ~p, Marker: ~p, MaxKeys: ~p",
-           [BucketName, Delimiter, Marker, MaxKeys]),
+    ?debug("get_bucket_1/6", "BucketName: ~p, Delimiter: ~p, Marker: ~p, MaxKeys: ~p, Prefix: ~p",
+           [BucketName, Delimiter, Marker, MaxKeys, Prefix]),
 
     Prefix_1 = case Prefix of
                    none ->
@@ -2051,25 +2050,32 @@ delete_multi_objects_3(Req, [_|Rest], IsQuiet, Keys, Params) ->
 delete_multi_objects_4(Req, IsQuiet, [], DeletedKeys, ErrorKeys, Params) ->
     delete_multi_objects_5(Req, IsQuiet, DeletedKeys, ErrorKeys, Params);
 delete_multi_objects_4(Req, IsQuiet, [Key|Rest], DeletedKeys, ErrorKeys,
-                       #req_params{bucket_name = BucketName} = Params) ->
+                       #req_params{bucket_name = BucketName,
+                                   begin_time = BeginTime} = Params) ->
     BinKey = list_to_binary(Key),
     Path = << BucketName/binary, <<"/">>/binary, BinKey/binary >>,
     case leo_gateway_rpc_handler:head(Path) of
         {ok, Meta} ->
-            BeginTime = leo_date:clock(),
             case leo_gateway_rpc_handler:delete(Path) of
                 ok ->
                     ?access_log_delete(BucketName, Path, Meta#?METADATA.dsize, ?HTTP_ST_NO_CONTENT, BeginTime),
                     delete_multi_objects_4(Req, IsQuiet, Rest,
                                            [Key|DeletedKeys], ErrorKeys, Params);
                 {error, not_found} ->
+                    ?access_log_delete(BucketName, Path, 0, ?HTTP_ST_NOT_FOUND, BeginTime),
                     delete_multi_objects_4(Req, IsQuiet, Rest,
                                            [Key|DeletedKeys], ErrorKeys, Params);
                 {error, _} ->
+                    ?access_log_delete(BucketName, Path, 0, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
                     delete_multi_objects_4(Req, IsQuiet, Rest,
                                            DeletedKeys, [Key|ErrorKeys], Params)
             end;
-        _ ->
+        {error, not_found} ->
+            ?access_log_delete(BucketName, Path, 0, ?HTTP_ST_NOT_FOUND, BeginTime),
+            delete_multi_objects_4(Req, IsQuiet, Rest,
+                                   DeletedKeys, [Key|ErrorKeys], Params);
+        {error, _} ->
+            ?access_log_delete(BucketName, Path, 0, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
             delete_multi_objects_4(Req, IsQuiet, Rest,
                                    DeletedKeys, [Key|ErrorKeys], Params)
     end.

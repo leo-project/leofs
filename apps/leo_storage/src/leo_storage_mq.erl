@@ -158,6 +158,7 @@ publish(?QUEUE_ID_REQ_DEL_DIR = Id, Node, Directory) ->
                                node = Node,
                                dir = Directory,
                                timestamp = leo_date:now()}),
+    ?debug("leo_mq delete directory", [{dir, Directory}]),
     leo_mq_api:publish(Id, KeyBin, MsgBin);
 
 publish({?QUEUE_ID_DEL_DIR, WorkerId}, AddrId, Key) ->
@@ -394,6 +395,7 @@ handle_call({consume, ?QUEUE_ID_REQ_DEL_DIR, MessageBin}) ->
             case rpc:call(Node, leo_storage_handler_del_directory, enqueue,
                           [?TYPE_DEL_DIR, Directory], ?DEF_REQ_TIMEOUT) of
                 ok ->
+                    ?debug("leo_mq delete directory", [{dir, Directory}]),
                     ok;
                 Cause ->
                     {error, Cause}

@@ -176,6 +176,7 @@ gen_key(Req) ->
 %% @doc Hande an http-request
 %% @private
 handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, _CustomHeaderSettings, Props] = State, Path) ->
+    BeginTime = leo_date:clock(),
     TokenLen = length(binary:split(Path, [?BIN_SLASH], [global, trim])),
     HTTPMethod = cowboy_req:get(method, Req),
 
@@ -195,7 +196,8 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, _CustomHeaderSet
                                     timeout_for_body = Props#http_options.timeout_for_body,
                                     sending_chunked_obj_len = Props#http_options.sending_chunked_obj_len,
                                     reading_chunked_obj_len = Props#http_options.reading_chunked_obj_len,
-                                    threshold_of_chunk_len = Props#http_options.threshold_of_chunk_len},
+                                    threshold_of_chunk_len = Props#http_options.threshold_of_chunk_len,
+                                    begin_time = BeginTime},
             handle_2(Req, HTTPMethod, Path, ReqParams, State);
         false when HTTPMethod == ?HTTP_GET ->
             {ok, Req2} = ?reply_not_found([?SERVER_HEADER], Path, <<>>, Req),

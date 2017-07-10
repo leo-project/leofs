@@ -899,6 +899,7 @@ get_inconsistent_nodes(AddrId, Preferred_N, InconsistentNodes) ->
 %% API - Prefix Search (Fetch)
 %%--------------------------------------------------------------------
 prefix_search(ParentDir, Marker, MaxKeys) ->
+    ?debug("prefix_search/3", "Parent Dir: ~p, Marker: ~p", [ParentDir, Marker]),
     StartDateTime = leo_date:now(),
     Timeout = ?env_seeking_timeout_per_metadata() * MaxKeys,
 
