@@ -1,6 +1,6 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
 %% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
@@ -490,7 +490,7 @@ handle_call(_Socket, <<?CMD_ADD_BUCKET, ?SPACE, Option/binary>>,
     {reply, Reply, State};
 
 
-%% Command: "delete-buckets ${bucket} ${access-key-id}"
+%% Command: "delete-bucket ${bucket} ${access-key-id}"
 handle_call(_Socket, <<?CMD_DELETE_BUCKET, ?SPACE, Option/binary>>,
             #state{formatter = Formatter} = State) ->
     Fun = fun() ->
@@ -502,6 +502,35 @@ handle_call(_Socket, <<?CMD_DELETE_BUCKET, ?SPACE, Option/binary>>,
                   end
           end,
     Reply = invoke(?CMD_DELETE_BUCKET, Formatter, Fun),
+    {reply, Reply, State};
+
+%% Command: "delete-bucket-stats ${bucket}"
+handle_call(Socket, <<?CMD_DELETE_BUCKET_STATS, ?LF>>, State) ->
+    handle_call(Socket, <<?CMD_DELETE_BUCKET_STATS, ?CRLF>>, State);
+handle_call(_Socket, <<?CMD_DELETE_BUCKET_STATS, ?CRLF>>,
+            #state{formatter = Formatter} = State) ->
+    Fun = fun() ->
+                  case delete_bucket_stats_all() of
+                      {ok, Stats} ->
+                          Formatter:del_bucket_stats_all(Stats);
+                      {error, Cause} ->
+                          Formatter:error(Cause)
+                  end
+          end,
+    Reply = invoke(?CMD_DELETE_BUCKET_STATS, Formatter, Fun),
+    {reply, Reply, State};
+
+handle_call(_Socket, <<?CMD_DELETE_BUCKET_STATS, ?SPACE, Option/binary>>,
+            #state{formatter = Formatter} = State) ->
+    Fun = fun() ->
+                  case delete_bucket_stats(Option) of
+                      {ok, Stats} ->
+                          Formatter:del_bucket_stats(Stats);
+                      {error, Cause} ->
+                          Formatter:error(Cause)
+                  end
+          end,
+    Reply = invoke(?CMD_DELETE_BUCKET_STATS, Formatter, Fun),
     {reply, Reply, State};
 
 
@@ -2242,6 +2271,40 @@ delete_bucket(Option) ->
             AccessKeyBin = list_to_binary(AccessKey),
             leo_manager_api:delete_bucket(AccessKeyBin, BucketBin);
         {ok,_} ->
+            {error, ?ERROR_INVALID_ARGS};
+        Error ->
+            Error
+    end.
+
+
+%% @doc Retrieve the state of a deletion buckets from the manager
+%% @private
+-spec(delete_bucket_stats_all() ->
+             {ok, [{binary(),[#del_bucket_state{}]}]} | {error, any()}).
+delete_bucket_stats_all() ->
+    case leo_manager_api:delete_bucket_stats_all() of
+        {ok, Stats} ->
+            {ok, Stats};
+        Other_1 ->
+            Other_1
+    end.
+
+
+%% @doc Retrieve the state of a deletion bucket from the manager
+%% @private
+-spec(delete_bucket_stats(binary()) ->
+             {ok, #del_bucket_state{}}  | {error, any()}).
+delete_bucket_stats(Option) ->
+    case ?get_tokens(Option, ?ERROR_INVALID_ARGS) of
+        {ok, [Bucket|_]} ->
+            BucketBin = list_to_binary(Bucket),
+            case leo_manager_api:delete_bucket_stats(BucketBin) of
+                {ok, Stats} ->
+                    {ok, Stats};
+                Other_2 ->
+                    Other_2
+            end;
+        {ok, []} ->
             {error, ?ERROR_INVALID_ARGS};
         Error ->
             Error

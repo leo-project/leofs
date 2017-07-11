@@ -1,6 +1,6 @@
 %%======================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
 %% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
@@ -27,6 +27,7 @@
 -include("leo_storage.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
 -include_lib("leo_logger/include/leo_logger.hrl").
+-include_lib("leo_mq/include/leo_mq.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_ordning_reda/include/leo_ordning_reda.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
@@ -38,13 +39,12 @@
          put/1, put/2, put/4,
          delete/1, delete/2, delete/3, delete/4,
          delete_objects_under_dir/1,
-         delete_objects_under_dir/2,
-         delete_objects_under_dir/3,
          head/2, head/3,
          head_with_calc_md5/3,
          replicate/1, replicate/3,
-         prefix_search/3, prefix_search_and_remove_objects/1,
-         find_uploaded_objects_by_key/1
+         prefix_search/3, prefix_search_and_remove_objects/2,
+         find_uploaded_objects_by_key/1,
+         is_key_under_del_dir/1, can_compact_object/2
         ]).
 
 -define(REP_LOCAL, 'local').
@@ -598,6 +598,7 @@ delete(Object, ReqId, CheckUnderDir, leo_mq) ->
             {error, Cause}
     end.
 
+
 %% @private
 delete_1(Ret,_Object, false) ->
     Ret;
@@ -621,58 +622,12 @@ delete_objects_under_dir(Object) ->
         {'EXIT',_} ->
             ok;
         ?BIN_SLASH ->
-            leo_storage_mq:publish(?QUEUE_ID_DEL_DIR, Key);
+            leo_storage_handler_del_directory:enqueue(?TYPE_DEL_DIR, Key);
         ?BIN_NL ->
-            leo_storage_mq:publish(?QUEUE_ID_DEL_DIR, Key);
+            leo_storage_handler_del_directory:enqueue(?TYPE_DEL_DIR, Key);
         _ ->
             ok
     end.
-
-
-%% @doc Remove objects of the under directory for remote-nodes
--spec(delete_objects_under_dir(Ref, Keys) ->
-             {ok, Ref} when Ref::reference(),
-                            Keys::[binary()|undefined]).
-delete_objects_under_dir(Ref, []) ->
-    {ok, Ref};
-delete_objects_under_dir(Ref, [undefined|Rest]) ->
-    delete_objects_under_dir(Ref, Rest);
-delete_objects_under_dir(Ref, [Key|Rest]) ->
-    _ = prefix_search_and_remove_objects(Key),
-    delete_objects_under_dir(Ref, Rest).
-
--spec(delete_objects_under_dir(Nodes, Ref, Keys) ->
-             {ok, Ref} when Nodes::[atom()],
-                            Ref::reference(),
-                            Keys::[binary()|undefined]).
-delete_objects_under_dir([], Ref,_Keys) ->
-    {ok, Ref};
-delete_objects_under_dir([Node|Rest], Ref, Keys) when Node == erlang:node() ->
-    {ok, Ref} = delete_objects_under_dir(Ref, Keys),
-    delete_objects_under_dir(Rest, Ref, Keys);
-delete_objects_under_dir([Node|Rest], Ref, Keys) ->
-    case leo_misc:node_existence(Node) of
-        true ->
-            RPCKey = rpc:async_call(Node, leo_storage_mq,
-                                    publish, [?QUEUE_ID_DEL_DIR, {bulk_insert, Keys}]),
-            case rpc:nb_yield(RPCKey, ?DEF_REQ_TIMEOUT) of
-                {value, ok} ->
-                    ok;
-                _Other ->
-                    delete_objects_under_dir_1(Node, Keys)
-            end;
-        false ->
-            delete_objects_under_dir_1(Node, Keys)
-    end,
-    delete_objects_under_dir(Rest, Ref, Keys).
-
-%% @private
-delete_objects_under_dir_1(_,[]) ->
-    ok;
-delete_objects_under_dir_1(Node, [Key|Rest]) ->
-    QId = ?QUEUE_ID_DEL_DIR,
-    ok = leo_storage_mq:publish(QId, Node, Key),
-    delete_objects_under_dir_1(Node, Rest).
 
 
 %%--------------------------------------------------------------------
@@ -1070,37 +1025,40 @@ prefix_search_2(ParentDir, Marker, Key, Meta, Acc) ->
 
 
 %% @doc Retrieve object of deletion from object-storage by key
--spec(prefix_search_and_remove_objects(ParentDir) ->
-             {ok, [Metadata]} |
-             not_found when ParentDir::undefined|binary(),
-                            Metadata::#?METADATA{}).
-prefix_search_and_remove_objects(undefined) ->
-    not_found;
-prefix_search_and_remove_objects(ParentDir) ->
+-spec(prefix_search_and_remove_objects(MQId, ParentDir) ->
+             {ok, [{Key, Value}]} |
+             not_found |
+             {error, Cause} when MQId::mq_id(),
+                                 ParentDir::binary(),
+                                 Key::atom(),
+                                 Value::any(),
+                                 Cause::any()).
+prefix_search_and_remove_objects(MQId, ParentDir) ->
     Fun = fun(Key, V, Acc) ->
-                  Meta_Pre = binary_to_term(V),
-                  case leo_object_storage_transformer:transform_metadata(Meta_Pre) of
+                  PreMeta = binary_to_term(V),
+                  case leo_object_storage_transformer:transform_metadata(PreMeta) of
                       {error, Cause} ->
-                          ?error("prefix_search_and_remove_objects/1", [{key, Key}, {error, Cause}]),
+                          ?error("prefix_search_and_remove_objects/1",
+                                 [{key, Key}, {error, Cause}]),
                           Acc;
                       Metadata ->
                           AddrId = Metadata#?METADATA.addr_id,
                           Pos_1 = case binary:match(Key, [ParentDir]) of
                                       nomatch ->
-                                           -1;
+                                          -1;
                                       {Pos,_} ->
                                           Pos
                                   end,
                           case (Pos_1 == 0) of
                               true when Metadata#?METADATA.del == ?DEL_FALSE ->
-                                  QId = ?QUEUE_ID_ASYNC_DELETION,
-                                  case leo_storage_mq:publish(QId, AddrId, Key) of
+                                  case leo_storage_mq:publish(
+                                         {?QUEUE_ID_DEL_DIR, MQId}, AddrId, Key) of
                                       ok ->
                                           void;
                                       {error, Cause} ->
                                           ?warn("prefix_search_and_remove_objects/1",
-                                                  [{qid, QId}, {addr_id, AddrId},
-                                                  {key, Key}, {cause, Cause}])
+                                                [{qid, MQId}, {addr_id, AddrId},
+                                                 {key, Key}, {cause, Cause}])
                                   end,
                                   Acc;
                               _ ->
@@ -1111,8 +1069,13 @@ prefix_search_and_remove_objects(ParentDir) ->
     case catch leo_object_storage_api:fetch_by_key(ParentDir, Fun) of
         {'EXIT', Cause} ->
             {error, Cause};
-        Ret ->
-            Ret
+        {ok,_} ->
+            {ok, MsgCount} = leo_mq_api:count(MQId),
+            {ok, MsgCount};
+        not_found ->
+            {ok, 0};
+        Error ->
+            Error
     end.
 
 
@@ -1146,6 +1109,49 @@ find_uploaded_objects_by_key(OriginalKey) ->
             {error, Cause};
         Ret ->
             Ret
+    end.
+
+
+%% @doc Investigate the key whether it is under any deletion-directory or not
+-spec(is_key_under_del_dir(Key) ->
+             Result when Key::binary(),
+                         Result::boolean()).
+is_key_under_del_dir(Key) ->
+    case leo_storage_handler_del_directory:get_cached_items() of
+        {ok, Dirs} ->
+            is_key_under_del_dir(Dirs, Key);
+        {error, Cause} ->
+            ?error("is_key_under_del_dir/1", [{cause, Cause}]),
+            false
+    end.
+
+is_key_under_del_dir([],_) ->
+    false;
+is_key_under_del_dir([Dir|Acc], Key) ->
+    Dir_1 = case catch binary:part(Dir, (byte_size(Dir) - 1), 1) of
+                <<"/">> ->
+                    Dir;
+                _ ->
+                    << Dir/binary, "/" >>
+            end,
+    case binary:match(Key, [Dir_1],[]) of
+        {0,_} ->
+            true;
+        _ ->
+            is_key_under_del_dir(Acc, Key)
+    end.
+
+
+%% @doc Investigate the object whether it can do data-compaction
+-spec(can_compact_object(Key, NumOfReplicas) ->
+             boolean() when Key::binary(),
+                            NumOfReplicas::non_neg_integer()).
+can_compact_object(Key, NumOfReplicas) ->
+    case is_key_under_del_dir(Key) of
+        true ->
+            false;
+        false ->
+            leo_redundant_manager_api:has_charge_of_node(Key, NumOfReplicas)
     end.
 
 

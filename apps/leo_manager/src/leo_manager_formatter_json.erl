@@ -1,6 +1,6 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
 %% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
@@ -36,6 +36,7 @@
          mq_stats/1,
          credential/2, users/1, endpoints/1,
          buckets/1, bucket_by_access_key/1,
+         del_bucket_stats/1, del_bucket_stats_all/1,
          acls/1, cluster_status/1,
          whereis/1, nfs_mnt_key/1,
          histories/1,
@@ -43,12 +44,11 @@
          authorized/0, user_id/0, password/0
         ]).
 
--define(output_ok(),           gen_json({[{result, <<"OK">>}]})).
+-define(output_ok(), gen_json({[{result, <<"OK">>}]})).
 -define(output_error_1(Cause), gen_json({[{error, leo_misc:any_to_binary(Cause)}]})).
 
 
 %% @doc Format 'ok'
-%%
 -spec(ok() ->
              binary()).
 ok() ->
@@ -56,7 +56,6 @@ ok() ->
 
 
 %% @doc Format 'error'
-%%
 -spec(error(atom() | string()) ->
              binary()).
 error(not_found)  ->
@@ -66,8 +65,6 @@ error(nodedown)  ->
 error(Cause) ->
     gen_json({[{error, leo_misc:any_to_binary(Cause)}]}).
 
-%% @doc Format 'error'
-%%
 -spec(error(atom()|string()|binary(), any()) ->
              binary()).
 error(Node, Cause) when is_atom(Node) ->
@@ -83,23 +80,20 @@ error(Node, Cause) ->
 
 
 %% @doc Format 'help'
-%%
 -spec(help() ->
              binary()).
 help() ->
     <<>>.
 
 
-%% Format 'version'
-%%
+%% @doc Format 'version'
 -spec(version(string()|binary()) ->
              binary()).
 version(Version) ->
     gen_json({[{result, leo_misc:any_to_binary(Version)}]}).
 
 
-%% Format 'version'
-%%
+%% @doc Format 'login'
 -spec(login(#?S3_USER{}, [tuple()]) ->
              binary()).
 login(User, Credential) ->
@@ -114,7 +108,6 @@ login(User, Credential) ->
 
 
 %% @doc Format 'bad nodes'
-%%
 -spec(bad_nodes([atom()]) ->
              binary()).
 bad_nodes(BadNodes) ->
@@ -125,8 +118,7 @@ bad_nodes(BadNodes) ->
     gen_json({[{error, leo_misc:any_to_binary(Cause)}]}).
 
 
-%% @doc Format a cluster-node list
-%%
+%% @doc Format the result of the system-info and a list of the cluster-nodes
 -spec(system_info_and_nodes_stat([tuple()]) ->
              binary()).
 system_info_and_nodes_stat(Props) ->
@@ -186,8 +178,8 @@ system_info_and_nodes_stat(Props) ->
                {<<"node_list">>, NodeInfo}
               ]}).
 
-%% @doc Format a version list
-%%
+
+%% @doc Format the result of a list of versions
 -spec(version_all([tuple()]) ->
              binary()).
 version_all(Nodes) ->
@@ -204,8 +196,8 @@ version_all(Nodes) ->
                end,
     gen_json({[{<<"result">>, NodeInfo}]}).
 
-%% @doc Format a cluster node state
-%%
+
+%% @doc Format the result of a cluster node state
 -spec(node_stat(string(), [tuple()]) ->
              binary()).
 node_stat(?SERVER_TYPE_GATEWAY, State) ->
@@ -363,8 +355,8 @@ node_stat(?SERVER_TYPE_STORAGE, State) ->
                  ]}}
               ]}).
 
+
 %% @doc Status of compaction
-%%
 -spec(compact_status(#compaction_stats{}) ->
              binary()).
 compact_status(#compaction_stats{status = Status,
@@ -389,8 +381,7 @@ compact_status(#compaction_stats{status = Status,
               ]}).
 
 
-%% @doc Format storage stats
-%%
+%% @doc Format the result of `du`
 -spec(du(summary | detail, {integer(), integer(), integer(), integer(), integer(), integer()} | list()) ->
              binary()).
 du(summary, {TotalNum, ActiveNum, TotalSize, ActiveSize, LastStart, LastEnd}) ->
@@ -482,8 +473,7 @@ mq_stats(Stats) ->
     gen_json({[{<<"mq_stats">>, JSON}]}).
 
 
-%% @doc Format s3-gen-key result
-%%
+%% @doc Format the resulst of s3-gen-key
 -spec(credential(binary(), binary()) ->
              binary()).
 credential(AccessKeyId, SecretAccessKey) ->
@@ -493,8 +483,7 @@ credential(AccessKeyId, SecretAccessKey) ->
               ]}).
 
 
-%% @doc Format s3-owers
-%%
+%% @doc Format the result of s3-owers
 -spec(users(list(#user_credential{})) ->
              binary()).
 users(Owners) ->
@@ -512,8 +501,7 @@ users(Owners) ->
     gen_json({[{<<"users">>, JSON}]}).
 
 
-%% @doc Format a endpoint list
-%%
+%% @doc Format the result of a list of endpoints
 -spec(endpoints([tuple()]) ->
              binary()).
 endpoints(EndPoints) ->
@@ -525,8 +513,7 @@ endpoints(EndPoints) ->
     gen_json({[{<<"endpoints">>, JSON}]}).
 
 
-%% @doc Format a bucket list
-%%
+%% @doc Format the result of a list of buckets
 -spec(buckets([#bucket_dto{}]) ->
              binary()).
 buckets(Buckets) ->
@@ -552,6 +539,8 @@ buckets(Buckets) ->
                      end, Buckets),
     gen_json({[{<<"buckets">>, JSON}]}).
 
+
+%% @doc Format the result of bucket-by-access-key
 -spec(bucket_by_access_key([#?BUCKET{}]) ->
              binary()).
 bucket_by_access_key(Buckets) ->
@@ -573,8 +562,58 @@ bucket_by_access_key(Buckets) ->
     gen_json({[{<<"buckets">>, JSON}]}).
 
 
-%% @doc Format a acl list
-%%
+%% @doc Format the states of a deletion-bucket
+-spec(del_bucket_stats(Stats) ->
+             binary() when Stats::[#del_bucket_state{}]).
+del_bucket_stats(Stats) ->
+    JSON = lists:map(fun(#del_bucket_state{node = Node,
+                                           state = State,
+                                           timestamp = TS}) ->
+                             TS_1  = case (TS > 1) of
+                                         true ->
+                                             leo_date:date_format(TS);
+                                         false ->
+                                             []
+                                     end,
+
+
+                             {[{<<"node">>, leo_misc:any_to_binary(Node)},
+                               {<<"state">>, leo_misc:any_to_binary(State)},
+                               {<<"state_str">>, leo_misc:any_to_binary(?del_bucket_state_str(State))},
+                               {<<"timestamp">>,  leo_misc:any_to_binary(TS_1)}
+                              ]}
+                     end, Stats),
+    gen_json({[{<<"de_bucket_state">>, JSON}]}).
+
+
+%% @doc Format the states of a deletion-bucket
+-spec(del_bucket_stats_all(Stats) ->
+             binary() when BucketName::binary(),
+                           Stats::[ {BucketName, [#del_bucket_state{}]} ]).
+del_bucket_stats_all(Stats) ->
+    JSON = lists:map(fun({BucketName, NodeStateList}) ->
+                             SubJSON = lists:map(
+                                         fun(#del_bucket_state{node = Node,
+                                                               state = State,
+                                                               timestamp = TS}) ->
+                                                 TS_1  = case (TS > 1) of
+                                                             true ->
+                                                                 leo_date:date_format(TS);
+                                                             false ->
+                                                                 []
+                                                         end,
+                                                 {[{<<"node">>, leo_misc:any_to_binary(Node)},
+                                                   {<<"state">>, leo_misc:any_to_binary(State)},
+                                                   {<<"timestamp">>,  leo_misc:any_to_binary(TS_1)}
+                                                  ]}
+                                         end, NodeStateList),
+                             {[{BucketName, SubJSON}]}
+                     end, Stats),
+    gen_json({[{<<"de_bucket_state_all">>, JSON}]}).
+
+
+
+%% @doc Format the result of a list of acls
 -spec(acls([#bucket_acl_info{}]) ->
              binary()).
 acls(ACLs) ->
@@ -586,6 +625,7 @@ acls(ACLs) ->
     gen_json({[{<<"acls">>, JSON}]}).
 
 
+%% @doc Format the result of a cluster's status
 -spec(cluster_status([tuple()]) ->
              binary()).
 cluster_status(Stats) ->
@@ -617,8 +657,7 @@ cluster_status(Stats) ->
     gen_json({[{<<"cluster_stats">>, JSON}]}).
 
 
-%% @doc Format an assigned file
-%%
+%% @doc Format the result of an assigned file
 -spec(whereis([tuple()]) ->
              binary()).
 whereis(AssignedInfo) ->
@@ -678,13 +717,12 @@ whereis(AssignedInfo) ->
     gen_json({[{<<"assigned_info">>, JSON}]}).
 
 
-%% @doc Format a NFS mount key
+%% @doc Format the result of a NFS mount key
 nfs_mnt_key(Key) ->
     gen_json({[{nfs_mnt_key, list_to_binary(Key)}]}).
 
 
-%% @doc Format a history list
-%%
+%% @doc Format the result of a list of histories
 -spec(histories(_) ->
              binary()).
 histories(_) ->
@@ -712,7 +750,6 @@ password() ->
 %% Inner function(s)
 %%----------------------------------------------------------------------
 %% @doc Generate a JSON-format doc
-%%
 -spec(gen_json(tuple()|[tuple()]) ->
              binary()).
 gen_json(JSON) ->

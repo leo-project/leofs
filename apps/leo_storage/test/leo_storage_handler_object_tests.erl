@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -283,6 +283,19 @@ delete_({Node0, Node1}) ->
                 fun(_,_) ->
                         ok
                 end),
+    meck:new(leo_storage_handler_del_directory, [non_strict]),
+    meck:expect(leo_storage_handler_del_directory, enqueue,
+                fun(_) ->
+                        ok
+                end),
+    meck:expect(leo_storage_handler_del_directory, enqueue,
+                fun(_,_) ->
+                        ok
+                end),
+    meck:expect(leo_storage_handler_del_directory, enqueue,
+                fun(_,_,_) ->
+                        ok
+                end),
 
     ok = rpc:call(Node1, meck, new,    [leo_metrics_req, [no_link, non_strict]]),
     ok = rpc:call(Node1, meck, expect, [leo_metrics_req, notify, fun(_) -> ok end]),
@@ -490,7 +503,7 @@ prefix_search_and_remove_objects_(_) ->
     meck:new(leo_mq_api, [non_strict]),
     meck:expect(leo_mq_api, publish, fun(_,_,_) -> ok end),
 
-    Res = leo_storage_handler_object:prefix_search_and_remove_objects(?TEST_BUCKET),
+    Res = leo_storage_handler_object:prefix_search_and_remove_objects(mqid, ?TEST_BUCKET),
     ?assertEqual(true, is_list(Res)),
     ok.
 

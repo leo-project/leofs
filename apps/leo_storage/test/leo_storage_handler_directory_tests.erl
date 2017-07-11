@@ -1,8 +1,8 @@
 %%====================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -37,8 +37,7 @@
 
 object_handler_test_() ->
     {foreach, fun setup/0, fun teardown/1,
-     [{with, [T]} || T <- [fun find_by_parent_dir_/1,
-                           fun delete_objects_in_parent_dir_/1
+     [{with, [T]} || T <- [fun find_by_parent_dir_/1
                           ]]}.
 
 setup() ->
@@ -89,16 +88,6 @@ find_by_parent_dir_([Node0, Node1]) ->
     {ok, Res} = leo_storage_handler_directory:find_by_parent_dir("air/on/g/", none, none, 1000),
     ?assertEqual(2, length(Res)),
 
-    meck:unload(),
-    ok.
-
-delete_objects_in_parent_dir_(_) ->
-    ok = meck:new(leo_storage_handler_object, [non_strict]),
-    meck:expect(leo_storage_handler_object, prefix_search_and_remove_objects,
-                fun(_) ->
-                        ok
-                end),
-    ok = leo_storage_handler_directory:delete_objects_in_parent_dir("air/on/g/"),
     meck:unload(),
     ok.
 

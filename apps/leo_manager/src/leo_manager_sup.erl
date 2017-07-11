@@ -1,6 +1,6 @@
 %%======================================================================
 %%
-%% Leo Manaegr
+%% LeoManaegr
 %%
 %% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
@@ -32,6 +32,7 @@
 -include_lib("leo_s3_libs/include/leo_s3_auth.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_user.hrl").
 -include_lib("eunit/include/eunit.hrl").
+
 
 %% External API
 -export([start_link/0, stop/0]).
@@ -93,8 +94,10 @@ start_link() ->
 
             %% Launch Mnesia and create that tables
             MnesiaDir = case application:get_env(mnesia, dir) of
-                            {ok, Dir} -> Dir;
-                            undefined -> ?DEF_MNESIA_DIR
+                            {ok, Dir} ->
+                                Dir;
+                            undefined ->
+                                ?DEF_MNESIA_DIR
                         end,
             case filelib:fold_files(MnesiaDir, "\\.DCD$", false,
                                     fun(X, Acc) ->
@@ -113,7 +116,6 @@ start_link() ->
 
 
 %% @doc Create mnesia tables
-%%
 -spec(create_mnesia_tables(master|slave, [atom()]) ->
              ok | {error, any()}).
 create_mnesia_tables(_, []) ->
@@ -125,8 +127,10 @@ create_mnesia_tables(Mode, ReplicaNodes) ->
         PartnerNodes ->
             case lists:foldl(fun(N, _) ->
                                      case catch net_adm:ping(N) of
-                                         pong -> true;
-                                         _    -> false
+                                         pong ->
+                                             true;
+                                         _  ->
+                                             false
                                      end
                              end, false, PartnerNodes) of
                 true ->
@@ -181,7 +185,14 @@ init([]) ->
                    permanent,
                    ?SHUTDOWN_WAITING_TIME,
                    worker,
-                   [leo_manager_ring_sync]}
+                   [leo_manager_ring_sync]},
+
+                  {leo_manager_del_bucket_handler,
+                   {leo_manager_del_bucket_handler, start_link, []},
+                   permanent,
+                   ?SHUTDOWN_WAITING_TIME,
+                   worker,
+                   [leo_manager_del_bucket_handler]}
                  ],
     {ok, {_SupFlags = {one_for_one, ?MAX_RESTART, ?MAX_TIME}, ChildProcs}}.
 
@@ -312,6 +323,7 @@ create_mnesia_tables_1(?MANAGER_TYPE_MASTER = Mode, Nodes) ->
                 leo_manager_mnesia:create_gateway_nodes(disc_copies, Nodes_1),
                 leo_manager_mnesia:create_rebalance_info(disc_copies, Nodes_1),
                 leo_manager_mnesia:create_available_commands(disc_copies, Nodes_1),
+                leo_manager_mnesia:create_del_bucket_state(disc_copies, Nodes_1),
 
                 leo_cluster_tbl_conf:create_table(disc_copies, Nodes_1),
                 leo_mdcr_tbl_cluster_info:create_table(disc_copies, Nodes_1),
@@ -415,6 +427,7 @@ create_mnesia_tables_2(Mode) ->
             init:stop()
     end.
 
+
 %% @doc Force load tables when the mnesia won't load due to the possibility split brain could happen
 %% @private
 -spec(force_load_tables(Tables) ->
@@ -433,6 +446,7 @@ force_load_tables([H|Rest]) ->
             Error
     end.
 
+
 %% @doc Wrapper function to load tables
 %% @private
 -spec(load_tables(Tables) ->
@@ -448,6 +462,7 @@ load_tables(Tables) ->
         _ ->
             mnesia:wait_for_tables(Tables, timer:seconds(180))
     end.
+
 
 %% @doc Function migrating datas
 %%      Should be called on the leo_manager master after all partner nodes finished initialization processes

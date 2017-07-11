@@ -1,6 +1,6 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
 %% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
@@ -36,6 +36,7 @@
          mq_stats/1,
          credential/2, users/1, endpoints/1,
          buckets/1, bucket_by_access_key/1,
+         del_bucket_stats/1, del_bucket_stats_all/1,
          acls/1, cluster_status/1,
          whereis/1, nfs_mnt_key/1,
          histories/1,
@@ -43,15 +44,14 @@
          authorized/0, user_id/0, password/0
         ]).
 
+
 %% @doc Format 'ok'
-%%
 -spec(ok() ->
              string()).
 ok() ->
     ?OK.
 
 %% @doc Format 'error'
-%%
 -spec(error(string()) ->
              string()).
 error(Cause) when is_list(Cause) ->
@@ -59,9 +59,6 @@ error(Cause) when is_list(Cause) ->
 error(Cause) ->
     io_lib:format("[ERROR] ~p\r\n", [Cause]).
 
-
-%% @doc Format 'error'
-%%
 -spec(error(atom() | string(), string()) ->
              string()).
 error(Node, Cause) when is_atom(Node) ->
@@ -71,7 +68,6 @@ error(Node, Cause) ->
 
 
 %% @doc Format 'help'
-%%
 -spec(help(undefined | atom()) ->
              string()).
 help(PluginMod) ->
@@ -122,6 +118,7 @@ help(PluginMod) ->
                                  ?CMD_GET_ENDPOINTS,
                                  ?CMD_ADD_BUCKET,
                                  ?CMD_DELETE_BUCKET,
+                                 ?CMD_DELETE_BUCKET_STATS,
                                  ?CMD_GET_BUCKETS,
                                  ?CMD_GET_BUCKET_BY_ACCESS_KEY,
                                  ?CMD_CHANGE_BUCKET_OWNER,
@@ -186,7 +183,7 @@ bad_nodes(BadNodes) ->
                 end, [], BadNodes).
 
 
-%% @doc Format a cluster-node list
+%% @doc Format the resulst of a list of cluster-nodes
 -spec(system_info_and_nodes_stat(list()) ->
              string()).
 system_info_and_nodes_stat(Props) ->
@@ -276,7 +273,7 @@ system_info_and_nodes_stat(Props) ->
     system_conf_with_node_stat(FormattedSystemConf, Nodes).
 
 
-%% @doc Format a system-configuration w/node-state
+%% @doc Format the result of a system-configuration w/node-state
 -spec(system_conf_with_node_stat(string(), list()) ->
              string()).
 system_conf_with_node_stat(FormattedSystemConf, []) ->
@@ -336,7 +333,7 @@ system_conf_with_node_stat(FormattedSystemConf, Nodes) ->
                        " [State of Node(s)]\r\n",
                        Header1,Header2, Header1], Nodes) ++ Header1 ++ ?CRLF.
 
-%% @doc Format the version of every node
+%% @doc Format the resylt of a list of versions
 -spec(version_all(list()) ->
              string()).
 version_all(Nodes) ->
@@ -384,7 +381,7 @@ version_all(Nodes) ->
     lists:foldl(Fun3, [" [Version of Node(s)]\r\n",
                        Header1,Header2, Header1], Nodes) ++ Header1 ++ ?CRLF.
 
-%% @doc Format a cluster node state
+%% @doc Format the result of a cluster node state
 -spec(node_stat(string(), [tuple()]) ->
              string()).
 node_stat(?SERVER_TYPE_GATEWAY, State) ->
@@ -725,7 +722,6 @@ node_stat(?SERVER_TYPE_STORAGE, State) ->
 
 
 %% @doc Status of compaction
-%%
 -spec(compact_status(#compaction_stats{}) ->
              string()).
 compact_status(#compaction_stats{status = Status,
@@ -749,7 +745,7 @@ compact_status(#compaction_stats{status = Status,
                   [Status, Date, TotalNumOfTargets, Targets1, Targets2, Targets3]).
 
 
-%% @doc Format storge stats-list
+%% @doc Format the result of a list of storge-status
 -spec(du(summary | detail, {integer(), integer(), integer(),
                             integer(), integer(), integer()} | list()) ->
              string()).
@@ -825,7 +821,7 @@ du(_, _) ->
     [].
 
 
-%% @doc Format result of mq-stats
+%% @doc Format the result of mq-stats
 -spec(mq_stats(Stats) ->
              string() when Stats::[tuple()]).
 mq_stats([]) ->
@@ -852,7 +848,7 @@ mq_stats(Stats) ->
     Output.
 
 
-%% @doc Format s3-gen-key result
+%% @doc Format the result of s3-gen-key
 %%
 -spec(credential(string(), string()) ->
              string()).
@@ -861,7 +857,7 @@ credential(AccessKeyId, SecretAccessKey) ->
                   [AccessKeyId, SecretAccessKey]).
 
 
-%% @doc Format s3-users result
+%% @doc Format the result of s3-users
 %%
 -spec(users([#?S3_USER{}]) ->
              string()).
@@ -906,7 +902,7 @@ users(Owners) ->
     lists:append([lists:foldl(Fun, Header, Owners), "\r\n"]).
 
 
-%% @doc Format a endpoint list
+%% @doc Format the result of a list of endpoints
 -spec(endpoints(list(tuple())) ->
              string()).
 endpoints(EndPoints) ->
@@ -937,7 +933,7 @@ endpoints(EndPoints) ->
     lists:append([lists:foldl(Fun, Header, EndPoints), "\r\n"]).
 
 
-%% @doc Format a bucket list
+%% @doc Format the result of a list of buckets
 -spec(buckets([#?BUCKET{}]) ->
              string()).
 buckets(Buckets) ->
@@ -1067,7 +1063,7 @@ get_redundancy_method_str(RedMethod, CPParams, ECParams, RedOptions) ->
     end.
 
 
-%% @doc Format a bucket list
+%% @doc Format the result of a list of buckets
 -spec(bucket_by_access_key(list(#?BUCKET{})) ->
              string()).
 bucket_by_access_key(Buckets) ->
@@ -1128,7 +1124,66 @@ bucket_by_access_key(Buckets) ->
     lists:append([lists:foldl(Fun, Header, Buckets), "\r\n"]).
 
 
-%% @doc Format a acl list
+%% @doc Format the states of a deletion-bucket
+-spec(del_bucket_stats(Stats) ->
+             string() when Stats::[#del_bucket_state{}]).
+del_bucket_stats(Stats) ->
+    Col_1_MinLen = 28,
+    Col_1_Len =
+        lists:foldl(fun(#del_bucket_state{node = Node}, C) ->
+                            Len = length(atom_to_list(Node)),
+                            case (Len > C) of
+                                true ->
+                                    Len;
+                                false ->
+                                    C
+                            end
+                    end, Col_1_MinLen, Stats),
+    Col_2_Len = 16,
+    Col_3_Len = 28,
+
+    Header = lists:append(
+               [string:left("node", Col_1_Len), " | ",
+                string:left("node", Col_2_Len), " | ",
+                string:left("state", Col_3_Len), "\r\n",
+
+                lists:duplicate(Col_1_Len, "-"), "-+-",
+                lists:duplicate(Col_2_Len, "-"), "-+-",
+                lists:duplicate(Col_3_Len, "-"), "\r\n"]),
+
+    Fun = fun(#del_bucket_state{node = Node,
+                                state = State,
+                                timestamp = TS}, Acc) ->
+                  NodeStr = atom_to_list(Node),
+                  StateStr = ?del_bucket_state_str(State),
+                  TS_1  = case (TS > 1) of
+                              true ->
+                                  leo_date:date_format(TS);
+                              false ->
+                                  []
+                          end,
+                  Acc ++ io_lib:format("~s | ~s | ~s\r\n",
+                                       [string:left(NodeStr, Col_1_Len),
+                                        string:left(StateStr, Col_2_Len),
+                                        string:left(TS_1, Col_3_Len)
+                                       ])
+          end,
+    lists:append([lists:foldl(Fun, Header, Stats), "\r\n"]).
+
+
+%% @doc Format the states of a deletion-bucket
+-spec(del_bucket_stats_all(Stats) ->
+             string() when BucketName::binary(),
+                           Stats::[ {BucketName, [#del_bucket_state{}]} ]).
+del_bucket_stats_all(Stats) ->
+    lists:foldl(fun({BucketName, NodeStateList}, Acc) ->
+                        Acc_1 = lists:append([Acc, "- Bucket: ",  binary_to_list(BucketName), "\r\n"]),
+                        Acc_2 = lists:append([Acc_1, del_bucket_stats(NodeStateList), "\r\n"]),
+                        Acc_2
+                end, [], Stats).
+
+
+%% @doc Format the result of a list of acls
 -spec(acls(acls()) ->
              string()).
 acls(ACLs) ->
@@ -1231,7 +1286,7 @@ cluster_status(Stats) ->
     lists:append([lists:foldl(Fun, Header, Stats), "\r\n"]).
 
 
-%% @doc Format an assigned file
+%% @doc Format the result of an assigned file
 -spec(whereis(list()) ->
              string()).
 whereis(AssignedInfo) ->
@@ -1357,12 +1412,12 @@ whereis(AssignedInfo) ->
     lists:foldl(Fun3, [Header_1, Header_2, Header_1], AssignedInfo) ++ ?CRLF.
 
 
-%% @doc Format a NFS mount key
+%% @doc Format the result of a NFS mount key
 nfs_mnt_key(Key) ->
     io_lib:format("~s\r\n", [Key]).
 
 
-%% @doc Format a history list
+%% @doc Format the result of a list of a histories
 -spec(histories(list(#history{})) ->
              string()).
 histories(Histories) ->

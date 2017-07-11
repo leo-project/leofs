@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -53,12 +53,12 @@
 -undef(DEF_TIMEOUT).
 -define(DEF_TIMEOUT, 30000).
 
--record(registration, {pid           :: pid(),
-                       node          :: atom(),
-                       type          :: atom(),
-                       times         :: atom(),
-                       level_1 = []  :: string(),
-                       level_2 = []  :: string(),
+-record(registration, {pid :: pid(),
+                       node :: atom(),
+                       type :: atom(),
+                       times :: atom(),
+                       level_1 = [] :: string(),
+                       level_2 = [] :: string(),
                        num_of_vnodes = ?DEF_NUMBER_OF_VNODES :: pos_integer(),
                        rpc_port = ?DEF_LISTEN_PORT :: pos_integer()
                       }).
@@ -76,13 +76,12 @@ stop() ->
 
 
 %% @doc Register gateway and storage pid in monitor.
-%%
 -spec(register(atom(), pid(), atom(), atom()) ->
              ok).
 register(RequestedTimes, Pid, Node, TypeOfNode) ->
-    RegistrationInfo = #registration{pid   = Pid,
-                                     node  = Node,
-                                     type  = TypeOfNode,
+    RegistrationInfo = #registration{pid  = Pid,
+                                     node = Node,
+                                     type = TypeOfNode,
                                      times = RequestedTimes},
     gen_server:call(?MODULE, {register, RegistrationInfo}, ?DEF_TIMEOUT).
 
@@ -96,9 +95,9 @@ register(RequestedTimes, Pid, Node, TypeOfNode, L1Id, L2Id, NumOfVNodes) ->
                string(), string(), pos_integer(), pos_integer()) ->
              ok).
 register(RequestedTimes, Pid, Node, TypeOfNode, L1Id, L2Id, NumOfVNodes, RPCPort) ->
-    RegistrationInfo = #registration{pid   = Pid,
-                                     node  = Node,
-                                     type  = TypeOfNode,
+    RegistrationInfo = #registration{pid  = Pid,
+                                     node = Node,
+                                     type = TypeOfNode,
                                      times = RequestedTimes,
                                      level_1 = L1Id,
                                      level_2 = L2Id,
@@ -109,7 +108,6 @@ register(RequestedTimes, Pid, Node, TypeOfNode, L1Id, L2Id, NumOfVNodes, RPCPort
 
 
 %% @doc Demonitor pid from monitor.
-%%
 -spec(demonitor(atom()) ->
              ok | undefined).
 demonitor(Node) ->
@@ -123,7 +121,6 @@ get_remote_node_proc() ->
     gen_server:cast(?MODULE, get_remote_node_proc).
 
 %% @doc Retrieve pid of remote-nodes.
-%%
 -spec(get_remote_node_proc(ServerType, Node) ->
              ok when ServerType::atom(),
                      Node::atom()).
@@ -132,7 +129,6 @@ get_remote_node_proc(ServerType, Node) ->
 
 
 %% @doc Retrieve node-alias.
-%%
 -spec(get_server_node_alias(Node::atom()) -> {ok, tuple()}).
 get_server_node_alias(Node) ->
     NewNode = case is_atom(Node) of
@@ -141,8 +137,8 @@ get_server_node_alias(Node) ->
               end,
     gen_server:call(?MODULE, {get_server_node_alias, NewNode}, ?DEF_TIMEOUT).
 
+
 %% @doc Syncronize RING between manager and storage/gateway
-%%
 -spec(sync_ring(Node) ->
              ok when Node::atom()).
 sync_ring(Node) ->
@@ -171,9 +167,9 @@ handle_call({register, RegistrationInfo}, _From, {Refs, Htbl, Pids} = Arg) ->
     ?debug("handle_call - register", "requested-times:~w, node:~w",
            [RegistrationInfo#registration.times,
             RegistrationInfo#registration.node]),
-    #registration{pid   = Pid,
-                  node  = Node,
-                  type  = TypeOfNode} = RegistrationInfo,
+    #registration{pid = Pid,
+                  node = Node,
+                  type = TypeOfNode} = RegistrationInfo,
 
     case is_exists_proc(Htbl, Pid, Node) of
         true ->
@@ -193,7 +189,7 @@ handle_call({register, RegistrationInfo}, _From, {Refs, Htbl, Pids} = Arg) ->
                     MonitorRef = erlang:monitor(process, Pid),
                     ProcInfo   = {Pid, {atom_to_list(Node), Node, TypeOfNode, MonitorRef}},
                     {reply, ok, {_Refs = [MonitorRef | Refs  ],
-                                 _Htbl = [ProcInfo   | Htbl_1],
+                                 _Htbl = [ProcInfo | Htbl_1],
                                  _Pids = Pids}};
                 Error ->
                     {reply, Error, Arg}
@@ -374,7 +370,7 @@ update_node_state_1(State, Node, Clock) ->
 get_remote_node_proc_fun() ->
     Nodes_0 = case leo_manager_mnesia:get_gateway_nodes_all() of
                   {ok, R1} ->
-                      [{gateway,_N1,_S1} || #node_state{node  = _N1,
+                      [{gateway,_N1,_S1} || #node_state{node = _N1,
                                                         state = _S1} <- R1];
                   _ ->
                       []
@@ -388,8 +384,8 @@ get_remote_node_proc_fun() ->
               end,
     lists:foreach(
       fun({_Type, _Node, ?STATE_DETACHED}) -> void;
-         ({_Type, _Node, ?STATE_SUSPEND})  -> void;
-         ({_Type, _Node, ?STATE_STOP})     -> void;
+         ({_Type, _Node, ?STATE_SUSPEND}) -> void;
+         ({_Type, _Node, ?STATE_STOP}) -> void;
          ({ Type,  Node, _}) ->
               spawn(
                 fun() ->

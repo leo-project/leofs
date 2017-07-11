@@ -1,8 +1,8 @@
 %%====================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -132,6 +132,22 @@ setup() ->
     meck:expect(leo_redundant_manager_api, checksum,
                 fun(_) ->
                         {ok,{12345,56789}}
+                end),
+
+    meck:new(leo_storage_handler_del_directory, [non_strict]),
+    meck:expect(leo_storage_handler_del_directory, get_cached_items,
+                fun() ->
+                        {ok, []}
+                end),
+
+    meck:new(leo_logger_client_message, [non_strict]),
+    meck:expect(leo_logger_client_message, error,
+                fun(_) ->
+                        ok
+                end),
+    meck:expect(leo_logger_client_message, warn,
+                fun(_) ->
+                        ok
                 end),
     {Test0Node, Test1Node}.
 
@@ -275,6 +291,10 @@ subscribe_2_({Test0Node, _Test1Node}) ->
                 fun({_Ref,_}) ->
                         {ok,_Ref, <<>>, <<>>}
                 end),
+    meck:expect(leo_storage_handler_object, is_key_under_del_dir,
+                fun(_) ->
+                        true
+                end),
 
     meck:expect(leo_redundant_manager_api, get_member_by_node,
                 fun(_Node) ->
@@ -292,6 +312,7 @@ subscribe_2_({Test0Node, _Test1Node}) ->
                 end),
 
     timer:sleep(100),
+
     leo_storage_mq:handle_call(
       {consume, ?QUEUE_ID_REBALANCE, ?TEST_MSG_3}),
 

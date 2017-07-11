@@ -1,6 +1,6 @@
 %%====================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
 %% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
@@ -40,14 +40,7 @@
 -export([init/0, handle_call/1, handle_call/3]).
 
 -define(SLASH, "/").
--define(MSG_PATH_PER_OBJECT,        "1").
--define(MSG_PATH_SYNC_VNODE_ID,     "2").
--define(MSG_PATH_REBALANCE,         "3").
--define(MSG_PATH_ASYNC_DELETION,    "4").
--define(MSG_PATH_RECOVERY_NODE,     "5").
--define(MSG_PATH_SYNC_OBJ_WITH_DC,  "6").
--define(MSG_PATH_COMP_META_WITH_DC, "7").
--define(MSG_PATH_DEL_DIR,           "8").
+
 
 %%--------------------------------------------------------------------
 %% API
@@ -84,6 +77,7 @@ start(RefSup, RootPath) ->
 
     ?TBL_REBALANCE_COUNTER = ets:new(?TBL_REBALANCE_COUNTER,
                                      [named_table, public, {read_concurrency, true}]),
+    DelBucketQueues = ?del_dir_queue_list(),
     start_1([{?QUEUE_ID_PER_OBJECT,        ?MSG_PATH_PER_OBJECT},
              {?QUEUE_ID_SYNC_BY_VNODE_ID,  ?MSG_PATH_SYNC_VNODE_ID},
              {?QUEUE_ID_REBALANCE,         ?MSG_PATH_REBALANCE},
@@ -91,8 +85,8 @@ start(RefSup, RootPath) ->
              {?QUEUE_ID_RECOVERY_NODE,     ?MSG_PATH_RECOVERY_NODE},
              {?QUEUE_ID_SYNC_OBJ_WITH_DC,  ?MSG_PATH_SYNC_OBJ_WITH_DC},
              {?QUEUE_ID_COMP_META_WITH_DC, ?MSG_PATH_COMP_META_WITH_DC},
-             {?QUEUE_ID_DEL_DIR,           ?MSG_PATH_DEL_DIR}
-            ], RefMqSup, RootPath_1).
+             {?QUEUE_ID_REQ_DEL_DIR,       ?MSG_PATH_REQ_DEL_DIR}
+            ] ++ DelBucketQueues, RefMqSup, RootPath_1).
 
 %% @private
 start_1([],_,_) ->
@@ -113,7 +107,7 @@ start_1([{Id, Path}|Rest], Sup, Root) ->
 
 
 %% @doc Input a message into the queue.
--spec(publish(queue_id(), atom()|binary()) ->
+-spec(publish(mq_id(), atom()|binary()) ->
              ok | {error, any()}).
 publish(?QUEUE_ID_RECOVERY_NODE = Id, Node) ->
     KeyBin = term_to_binary(Node),
@@ -122,24 +116,10 @@ publish(?QUEUE_ID_RECOVERY_NODE = Id, Node) ->
                                       node = Node,
                                       timestamp = leo_date:now()}),
     leo_mq_api:publish(Id, KeyBin, MsgBin);
-
-publish(?QUEUE_ID_DEL_DIR = Id, {bulk_insert, Dirs}) ->
-    [publish(Id, erlang:node(), D) || D <- Dirs],
-    ok;
-publish(?QUEUE_ID_DEL_DIR = Id, Dir) ->
-    case leo_redundant_manager_api:get_members() of
-        {ok, RetL} ->
-            [publish(Id, N, Dir)
-             || #member{node = N} <- RetL],
-            ok;
-        _ ->
-            timer:sleep(timer:seconds(5)),
-            publish(Id, Dir)
-    end;
 publish(_,_) ->
     {error, badarg}.
 
--spec(publish(queue_id(), any(), any()) ->
+-spec(publish(mq_id(), any(), any()) ->
              ok | {error, any()}).
 publish(?QUEUE_ID_SYNC_BY_VNODE_ID = Id, VNodeId, Node) ->
     KeyBin = term_to_binary({VNodeId, Node}),
@@ -171,19 +151,29 @@ publish(?QUEUE_ID_COMP_META_WITH_DC = Id, ClusterId, AddrAndKeyList) ->
                                                 timestamp = leo_date:now()}),
     leo_mq_api:publish(Id, KeyBin, MessageBin);
 
-publish(?QUEUE_ID_DEL_DIR = Id, Node, Dir) ->
-    KeyBin = term_to_binary({Node, Dir}),
-    MsgBin = term_to_binary(
-               #delete_dir{id = leo_date:clock(),
-                           dir = Dir,
-                           node = Node,
-                           timestamp = leo_date:now()}),
-    ?debug("leo_mq delete directory", [{dir, Dir}]),
+publish(?QUEUE_ID_REQ_DEL_DIR = Id, Node, Directory) ->
+    KeyBin = term_to_binary({Node, Directory}),
+    MsgBin = term_to_binary(#delete_dir{
+                               id = leo_date:clock(),
+                               node = Node,
+                               dir = Directory,
+                               timestamp = leo_date:now()}),
+    ?debug("leo_mq delete directory", [{dir, Directory}]),
     leo_mq_api:publish(Id, KeyBin, MsgBin);
+
+publish({?QUEUE_ID_DEL_DIR, WorkerId}, AddrId, Key) ->
+    KeyBin = term_to_binary({AddrId, Key}),
+    MsgBin = term_to_binary(#async_deletion_message{
+                               id = leo_date:clock(),
+                               addr_id = AddrId,
+                               key = Key,
+                               timestamp = leo_date:now()}),
+    leo_mq_api:publish(WorkerId, KeyBin, MsgBin);
+
 publish(_,_,_) ->
     {error, badarg}.
 
--spec(publish(queue_id(), any(), any(), any()) ->
+-spec(publish(mq_id(), any(), any(), any()) ->
              ok | {error, any()}).
 publish(?QUEUE_ID_PER_OBJECT = Id, AddrId, Key, ErrorType) ->
     KeyBin = term_to_binary({ErrorType, Key}),
@@ -209,27 +199,34 @@ publish(?QUEUE_ID_SYNC_OBJ_WITH_DC = Id, ClusterId, AddrId, Key) ->
 publish(_,_,_,_) ->
     {error, badarg}.
 
--spec(publish(queue_id(), any(), any(), any(), any()) ->
+-spec(publish(mq_id(), any(), any(), any(), any()) ->
              ok | {error, any()}).
 publish(?QUEUE_ID_REBALANCE = Id, Node, VNodeId, AddrId, Key) ->
-    Hash = erlang:crc32(term_to_binary({Node, AddrId, Key})),
-    KeyBin = term_to_binary({Hash, Node, AddrId, Key}),
-    MessageBin = term_to_binary(
-                   #rebalance_message{id = leo_date:clock(),
-                                      vnode_id = VNodeId,
-                                      addr_id = AddrId,
-                                      key = Key,
-                                      node = Node,
-                                      timestamp = leo_date:now()}),
-    Table = ?TBL_REBALANCE_COUNTER,
-    case ets_lookup(Table, VNodeId) of
-        {ok, 0} ->
-            ets:insert(Table, {VNodeId, 0});
-        _Other ->
-            void
-    end,
-    ok = increment_counter(Table, VNodeId),
-    leo_mq_api:publish(Id, KeyBin, MessageBin);
+    %% Check Key under del-bucket/directory or not
+    case leo_storage_handler_object:is_key_under_del_dir(Key) of
+        true ->
+            ok;
+        false ->
+            %% Enqueue a message of the rebalance
+            Hash = erlang:crc32(term_to_binary({Node, AddrId, Key})),
+            KeyBin = term_to_binary({Hash, Node, AddrId, Key}),
+            MessageBin = term_to_binary(
+                           #rebalance_message{id = leo_date:clock(),
+                                              vnode_id = VNodeId,
+                                              addr_id = AddrId,
+                                              key = Key,
+                                              node = Node,
+                                              timestamp = leo_date:now()}),
+            Table = ?TBL_REBALANCE_COUNTER,
+            case ets_lookup(Table, VNodeId) of
+                {ok, 0} ->
+                    ets:insert(Table, {VNodeId, 0});
+                _Other ->
+                    void
+            end,
+            ok = increment_counter(Table, VNodeId),
+            leo_mq_api:publish(Id, KeyBin, MessageBin)
+    end;
 
 publish(?QUEUE_ID_SYNC_OBJ_WITH_DC = Id, ClusterId, AddrId, Key, Del) ->
     KeyBin = term_to_binary({ClusterId, AddrId, Key}),
@@ -270,7 +267,7 @@ init() ->
 
 %% @doc Subscribe a message from the queue.
 %% @private
--spec(handle_call({consume, any() | queue_id() , any() | binary()}) ->
+-spec(handle_call({consume, any() | mq_id() , any() | binary()}) ->
              ok | {error, any()}).
 handle_call({consume, ?QUEUE_ID_PER_OBJECT, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
@@ -283,7 +280,6 @@ handle_call({consume, ?QUEUE_ID_PER_OBJECT, MessageBin}) ->
             case ?transform_inconsistent_data_message(Term) of
                 {ok, #?MSG_INCONSISTENT_DATA{addr_id = AddrId,
                                              key = Key,
-                                             %% type = ErrorType,
                                              sync_node = SyncNode,
                                              is_force_sync = true}} when SyncNode /= undefined ->
                     send_object_to_remote_node(SyncNode, AddrId, Key);
@@ -331,8 +327,14 @@ handle_call({consume, ?QUEUE_ID_SYNC_BY_VNODE_ID, MessageBin}) ->
 
 handle_call({consume, ?QUEUE_ID_REBALANCE, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        #rebalance_message{} = Msg ->
-            rebalance_1(Msg);
+        #rebalance_message{key = Key} = Msg ->
+            %% Check Key under del-bucket/directory or not
+            case leo_storage_handler_object:is_key_under_del_dir(Key) of
+                true ->
+                    ok;
+                false ->
+                    rebalance_1(Msg)
+            end;
         _ ->
             ?warn("handle_call/1 - consume",
                   [{qid, ?QUEUE_ID_REBALANCE},
@@ -341,29 +343,7 @@ handle_call({consume, ?QUEUE_ID_REBALANCE, MessageBin}) ->
     end;
 
 handle_call({consume, ?QUEUE_ID_ASYNC_DELETION, MessageBin}) ->
-    case catch binary_to_term(MessageBin) of
-        #async_deletion_message{addr_id = AddrId,
-                                key = Key} ->
-            case catch leo_storage_handler_object:delete(
-                         #?OBJECT{addr_id = AddrId,
-                                  key = Key,
-                                  clock = leo_date:clock(),
-                                  timestamp = leo_date:now(),
-                                  del = ?DEL_TRUE
-                                 }, 0, false, leo_mq) of
-                ok ->
-                    ok;
-                {error, not_found} ->
-                    ok;
-                {_, Cause} ->
-                    {error, Cause}
-            end;
-        _ ->
-            ?warn("handle_call/1 - consume",
-                  [{qid, ?QUEUE_ID_ASYNC_DELETION},
-                   {cause, invalid_data_format}]),
-            ok
-    end;
+    remove_objects_under_dir(MessageBin);
 
 handle_call({consume, ?QUEUE_ID_RECOVERY_NODE, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
@@ -396,7 +376,7 @@ handle_call({consume, ?QUEUE_ID_COMP_META_WITH_DC, MessageBin}) ->
             case leo_mdcr_tbl_cluster_stat:find_by_cluster_id(ClusterId) of
                 {ok, #?CLUSTER_STAT{state = ?STATE_RUNNING}} ->
                     %% re-compare metadatas
-                    leo_storage_handle_sync:send_addrid_and_key_to_remote(
+                    leo_storage_handler_sync:send_addrid_and_key_to_remote(
                       ClusterId, AddrAndKeyList);
                 _ ->
                     ok
@@ -408,30 +388,33 @@ handle_call({consume, ?QUEUE_ID_COMP_META_WITH_DC, MessageBin}) ->
             ok
     end;
 
-handle_call({consume, ?QUEUE_ID_DEL_DIR, MessageBin}) ->
+handle_call({consume, ?QUEUE_ID_REQ_DEL_DIR, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
-        %% A destination node is NOT specified
-        #delete_dir{dir = ParentDir,
-                    node = undefined} ->
-            ?debug("leo_mq delete directory", [{dir, ParentDir}]),
-            publish(?QUEUE_ID_DEL_DIR, ParentDir);
-
-        %% A destination node is specified
-        #delete_dir{dir = ParentDir,
-                    node = Node} ->
-            Ref = make_ref(),
-            ?debug("leo_mq handle delete directory", [{dir, ParentDir}]),
-            case leo_storage_handler_object:delete_objects_under_dir(
-                   [Node], Ref, [ParentDir]) of
-                {ok, Ref} ->
+        #delete_dir{node = Node,
+                    dir = Directory} ->
+            case rpc:call(Node, leo_storage_handler_del_directory, enqueue,
+                          [?TYPE_DEL_DIR, Directory], ?DEF_REQ_TIMEOUT) of
+                ok ->
+                    ?debug("leo_mq delete directory", [{dir, Directory}]),
                     ok;
                 Cause ->
                     {error, Cause}
             end;
         _ ->
             ?warn("handle_call/1 - consume",
-                  [{qid, ?QUEUE_ID_DEL_DIR},
+                  [{qid, ?QUEUE_ID_REQ_DEL_DIR},
                    {cause, invalid_data_format}]),
+            ok
+    end;
+
+handle_call({consume, MQId, MessageBin}) ->
+    case lists:member(MQId, ?del_dir_id_list()) of
+        true ->
+            %% Not handle the returun value of 'remove_objects_under_dir/1'
+            %% because 'replcation-failurre' which is fixed by 'leo_async_deletion_queue'
+            remove_objects_under_dir(MessageBin),
+            ok;
+        false ->
             ok
     end;
 handle_call(_) ->
@@ -937,6 +920,33 @@ fix_consistency_between_clusters(#inconsistent_data_with_dc{
                           del = ?DEL_FALSE},
     Object = leo_object_storage_transformer:metadata_to_object(Metadata),
     leo_sync_remote_cluster:stack(Object#?OBJECT{data = <<>>}).
+
+
+%% @doc Remove objects under the directory/bucket
+remove_objects_under_dir(MessageBin) ->
+    case catch binary_to_term(MessageBin) of
+        #async_deletion_message{addr_id = AddrId,
+                                key = Key} ->
+            case catch leo_storage_handler_object:delete(
+                         #?OBJECT{addr_id = AddrId,
+                                  key = Key,
+                                  clock = leo_date:clock(),
+                                  timestamp = leo_date:now(),
+                                  del = ?DEL_TRUE
+                                 }, 0, false, leo_mq) of
+                ok ->
+                    ok;
+                {error, not_found} ->
+                    ok;
+                {_, Cause} ->
+                    {error, Cause}
+            end;
+        _ ->
+            ?warn("remove_objects_under_dir/1",
+                  [{qid, ?QUEUE_ID_DEL_DIR},
+                   {cause, invalid_data_format}]),
+            ok
+    end.
 
 
 %%--------------------------------------------------------------------

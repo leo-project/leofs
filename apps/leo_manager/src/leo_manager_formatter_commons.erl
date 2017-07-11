@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -25,6 +25,7 @@
 
 -export([exchange_value/2]).
 
+
 %% @doc Exchange value
 -spec(exchange_value(Values, Ret) ->
              Ret when Values::[{Ret, any()}],
@@ -35,4 +36,3 @@ exchange_value([{Ret, NewRet}|_], Ret) ->
     NewRet;
 exchange_value([{_,_}|Rest], Ret) ->
     exchange_value(Rest, Ret).
-

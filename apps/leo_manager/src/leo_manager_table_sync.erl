@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -30,6 +30,7 @@
 -include_lib("leo_s3_libs/include/leo_s3_libs.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_user.hrl").
 -include_lib("eunit/include/eunit.hrl").
+
 
 %% API
 -export([start_link/0,
@@ -214,20 +215,20 @@ exec([#cluster_manager{node = Node,
 %% @doc Compare s3-related tables of checksum with a remote-node
 %% @private
 compare_with_remote_node(Node,
-                         #s3_tbls_checksum{auth       = L_C1,
-                                           bucket     = L_C2,
-                                           user       = L_C3,
+                         #s3_tbls_checksum{auth = L_C1,
+                                           bucket = L_C2,
+                                           user = L_C3,
                                            credential = L_C4
                                           } = _S3TblsChecksum_1) ->
     case catch leo_rpc:call(Node, leo_s3_libs, get_checksums, []) of
-        {ok, #s3_tbls_checksum{auth       = R_C1,
-                               bucket     = R_C2,
-                               user       = R_C3,
+        {ok, #s3_tbls_checksum{auth = R_C1,
+                               bucket = R_C2,
+                               user = R_C3,
                                credential = R_C4
                               } = _S3TblsChecksum_2} ->
-            Ret = [{auth,       (L_C1 == R_C1)},
-                   {bucket,     (L_C2 == R_C2)},
-                   {user,       (L_C3 == R_C3)},
+            Ret = [{auth, (L_C1 == R_C1)},
+                   {bucket, (L_C2 == R_C2)},
+                   {user, (L_C3 == R_C3)},
                    {credential, (L_C4 == R_C4)}],
             compare_with_remote_node_1(Ret, Node);
         _Error ->

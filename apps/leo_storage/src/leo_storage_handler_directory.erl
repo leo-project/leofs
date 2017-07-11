@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% LeoFS Storage
+%% LeoStorage
 %%
-%% Copyright (c) 2012-2016 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -30,11 +30,11 @@
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
--export([find_by_parent_dir/4,
-         delete_objects_in_parent_dir/1
+-export([find_by_parent_dir/4
         ]).
 
 -define(DEF_MAX_KEYS, 1000).
+
 
 %%--------------------------------------------------------------------
 %% API
@@ -106,11 +106,3 @@ find_by_parent_dir(ParentDir, _Delimiter, Marker, MaxKeys) ->
                              lists:flatten(List)), NewMaxKeys)}
             end
     end.
-
-
-%% @doc Remove objects in the parent directory - request from Gateway
-%%
--spec(delete_objects_in_parent_dir(ParentDir) ->
-             {ok, [_]} | not_found when ParentDir::binary()).
-delete_objects_in_parent_dir(ParentDir) ->
-    leo_storage_handler_object:prefix_search_and_remove_objects(ParentDir).

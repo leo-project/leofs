@@ -1,8 +1,8 @@
 %%======================================================================
 %%
-%% Leo Manager
+%% LeoManager
 %%
-%% Copyright (c) 2012-2015 Rakuten, Inc.
+%% Copyright (c) 2012-2017 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -29,12 +29,13 @@
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
--export([start/2, start/3, publish/3]).
+-export([start/2, start/3, publish/3, publish/4]).
 -export([init/0, handle_call/1, handle_call/3]).
 
 
 -define(SLASH, "/").
 -define(MQ_MSG_PATH_REBALANCE, "1").
+-define(MQ_MSG_PATH_REQ_DEL_BUCKET, "2").
 -define(DEF_MQ_PROP_MAX_INTERVAL, 15000).
 
 -define(env_num_of_mq_procs(),
@@ -46,16 +47,27 @@
         case application:get_env(leo_storage, mq_backend_db) of
             {ok, EnvMQBackendDB} ->
                 EnvMQBackendDB;
-                        _ ->
+            _ ->
                 ?DEF_BACKEND_DB
         end).
+
+%% Take a measure of storage-nodes' load redunction
+%% If leo_manager requests too much, leo_storage cannot launch
+-undef(DEF_CONSUME_MAX_INTERVAL).
+-define(DEF_CONSUME_MAX_INTERVAL, timer:seconds(30)).
+-undef(DEF_CONSUME_REG_INTERVAL).
+-define(DEF_CONSUME_REG_INTERVAL, timer:seconds(10)).
+
+-undef(DEF_CONSUME_MAX_BATCH_MSGS).
+-define(DEF_CONSUME_MAX_BATCH_MSGS, 10).
+-undef(DEF_CONSUME_REG_BATCH_MSGS).
+-define(DEF_CONSUME_REG_BATCH_MSGS, 1).
 
 
 %%--------------------------------------------------------------------
 %% API
 %%--------------------------------------------------------------------
 %% @doc create queues and launch mq-servers.
-%%
 -spec(start(string(), list(tuple())) ->
              ok | {error, any()}).
 start(RootPath, Intervals) ->
@@ -77,41 +89,62 @@ start(RefSup, Intervals, RootPath) ->
                end,
 
     %% launch queue-processes
-    MaxInterval  = leo_misc:get_value(cns_interval_fail_rebalance_max,
-                                      Intervals, ?DEF_CONSUME_MAX_INTERVAL),
-    RegInterval  = leo_misc:get_value(cns_interval_fail_rebalance_regular,
-                                      Intervals, ?DEF_CONSUME_REG_INTERVAL),
+    MaxInterval = leo_misc:get_value(cns_interval_fail_rebalance_max, Intervals, ?DEF_CONSUME_MAX_INTERVAL),
+    RegInterval = leo_misc:get_value(cns_interval_fail_rebalance_regular,Intervals, ?DEF_CONSUME_REG_INTERVAL),
     RootPath_1 = case (string:len(RootPath) == string:rstr(RootPath, ?SLASH)) of
-                     true  -> RootPath;
-                     false -> RootPath ++ ?SLASH
+                     true ->
+                         RootPath;
+                     false ->
+                         RootPath ++ ?SLASH
                  end,
-    leo_mq_api:new(RefMqSup, ?QUEUE_ID_FAIL_REBALANCE,
+    start_1([{?QUEUE_ID_FAIL_REBALANCE, RootPath_1 ++ ?MQ_MSG_PATH_REBALANCE},
+             {?QUEUE_ID_REQ_DEL_BUCKET, RootPath_1 ++ ?MQ_MSG_PATH_REQ_DEL_BUCKET}],
+            RefMqSup, MaxInterval, RegInterval).
+
+%% @private
+start_1([],_Sup,_MaxInterval,_RegInterval) ->
+    ok;
+start_1([{Id, Path}|Acc], Sup, MaxInterval, RegInterval) ->
+    leo_mq_api:new(Sup, Id,
                    [{?MQ_PROP_MOD, ?MODULE},
                     {?MQ_PROP_FUN, ?MQ_SUBSCRIBE_FUN},
-                    {?MQ_PROP_ROOT_PATH, RootPath_1 ++ ?MQ_MSG_PATH_REBALANCE},
-                    {?MQ_PROP_DB_NAME,   ?env_mq_backend_db()},
-                    {?MQ_PROP_DB_PROCS,  ?env_num_of_mq_procs()},
-                    {?MQ_PROP_INTERVAL_MAX,    MaxInterval},
-                    {?MQ_PROP_INTERVAL_REG,    RegInterval},
-                    {?MQ_PROP_BATCH_MSGS_MAX,  ?DEF_CONSUME_MAX_BATCH_MSGS},
-                    {?MQ_PROP_BATCH_MSGS_REG,  ?DEF_CONSUME_REG_BATCH_MSGS}
+                    {?MQ_PROP_ROOT_PATH, Path},
+                    {?MQ_PROP_DB_NAME, ?env_mq_backend_db()},
+                    {?MQ_PROP_DB_PROCS, ?env_num_of_mq_procs()},
+                    {?MQ_PROP_INTERVAL_MAX, MaxInterval},
+                    {?MQ_PROP_INTERVAL_REG, RegInterval},
+                    {?MQ_PROP_BATCH_MSGS_MAX, ?DEF_CONSUME_MAX_BATCH_MSGS},
+                    {?MQ_PROP_BATCH_MSGS_REG, ?DEF_CONSUME_REG_BATCH_MSGS}
                    ]),
-    ok.
+    start_1(Acc, Sup, MaxInterval, RegInterval).
 
 
-%% @doc Input a message into the queue.
-%%
--spec(publish(atom(), atom(), list()) ->
-             ok | {error, any()}).
+%% @doc Input a message into the queue
 publish(?QUEUE_ID_FAIL_REBALANCE = Id, Node, RebalanceInfo) ->
-    KeyBin     = term_to_binary(Node),
+    KeyBin = term_to_binary(Node),
     MessageBin = term_to_binary(
-                   #recovery_rebalance_info{id   = leo_date:clock(),
-                                            node = Node,
-                                            rebalance_info = RebalanceInfo,
-                                            timestamp = leo_date:now()}),
+                   #recovery_rebalance_info{
+                      id = leo_date:clock(),
+                      node = Node,
+                      rebalance_info = RebalanceInfo,
+                      timestamp = leo_date:now()}),
     leo_mq_api:publish(Id, KeyBin, MessageBin);
 publish(_,_,_) ->
+    {error, badarg}.
+
+-spec(publish(atom(), atom(), atom(), binary()) ->
+             ok | {error, any()}).
+publish(?QUEUE_ID_REQ_DEL_BUCKET = Id, NodeType, Node, Bucket) ->
+    KeyBin = term_to_binary({Node, Bucket}),
+    MessageBin = term_to_binary(
+                   #del_bucket_request{
+                      id = leo_date:clock(),
+                      node_type = NodeType,
+                      node = Node,
+                      bucket_name = Bucket,
+                      timestamp = leo_date:now()}),
+    leo_mq_api:publish(Id, KeyBin, MessageBin);
+publish(_,_,_,_) ->
     {error, badarg}.
 
 
@@ -119,7 +152,6 @@ publish(_,_,_) ->
 %% Callbacks
 %% -------------------------------------------------------------------
 %% @doc Initializer
-%%
 -spec(init() ->
              ok | {error, any()}).
 init() ->
@@ -127,10 +159,9 @@ init() ->
 
 
 %% @doc Subscribe a message from the queue.
-%%
 -spec(handle_call({publish | consume, atom(), binary()}) ->
              ok | {error, any()}).
-handle_call({publish, _Id, _Reply}) ->
+handle_call({publish,_Id,_Reply}) ->
     ok;
 
 handle_call({consume, ?QUEUE_ID_FAIL_REBALANCE, MessageBin}) ->
@@ -142,10 +173,25 @@ handle_call({consume, ?QUEUE_ID_FAIL_REBALANCE, MessageBin}) ->
         #recovery_rebalance_info{node = Node,
                                  rebalance_info = RebalanceInfo} ->
             recover_rebalance(Node, RebalanceInfo)
-    end.
+    end;
+
+handle_call({consume, ?QUEUE_ID_REQ_DEL_BUCKET, MessageBin}) ->
+    case catch binary_to_term(MessageBin) of
+        {'EXIT', Cause} ->
+            ?error("handle_call/1 - QUEUE_ID_REQ_DEL_BUCKET",
+                   [{cause, Cause}]),
+            {error, Cause};
+        #del_bucket_request{node = Node,
+                            node_type = NodeType,
+                            bucket_name = BucketName} ->
+            leo_manager_del_bucket_handler:notify(NodeType, Node, BucketName)
+    end;
+
+handle_call(_Other) ->
+    ok.
 
 -spec(handle_call(atom(), atom(), any()) ->
-                 ok | {error, any()}).
+             ok | {error, any()}).
 handle_call(_,_,_) ->
     ok.
 
@@ -164,7 +210,7 @@ recover_rebalance(Node, RebalanceInfo) ->
                           _ = leo_manager_mnesia:update_storage_node_status(
                                 update_chksum,
                                 #node_state{node = Node,
-                                            ring_hash_new = leo_hex:integer_to_hex(RingHashCur,  8),
+                                            ring_hash_new = leo_hex:integer_to_hex(RingHashCur, 8),
                                             ring_hash_old = leo_hex:integer_to_hex(RingHashPrev, 8)}),
                           ok;
                       {_, Cause} ->
