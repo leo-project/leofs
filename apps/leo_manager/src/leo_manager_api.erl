@@ -2604,7 +2604,7 @@ call_remote_node_fun_1([_|Rest], NodeStr, Method, Args) ->
 -spec(notify_del_dir_state(Node, BucketName, State) ->
              ok | {error, Cause} when Node::node(),
                                       BucketName::binary(),
-                                      State::pending|ongoing|monitoring|finished,
+                                      State::pending|enqueuing|monitoring|finished,
                                       Cause::any()).
 notify_del_dir_state(Node, BucketName, State) ->
     leo_manager_del_bucket_handler:change_status(
