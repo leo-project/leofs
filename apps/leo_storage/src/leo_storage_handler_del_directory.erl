@@ -327,7 +327,7 @@ insert_messages(From, MQId, Type, Directory) ->
     end.
 
 
-%% @doc Retrieve the records whose state is pending/ongoing/monitoring.
+%% @doc Retrieve the records whose state is pending/enqueuing/monitoring.
 %% @private
 get_ongoing_workers(NumOfWorkers) ->
     %% Retrieve ongoing workers
