@@ -6,8 +6,7 @@
 
 ## Overview
 
-LeoFS is a highly available, distributed, eventually consistent object/blob store.
-If you are searching a storage system that is able to store huge amount and various kind of files such as photo, movie, log data and so on, LeoFS is suitable for that.
+LeoFS is an **Enterprise Open Source Storage**, and it is a highly available, distributed, eventually consistent object/blob store. If you are seeking a storage system that can store huge amount and various kind of files such as photo, movie, log data and so on, LeoFS is suitable for that.
 
 LeoFS is supporting the following features:
 
