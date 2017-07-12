@@ -48,6 +48,9 @@ transform() ->
     leo_mdcr_tbl_cluster_mgr:create_table(CopyType, ReplicaNodes),
     leo_mdcr_tbl_cluster_member:create_table(CopyType, ReplicaNodes),
 
+    %% delete-bucket related
+    leo_manager_mnesia:create_del_bucket_state(CopyType, ReplicaNodes),
+
     %% data migration - redundant-manager related tables
     ok = leo_cluster_tbl_conf:transform(),
     ok = leo_mdcr_tbl_cluster_info:transform(),
