@@ -363,8 +363,16 @@ put({Object, Ref}) ->
                                               ReqId::integer(),
                                               ETag::{etag, integer()}).
 put(Object, ReqId) ->
+    put(Object, ReqId, gateway).
+
+-spec(put(Object, ReqId, From) ->
+             {ok, ETag} | {error, any()} when Object::#?OBJECT{},
+                                              ReqId::integer(),
+                                              From::atom(),
+                                              ETag::{etag, integer()}).
+put(Object, ReqId, From) ->
     BeginTime = leo_date:clock(),
-    ?debug("put/2", [{from, gateway}, {method, put}, {key, Object#?OBJECT.key}, {req_id, ReqId}]),
+    ?debug("put/2", [{from, From}, {method, put}, {key, Object#?OBJECT.key}, {req_id, ReqId}]),
     ok = leo_metrics_req:notify(?STAT_COUNT_PUT),
     Ret = replicate_fun(?REP_LOCAL, ?CMD_PUT, Object#?OBJECT.addr_id,
                         Object#?OBJECT{method = ?CMD_PUT,
@@ -375,11 +383,10 @@ put(Object, ReqId) ->
             ?access_log_put(Object#?OBJECT.key, Object#?OBJECT.dsize, ReqId, BeginTime, ok);
         {error, Cause} ->
             ?access_log_put(?ACC_LOG_L_ERROR, Object#?OBJECT.key, Object#?OBJECT.dsize, ReqId, BeginTime, error),
-            ?error("put/2", [{from, gateway}, {method, put},
+            ?error("put/2", [{from, From}, {method, put},
                              {key, Object#?OBJECT.key}, {req_id, ReqId}, {cause, Cause}])
     end,
     Ret.
-
 
 %% @doc Insert an  object (request from remote-storage-nodes/replicator).
 -spec(put(Ref, From, Object, ReqId) ->
@@ -485,7 +492,7 @@ delete_chunked_objects(CIndex, ParentKey) ->
                          cindex = CIndex,
                          clock = leo_date:clock(),
                          timestamp = leo_date:now(),
-                         del = ?DEL_TRUE}, 0) of
+                         del = ?DEL_TRUE}, 0, false, storage) of
         ok ->
             delete_chunked_objects(CIndex - 1, ParentKey);
         {error, Cause} ->
@@ -571,15 +578,15 @@ delete(Object, ReqId, CheckUnderDir) ->
             {error, Cause}
     end.
 
-%% @doc Remova an object (request from leo_mq)
+%% @doc Remova an object (request from leo_mq/storage)
 -spec(delete(Object, ReqId, CheckUnderDir, From) ->
              ok | {error, any()} when Object::#?OBJECT{},
                                       ReqId::integer()|reference(),
                                       CheckUnderDir::boolean(),
                                       From::atom()).
-delete(Object, ReqId, CheckUnderDir, leo_mq) ->
+delete(Object, ReqId, CheckUnderDir, From) ->
     Key = Object#?OBJECT.key,
-    ?debug("delete/3", [{from, leo_mq}, {method, del}, {key, Key}, {req_id, ReqId}]),
+    ?debug("delete/3", [{from, From}, {method, del}, {key, Key}, {req_id, ReqId}]),
     case replicate_fun(?REP_LOCAL, ?CMD_DELETE,
                        Object#?OBJECT.addr_id,
                        Object#?OBJECT{method = ?CMD_DELETE,
@@ -587,13 +594,13 @@ delete(Object, ReqId, CheckUnderDir, leo_mq) ->
                                       dsize = 0,
                                       clock = leo_date:clock(),
                                       req_id = ReqId,
-                                      del = ?DEL_TRUE}, leo_mq) of
+                                      del = ?DEL_TRUE}, From) of
         {ok,_} ->
             delete_1(ok, Object, CheckUnderDir);
         {error, Cause = not_found} ->
             delete_1({error, Cause}, Object, CheckUnderDir);
         {error, Cause} ->
-            ?debug("delete/4", [{from, leo_mq}, {method, del},
+            ?debug("delete/4", [{from, From}, {method, del},
                                 {key, Object#?OBJECT.key}, {req_id, ReqId}, {cause, Cause}]),
             {error, Cause}
     end.

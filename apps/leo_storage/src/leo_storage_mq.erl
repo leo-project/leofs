@@ -756,7 +756,7 @@ correct_redundancies_4({error, eof},_InconsistentNodes,_NodeL, Metadata) ->
     case (Metadata#?METADATA.dsize == 0) of
         true ->
             Obj = leo_object_storage_transformer:metadata_to_object(<<>>, Metadata),
-            case leo_storage_handler_object:put(Obj, 0) of
+            case leo_storage_handler_object:put(Obj, 0, leo_mq) of
                 {ok,_} ->
                     ok;
                 Error ->
