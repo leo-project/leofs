@@ -533,6 +533,19 @@ handle_call(_Socket, <<?CMD_DELETE_BUCKET_STATS, ?SPACE, Option/binary>>,
     Reply = invoke(?CMD_DELETE_BUCKET_STATS, Formatter, Fun),
     {reply, Reply, State};
 
+%% Command: "reset-delete-bucket-stats ${bucket}"
+handle_call(_Socket, <<?CMD_RESET_DELETE_BUCKET_STATS, ?SPACE, Option/binary>>,
+            #state{formatter = Formatter} = State) ->
+    Fun = fun() ->
+                  case reset_delete_bucket_stats(Option) of
+                      ok ->
+                          Formatter:ok();
+                      {error, Cause} ->
+                          Formatter:error(Cause)
+                  end
+          end,
+    Reply = invoke(?CMD_RESET_DELETE_BUCKET_STATS, Formatter, Fun),
+    {reply, Reply, State};
 
 %% Command: "get-buckets"
 handle_call(_Socket, <<?CMD_GET_BUCKETS, ?LF>>,
@@ -2310,6 +2323,25 @@ delete_bucket_stats(Option) ->
             Error
     end.
 
+%% @doc Reset(delete) the state of a deletion bucket stats from the manager
+%% @private
+-spec(reset_delete_bucket_stats(binary()) ->
+             ok  | {error, any()}).
+reset_delete_bucket_stats(Option) ->
+    case ?get_tokens(Option, ?ERROR_INVALID_ARGS) of
+        {ok, [Bucket|_]} ->
+            BucketBin = list_to_binary(Bucket),
+            case leo_manager_del_bucket_handler:delete_by_bucket_name(BucketBin) of
+                ok ->
+                    ok;
+                Error0 ->
+                    Error0
+            end;
+        {ok, []} ->
+            {error, ?ERROR_INVALID_ARGS};
+        Error ->
+            Error
+    end.
 
 %% @doc Retrieve a Buckets from the manager
 %% @private

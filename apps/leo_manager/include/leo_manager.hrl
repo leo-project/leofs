@@ -111,6 +111,7 @@
 -define(CMD_SET_RED_METHOD, "set-redundancy-method").
 -define(CMD_DELETE_BUCKET, "delete-bucket").
 -define(CMD_DELETE_BUCKET_STATS, "delete-bucket-stats").
+-define(CMD_RESET_DELETE_BUCKET_STATS, "reset-delete-bucket-stats").
 -define(CMD_CHANGE_BUCKET_OWNER, "chown-bucket").
 -define(CMD_UPDATE_ACL, "update-acl").
 
@@ -211,6 +212,7 @@
                    {?CMD_ADD_BUCKET, "add-bucket <bucket> <access-key-id>"},
                    {?CMD_DELETE_BUCKET, "delete-bucket <bucket> <access-key-id>"},
                    {?CMD_DELETE_BUCKET_STATS, "delete-bucket-stats <bucket>"},
+                   {?CMD_RESET_DELETE_BUCKET_STATS, "reset-delete-bucket-stats <bucket>"},
                    {?CMD_GET_BUCKETS, "get-buckets"},
                    {?CMD_GET_BUCKET_BY_ACCESS_KEY, "get-bucket <access-key-id>"},
                    {?CMD_CHANGE_BUCKET_OWNER, "chown-bucket <bucket> <new-access-key-id>"},

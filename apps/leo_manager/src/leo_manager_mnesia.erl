@@ -712,17 +712,7 @@ delete_gateway_node(NodeInfo) ->
 delete_del_bucket_state(BucketName) ->
     case get_del_bucket_state_by_bucket_name(BucketName) of
         {ok, DelBucketState} ->
-            Tbl = ?TBL_DEL_BUCKET_STATE,
-
-            case catch mnesia:table_info(Tbl, all) of
-                {'EXIT', _Cause} ->
-                    {error, ?ERROR_MNESIA_NOT_START};
-                _ ->
-                    F = fun() ->
-                                mnesia:delete_object(Tbl, DelBucketState, write)
-                        end,
-                    leo_mnesia:delete(F)
-            end;
+            bulk_delete_del_bucket_info(DelBucketState);
         not_found ->
             ok;
         Error ->

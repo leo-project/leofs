@@ -29,6 +29,7 @@
 
 -export([start_link/0, stop/0]).
 -export([enqueue/2, notify/3, find_by_bucket_name/1, find_all/0, change_status/3, status/1]).
+-export([delete_by_bucket_name/1]).
 -export([init/1,
          handle_call/3,
          handle_cast/2,
@@ -102,6 +103,11 @@ change_status(Node, BucketName, ProcState) ->
 status(BucketName) ->
     gen_server:call(?MODULE, {status, BucketName}, ?DEF_TIMEOUT).
 
+%% @doc Delete del-bucket's states by bucket-name
+-spec(delete_by_bucket_name(BucketName) ->
+             ok | {error, any()} when BucketName::binary()).
+delete_by_bucket_name(BucketName) ->
+    gen_server:call(?MODULE, {delete_by_bucket_name, BucketName}, ?DEF_TIMEOUT).
 
 %%====================================================================
 %% GEN_SERVER CALLBACKS
@@ -196,6 +202,16 @@ handle_call({change_status, Node, BucketName, ProcState},_From, State) ->
                   Cause;
               {error, Reason} ->
                   ?error("handle_call/3, change_status", [{cause, Reason}]),
+                  {error, ?ERROR_MNESIA_PROC_FAILURE}
+          end,
+    {reply, Ret, State};
+
+handle_call({delete_by_bucket_name, BucketName},_From, State) ->
+    Ret = case leo_manager_mnesia:delete_del_bucket_state(BucketName) of
+              ok ->
+                  ok;
+              {error, Reason} ->
+                  ?error("handle_call/3, delete_by_bucket_name", [{cause, Reason}]),
                   {error, ?ERROR_MNESIA_PROC_FAILURE}
           end,
     {reply, Ret, State};

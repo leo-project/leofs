@@ -707,6 +707,20 @@ usage_delete_bucket_stats() {
     esac
 }
 
+usage_reset_delete_bucket_stats() {
+    USAGE="reset-delete-bucket-stats [<bucket>]"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Reset the deletion-bucket's state"
+    esac
+}
+
 usage_get_bucket() {
     USAGE="get-bucket $ACCESS_KEY_ID"
     case "$1" in
@@ -960,6 +974,7 @@ usage() {
     usage_add_bucket min
     usage_delete_bucket min
     usage_delete_bucket_stats min
+    usage_reset_delete_bucket_stats min
     usage_get_bucket min
     usage_get_buckets min
     usage_chown_bucket min
@@ -1556,6 +1571,20 @@ case "$1" in
             esac
         else
             usage_delete_bucket_stats
+        fi
+        ;;
+    reset-delete-bucket-stats)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_reset_delete_bucket_stats
+                    exit 1
+                    ;;
+                *)
+                    send_command "$@"
+            esac
+        else
+            usage_reset_delete_bucket_stats
         fi
         ;;
     get-bucket)
