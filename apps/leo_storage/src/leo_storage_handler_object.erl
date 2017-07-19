@@ -36,7 +36,7 @@
 -include_lib("eunit/include/eunit.hrl").
 
 -export([get/1, get/2, get/3, get/4, get/5,
-         put/1, put/2, put/4,
+         put/1, put/2, put/3, put/4,
          delete/1, delete/2, delete/3, delete/4,
          delete_objects_under_dir/1,
          head/2, head/3,
