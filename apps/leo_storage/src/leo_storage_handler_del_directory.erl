@@ -259,7 +259,8 @@ dequeue(#state{num_of_workers = NumOfWorkers} = State) ->
                                      #del_dir_state{mq_id = MQId,
                                                     state = ProcState}
                                        when ProcState == ?STATE_ENQUEUING;
-                                            ProcState == ?STATE_MONITORING ->
+                                            ProcState == ?STATE_MONITORING;
+                                            ProcState == ?STATE_FINISHED ->
                                          [MQId|Acc];
                                      _ ->
                                          Acc
@@ -327,7 +328,8 @@ insert_messages(From, MQId, Type, Directory) ->
     end.
 
 
-%% @doc Retrieve the records whose state is pending/enqueuing/monitoring.
+%% @doc Retrieve the records whose state is pending/enqueuing/monitoring/finished.
+%%      STATE_FINISHED should be returned as its state means notifying to managers still doesn't succeed.
 %% @private
 get_ongoing_workers(NumOfWorkers) ->
     %% Retrieve ongoing workers
@@ -336,7 +338,8 @@ get_ongoing_workers(NumOfWorkers) ->
                        #del_dir_state{state = ProcState}
                          when ProcState == ?STATE_PENDING;
                               ProcState == ?STATE_ENQUEUING;
-                              ProcState == ?STATE_MONITORING ->
+                              ProcState == ?STATE_MONITORING;
+                              ProcState == ?STATE_FINISHED ->
                            true;
                        _ ->
                            false
@@ -529,10 +532,24 @@ run(?TYPE_DEL_BUCKET = Type, ProcState, MQId, Directory,
     end,
     {ok, State};
 
-run(?TYPE_DEL_BUCKET, ?STATE_FINISHED = ProcState,_MQId, Directory,
+run(?TYPE_DEL_BUCKET = Type, ?STATE_FINISHED = ProcState, MQId, Directory,
     #state{manager_nodes = ManagerNodes} = State) ->
     Node = node(),
     ProcState_1 = ?del_dir_state_to_atom(ProcState),
+
+    %% Update the state to STATE_FINISHED in order to retry notify_del_dir_state
+    %% when the following rpc:call failed.
+    case update_state(#del_dir_state{
+                         mq_id = MQId,
+                         directory = Directory,
+                         type = Type,
+                         state = ProcState,
+                         timestamp = leo_date:now()}) of
+        ok ->
+            void;
+        {error, Cause0} ->
+            ?error("run/5", [{cause, Cause0}])
+    end,
 
     case (lists:foldl(
             fun(Manager, false) ->
