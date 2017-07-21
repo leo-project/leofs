@@ -415,7 +415,9 @@ check_stats_2(#del_dir_state{mq_id = MQId,
 check_stats_2(#del_dir_state{mq_id = MQId,
                              type = Type,
                              directory = Directory,
-                             state = ?STATE_ENQUEUING},_From, State) ->
+                             state = ?STATE_ENQUEUING,
+                             is_notification_successful = false}, _From, State) ->
+    % ONLY call when the notification still doesn't succeed
     run(Type, ?STATE_ENQUEUING, MQId, Directory, State);
 check_stats_2(#del_dir_state{mq_id = MQId,
                              type = Type,
@@ -491,44 +493,61 @@ run(?TYPE_DEL_BUCKET, ProcState,_MQId,_Directory, State) when ProcState == ?STAT
 
 run(?TYPE_DEL_BUCKET = Type, ProcState, MQId, Directory,
     #state{manager_nodes = ManagerNodes} = State) when ProcState == ?STATE_ENQUEUING ->
-    case notify_current_state_to_manager(
-           ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)) of
-        true ->
-            case update_state(#del_dir_state{
-                                 mq_id = MQId,
-                                 directory = Directory,
-                                 type = Type,
-                                 state = ProcState,
-                                 is_notification_successful = true,
-                                 timestamp = leo_date:now()}) of
-                ok ->
-                    void;
-                {error, Cause} ->
-                    ?error("run/5", [{cause, Cause}])
-            end;
-        false ->
-            void
+    case update_state(#del_dir_state{
+                         mq_id = MQId,
+                         directory = Directory,
+                         type = Type,
+                         state = ProcState,
+                         is_notification_successful = false,
+                         timestamp = leo_date:now()}) of
+        ok ->
+            void;
+        {error, Cause} ->
+            ?error("run/5 - ENQUEUING ", [{cause, Cause}])
+    end,
+    notify_current_state_to_manager(
+        ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)),
+    case update_state(#del_dir_state{
+                         mq_id = MQId,
+                         directory = Directory,
+                         type = Type,
+                         state = ProcState,
+                         is_notification_successful = true,
+                         timestamp = leo_date:now()}) of
+        ok ->
+            void;
+        {error, Cause2} ->
+            ?error("run/5 - ENQUEUING", [{cause, Cause2}])
     end,
     {ok, State};
 
 run(?TYPE_DEL_BUCKET = Type, ProcState, MQId, Directory,
     #state{manager_nodes = ManagerNodes} = State) when ProcState == ?STATE_MONITORING ->
-    case notify_current_state_to_manager(
-           ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)) of
-        true ->
-            case update_state(#del_dir_state{
-                                 mq_id = MQId,
-                                 directory = Directory,
-                                 type = Type,
-                                 state = ProcState,
-                                 timestamp = leo_date:now()}) of
-                ok ->
-                    void;
-                {error, Cause} ->
-                    ?error("run/5", [{cause, Cause}])
-            end;
-        false ->
-            void
+    case update_state(#del_dir_state{
+                         mq_id = MQId,
+                         directory = Directory,
+                         type = Type,
+                         state = ProcState,
+                         is_notification_successful = false,
+                         timestamp = leo_date:now()}) of
+        ok ->
+            void;
+        {error, Cause} ->
+            ?error("run/5 - MONITORING", [{cause, Cause}])
+    end,
+    notify_current_state_to_manager(
+        ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)),
+    case update_state(#del_dir_state{
+                         mq_id = MQId,
+                         directory = Directory,
+                         type = Type,
+                         state = ProcState,
+                         is_notification_successful = true,
+                         timestamp = leo_date:now()}) of
+        ok ->
+            void;
+        {error, Cause2} ->
+            ?error("run/5 - MONITORING", [{cause, Cause2}])
     end,
     {ok, State};
 
@@ -655,9 +674,13 @@ run(_,_,_,_, State) ->
 
 %% @doc Notify the current state of a MQ to the manager-node
 %% @private
-notify_current_state_to_manager([],_Directory,_ProcState) ->
-    false;
-notify_current_state_to_manager([Manager|Acc], Directory, ProcStateAtom) ->
+notify_current_state_to_manager(ManagerNodes,_Directory,_ProcState) ->
+    notify_current_state_to_manager(ManagerNodes, ManagerNodes,_Directory,_ProcState).
+notify_current_state_to_manager(ManagerNodes, [],_Directory,_ProcState) ->
+    %% retry after 5 seconds
+    timer:sleep(timer:seconds(5)),
+    notify_current_state_to_manager(ManagerNodes, ManagerNodes,_Directory,_ProcState);
+notify_current_state_to_manager(ManagerNodes, [Manager|Acc], Directory, ProcStateAtom) ->
     case rpc:call(Manager, leo_manager_api,
                   notify_del_dir_state,
                   [node(), Directory, ProcStateAtom], ?DEF_REQ_TIMEOUT) of
@@ -667,6 +690,6 @@ notify_current_state_to_manager([Manager|Acc], Directory, ProcStateAtom) ->
             true;
         Other ->
             %% {badrpc, Reason} or {error, Reason} returned
-            ?error("notify_current_state_to_manager/3", [{cause, Other}]),
-            notify_current_state_to_manager(Acc, Directory, ProcStateAtom)
+            ?error("notify_current_state_to_manager/4", [{cause, Other}]),
+            notify_current_state_to_manager(ManagerNodes, Acc, Directory, ProcStateAtom)
     end.
