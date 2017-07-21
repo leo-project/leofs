@@ -560,7 +560,9 @@ run(?TYPE_DEL_BUCKET = Type, ?STATE_FINISHED = ProcState, MQId, Directory,
                             true;
                         not_found ->
                             true;
-                        _Other ->
+                        Other ->
+                            %% {badrpc, Reason} or {error, Reason} returned
+                            ?error("run/5 - FINISHED", [{cause, Other}]),
                             false
                     end;
                (_, true) ->
@@ -596,6 +598,11 @@ run(?TYPE_DEL_DIR = Type, ProcState,_MQId, Directory, State) when ProcState == ?
                                                 [Type, Directory, true], ?DEF_REQ_TIMEOUT),
                               BadNodes
                       end,
+            case BadList of
+                [] -> void;
+                _ ->
+                    ?error("run/5 - PENDING", [{cause, "rpc:multicall failed"}, {bad_nodes, BadList}])
+            end,
             lists:foreach(
               fun(N) ->
                       case leo_storage_mq:publish(
@@ -658,6 +665,8 @@ notify_current_state_to_manager([Manager|Acc], Directory, ProcStateAtom) ->
             true;
         not_found ->
             true;
-        _ ->
+        Other ->
+            %% {badrpc, Reason} or {error, Reason} returned
+            ?error("notify_current_state_to_manager/3", [{cause, Other}]),
             notify_current_state_to_manager(Acc, Directory, ProcStateAtom)
     end.
