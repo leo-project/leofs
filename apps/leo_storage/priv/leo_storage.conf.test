@@ -139,14 +139,18 @@ leo_logger.profile = true
 
 ## Enable profiler - leo_mq
 leo_mq.profile = true
-## MQ backend storage: [bitcask, leveldb]
+
+## MQ backend storage
+## NOTE: To be able to only use 'leveldb' from v1.3.5
 leo_mq.backend_db = leveldb
 
 ## Enable profiler - leo_object_storage
 leo_object_storage.profile = true
 ## Enable strict check between checksum of a metadata and checksum of an object
 leo_object_storage.is_strict_check = true
-## Metadata Storage: [bitcask, leveldb]
+
+## Metadata Storage
+## NOTE: To be able to only use 'leveldb' from v1.3.5
 leo_object_storage.metadata_storage = leveldb
 
 ## Enable profiler - leo_ordning_reda
