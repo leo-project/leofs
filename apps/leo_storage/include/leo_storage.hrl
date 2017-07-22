@@ -207,6 +207,35 @@
           key :: any(),
           timestamp = 0 :: non_neg_integer(),
           times = 0 :: non_neg_integer()}).
+-record(async_deletion_message_1, {
+          id = 0 :: non_neg_integer(),
+          addr_id = 0 :: non_neg_integer(),
+          key :: any(),
+          meta :: term(),
+          timestamp = 0 :: non_neg_integer(),
+          times = 0 :: non_neg_integer()}).
+-define(MSG_ASYNC_DELETION, 'async_deletion_message_1').
+-define(transform_async_deletion_message(_Msg),
+        begin
+            case _Msg of
+                #async_deletion_message{id = _Id,
+                                        addr_id = _AddrId,
+                                        key = _Key,
+                                        timestamp = _Timestamp,
+                                        times = _Time} ->
+                    {ok, #async_deletion_message_1{
+                            id = _Id,
+                            addr_id = _AddrId,
+                            key = _Key,
+                            timestamp = _Timestamp,
+                            times = _Time}};
+                #async_deletion_message_1{} ->
+                    {ok,_Msg};
+                _ ->
+                    {error, invalid_record}
+            end
+        end).
+
 
 -record(recovery_node_message, {
           id = 0 :: non_neg_integer(),

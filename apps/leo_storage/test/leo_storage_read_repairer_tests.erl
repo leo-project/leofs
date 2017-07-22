@@ -92,7 +92,7 @@ regular_({Test0Node, Test1Node}) ->
                                                                               end]),
     meck:new(leo_storage_mq, [non_strict]),
     meck:expect(leo_storage_mq, publish,
-                fun(_,_,_,_) ->
+                fun(_,_,_) ->
                         ok
                 end),
 
@@ -115,7 +115,7 @@ fail_1_({Test0Node, Test1Node}) ->
                                                                               end]),
     meck:new(leo_storage_mq, [non_strict]),
     meck:expect(leo_storage_mq, publish,
-                fun(_,_,_,_) ->
+                fun(_,_,_) ->
                         ok
                 end),
 
@@ -138,7 +138,7 @@ fail_2_({Test0Node, Test1Node}) ->
                                                                               end]),
     meck:new(leo_storage_mq, [non_strict]),
     meck:expect(leo_storage_mq, publish,
-                fun(_,_,_,_) ->
+                fun(_,_,_) ->
                         ok
                 end),
 
