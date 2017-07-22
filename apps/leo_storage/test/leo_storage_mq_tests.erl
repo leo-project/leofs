@@ -177,12 +177,31 @@ start_(_) ->
 %% sync vnode-id queue.
 publish_({_, Test1Node}) ->
     ?TBL_REBALANCE_COUNTER = ets:new(?TBL_REBALANCE_COUNTER, [named_table, public]),
+    meck:new(leo_object_storage_api, [non_strict]),
+    meck:expect(leo_object_storage_api, head,
+                fun({_AddrId, _Key}) ->
+                        {ok, term_to_binary(#?METADATA{num_of_replicas = 0})}
+                end),
+
+    ok = leo_storage_mq:publish(?QUEUE_ID_RECOVERY_NODE, node()),
+    ok = leo_storage_mq:publish(?QUEUE_ID_ASYNC_DELETION, #?METADATA{addr_id = ?TEST_VNODE_ID,
+                                                                     key = ?TEST_KEY_1}),
+    ok = leo_storage_mq:publish(?QUEUE_ID_ASYNC_DELETION, ?TEST_VNODE_ID, ?TEST_KEY_1),
+
+    ok = leo_storage_mq:publish(?QUEUE_ID_SYNC_BY_VNODE_ID, ?TEST_VNODE_ID, node()),
+    ok = leo_storage_mq:publish(?QUEUE_ID_SYNC_OBJ_WITH_DC, ?TEST_VNODE_ID, ?TEST_KEY_1),
+    ok = leo_storage_mq:publish(?QUEUE_ID_COMP_META_WITH_DC, 'leofs_1', [{?TEST_VNODE_ID, ?TEST_KEY_1}]),
+    ok = leo_storage_mq:publish(?QUEUE_ID_REQ_DEL_DIR, node(), <<"leofs/">>),
+    ok = leo_storage_mq:publish({?QUEUE_ID_DEL_DIR, 'worker_1'}, ?TEST_VNODE_ID, ?TEST_KEY_1),
+    ok = leo_storage_mq:publish(?QUEUE_ID_SYNC_OBJ_WITH_DC, 'leofs_1', ?TEST_VNODE_ID, ?TEST_KEY_1),
 
     ok = leo_storage_mq:publish(
            ?QUEUE_ID_SYNC_BY_VNODE_ID, ?TEST_VNODE_ID, Test1Node),
     ok = leo_storage_mq:publish(
            ?QUEUE_ID_REBALANCE, Test1Node, ?TEST_VNODE_ID, ?TEST_VNODE_ID, ?TEST_KEY_1),
-
+    ok = leo_storage_mq:publish(
+           ?QUEUE_ID_PER_OBJECT, #?METADATA{addr_id = ?TEST_VNODE_ID,
+                                            key = ?TEST_KEY_1}, ?ERR_TYPE_REPLICATE_DATA),
     ok = leo_storage_mq:publish(
            ?QUEUE_ID_PER_OBJECT, ?TEST_VNODE_ID, ?TEST_KEY_1, ?ERR_TYPE_REPLICATE_DATA),
     ok = leo_storage_mq:publish(

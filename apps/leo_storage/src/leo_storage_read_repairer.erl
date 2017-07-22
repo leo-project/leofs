@@ -138,9 +138,11 @@ loop(R, Ref, From, NumOfNodes, {ReqId, Key, E} = Args, Callback) ->
                      RPCKey::rpc:key(),
                      Node::atom(),
                      State::#state{}).
-compare(Ref, Pid, RPCKey, Node, #state{metadata = #?METADATA{addr_id = AddrId,
-                                                             key     = Key,
-                                                             clock   = Clock}}) ->
+compare(Ref, Pid, RPCKey, Node, #state{metadata = Metadata}) ->
+    #?METADATA{addr_id = AddrId,
+               key = Key,
+               clock = Clock} = Metadata,
+
     Ret = case rpc:nb_yield(RPCKey, ?DEF_REQ_TIMEOUT) of
               {value, {ok, #?METADATA{clock = RemoteClock}}} when Clock == RemoteClock ->
                   ok;
@@ -165,22 +167,24 @@ compare(Ref, Pid, RPCKey, Node, #state{metadata = #?METADATA{addr_id = AddrId,
             ?warn("compare/4",
                   [{node, Node}, {addr_id, AddrId},
                    {key, Key}, {clock, Clock}, {cause, Reason}]),
-            enqueue(AddrId, Key)
+            %% enqueue(AddrId, Key)
+            enqueue(Metadata)
     end,
     erlang:send(Pid, {Ref, Ret}).
 
 
 %% @doc Insert a message into the queue
 %% @private
--spec(enqueue(AddrId, Key) ->
-             ok | {error, any()} when AddrId::non_neg_integer(),
-                                      Key::binary()).
-enqueue(AddrId, Key) ->
+-spec(enqueue(Metadata) ->
+             ok | {error, any()} when Metadata::#?METADATA{}).
+enqueue(Metadata) ->
     QId = ?QUEUE_ID_PER_OBJECT,
-    case leo_storage_mq:publish(QId, AddrId, Key, ?ERR_TYPE_RECOVER_DATA) of
+    case leo_storage_mq:publish(QId, Metadata, ?ERR_TYPE_RECOVER_DATA) of
         ok ->
             void;
         {error, Cause} ->
+            #?METADATA{addr_id = AddrId,
+                      key = Key} = Metadata,
             ?warn("enqueue/1",
                   [{qid, QId}, {addr_id, AddrId},
                    {key, Key}, {cause, Cause}])

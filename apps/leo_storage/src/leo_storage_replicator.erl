@@ -104,9 +104,9 @@ init_loop(NumOfNodes, Quorum, Ref, Parent, State) ->
     loop(NumOfNodes, Quorum, [], Ref, Parent, State).
 
 %% @private
-replicate_1([], Ref,_From, #state{method   = Method,
-                                  addr_id  = AddrId,
-                                  key      = Key,
+replicate_1([], Ref,_From, #state{method = Method,
+                                  key = Key,
+                                  object = Object,
                                   callback = Callback}) ->
     receive
         %% Receive only messages sent from SubParent (_From in this context)
@@ -115,7 +115,9 @@ replicate_1([], Ref,_From, #state{method   = Method,
     after
         (?DEF_REQ_TIMEOUT + timer:seconds(1)) ->
             %% for recovering message of the repair-obj's MQ
-            enqueue(Method, ?ERR_TYPE_REPLICATE_DATA, AddrId, Key),
+            Metadata = leo_object_storage_transformer:object_to_metadata(Object),
+            enqueue(Method, ?ERR_TYPE_REPLICATE_DATA, Metadata),
+
             %% for watchdog
             ok = leo_storage_msg_collector:notify(?ERROR_MSG_TIMEOUT, Method, Key),
             %% reply error
@@ -168,8 +170,8 @@ loop(_, W,_ResL, Ref, From, #state{num_of_nodes = N,
     %% This message is sent to Parent so need to add a tag
     erlang:send(From, {?LEO_STORAGE_REPLICATOR_MSG_TAG, Ref, {error, E}});
 loop(N, W, ResL, Ref, From, #state{method = Method,
-                                   addr_id = AddrId,
                                    key = Key,
+                                   object = Object,
                                    errors = E,
                                    callback = Callback,
                                    is_reply = IsReply} = State) ->
@@ -202,7 +204,9 @@ loop(N, W, ResL, Ref, From, #state{method = Method,
                 end,
             loop(N-1, W_1, [0|ResL], Ref, From, State_1);
         {Ref, {error, {Node, Cause}}} ->
-            enqueue(Method, ?ERR_TYPE_REPLICATE_DATA, AddrId, Key),
+            Metadata = leo_object_storage_transformer:object_to_metadata(Object),
+            enqueue(Method, ?ERR_TYPE_REPLICATE_DATA, Metadata),
+
             State_1 = State#state{errors = [{Node, Cause}|E]},
             loop(N-1, W, ResL, Ref, From, State_1)
     after
@@ -210,7 +214,9 @@ loop(N, W, ResL, Ref, From, #state{method = Method,
             case (W > 0) of
                 true ->
                     %% for recovering message of the repair-obj's MQ
-                    enqueue(Method, ?ERR_TYPE_REPLICATE_DATA, AddrId, Key),
+                    Metadata = leo_object_storage_transformer:object_to_metadata(Object),
+                    enqueue(Method, ?ERR_TYPE_REPLICATE_DATA, Metadata),
+
                     %% set reply
                     Cause = timeout,
                     ?warn("loop/6",
@@ -250,28 +256,30 @@ replicate_fun(Ref, #req_params{pid     = Pid,
 
 
 %% @doc Input a message into the queue.
-%%
--spec(enqueue(Method, Type, AddrId, Key) ->
+-spec(enqueue(Method, Type, Metadata) ->
              ok when Method::type_of_method(),
                      Type::error_msg_type(),
-                     AddrId::non_neg_integer(),
-                     Key::binary()).
-enqueue('put', ?ERR_TYPE_REPLICATE_DATA = Type,  AddrId, Key) ->
+                     Metadata::#?METADATA{}).
+enqueue('put', ?ERR_TYPE_REPLICATE_DATA = Type, Metadata) ->
     QId = ?QUEUE_ID_PER_OBJECT,
-    case leo_storage_mq:publish(QId, AddrId, Key, Type) of
+    case leo_storage_mq:publish(QId, Metadata, Type) of
         ok ->
             ok;
         {error, Cause} ->
+            #?METADATA{addr_id = AddrId,
+                       key = Key} = Metadata,
             ?warn("enqueue/1",
                   [{qid, QId}, {addr_id, AddrId},
                    {key, Key}, {type, Type}, {cause, Cause}])
     end;
-enqueue('delete', _Type,  AddrId, Key) ->
+enqueue('delete', _Type, Metadata) ->
     QId = ?QUEUE_ID_ASYNC_DELETION,
-    case leo_storage_mq:publish(QId, AddrId, Key) of
+    case leo_storage_mq:publish(QId, Metadata) of
         ok ->
             ok;
         {error, Cause} ->
+            #?METADATA{addr_id = AddrId,
+                       key = Key} = Metadata,
             ?warn("enqueue/1",
                   [{qid, QId}, {addr_id, AddrId},
                    {key, Key}, {cause, Cause}])
