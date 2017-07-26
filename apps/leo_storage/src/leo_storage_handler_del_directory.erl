@@ -215,10 +215,6 @@ handle_info({failed, MQId, Type, Directory}, State) ->
                     timestamp = leo_date:now()}),
     {noreply, State};
 
-%handle_info({enqueuing, MQId, Type, Directory}, State) ->
-%    {ok, State_1} = run(Type, ?STATE_ENQUEUING, MQId, Directory, State),
-%    {noreply, State_1};
-
 handle_info({enqueued, MQId, Type, Directory}, State) ->
     {ok, State_1} = run(Type, ?STATE_MONITORING, MQId, Directory, State),
     {noreply, State_1};
