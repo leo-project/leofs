@@ -215,9 +215,9 @@ handle_info({failed, MQId, Type, Directory}, State) ->
                     timestamp = leo_date:now()}),
     {noreply, State};
 
-handle_info({enqueuing, MQId, Type, Directory}, State) ->
-    {ok, State_1} = run(Type, ?STATE_ENQUEUING, MQId, Directory, State),
-    {noreply, State_1};
+%handle_info({enqueuing, MQId, Type, Directory}, State) ->
+%    {ok, State_1} = run(Type, ?STATE_ENQUEUING, MQId, Directory, State),
+%    {noreply, State_1};
 
 handle_info({enqueued, MQId, Type, Directory}, State) ->
     {ok, State_1} = run(Type, ?STATE_MONITORING, MQId, Directory, State),
@@ -268,7 +268,7 @@ dequeue(#state{num_of_workers = NumOfWorkers} = State) ->
                          end, [], DelBucketStateList))),
             case List of
                 [H|_] ->
-                    Ret = dequeue_1(DelBucketStateList, H),
+                    Ret = dequeue_1(State, DelBucketStateList, H),
                     {Ret, State};
                 [] ->
                     {ok, State}
@@ -281,15 +281,16 @@ dequeue(#state{num_of_workers = NumOfWorkers} = State) ->
     end.
 
 %% @private
--spec(dequeue_1(DelBucketStateList, MQId) ->
+-spec(dequeue_1(State, DelBucketStateList, MQId) ->
              ok |
              not_found |
-             {error, Cause} when DelBucketStateList::[],
+             {error, Cause} when State::#state{},
+                                 DelBucketStateList::[],
                                  MQId::mq_id(),
                                  Cause::any()).
-dequeue_1([],_) ->
+dequeue_1(_,[],_) ->
     not_found;
-dequeue_1([{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
+dequeue_1(State, [{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
     case catch binary_to_term(DelBucketStateBin) of
         #del_dir_state{type = Type,
                        directory = Directory,
@@ -299,9 +300,15 @@ dequeue_1([{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
                      fun() ->
                              insert_messages(From, MQId, Type, Directory)
                      end),
+            % receive 'enqueuing' message here to change the state from STATE_PENDING to STATE_ENQUEUING
+            % for preventing insert_messages from being invoked multiple times.
+            receive
+                {enqueuing, MQId, Type, Directory} ->
+                    run(Type, ?STATE_ENQUEUING, MQId, Directory, State)
+            end,
             ok;
         #del_dir_state{} ->
-            dequeue_1(DelBucketStateList, MQId);
+            dequeue_1(State, DelBucketStateList, MQId);
         {_, Cause} ->
             ?error("dequeue_1/2", [{cause, Cause}]),
             {error, Cause}
