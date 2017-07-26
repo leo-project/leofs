@@ -306,7 +306,7 @@ dequeue_1(State, [{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
         #del_dir_state{} ->
             dequeue_1(State, DelBucketStateList, MQId);
         {_, Cause} ->
-            ?error("dequeue_1/2", [{cause, Cause}]),
+            ?error("dequeue_1/3", [{cause, Cause}]),
             {error, Cause}
     end.
 
