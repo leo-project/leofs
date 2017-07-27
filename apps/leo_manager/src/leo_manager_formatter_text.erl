@@ -1144,8 +1144,8 @@ del_bucket_stats(Stats) ->
 
     Header = lists:append(
                [string:left("node", Col_1_Len), " | ",
-                string:left("node", Col_2_Len), " | ",
-                string:left("state", Col_3_Len), "\r\n",
+                string:left("state", Col_2_Len), " | ",
+                string:left("timestamp", Col_3_Len), "\r\n",
 
                 lists:duplicate(Col_1_Len, "-"), "-+-",
                 lists:duplicate(Col_2_Len, "-"), "-+-",
