@@ -355,7 +355,7 @@ get_ongoing_workers(NumOfWorkers) ->
         not_found ->
             {ok, []};
         {_, Cause} ->
-            ?error("get_available_workers/1", [{cause, Cause}]),
+            ?error("get_ongoing_workers/1", [{cause, Cause}]),
             {error, Cause}
     end.
 
