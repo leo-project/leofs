@@ -49,6 +49,7 @@ prep_stop(_State) ->
     catch leo_object_storage_sup:stop(),
     catch leo_redundant_manager_sup:stop(),
     catch leo_mq_sup:stop(),
+    catch leo_backend_db_sup:stop(),
     catch leo_logger_sup:stop(),
     catch leo_storage_sup:stop(),
     ok.
