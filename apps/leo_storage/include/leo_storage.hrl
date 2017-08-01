@@ -835,6 +835,7 @@
           directory = <<>> :: binary(),
           state = ?STATE_PENDING :: del_dir_state(),
           is_notification_successful = false :: boolean(), %% for del-buclet (communication w/leo_manager)
+          enqueued_at = 1 :: pos_integer(),
           timestamp = 1 :: pos_integer()
          }).
 

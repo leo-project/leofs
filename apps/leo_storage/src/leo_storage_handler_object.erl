@@ -42,7 +42,7 @@
          head/2, head/3,
          head_with_calc_md5/3,
          replicate/1, replicate/3,
-         prefix_search/3, prefix_search_and_remove_objects/2,
+         prefix_search/3, prefix_search_and_remove_objects/3,
          find_uploaded_objects_by_key/1,
          is_key_under_del_dir/1, can_compact_object/2
         ]).
@@ -1032,20 +1032,21 @@ prefix_search_2(ParentDir, Marker, Key, Meta, Acc) ->
 
 
 %% @doc Retrieve object of deletion from object-storage by key
--spec(prefix_search_and_remove_objects(MQId, ParentDir) ->
+-spec(prefix_search_and_remove_objects(MQId, ParentDir, EnqueuedAt) ->
              {ok, [{Key, Value}]} |
              not_found |
              {error, Cause} when MQId::mq_id(),
                                  ParentDir::binary(),
+                                 EnqueuedAt::pos_integer(),
                                  Key::atom(),
                                  Value::any(),
                                  Cause::any()).
-prefix_search_and_remove_objects(MQId, ParentDir) ->
+prefix_search_and_remove_objects(MQId, ParentDir, EnqueuedAt) ->
     Fun = fun(Key, V, Acc) ->
                   PreMeta = binary_to_term(V),
                   case leo_object_storage_transformer:transform_metadata(PreMeta) of
                       {error, Cause} ->
-                          ?error("prefix_search_and_remove_objects/1",
+                          ?error("prefix_search_and_remove_objects/3",
                                  [{key, Key}, {error, Cause}]),
                           Acc;
                       Metadata ->
@@ -1059,7 +1060,7 @@ prefix_search_and_remove_objects(MQId, ParentDir) ->
                           case (Pos_1 == 0) of
                               true when Metadata#?METADATA.del == ?DEL_FALSE ->
                                   case leo_storage_mq:publish(
-                                         {?QUEUE_ID_DEL_DIR, MQId}, AddrId, Key) of
+                                         {?QUEUE_ID_DEL_DIR, MQId}, AddrId, Key, EnqueuedAt) of
                                       ok ->
                                           void;
                                       {error, Cause} ->
