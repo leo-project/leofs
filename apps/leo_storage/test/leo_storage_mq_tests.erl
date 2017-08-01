@@ -192,7 +192,7 @@ publish_({_, Test1Node}) ->
     ok = leo_storage_mq:publish(?QUEUE_ID_SYNC_OBJ_WITH_DC, ?TEST_VNODE_ID, ?TEST_KEY_1),
     ok = leo_storage_mq:publish(?QUEUE_ID_COMP_META_WITH_DC, 'leofs_1', [{?TEST_VNODE_ID, ?TEST_KEY_1}]),
     ok = leo_storage_mq:publish(?QUEUE_ID_REQ_DEL_DIR, node(), <<"leofs/">>),
-    ok = leo_storage_mq:publish({?QUEUE_ID_DEL_DIR, 'worker_1'}, ?TEST_VNODE_ID, ?TEST_KEY_1),
+    ok = leo_storage_mq:publish({?QUEUE_ID_DEL_DIR, 'worker_1'}, ?TEST_VNODE_ID, ?TEST_KEY_1, leo_date:clock()),
     ok = leo_storage_mq:publish(?QUEUE_ID_SYNC_OBJ_WITH_DC, 'leofs_1', ?TEST_VNODE_ID, ?TEST_KEY_1),
 
     ok = leo_storage_mq:publish(

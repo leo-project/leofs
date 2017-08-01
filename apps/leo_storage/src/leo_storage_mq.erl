@@ -186,16 +186,6 @@ publish(?QUEUE_ID_REQ_DEL_DIR = Id, Node, Directory) ->
                                dir = Directory,
                                timestamp = leo_date:now()}),
     leo_mq_api:publish(Id, KeyBin, MsgBin);
-
-publish({?QUEUE_ID_DEL_DIR, WorkerId}, AddrId, Key) ->
-    KeyBin = term_to_binary({AddrId, Key}),
-    MsgBin = term_to_binary(#async_deletion_message{
-                               id = leo_date:clock(),
-                               addr_id = AddrId,
-                               key = Key,
-                               timestamp = leo_date:now()}),
-    leo_mq_api:publish(WorkerId, KeyBin, MsgBin);
-
 publish(_,_,_) ->
     {error, badarg}.
 
@@ -225,6 +215,20 @@ publish(?QUEUE_ID_SYNC_OBJ_WITH_DC = Id, ClusterId, AddrId, Key) ->
                                                timestamp = leo_date:now()}),
     leo_mq_api:publish(Id, KeyBin, MessageBin);
 
+publish({?QUEUE_ID_DEL_DIR, WorkerId}, AddrId, Key, EnqueuedAt) ->
+    KeyBin = term_to_binary({AddrId, Key}),
+    MsgBin = term_to_binary(#?MSG_ASYNC_DELETION{
+                                id = leo_date:clock(),
+                                addr_id = AddrId,
+                                key = Key,
+                                %% To compare it with its latest metadata
+                                %% See `compare_between_metadatas/1`
+                                meta = #?METADATA{addr_id = AddrId,
+                                                  key = Key,
+                                                  clock = EnqueuedAt},
+                                timestamp = leo_date:now()}),
+
+    leo_mq_api:publish(WorkerId, KeyBin, MsgBin);
 publish(_,_,_,_) ->
     {error, badarg}.
 
@@ -323,7 +327,7 @@ handle_call({consume, ?QUEUE_ID_PER_OBJECT, MessageBin}) ->
                                              meta = Metadata,
                                              sync_node = SyncNode,
                                              is_force_sync = IsForceSync}} ->
-                    case compare_metadatas(Metadata) of
+                    case compare_between_metadatas(Metadata) of
                         true when IsForceSync == true,
                                   SyncNode /= undefined ->
                             send_object_to_remote_node(SyncNode, AddrId, Key);
@@ -996,7 +1000,7 @@ remove_objects_under_dir(MessageBin) ->
                 {ok, #?MSG_ASYNC_DELETION{addr_id = AddrId,
                                           key = Key,
                                           meta = Metadata}} ->
-                    case compare_metadatas(Metadata) of
+                    case compare_between_metadatas(Metadata) of
                         true ->
                             case catch leo_storage_handler_object:delete(
                                          #?OBJECT{addr_id = AddrId,
@@ -1026,15 +1030,15 @@ remove_objects_under_dir(MessageBin) ->
 
 
 %% @doc Compare MQ's metadata with its latest metadata
--spec(compare_metadatas(Metadata) ->
+-spec(compare_between_metadatas(Metadata) ->
              Result | {error, Cause} when Metadata::#?METADATA{},
                                           Result::boolean(),
                                           Cause::any()).
-compare_metadatas(undefined) ->
+compare_between_metadatas(undefined) ->
     true;
-compare_metadatas(#?METADATA{addr_id = AddrId,
-                             key = Key,
-                             clock = MsgClock}) ->
+compare_between_metadatas(#?METADATA{addr_id = AddrId,
+                                     key = Key,
+                                     clock = MsgClock}) ->
     case leo_storage_handler_object:head(AddrId, Key, false) of
         {ok, #?METADATA{clock = Clock}} when MsgClock > Clock ->
             true;
@@ -1043,7 +1047,7 @@ compare_metadatas(#?METADATA{addr_id = AddrId,
         not_found ->
             false;
         {error, Cause} ->
-            ?error("compare_metadatas/1",
+            ?error("compare_between_metadatas/1",
                    [{addr_id, AddrId}, {key, Key},
                     {cause, Cause}]),
             {error, ?ERROR_COULD_NOT_GET_META}

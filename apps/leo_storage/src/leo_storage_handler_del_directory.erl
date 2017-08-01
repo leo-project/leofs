@@ -134,7 +134,9 @@ handle_call({enqueue, Type, Directory, IsClient},_From, #state{cached_items = Ca
                                      directory = Directory,
                                      type = Type,
                                      state = ?STATE_PENDING,
-                                     timestamp = leo_date:now()}) of
+                                     enqueued_at = leo_date:clock(),
+                                     timestamp = leo_date:now()
+                                    }) of
                     ok when IsClient == false->
                         case run(Type, ?STATE_PENDING, null, Directory, State) of
                             {ok, State_1} ->
@@ -144,7 +146,7 @@ handle_call({enqueue, Type, Directory, IsClient},_From, #state{cached_items = Ca
                                 {error, State}
                         end;
                     ok ->
-                        ?info("run/5", [{"msg: enqueued", Directory}]),
+                        ?info("handle_call/3 - enqueue",  [{"msg: enqueued", Directory}]),
                         {ok, State};
                     {error,_Cause} ->
                         {{error, ?ERROR_ENQUEUE_FAILURE}, State}
@@ -290,11 +292,12 @@ dequeue_1(State, [{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
     case catch binary_to_term(DelBucketStateBin) of
         #del_dir_state{type = Type,
                        directory = Directory,
-                       state = ?STATE_PENDING} ->
+                       state = ?STATE_PENDING,
+                       enqueued_at = EnqueuedAt} ->
             From = self(),
             _Pid = spawn(
                      fun() ->
-                             insert_messages(From, MQId, Type, Directory)
+                             insert_messages(From, MQId, Type, Directory, EnqueuedAt)
                      end),
             % receive 'enqueuing' message here to change the state from STATE_PENDING to STATE_ENQUEUING
             % for preventing insert_messages from being invoked multiple times.
@@ -312,17 +315,18 @@ dequeue_1(State, [{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
 
 
 %% @private
--spec(insert_messages(From, MQId, Type, Directory) ->
+-spec(insert_messages(From, MQId, Type, Directory, EnqueuedAt) ->
              ok | {error, Cause} when From::pid(),
                                       MQId::mq_id(),
                                       Type::del_dir_type(),
                                       Directory::binary(),
+                                      EnqueuedAt::pos_integer(),
                                       Cause::any()).
-insert_messages(From, MQId, Type, Directory) ->
+insert_messages(From, MQId, Type, Directory, EnqueuedAt) ->
     erlang:send(From, {enqueuing, MQId, Type, Directory}),
 
     case leo_storage_handler_object:prefix_search_and_remove_objects(
-           MQId, Directory) of
+           MQId, Directory, EnqueuedAt) of
         {ok,_TotalMsgs} ->
             erlang:send(From, {enqueued, MQId, Type, Directory});
         {error, Cause} ->
@@ -396,22 +400,20 @@ check_stats_1([_|DelBucketStateList], From, State) ->
 check_stats_2(#del_dir_state{mq_id = MQId,
                              type = Type,
                              directory = Directory,
-                             state = ?STATE_PENDING}, From,_State) when MQId /= null,
-                                                                        Type == ?TYPE_DEL_DIR ->
+                             state = ?STATE_PENDING,
+                             enqueued_at = EnqueuedAt} = CurState, From,_State) when MQId /= null,
+                                                                                     Type == ?TYPE_DEL_DIR ->
     case leo_mq_api:count(MQId) of
         {ok, 0} ->
             _Pid = spawn(
                      fun() ->
-                             insert_messages(From, MQId, Type, Directory)
+                             insert_messages(From, MQId, Type, Directory, EnqueuedAt)
                      end),
             ok;
         {ok,_Count} ->
-            update_state(#del_dir_state{
-                            mq_id = MQId,
-                            directory = Directory,
-                            type = Type,
-                            state = ?STATE_MONITORING,
-                            timestamp = leo_date:now()});
+            update_state(CurState#del_dir_state{
+                           state = ?STATE_MONITORING,
+                           timestamp = leo_date:now()});
         _ ->
             ok
     end;
