@@ -156,7 +156,7 @@ gen_mock_2(object, {_Test0Node, _Test1Node}, Case) ->
     meck:new(leo_storage_mq, [non_strict]),
     meck:expect(leo_storage_mq, publish,
                 fun(Type,  #?METADATA{addr_id = AddrId,
-                                      key = Key} = Metadata, _ErrorType) ->
+                                      key = Key}, _ErrorType) ->
                         ?assertEqual(?QUEUE_ID_PER_OBJECT, Type),
                         ?assertEqual(?TEST_RING_ID_1, AddrId),
                         ?assertEqual(?TEST_KEY_1, Key),

@@ -502,8 +502,10 @@ prefix_search_and_remove_objects_(_) ->
 
     meck:new(leo_mq_api, [non_strict]),
     meck:expect(leo_mq_api, publish, fun(_,_,_) -> ok end),
+    meck:expect(leo_mq_api, publish, fun(_,_,_,_) -> ok end),
 
-    Res = leo_storage_handler_object:prefix_search_and_remove_objects(mqid, ?TEST_BUCKET),
+    Res = leo_storage_handler_object:prefix_search_and_remove_objects(
+            mqid, ?TEST_BUCKET, leo_date:clock()),
     ?assertEqual(true, is_list(Res)),
     ok.
 
