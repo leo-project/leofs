@@ -229,6 +229,8 @@ handle_info(_Info, State) ->
 %%      terminate. It should be the opposite of Module:init/1 and do any necessary
 %%      cleaning up. When it returns, the gen_server terminates with Reason.
 terminate(_Reason,_State) ->
+    ?info("terminate/2", [{"terminate with reason", _Reason}]),
+    rollback_to_pending(),
     ok.
 
 
@@ -363,6 +365,54 @@ get_ongoing_workers(NumOfWorkers) ->
             {error, Cause}
     end.
 
+%% @doc Rollback the records whose state is enqueuing into pending
+%%      When leo_storage goes down in the middle of enqueuing
+%%      in order to retry the enqueuing at the next restart.
+%% @private
+rollback_to_pending() ->
+    %% Retrieve ALL enqueuing records
+    Cond = fun(_K, V) ->
+                   case catch binary_to_term(V) of
+                       #del_dir_state{state = ProcState}
+                         when ProcState == ?STATE_ENQUEUING ->
+                           true;
+                       _ ->
+                           false
+                   end
+           end,
+    case leo_backend_db_api:first_n(?DEL_DIR_STATE_DB_ID,
+                                    round(math:pow(2, 32)), Cond) of
+        {ok, DelBucketStateList} ->
+            rollback_to_pending(DelBucketStateList);
+        not_found ->
+            ok;
+        {_, Cause} ->
+            ?error("rollback_to_pending/0", [{cause, Cause}])
+    end.
+
+rollback_to_pending([]) ->
+    ok;
+rollback_to_pending([{_, DelBucketStateBin} | DelBucketStateList]) ->
+    case catch binary_to_term(DelBucketStateBin) of
+        #del_dir_state{} = DelBucketState ->
+            rollback_to_pending_1(DelBucketState);
+        _ ->
+            void
+    end,
+    rollback_to_pending(DelBucketStateList);
+rollback_to_pending([_|DelBucketStateList]) ->
+    rollback_to_pending(DelBucketStateList).
+
+rollback_to_pending_1(#del_dir_state{mq_id = MQId,
+                                     type = Type,
+                                     directory = Directory}) ->
+    %% rollback to pending
+    update_state(#del_dir_state{
+                    mq_id = MQId,
+                    directory = Directory,
+                    type = Type,
+                    state = ?STATE_PENDING,
+                    timestamp = leo_date:now()}).
 
 %% @doc FSM
 %% @private
