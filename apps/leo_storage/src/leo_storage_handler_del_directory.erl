@@ -508,7 +508,7 @@ check_stats_2(#del_dir_state{mq_id = MQId,
                              directory = Directory,
                              state = ?STATE_ENQUEUING,
                              is_notification_successful = false}, _From, State) ->
-                                                % ONLY call when the notification still doesn't succeed
+    %% ONLY call when the notification still doesn't succeed
     run(Type, ?STATE_ENQUEUING, MQId, Directory, State);
 check_stats_2(#del_dir_state{mq_id = MQId,
                              type = Type,
