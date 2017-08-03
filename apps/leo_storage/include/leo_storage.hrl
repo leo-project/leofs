@@ -109,6 +109,7 @@
 -define(ERROR_SYSTEM_HIGH_LOAD, "System High load").
 -define(ERROR_COULD_NOT_UPDATE_LOG_LEVEL, "Could not update a log-level").
 -define(ERROR_ENQUEUE_FAILURE, "Enqueue failure").
+-define(ERROR_NOTIFICATION_FAILURE_OF_PROC_STATE, "Notification failure of a proc state").
 
 
 %% @doc notified message items

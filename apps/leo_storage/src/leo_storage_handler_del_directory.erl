@@ -228,9 +228,9 @@ handle_info(_Info, State) ->
 %% @doc This function is called by a gen_server when it is about to
 %%      terminate. It should be the opposite of Module:init/1 and do any necessary
 %%      cleaning up. When it returns, the gen_server terminates with Reason.
-terminate(_Reason,_State) ->
+terminate(_Reason, #state{manager_nodes = ManagerNodes}) ->
     ?info("terminate/2", [{"terminate with reason", _Reason}]),
-    rollback_to_pending(),
+    rollback_to_pending(ManagerNodes),
     ok.
 
 
@@ -301,8 +301,9 @@ dequeue_1(State, [{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
                      fun() ->
                              insert_messages(From, MQId, Type, Directory, EnqueuedAt)
                      end),
-            % receive 'enqueuing' message here to change the state from STATE_PENDING to STATE_ENQUEUING
-            % for preventing insert_messages from being invoked multiple times.
+
+            %% receive 'enqueuing' message here to change the state from STATE_PENDING to STATE_ENQUEUING
+            %% for preventing insert_messages from being invoked multiple times.
             receive
                 {enqueuing, MQId, Type, Directory} ->
                     run(Type, ?STATE_ENQUEUING, MQId, Directory, State)
@@ -369,7 +370,9 @@ get_ongoing_workers(NumOfWorkers) ->
 %%      When leo_storage goes down in the middle of enqueuing
 %%      in order to retry the enqueuing at the next restart.
 %% @private
-rollback_to_pending() ->
+-spec(rollback_to_pending(ManagerNodes) ->
+             ok when ManagerNodes::[node()]).
+rollback_to_pending(ManagerNodes) ->
     %% Retrieve ALL enqueuing records
     Cond = fun(_K, V) ->
                    case catch binary_to_term(V) of
@@ -383,36 +386,66 @@ rollback_to_pending() ->
     case leo_backend_db_api:first_n(?DEL_DIR_STATE_DB_ID,
                                     round(math:pow(2, 32)), Cond) of
         {ok, DelBucketStateList} ->
-            rollback_to_pending(DelBucketStateList);
+            rollback_to_pending_1(DelBucketStateList, ManagerNodes);
         not_found ->
             ok;
         {_, Cause} ->
             ?error("rollback_to_pending/0", [{cause, Cause}])
     end.
 
-rollback_to_pending([]) ->
+%% @private
+rollback_to_pending_1([],_ManagerNodes) ->
     ok;
-rollback_to_pending([{_, DelBucketStateBin} | DelBucketStateList]) ->
+rollback_to_pending_1([{_, DelBucketStateBin} | DelBucketStateList], ManagerNodes) ->
     case catch binary_to_term(DelBucketStateBin) of
         #del_dir_state{} = DelBucketState ->
-            rollback_to_pending_1(DelBucketState);
+            rollback_to_pending_2(DelBucketState, ManagerNodes);
         _ ->
             void
     end,
-    rollback_to_pending(DelBucketStateList);
-rollback_to_pending([_|DelBucketStateList]) ->
-    rollback_to_pending(DelBucketStateList).
+    rollback_to_pending_1(DelBucketStateList, ManagerNodes);
+rollback_to_pending_1([_|DelBucketStateList], ManagerNodes) ->
+    rollback_to_pending_1(DelBucketStateList, ManagerNodes).
 
-rollback_to_pending_1(#del_dir_state{mq_id = MQId,
+%% @private
+rollback_to_pending_2(#del_dir_state{mq_id = MQId,
                                      type = Type,
-                                     directory = Directory}) ->
+                                     directory = Directory}, ManagerNodes) ->
     %% rollback to pending
     update_state(#del_dir_state{
                     mq_id = MQId,
                     directory = Directory,
                     type = Type,
                     state = ?STATE_PENDING,
-                    timestamp = leo_date:now()}).
+                    timestamp = leo_date:now()}),
+    notify_message_to_manager(ManagerNodes, Directory,
+                              ?del_dir_state_to_atom(?STATE_PENDING)).
+
+
+%% @doc Nofify the latest proc-state of a del-directory proc to LeoManager
+%% @private
+-spec(notify_message_to_manager(ManagerNodes, Directory, ProcState) ->
+             ok | {error, Cause} when ManagerNodes::[node()],
+                                      Directory::binary(),
+                                      ProcState::del_dir_state(),
+                                      Cause::any()).
+notify_message_to_manager([],_,_) ->
+    ?error("notify_message_to_manager/3",
+           [{cause, ?ERROR_NOTIFICATION_FAILURE_OF_PROC_STATE}]),
+    false;
+notify_message_to_manager([Manager|Rest], Directory, ProcState) ->
+    case rpc:call(Manager, leo_manager_api,
+                  notify_del_dir_state,
+                  [node(), Directory, ProcState], ?DEF_REQ_TIMEOUT) of
+        ok ->
+            ok;
+        not_found ->
+            ok;
+        Other ->
+            ?error("notify_message_to_manager/3", [{cause, Other}]),
+            notify_message_to_manager([Manager|Rest], Directory, ProcState)
+    end.
+
 
 %% @doc FSM
 %% @private
@@ -475,7 +508,7 @@ check_stats_2(#del_dir_state{mq_id = MQId,
                              directory = Directory,
                              state = ?STATE_ENQUEUING,
                              is_notification_successful = false}, _From, State) ->
-    % ONLY call when the notification still doesn't succeed
+                                                % ONLY call when the notification still doesn't succeed
     run(Type, ?STATE_ENQUEUING, MQId, Directory, State);
 check_stats_2(#del_dir_state{mq_id = MQId,
                              type = Type,
@@ -523,10 +556,10 @@ update_state(#del_dir_state{directory = Directory} = DelDirState) ->
 get_current_state(State) ->
     %% Retrieve the latest items
     case catch leo_backend_db_api:fetch(
-           ?DEL_DIR_STATE_DB_ID, <<>>,
-           fun(K,_V, Acc) ->
-                   [K| Acc]
-           end) of
+                 ?DEL_DIR_STATE_DB_ID, <<>>,
+                 fun(K,_V, Acc) ->
+                         [K| Acc]
+                 end) of
         {ok, Dirs} ->
             State#state{cached_items = Dirs};
         not_found ->
@@ -564,7 +597,7 @@ run(?TYPE_DEL_BUCKET = Type, ProcState, MQId, Directory,
             ?error("run/5 - ENQUEUING ", [{cause, Cause}])
     end,
     notify_current_state_to_manager(
-        ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)),
+      ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)),
     case update_state(#del_dir_state{
                          mq_id = MQId,
                          directory = Directory,
@@ -594,7 +627,7 @@ run(?TYPE_DEL_BUCKET = Type, ProcState, MQId, Directory,
             ?error("run/5 - MONITORING", [{cause, Cause}])
     end,
     notify_current_state_to_manager(
-        ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)),
+      ManagerNodes, Directory, ?del_dir_state_to_atom(ProcState)),
     case update_state(#del_dir_state{
                          mq_id = MQId,
                          directory = Directory,
@@ -611,7 +644,6 @@ run(?TYPE_DEL_BUCKET = Type, ProcState, MQId, Directory,
 
 run(?TYPE_DEL_BUCKET = Type, ?STATE_FINISHED = ProcState, MQId, Directory,
     #state{manager_nodes = ManagerNodes} = State) ->
-    Node = node(),
     ProcState_1 = ?del_dir_state_to_atom(ProcState),
 
     %% Update the state to STATE_FINISHED in order to retry notify_del_dir_state
@@ -624,27 +656,11 @@ run(?TYPE_DEL_BUCKET = Type, ?STATE_FINISHED = ProcState, MQId, Directory,
                          timestamp = leo_date:now()}) of
         ok ->
             void;
-        {error, Cause0} ->
-            ?error("run/5", [{cause, Cause0}])
+        {error, Cause} ->
+            ?error("run/5", [{cause, Cause}])
     end,
 
-    case (lists:foldl(
-            fun(Manager, false) ->
-                    case rpc:call(Manager, leo_manager_api,
-                                  notify_del_dir_state,
-                                  [Node, Directory, ProcState_1], ?DEF_REQ_TIMEOUT) of
-                        ok ->
-                            true;
-                        not_found ->
-                            true;
-                        Other ->
-                            %% {badrpc, Reason} or {error, Reason} returned
-                            ?error("run/5 - FINISHED", [{cause, Other}]),
-                            false
-                    end;
-               (_, true) ->
-                    true
-            end, false, ManagerNodes)) of
+    case notify_message_to_manager(ManagerNodes, Directory, ProcState_1) of
         true ->
             %% After finishing notification of its message to LeoManager,
             %% delete the record of del-bucket state
@@ -652,8 +668,8 @@ run(?TYPE_DEL_BUCKET = Type, ?STATE_FINISHED = ProcState, MQId, Directory,
                    ?DEL_DIR_STATE_DB_ID, Directory) of
                 ok ->
                     ?info("run/5", [{"msg: dequeued and removed (bucket)", Directory}]);
-                {error, Cause} ->
-                    ?error("run/5", [{cause, Cause}])
+                {error, Reason} ->
+                    ?error("run/5", [{cause, Reason}])
             end;
         false ->
             void

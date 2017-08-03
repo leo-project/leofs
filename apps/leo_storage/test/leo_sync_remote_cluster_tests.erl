@@ -149,7 +149,7 @@ stack(ClusterId, Index) ->
     Meta   = #?METADATA{addr_id = AddrId, key = Key, dsize = Size, ksize = byte_size(Key)},
     Object_1 = leo_object_storage_transformer:metadata_to_object(Meta),
     Object_2 = Object_1#?OBJECT{method = put,
-                                data = crypto:rand_bytes(Size)},
+                                data = crypto:strong_rand_bytes(Size)},
     ok = leo_sync_remote_cluster:stack(Object_2),
     stack(ClusterId, Index - 1).
 
