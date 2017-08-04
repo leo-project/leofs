@@ -1168,7 +1168,7 @@ del_bucket_stats(Stats) ->
                                         string:left(TS_1, Col_3_Len)
                                        ])
           end,
-    lists:append([lists:foldl(Fun, Header, Stats), "\r\n"]).
+    lists:append([lists:foldl(Fun, Header, lists:sort(Stats)), "\r\n"]).
 
 
 %% @doc Format the states of a deletion-bucket
