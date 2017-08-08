@@ -463,8 +463,7 @@ handle_call({consume, MQId, MessageBin}) ->
         true ->
             %% Not handle the returun value of 'remove_objects_under_dir/1'
             %% because 'replcation-failurre' which is fixed by 'leo_async_deletion_queue'
-            remove_objects_under_dir(MessageBin),
-            ok;
+            remove_objects_under_dir(MessageBin);
         false ->
             ok
     end;
