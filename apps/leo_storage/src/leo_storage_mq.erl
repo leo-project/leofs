@@ -1040,7 +1040,7 @@ compare_between_metadatas(#?METADATA{addr_id = AddrId,
                                      key = Key,
                                      clock = MsgClock}) ->
     case leo_storage_handler_object:head(AddrId, Key, false) of
-        {ok, #?METADATA{clock = Clock}} when MsgClock > Clock ->
+        {ok, #?METADATA{clock = Clock}} when MsgClock >= Clock ->
             true;
         {ok, _} ->
             false;
