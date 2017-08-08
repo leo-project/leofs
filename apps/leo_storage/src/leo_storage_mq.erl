@@ -461,8 +461,9 @@ handle_call({consume, ?QUEUE_ID_REQ_DEL_DIR, MessageBin}) ->
 handle_call({consume, MQId, MessageBin}) ->
     case lists:member(MQId, ?del_dir_id_list()) of
         true ->
-            %% Not handle the returun value of 'remove_objects_under_dir/1'
-            %% because 'replcation-failurre' which is fixed by 'leo_async_deletion_queue'
+            %% Need to handle the returun value of 'remove_objects_under_dir/1'
+            %% because there is a case that an item doesn't get inserted into 'leo_async_deletion_queue'
+            %% when leo_storage_handler_object:head in compare_between_metadatas failed.
             remove_objects_under_dir(MessageBin);
         false ->
             ok
