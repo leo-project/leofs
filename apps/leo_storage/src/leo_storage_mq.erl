@@ -274,6 +274,17 @@ publish(?QUEUE_ID_SYNC_OBJ_WITH_DC = Id, ClusterId, AddrId, Key, Del) ->
 publish(_,_,_,_,_) ->
     {error, badarg}.
 
+publish(?QUEUE_ID_PER_OBJECT = Id, AddrId, Key, SyncNode, true = IsForceSync, ErrorType) ->
+    KeyBin = term_to_binary({ErrorType, Key}),
+    MessageBin = term_to_binary(
+                   #?MSG_INCONSISTENT_DATA{id = leo_date:clock(),
+                                           type = ErrorType,
+                                           addr_id = AddrId,
+                                           key = Key,
+                                           sync_node = SyncNode,
+                                           is_force_sync = IsForceSync,
+                                           timestamp = leo_date:now()}),
+    leo_mq_api:publish(Id, KeyBin, MessageBin);
 publish(?QUEUE_ID_PER_OBJECT = Id, AddrId, Key, SyncNode, IsForceSync, ErrorType) ->
     case leo_storage_handler_object:head(AddrId, Key, false) of
         {ok, Metadata} ->
@@ -327,36 +338,39 @@ handle_call({consume, ?QUEUE_ID_PER_OBJECT, MessageBin}) ->
                                              meta = Metadata,
                                              sync_node = SyncNode,
                                              is_force_sync = IsForceSync}} ->
-                    case compare_between_metadatas(Metadata) of
-                        true when IsForceSync == true,
-                                  SyncNode /= undefined ->
-                            send_object_to_remote_node(SyncNode, AddrId, Key);
+                    case (IsForceSync == true andalso
+                          SyncNode /= undefined) of
                         true ->
-                            case correct_redundancies(Key) of
-                                ok ->
-                                    ok;
-                                {error, Cause = not_found} ->
-                                    ?warn("handle_call/1 - consume",
-                                          [{qid, ?QUEUE_ID_PER_OBJECT},
-                                           {addr_id, AddrId},
-                                           {key, Key}, {cause, Cause}]),
+                            send_object_to_remote_node(SyncNode, AddrId, Key);
+                        false ->
+                            case compare_between_metadatas(Metadata) of
+                                true ->
+                                    case correct_redundancies(Key) of
+                                        ok ->
+                                            ok;
+                                        {error, Cause = not_found} ->
+                                            ?warn("handle_call/1 - consume",
+                                                  [{qid, ?QUEUE_ID_PER_OBJECT},
+                                                   {addr_id, AddrId},
+                                                   {key, Key}, {cause, Cause}]),
+                                            ok;
+                                        {error, Cause} ->
+                                            ?debug("handle_call/1 - consume",
+                                                   [{addr_id, AddrId},
+                                                    {key, Key}, {cause, Cause}]),
+                                            {error, Cause}
+                                    end;
+                                false ->
                                     ok;
                                 {error, Cause} ->
-                                    ?debug("handle_call/1 - consume",
-                                           [{addr_id, AddrId},
-                                            {key, Key}, {cause, Cause}]),
                                     {error, Cause}
                             end;
-                        false ->
-                            ok;
-                        {error, Cause} ->
-                            {error, Cause}
-                    end;
-                {error,_Error} ->
-                    ?warn("handle_call/1 - consume",
-                          [{qid, ?QUEUE_ID_PER_OBJECT},
-                           {cause, invalid_data_format}]),
-                    ok
+                        {error,_Error} ->
+                            ?warn("handle_call/1 - consume",
+                                  [{qid, ?QUEUE_ID_PER_OBJECT},
+                                   {cause, invalid_data_format}]),
+                            ok
+                    end
             end
     end;
 
