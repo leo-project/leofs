@@ -1,4 +1,76 @@
 # CHANGELOG
+## 1.3.5 (Aug 10, 2017)
+### LeoGateway
+
+#### NFS
+* [#608](https://github.com/leo-project/leofs/issues/608) Set *FSF_HOMOGENEOUS* bit to the properties
+* [#609](https://github.com/leo-project/leofs/issues/609) Set ffiles and afiles in the response to fsstat to *MAX*
+
+#### Others
+
+* [#730](https://github.com/leo-project/leofs/issues/730) Respond 403 when a multipart upload complete request failed
+* [#735](https://github.com/leo-project/leofs/issues/735) Abort multipart upload can respond 204 even if the operation failed
+* [#769](https://github.com/leo-project/leofs/issues/769) Abort multipart upload may not delete parts objects
+* [#770](https://github.com/leo-project/leofs/issues/770) Remove the code putting a zero byte object when handling abort MPU
+* [#784](https://github.com/leo-project/leofs/issues/784) The source object get deleted when `x-amz-metadata-directive` is set to *REPLACE*
+
+### LeoStorage
+
+* [#725](https://github.com/leo-project/leofs/issues/725#issuecomment-302606104) Deleting bucket eventually fails and makes delete queues stuck
+    * Some #725's issues remains to be done with v1.4.0
+* [#732](https://github.com/leo-project/leofs/issues/732) `leo_mq``1.3.3` Items in *QUEUE\_ID\_ASYNC\_DELETION* can keep existing
+* [#754](https://github.com/leo-project/leofs/issues/754) *delete-bucket* can not work in case the objects were created on LeoFS <= *v1.3.2.1*
+* [#783](https://github.com/leo-project/leofs/issues/783) Consistency Problem with asynchrpnous deletion
+
+### LeoManager
+
+* [#150](https://github.com/leo-project/leofs/issues/150) `s3-api` Implement a robust delete_bucket
+* [#556](https://github.com/leo-project/leofs/issues/556) `mnesia` Restarting slave may fail while master is down
+
+### Commons
+
+* [#653](https://github.com/leo-project/leofs/issues/653) Use [timer:send_after/3](http://erlang.org/doc/man/timer.html#send_after-3) for the periodic action in gen_server
+* [#731](https://github.com/leo-project/leofs/issues/731) `leo_backend_db` The number `mq-stats` displays can be different from the number leo_backend_db actually stores #731
+* [#744](https://github.com/leo-project/leofs/issues/744) `leo_mq` Timeout in return values are not needed at `handle_call`, `handle_cast` in `leo_mq_server`
+* [#746](https://github.com/leo-project/leofs/issues/746) `leo_mq` Cache the result of `leo_backend_db_api:status/0` to reduce call times
+* [#751](https://github.com/leo-project/leofs/issues/751) `leo_watchdog` LeoWatchdog for disk could make `leo\_backend\_db` overloaded
+* [#761](https://github.com/leo-project/leofs/issues/761) `leo_backend_db` Revision of dependency libraries
+* [#774](https://github.com/leo-project/leofs/issues/74) `elarm` records in ets may leak
+
+
+### Libraries
+#### Leo Project
+
+* [leo_backend-db v1.2.18](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.18)
+* [leo_cache v0.8.3](https://github.com/leo-project/leo_cache/releases/tag/0.8.3)
+* [leo_commons v1.1.9](https://github.com/leo-project/leo_commons/releases/tag/1.1.9)
+* [leo_dcerl v0.4.6](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.6)
+* [leo_logger v1.2.5](https://github.com/leo-project/leo_logger/releases/tag/1.2.5)
+* [leo_mcerl v0.6.4](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.4)
+* [leo_mq v1.5.6](https://github.com/leo-project/leo_mq/releases/tag/1.5.6)
+* [leo_object_storage v1.3.12](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.12)
+* [leo_ordning_reda v1.2.4](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.4)
+* [leo_pod v0.6.8](https://github.com/leo-project/leo_pod/releases/tag/0.6.8)
+* [leo_redundant_manager 1.9.48](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.48)
+* [leo_rpc v0.10.12](https://github.com/leo-project/leo_rpc/releases/tag/0.10.12)
+* [leo_s3_libs v1.2.12](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.12)
+* [leo_statistics v1.1.17](https://github.com/leo-project/leo_statistics/releases/tag/1.1.17)
+* [leo_watchdog v1.0.1](https://github.com/leo-project/leo_watchdog/releases/tag/1.0.1)
+* [savanna_agent v0.4.20](https://github.com/leo-project/savanna_agent/releases/tag/0.4.20)
+* [savanna_commons v0.10.6](https://github.com/leo-project/savanna_commons/releases/tag/0.10.6)
+* [erpcgen v0.2.5](https://github.com/leo-project/erpcgen/releases/tag/0.2.5)
+* [nfs_rpc_server v0.2.5](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.5)
+
+#### Others
+* [bitcask v2.0.8](https://github.com/leo-project/bitcask/releases/tag/2.0.8-for-leofs)
+* [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
+* [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+* [elarm (ESL)](https://github.com/esl/elarm/commit/5885c906cb7c248f233b90b83f6b910b7b1d293b)
+* [eleveldb v2.0.33](https://github.com/basho/eleveldb/releases/tag/2.0.33)
+* [folsom v0.8.2-p1](https://github.com/leo-project/folsom/releases/tag/0.8.2-p1)
+* [jiffy v0.14.7](https://github.com/davisp/jiffy/releases/tag/0.14.7)
+* [recon v2.2.1](https://github.com/ferd/recon/releases/tag/2.2.1)
+
 
 ## 1.3.4 (May 3, 2017)
 ### LeoStorage
