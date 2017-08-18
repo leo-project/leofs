@@ -1,11 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
-      <meta http-equiv="x-ua-compatible" content="ie=edge">
       
         <meta name="description" content="LeoProject makes LeoFS, which is an open source distributed object storage system and a highly available, distributed, eventually consistent storage system. LeoFS is supporting the following features:Multi-protocol Support - S3-API, REST-API and NFS v3, Large Object Support, Multi Data Center Replication and others.">
       
@@ -16,7 +15,7 @@
       
         <link rel="shortcut icon" href="../../../favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.7.4">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.5.4">
     
     
       
@@ -24,10 +23,10 @@
       
     
     
-      <script src="../../../assets/javascripts/modernizr-1df76c4e58.js"></script>
+      <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application-769c285a91.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-b1a1975878.css">
       
     
     
@@ -96,7 +95,7 @@
           <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
           
 <div class="md-search" data-md-component="search">
-  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__overlay"></div>
   <div class="md-search__inner">
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
@@ -105,7 +104,7 @@
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result" data-md-lang-search="">
+        <div class="md-search-result" data-md-component="result">
           <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
             Type to start searching
           </div>
@@ -117,9 +116,9 @@
 </div>
         
       </div>
-      
-        <div class="md-flex__cell md-flex__cell--shrink">
-          <div class="md-header-nav__source">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <div class="md-header-nav__source">
+          
             
 
 
@@ -139,9 +138,9 @@
     </div>
   </a>
 
-          </div>
+          
         </div>
-      
+      </div>
     </div>
   </nav>
 </header>
@@ -747,6 +746,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#retrieve-a-list-of-the-ongoing-delete-buckets-delete-bucket-stats" title="Retrieve a list of the ongoing delete-buckets, delete-bucket-stats" class="md-nav__link">
+    Retrieve a list of the ongoing delete-buckets, delete-bucket-stats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reset-a-delete-bucket-stats-record-reset-delete-bucket-stats" title="Reset a delete-bucket-stats record, reset-delete-bucket-stats" class="md-nav__link">
+    Reset a delete-bucket-stats record, reset-delete-bucket-stats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#retrieve-a-list-of-buckets-get-buckets" title="Retrieve a list of buckets, get-buckets" class="md-nav__link">
     Retrieve a list of buckets, get-buckets
   </a>
@@ -1160,6 +1173,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#retrieve-a-list-of-the-ongoing-delete-buckets-delete-bucket-stats" title="Retrieve a list of the ongoing delete-buckets, delete-bucket-stats" class="md-nav__link">
+    Retrieve a list of the ongoing delete-buckets, delete-bucket-stats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reset-a-delete-bucket-stats-record-reset-delete-bucket-stats" title="Reset a delete-bucket-stats record, reset-delete-bucket-stats" class="md-nav__link">
+    Reset a delete-bucket-stats record, reset-delete-bucket-stats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#retrieve-a-list-of-buckets-get-buckets" title="Retrieve a list of buckets, get-buckets" class="md-nav__link">
     Retrieve a list of buckets, get-buckets
   </a>
@@ -1426,6 +1453,105 @@ OK
 </pre></div>
 </td></tr></table>
 
+<div class="admonition note">
+<p class="admonition-title">Note: How many delete-bucket requests can be proceeded at once</p>
+<p>8 delete-bucket requests can be proceeded at once and if there are over 8 ones then exceeded ones are pushed on a queue and will be proceeded later once the number of processing delete-bucket go down under 8.</p>
+</div>
+<h4 id="retrieve-a-list-of-the-ongoing-delete-buckets-delete-bucket-stats">Retrieve a list of the ongoing delete-buckets, <code class="codehilite">delete-bucket-stats</code><a class="headerlink" href="#retrieve-a-list-of-the-ongoing-delete-buckets-delete-bucket-stats" title="Permanent link">&para;</a></h4>
+<p>Retrieves a list of the ongoing delete-buckets if you need to know the progress of the ongoing delete-buckets.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm delete-bucket-stats &lt;bucket-name&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm delete-bucket-stats
+- Bucket: test_2
+node                         <span class="p">|</span> state            <span class="p">|</span> date
+-----------------------------+------------------+-----------------------------
+storage_3@127.0.0.1          <span class="p">|</span> pending          <span class="p">|</span> <span class="m">2017</span>-07-27 <span class="m">09</span>:20:47 +0900
+storage_2@127.0.0.1          <span class="p">|</span> monitoring       <span class="p">|</span> <span class="m">2017</span>-07-27 <span class="m">09</span>:21:21 +0900
+storage_1@127.0.0.1          <span class="p">|</span> monitoring       <span class="p">|</span> <span class="m">2017</span>-07-27 <span class="m">09</span>:21:21 +0900
+storage_0@127.0.0.1          <span class="p">|</span> monitoring       <span class="p">|</span> <span class="m">2017</span>-07-27 <span class="m">09</span>:21:22 +0900
+
+- Bucket: test_4
+node                         <span class="p">|</span> state            <span class="p">|</span> date
+-----------------------------+------------------+-----------------------------
+storage_3@127.0.0.1          <span class="p">|</span> finished         <span class="p">|</span> <span class="m">2017</span>-07-27 <span class="m">09</span>:21:20 +0900
+storage_2@127.0.0.1          <span class="p">|</span> finished         <span class="p">|</span> <span class="m">2017</span>-07-27 <span class="m">09</span>:21:18 +0900
+storage_1@127.0.0.1          <span class="p">|</span> finished         <span class="p">|</span> <span class="m">2017</span>-07-27 <span class="m">09</span>:21:21 +0900
+storage_0@127.0.0.1          <span class="p">|</span> monitoring       <span class="p">|</span> <span class="m">2017</span>-07-27 <span class="m">09</span>:21:10 +0900
+
+<span class="c1">## Example (No ongoing delete-buckets)</span>
+$ leofs-adm delete-bucket-stats
+<span class="o">[</span>ERROR<span class="o">]</span> Delete-bucket<span class="err">&#39;</span>s stats not found
+</pre></div>
+</td></tr></table>
+
+<p>The below table explains what each state means.</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pending</td>
+<td>Waiting on the queue.</td>
+</tr>
+<tr>
+<td>enqueuing</td>
+<td>Iterating all objects and enqueuing object identifiers into the queue if those belong to the bucket deleted.</td>
+</tr>
+<tr>
+<td>monitoring</td>
+<td>Iterating all items in the queue and deleting objects one by one.</td>
+</tr>
+<tr>
+<td>finished</td>
+<td>Finished delete-bucket and waiting for other storage nodes.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note: How long the delete-bucket records exist</p>
+<p>Once the state of every storage node transit into finished, the delete-bucket records get deleted within a few minutes.</p>
+</div>
+<h4 id="reset-a-delete-bucket-stats-record-reset-delete-bucket-stats">Reset a delete-bucket-stats record, <code class="codehilite">reset-delete-bucket-stats</code><a class="headerlink" href="#reset-a-delete-bucket-stats-record-reset-delete-bucket-stats" title="Permanent link">&para;</a></h4>
+<p>Reset a delete-bucket-stats record if you face some trouble that inconsistency between manager nodes and storage nodes happened and only way to solve this problem is to reset(delete) a delete-bucket-stats record.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm reset-delete-bucket-stats &lt;bucket-name&gt;
+
+<span class="c1">## Example</span>
+$ leofs-adm reset-delete-bucket-stats bucket
+OK
+</pre></div>
+</td></tr></table>
+
 <h4 id="retrieve-a-list-of-buckets-get-buckets">Retrieve a list of buckets, <code class="codehilite">get-buckets</code><a class="headerlink" href="#retrieve-a-list-of-buckets-get-buckets" title="Permanent link">&para;</a></h4>
 <p>Retrieves a list of the buckets if you need to know the existing buckets.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -1635,9 +1761,7 @@ ok
       
     </div>
     
-      <script src="../../../assets/javascripts/application-c35428f87f.js"></script>
-      
-      
+      <script src="../../../assets/javascripts/application-0b7df094bf.js"></script>
       <script>app.initialize({url:{base:"../../.."}})</script>
       
     
