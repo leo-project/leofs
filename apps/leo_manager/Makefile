@@ -13,7 +13,7 @@ all: deps compile xref eunit
 deps:
 	@$(REBAR) get-deps
 compile:
-	find . -name rebar.config|xargs sed -i 's/require_otp_vsn,\s\+"\(.\+\)"/require_otp_vsn, "R16B*|17|18|19"/g'
+	$(SHELL) -c ./replace_otp_vsn.sh
 	@$(REBAR) compile
 xref:
 	@$(REBAR) xref skip_deps=true
