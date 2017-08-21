@@ -90,7 +90,7 @@
 %%      during starting a leo_storage server.
 -spec(init(any()) -> {ok, any()}).
 init(Args) ->
-    leo_nfs_state_ets:add_write_verfier(crypto:rand_bytes(8)),
+    leo_nfs_state_ets:add_write_verfier(crypto:strong_rand_bytes(8)),
     {ok, Args}.
 
 handle_call(Req,_From, S) ->
@@ -605,7 +605,7 @@ readdir_add_entry(Path) ->
     case leo_nfs_file_handler:list_dir(Path) of
         {ok, FileList}->
             %% gen cookie verfier
-            CookieVerf = crypto:rand_bytes(8),
+            CookieVerf = crypto:strong_rand_bytes(8),
             ReadDir = #ongoing_readdir{filelist = FileList},
             leo_nfs_readdir_state_ets_server:add_readdir_entry(CookieVerf, ReadDir),
             {ok, CookieVerf, ReadDir};

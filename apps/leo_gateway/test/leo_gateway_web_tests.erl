@@ -987,11 +987,11 @@ gen_chunks(PrevSign, SignHead, SignKey, 0, Acc) ->
     {Chunk, _Signature} = compute_chunk(PrevSign, SignHead, SignKey, Bin),
     <<Acc/binary, Chunk/binary>>;
 gen_chunks(PrevSign, SignHead, SignKey, Remain, Acc) when Remain < ?CHUNKSIZE ->
-    Bin = crypto:rand_bytes(Remain),
+    Bin = crypto:strong_rand_bytes(Remain),
     {Chunk, Signature} = compute_chunk(PrevSign, SignHead, SignKey, Bin),
     gen_chunks(Signature, SignHead, SignKey, 0, <<Acc/binary, Chunk/binary>>);
 gen_chunks(PrevSign, SignHead, SignKey, Remain, Acc) ->
-    Bin = crypto:rand_bytes(?CHUNKSIZE),
+    Bin = crypto:strong_rand_bytes(?CHUNKSIZE),
     {Chunk, Signature} = compute_chunk(PrevSign, SignHead, SignKey, Bin),
     gen_chunks(Signature, SignHead, SignKey, Remain - ?CHUNKSIZE, <<Acc/binary, Chunk/binary>>).
 
