@@ -157,7 +157,7 @@ stack(Node) ->
     Meta2  = #?METADATA{addr_id = AddrId, key = Key2, dsize = Size, ksize = 18},
     Meta3  = #?METADATA{addr_id = AddrId, key = Key3, dsize = Size, ksize = 18},
     Meta4  = #?METADATA{addr_id = AddrId, key = Key4, dsize = Size, ksize = 18},
-    Object = crypto:rand_bytes(Size),
+    Object = crypto:strong_rand_bytes(Size),
 
     _ = leo_sync_local_cluster:stack([Node], AddrId, Key1, Meta1, Object),
     _ = leo_sync_local_cluster:stack([Node], AddrId, Key2, Meta2, Object),
