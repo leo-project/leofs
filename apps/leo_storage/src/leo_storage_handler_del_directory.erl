@@ -327,8 +327,15 @@ dequeue_1(State, [{_, DelBucketStateBin}|DelBucketStateList], MQId) ->
 insert_messages(From, MQId, Type, Directory, EnqueuedAt) ->
     erlang:send(From, {enqueuing, MQId, Type, Directory}),
 
+    DirTrailingSlash = case binary:last(Directory) of
+        $/ ->
+            Directory;
+        _ ->
+            << Directory/binary, "/" >>
+    end,
+
     case leo_storage_handler_object:prefix_search_and_remove_objects(
-           MQId, Directory, EnqueuedAt) of
+           MQId, DirTrailingSlash, EnqueuedAt) of
         {ok,_TotalMsgs} ->
             erlang:send(From, {enqueued, MQId, Type, Directory});
         {error, Cause} ->
