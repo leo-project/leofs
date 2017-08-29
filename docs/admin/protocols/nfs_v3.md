@@ -77,10 +77,10 @@ bb5034f0c740148a346ed663ca0cf5157efb439f
 ```bash
 $ sudo mkdir /mnt/leofs
 
-## for Linux - "sudo mount -t nfs -o nolock <host>:/<bucket>/<token> <dir>"
+## for Linux - "sudo mount -t nfs -o nolock <host>:/<bucket>/<accesskey_id>/<token> <dir>"
 $ sudo mount -t nfs -o nolock 127.0.0.1:/test/05236/bb5034f0c740148a346ed663ca0cf5157efb439f /mnt/leofs
 
-## for FreeBSD - "sudo mount -t nfs -o nolockd <host>:/<bucket>/<token> <dir>"
+## for FreeBSD - "sudo mount -t nfs -o nolockd <host>:/<bucket>/<accesskey_id>/<token> <dir>"
 $ sudo mount -t nfs -o nolockd 127.0.0.1:/test/05236/bb5034f0c740148a346ed663ca0cf5157efb439f /mnt/leofs
 ```
 
