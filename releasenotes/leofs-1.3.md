@@ -1,9 +1,9 @@
 # 1.3.6 (Aug 30, 2017)
 ## Fixed Bugs
 
-* [#776](https://github.com/leo-project/leofs/issues/776) `leo_watchdog``leo_storage` Continuous warnings caused by disk usage make `leo_mq stop`
+* [#776](https://github.com/leo-project/leofs/issues/776) `leo_watchdog` `leo_storage` Continuous warnings caused by disk usage make `leo_mq stop`
 * [#803](https://github.com/leo-project/leofs/issues/803) `leo_storage` Much higher amount of messages during deletion of two buckets at once compared to deleting them one after another
-* [#804](https://github.com/leo-project/leofs/issues/804) `leo_storage``delete-bucket` The state change from enqueuing to monitoring could take much time
+* [#804](https://github.com/leo-project/leofs/issues/804) `leo_storage` `delete-bucket` The state change from enqueuing to monitoring could take much time
 
 ## Libraries
 ### Leo Project
@@ -65,7 +65,7 @@
 
 * [#725](https://github.com/leo-project/leofs/issues/725#issuecomment-302606104) Deleting bucket eventually fails and makes delete queues stuck
     * Some #725's issues remains to be done with v1.4.0
-* [#732](https://github.com/leo-project/leofs/issues/732) `leo_mq``1.3.3` Items in *QUEUE\_ID\_ASYNC\_DELETION* can keep existing
+* [#732](https://github.com/leo-project/leofs/issues/732) `leo_mq` `v1.3.3` Items in *QUEUE\_ID\_ASYNC\_DELETION* can keep existing
 * [#754](https://github.com/leo-project/leofs/issues/754) *delete-bucket* can not work in case the objects were created on LeoFS <= *v1.3.2.1*
 * [#783](https://github.com/leo-project/leofs/issues/783) Consistency Problem with asynchrpnous deletion
 
@@ -80,7 +80,7 @@
 * [#731](https://github.com/leo-project/leofs/issues/731) `leo_backend_db` The number `mq-stats` displays can be different from the number leo_backend_db actually stores #731
 * [#744](https://github.com/leo-project/leofs/issues/744) `leo_mq` Timeout in return values are not needed at `handle_call`, `handle_cast` in `leo_mq_server`
 * [#746](https://github.com/leo-project/leofs/issues/746) `leo_mq` Cache the result of `leo_backend_db_api:status/0` to reduce call times
-* [#751](https://github.com/leo-project/leofs/issues/751) `leo_watchdog` LeoWatchdog for disk could make `leo\_backend\_db` overloaded
+* [#751](https://github.com/leo-project/leofs/issues/751) `leo_watchdog` LeoWatchdog for disk could make `leo_backend_db` overloaded
 * [#761](https://github.com/leo-project/leofs/issues/761) `leo_backend_db` Revision of dependency libraries
 * [#774](https://github.com/leo-project/leofs/issues/74) `elarm` records in ets may leak
 
