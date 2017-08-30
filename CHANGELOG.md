@@ -1,5 +1,54 @@
 # CHANGELOG
+## 1.3.6 (Aug 30, 2017)
+
+### Fixed Bugs
+
+* [#776](https://github.com/leo-project/leofs/issues/776) `leo_watchdog``leo_storage` Continuous warnings caused by disk usage make `leo_mq stop`
+* [#803](https://github.com/leo-project/leofs/issues/803) `leo_storage` Much higher amount of messages during deletion of two buckets at once compared to deleting them one after another
+* [#804](https://github.com/leo-project/leofs/issues/804) `leo_storage``delete-bucket` The state change from enqueuing to monitoring could take much time
+
+### Libraries
+#### Leo Project
+
+* [leo_backend-db v1.2.20](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.20)
+* [leo_cache v0.8.5](https://github.com/leo-project/leo_cache/releases/tag/0.8.5)
+* [leo_commons v1.1.10](https://github.com/leo-project/leo_commons/releases/tag/1.1.10)
+* [leo_dcerl v0.4.8](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.8)
+* [leo_logger v1.2.6](https://github.com/leo-project/leo_logger/releases/tag/1.2.6)
+* [leo_mcerl v0.6.6](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.6)
+* [leo_mq v1.5.8](https://github.com/leo-project/leo_mq/releases/tag/1.5.8)
+* [leo_object_storage v1.3.15](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.15)
+* [leo_ordning_reda v1.2.6](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.6)
+* [leo_pod v0.6.9](https://github.com/leo-project/leo_pod/releases/tag/0.6.9)
+* [leo_redundant_manager 1.9.50](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.50)
+* [leo_rpc v0.10.13](https://github.com/leo-project/leo_rpc/releases/tag/0.10.13)
+* [leo_s3_libs v1.2.14](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.14)
+* [leo_statistics v1.1.18](https://github.com/leo-project/leo_statistics/releases/tag/1.1.18)
+* [leo_watchdog v1.0.2](https://github.com/leo-project/leo_watchdog/releases/tag/1.0.2)
+* [savanna_agent v0.4.21](https://github.com/leo-project/savanna_agent/releases/tag/0.4.21)
+* [savanna_commons v0.10.7](https://github.com/leo-project/savanna_commons/releases/tag/0.10.7)
+* [erpcgen v0.2.6](https://github.com/leo-project/erpcgen/releases/tag/0.2.6)
+* [nfs_rpc_server v0.2.6](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.6)
+
+#### Others
+
+* [bitcask v2.0.8](https://github.com/leo-project/bitcask/releases/tag/2.0.8.2-for-leofs)
+* [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
+* [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+* [elarm (ESL)](https://github.com/esl/elarm/commit/5885c906cb7c248f233b90b83f6b910b7b1d293b)
+* [eleveldb v2.0.33](https://github.com/basho/eleveldb/releases/tag/2.0.33)
+* [folsom v0.8.2-p1](https://github.com/leo-project/folsom/releases/tag/0.8.2-p1)
+* [jiffy v0.14.7](https://github.com/davisp/jiffy/releases/tag/0.14.7)
+* [recon v2.2.1](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
 ## 1.3.5 (Aug 10, 2017)
+
+### Add two leofs-adm commands which relate to LeoFS' bucket operation
+
+- Retrieve a list of the ongoing `delete-bucket`, [delete-bucket-stats](https://leo-project.net/leofs/docs/admin/system_operations/s3/#retrieve-a-list-of-the-ongoing-delete-buckets-delete-bucket-stats)
+- Reset a `delete-bucket-stats` record, [reset-delete-bucket-stats](https://leo-project.net/leofs/docs/admin/system_operations/s3/#reset-a-delete-bucket-stats-record-reset-delete-bucket-stats)
+
 ### LeoGateway
 
 #### NFS
@@ -62,6 +111,7 @@
 * [nfs_rpc_server v0.2.5](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.5)
 
 #### Others
+
 * [bitcask v2.0.8](https://github.com/leo-project/bitcask/releases/tag/2.0.8-for-leofs)
 * [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
 * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -102,6 +152,7 @@
 * [nfs_rpc_server v0.2.5](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.5)
 
 #### Others
+
 * [bitcask v2.0.7](https://github.com/basho/bitcask/releases/tag/2.0.7)
 * [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
 * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
@@ -188,6 +239,7 @@
 * [nfs_rpc_server v0.2.5](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.5)
 
 #### Others
+
 * [bitcask v2.0.7](https://github.com/basho/bitcask/releases/tag/2.0.7)
 * [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
 * [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
