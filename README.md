@@ -282,12 +282,12 @@ You can test LeoFS with <a target="_blank" href="https://github.com/leo-project/
     * Erasure Code
     * Improve compatibility S3-APIs#7
         * [Server Side Object Encryption](http://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html)
-* v1.5
-    * Hinted Hand-off
-    * LeoManager's cluster replaces from Erlang's mnesia dependensy to another implementation
     * Integration with distributed computing frameworks
         * Hadoop integration
         * Spark integration
+* v1.5
+    * Hinted Hand-off
+    * LeoManager's cluster replaces from Erlang's mnesia dependensy to another implementation
 
 ### Version 2
 * v2.0
