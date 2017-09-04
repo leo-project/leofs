@@ -1077,7 +1077,7 @@
  "leo_redundant_manager.sync_new_cluster_mod",
  [
   {datatype, atom},
-  {default, 'leo_storage_handle_sync'}
+  {default, 'leo_storage_handler_sync'}
  ]}.
 
 
