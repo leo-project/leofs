@@ -320,6 +320,7 @@
 -define(ERROR_ALREADY_HAS_SAME_CLUSTER, "Already has a same neme of cluster").
 -define(ERROR_COULD_NOT_GET_CLUSTER_INFO,"Could not get cluster info").
 -define(ERROR_OVER_MAX_CLUSTERS, "Over max number of clusters").
+-define(ERROR_CLUSTER_NOT_FOUND, "Cluster not found").
 -define(ERROR_UPDATED_SYSTEM_CONF, "Updated the system configuration").
 -define(ERROR_FAILED_UPDATE_LOG_LEVEL, "Failed to update the log-level").
 -define(ERROR_FAILED_GET_VERSION, "Failed to get the version").
