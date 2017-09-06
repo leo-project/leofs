@@ -2491,10 +2491,36 @@ update_cluster_manager([Node|Rest], ClusterId) ->
 
 
 %% @doc Remove a cluster (MDC-Replication)
--spec(remove_cluster(#?SYSTEM_CONF{}) ->
-             {ok, #?SYSTEM_CONF{}} | {error, any()}).
-remove_cluster(#?SYSTEM_CONF{cluster_id = ClusterId}) ->
-    leo_mdcr_tbl_cluster_info:delete(ClusterId).
+-spec(remove_cluster(ClusterId) ->
+             ok | {error, any()} when ClusterId::atom()).
+remove_cluster(ClusterId) ->
+    %% Remove the local data of the specified cluster
+    remove_cluster_1([leo_mdcr_tbl_cluster_member,
+                      leo_mdcr_tbl_cluster_mgr,
+                      leo_mdcr_tbl_cluster_stat,
+                      leo_mdcr_tbl_cluster_info], ClusterId).
+
+%% @private
+remove_cluster_1([],_ClusterId) ->
+    ok;
+remove_cluster_1([Mod|Rest], ClusterId) ->
+    Ret = case Mod:delete(ClusterId) of
+              ok ->
+                  ok;
+              not_found ->
+                  ok;
+              {error, Cause} ->
+                  {error, Cause}
+          end,
+    case Ret of
+        ok ->
+            remove_cluster_1(Rest, ClusterId);
+        {error, Reason} ->
+            ?error("remove_cluster_1/2",
+                   [{module, Mod}, {method, "delete/1"},
+                    {cause, Reason}]),
+            {error, Reason}
+    end.
 
 
 %% @doc Is allow distribute to a command

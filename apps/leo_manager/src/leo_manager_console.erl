@@ -832,6 +832,8 @@ handle_call(_Socket, <<?CMD_REMOVE_CLUSTER, ?SPACE, Option/binary>>,
                   case remove_cluster(Option) of
                       ok ->
                           Formatter:ok();
+                      not_found ->
+                          Formatter:error(?ERROR_CLUSTER_NOT_FOUND);
                       {error, Cause} ->
                           Formatter:error(Cause)
                   end
@@ -1274,55 +1276,85 @@ join_cluster_1(Bin) ->
 join_cluster_2([]) ->
     {error, ?ERROR_COULD_NOT_CONNECT};
 join_cluster_2([Node|Rest] = RemoteNodes) ->
-    {ok, SystemConf} = leo_cluster_tbl_conf:get(),
-    RPCNode  = leo_rpc:node(),
-    Managers = case ?env_partner_of_manager_node() of
-                   [] ->
-                       [RPCNode];
-                   [Partner|_] ->
-                       case rpc:call(Partner, leo_rpc, node, []) of
-                           {_,_Cause} ->
+    case find_cluster_id_by_manager_node(Node) of
+        {ok,_ClusterId} ->
+            {error, ?ERROR_ALREADY_HAS_SAME_CLUSTER};
+        not_found ->
+            {ok, SystemConf} = leo_cluster_tbl_conf:get(),
+            RPCNode  = leo_rpc:node(),
+            Managers = case ?env_partner_of_manager_node() of
+                           [] ->
                                [RPCNode];
-                           Partner_1 ->
-                               [RPCNode, Partner_1]
-                       end
-               end,
+                           [Partner|_] ->
+                               case rpc:call(Partner, leo_rpc, node, []) of
+                                   {_,_Cause} ->
+                                       [RPCNode];
+                                   Partner_1 ->
+                                       [RPCNode, Partner_1]
+                               end
+                       end,
 
-    case catch leo_rpc:call(Node, leo_manager_api, join_cluster,
-                            [Managers, SystemConf]) of
-        {ok, #?SYSTEM_CONF{cluster_id = ClusterId} = RemoteSystemConf} ->
-            case leo_mdcr_tbl_cluster_info:get(ClusterId) of
-                not_found ->
-                    #?SYSTEM_CONF{dc_id = DCId,
-                                  n = N,
-                                  r = R,
-                                  w = W,
-                                  d = D,
-                                  bit_of_ring = BitOfRing,
-                                  num_of_dc_replicas = NumOfReplicas,
-                                  num_of_rack_replicas = NumOfRaclReplicas
-                                 } = RemoteSystemConf,
-                    case leo_mdcr_tbl_cluster_info:update(
-                           #?CLUSTER_INFO{cluster_id = ClusterId,
-                                          dc_id = DCId,
-                                          n = N, r = R, w = W, d = D,
+            case catch leo_rpc:call(Node, leo_manager_api, join_cluster,
+                                    [Managers, SystemConf]) of
+                {ok, #?SYSTEM_CONF{cluster_id = ClusterId} = RemoteSystemConf} ->
+                    case leo_mdcr_tbl_cluster_info:get(ClusterId) of
+                        not_found ->
+                            #?SYSTEM_CONF{dc_id = DCId,
+                                          n = N,
+                                          r = R,
+                                          w = W,
+                                          d = D,
                                           bit_of_ring = BitOfRing,
                                           num_of_dc_replicas = NumOfReplicas,
-                                          num_of_rack_replicas = NumOfRaclReplicas}) of
-                        ok ->
-                            ok = leo_manager_api:sync_mdc_tables(
-                                   ClusterId, RemoteNodes),
-                            {ok, ClusterId};
+                                          num_of_rack_replicas = NumOfRaclReplicas
+                                         } = RemoteSystemConf,
+                            case leo_mdcr_tbl_cluster_info:update(
+                                   #?CLUSTER_INFO{cluster_id = ClusterId,
+                                                  dc_id = DCId,
+                                                  n = N, r = R, w = W, d = D,
+                                                  bit_of_ring = BitOfRing,
+                                                  num_of_dc_replicas = NumOfReplicas,
+                                                  num_of_rack_replicas = NumOfRaclReplicas}) of
+                                ok ->
+                                    ok = leo_manager_api:sync_mdc_tables(
+                                           ClusterId, RemoteNodes),
+                                    {ok, ClusterId};
+                                _Other ->
+                                    {error, ?ERROR_FAIL_ACCESS_MNESIA}
+                            end;
+                        {ok, _} ->
+                            {error, ?ERROR_ALREADY_HAS_SAME_CLUSTER};
                         _Other ->
                             {error, ?ERROR_FAIL_ACCESS_MNESIA}
                     end;
-                {ok, _} ->
-                    {error, ?ERROR_ALREADY_HAS_SAME_CLUSTER};
-                _Other ->
-                    {error, ?ERROR_FAIL_ACCESS_MNESIA}
+                _Error ->
+                    join_cluster_2(Rest)
             end;
-        _Error ->
-            join_cluster_2(Rest)
+        {error, Cause} ->
+            ?error("join_cluster_2/1", [{cause, Cause}]),
+            {error, ?ERROR_COULD_NOT_GET_CLUSTER_INFO}
+    end.
+
+
+%% @doc Find a clusterId by a remote manager-node
+%% @private
+find_cluster_id_by_manager_node(Node) ->
+    case leo_mdcr_tbl_cluster_mgr:all() of
+        {ok, ClusterMgrL} ->
+            case lists:foldl(
+                   fun(#cluster_manager{node = N,
+                                        cluster_id = ClusterId},_SoFar) when N == Node ->
+                           {ok, ClusterId};
+                      (_, SoFar) ->
+                           SoFar
+                   end, undefined, ClusterMgrL) of
+                {ok, ClusterId} ->
+                    {ok, ClusterId};
+                _ ->
+                    not_found
+            end;
+        Error ->
+            Error
     end.
 
 
@@ -1340,11 +1372,26 @@ remove_cluster(Option) ->
 remove_cluster_1([]) ->
     {error, ?ERROR_COULD_NOT_CONNECT};
 remove_cluster_1([Node|Rest]) ->
-    {ok, SystemConf} = leo_cluster_tbl_conf:get(),
-    case catch leo_rpc:call(list_to_atom(Node), leo_manager_api, remove_cluster, [SystemConf]) of
-        {ok, #?SYSTEM_CONF{cluster_id = ClusterId}} ->
-            leo_mdcr_tbl_cluster_info:delete(ClusterId);
-        _Error ->
+    {ok, #?SYSTEM_CONF{cluster_id = LocalClusterId}} = leo_cluster_tbl_conf:get(),
+    Node_1 = list_to_atom(Node),
+
+    case find_cluster_id_by_manager_node(Node_1) of
+        {ok, RetClusterId} ->
+            %% Execute removing the cluster info from the remote-cluster
+            case catch leo_rpc:call(Node_1, leo_manager_api,
+                                    remove_cluster, [LocalClusterId]) of
+                ok ->
+                    %% Remove the local data of the specified cluster
+                    leo_manager_api:remove_cluster(RetClusterId);
+                _Error ->
+                    remove_cluster_1(Rest)
+            end;
+        not_found = Cause ->
+            Cause;
+        {error, Cause} ->
+            ?error("remove_cluster_1/1",
+                   [{simple_cause, "Failure to leo_mdcr_tbl_cluster_mgr:all/0"},
+                    {cause, Cause}]),
             remove_cluster_1(Rest)
     end.
 
