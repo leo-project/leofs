@@ -56,8 +56,8 @@ get_count() ->
     proplists:get_value('size', Info).
 
 setup() ->
-    ok = leo_logger_client_message:new("./", ?LOG_LEVEL_INFO),
-    ok = leo_logger_client_base:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
+    ok = leo_logger_api:new("./", ?LOG_LEVEL_INFO),
+    ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
                                     "./", ?LOG_FILENAME_ACCESS),
     leo_nfs_readdir_state_ets_server:start_link(
       [{nfsd_readdir_scan_int, 3},

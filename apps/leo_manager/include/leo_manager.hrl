@@ -354,7 +354,7 @@
 -define(LOG_FILENAME_HISTORY, "cmd_history").
 -define(put_cmd_history(_CmdBody),
         begin
-            leo_logger_client_base:append(
+            leo_logger_api:append(
               {?LOG_ID_HISTORY,
                #message_log{format  = "~s\t~w\t~s",
                             message = [leo_date:date_format(),

@@ -205,9 +205,9 @@ init([]) ->
 start_logger() ->
     LogDir = ?env_log_dir(),
     LogLevel = ?env_log_level(leo_manager),
-    ok = leo_logger_client_message:new(
+    ok = leo_logger_api:new(
            LogDir, LogLevel, log_file_appender()),
-    ok = leo_logger_client_base:new(?LOG_GROUP_ID_HISTORY, ?LOG_ID_HISTORY,
+    ok = leo_logger_api:new(?LOG_GROUP_ID_HISTORY, ?LOG_ID_HISTORY,
                                     LogDir, ?LOG_FILENAME_HISTORY),
     ok.
 

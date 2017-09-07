@@ -145,8 +145,8 @@ gen_tests_2(Arg) ->
             "-----END RSA PRIVATE KEY-----\n").
 
 setup(InitFun, TermFun) ->
-    ok = leo_logger_client_message:new("./", ?LOG_LEVEL_WARN),
-    ok = leo_logger_client_base:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
+    ok = leo_logger_api:new("./", ?LOG_LEVEL_INFO),
+    ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
                                     "./", ?LOG_FILENAME_ACCESS),
 
     io:format(user, "cwd:~p~n",[os:cmd("pwd")]),
@@ -221,7 +221,7 @@ setup_s3_api() ->
 
     {ok, Options} = leo_gateway_app:get_options(),
     InitFun = fun() -> leo_gateway_http_commons:start(
-                         Options#http_options{port = 8080}) end,
+                         Options#http_options{port = 12345}) end,
     TermFun = fun() -> leo_gateway_s3_api:stop() end,
     setup(InitFun, TermFun).
 
@@ -233,7 +233,7 @@ setup_rest_api() ->
     {ok, Options} = leo_gateway_app:get_options(),
     InitFun = fun() -> leo_gateway_http_commons:start(
                          Options#http_options{handler = leo_gateway_rest_api,
-                                              port = 8080}) end,
+                                              port = 12345}) end,
     TermFun = fun() -> leo_gateway_rest_api:stop() end,
     setup(InitFun, TermFun).
 
@@ -269,7 +269,7 @@ get_bucket_list_error_([_TermFun, _Node0, Node1]) ->
                 Date = leo_http:rfc1123_date(leo_date:now()),
                 {ok, {SC, Body}} =
                     httpc:request(get, {lists:append(
-                                          ["http://", ?TARGET_HOST, ":8080/a/b?prefix=pre"]), [{"Date", Date}]},
+                                          ["http://", ?TARGET_HOST, ":12345/a/b?prefix=pre"]), [{"Date", Date}]},
                                   [], [{full_result, false}]),
 
                 %% req id is empty for now
@@ -299,7 +299,7 @@ get_bucket_list_empty_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, Body}} =
                     httpc:request(get, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/a/b?prefix=pre&delimiter=/"]),
+                                                      ":12345/a/b?prefix=pre&delimiter=/"]),
                                                       [{"Date", Date}]},
                                   [], [{full_result, false}]),
                 ?assertEqual(200, SC),
@@ -351,7 +351,7 @@ get_bucket_list_normal1_([_TermFun, _Node0, Node1]) ->
                 Date = leo_http:rfc1123_date(leo_date:now()),
                 {ok, {SC,Body}} =
                     httpc:request(get, {lists:append(["http://",
-                                                      ?TARGET_HOST, ":8080/a/b/?prefix=pre&delimiter=/"]), [{"Date", Date}]},
+                                                      ?TARGET_HOST, ":12345/a/b/?prefix=pre&delimiter=/"]), [{"Date", Date}]},
                                   [], [{full_result, false}]),
                 ?assertEqual(200, SC),
                 {_XmlDoc, Rest} = xmerl_scan:string(Body),
@@ -386,7 +386,7 @@ get_bucket_acl_normal1_([_TermFun, _Node0,_Node1]) ->
                 Date = leo_http:rfc1123_date(leo_date:now()),
                 {ok, {SC,Body}} =
                     httpc:request(get, {lists:append(["http://",
-                                                      ?TARGET_HOST, ":8080/bucket?acl"]), [{"Date", Date}, {"Authorization","AWS auth:hoge"}]},
+                                                      ?TARGET_HOST, ":12345/bucket?acl"]), [{"Date", Date}, {"Authorization","AWS auth:hoge"}]},
                                   [], [{full_result, false}]),
                 ?assertEqual(200, SC),
                 {_XmlDoc, Rest} = xmerl_scan:string(Body),
@@ -414,7 +414,7 @@ head_object_notfound_([_TermFun, Node0, Node1]) ->
                 {ok, {SC, _Body}} =
                     httpc:request(head, {lists:append(["http://",
                                                        ?TARGET_HOST,
-                                                       ":8080/a/b"]), [{"Date", Date}]},
+                                                       ":12345/a/b"]), [{"Date", Date}]},
                                   [], [{full_result, false}]),
                 ?assertEqual(404, SC)
             catch
@@ -437,7 +437,7 @@ head_object_error_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, _Body}} =
                     httpc:request(head, {lists:append(["http://",
                                                        ?TARGET_HOST,
-                                                       ":8080/a/b"]), [{"Date", Date}]},
+                                                       ":12345/a/b"]), [{"Date", Date}]},
                                   [], [{full_result, false}]),
                 ?assertEqual(500, SC)
             catch
@@ -480,7 +480,7 @@ head_object_normal1_([_TermFun, _Node0, Node1]) ->
                 {ok, {{_, SC, _}, Headers, _Body}} =
                     httpc:request(head, {lists:append(["http://",
                                                        ?TARGET_HOST,
-                                                       ":8080/a/b/c/d.png"]), [{"Date", Date}, {"connection", "close"}]}, [], []),
+                                                       ":12345/a/b/c/d.png"]), [{"Date", Date}, {"connection", "close"}]}, [], []),
                 %% https://github.com/leo-project/leofs/issues/489#issuecomment-265389401
                 %% exists only content-length header
                 ?assertEqual({"content-length", "16384"}, lists:keyfind("content-length", 1, Headers)),
@@ -507,7 +507,7 @@ get_object_error_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, Body}} =
                     httpc:request(get, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/a/b.png"]), [{"Date", Date}]}, [], [{full_result, false}]),
+                                                      ":12345/a/b.png"]), [{"Date", Date}]}, [], [{full_result, false}]),
 
                 %% req id is empty for now
                 Xml = io_lib:format(?XML_ERROR,
@@ -536,7 +536,7 @@ get_object_invalid_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, _Body}} =
                     httpc:request(head, {lists:append(["http://",
                                                        ?TARGET_HOST,
-                                                       ":8080/"]), [{"Date", Date}, {"Host", ""}]}, [{version, "HTTP/1.0"}], [{full_result, false}]),
+                                                       ":12345/"]), [{"Date", Date}, {"Host", ""}]}, [{version, "HTTP/1.0"}], [{full_result, false}]),
 
                 ?assertEqual(400, SC)
             catch
@@ -563,7 +563,7 @@ get_object_notfound_([_TermFun, Node0, Node1]) ->
                 {ok, {SC, Body}} =
                     httpc:request(get, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/a/b/c.png"]), [{"Date", Date}]}, [], [{full_result, false}]),
+                                                      ":12345/a/b/c.png"]), [{"Date", Date}]}, [], [{full_result, false}]),
 
                 %% req id is empty for now
                 Xml = io_lib:format(?XML_ERROR,
@@ -614,7 +614,7 @@ get_object_normal1_([_TermFun, _Node0, Node1]) ->
                 {ok, {{_, SC, _}, Headers, Body}} =
                     httpc:request(get, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/a/b.png"]), [{"Date", Date}, {"connection", "close"}]}, [], []),
+                                                      ":12345/a/b.png"]), [{"Date", Date}, {"connection", "close"}]}, [], []),
                 ?assertEqual(200, SC),
                 ?assertEqual("body", Body),
                 ?assertEqual(undefined, proplists:get_value("X-From-Cache", Headers))
@@ -661,7 +661,7 @@ get_object_cmeta_normal1_([_TermFun, _Node0, Node1]) ->
                 {ok, {{_, SC, _}, Headers, Body}} =
                     httpc:request(get, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/a/b.png"]), [{"Date", Date}, {"connection", "close"}]}, [], []),
+                                                      ":12345/a/b.png"]), [{"Date", Date}, {"connection", "close"}]}, [], []),
                 ?assertEqual(200, SC),
                 ?assertEqual("body", Body),
                 ?assertEqual(undefined, proplists:get_value("X-From-Cache", Headers)),
@@ -718,7 +718,7 @@ get_object_acl_normal1_([_TermFun, _Node0, Node1]) ->
                 Date = leo_http:rfc1123_date(leo_date:now()),
                 {ok, {SC,Body}} =
                     httpc:request(get, {lists:append(["http://",
-                                                      ?TARGET_HOST, ":8080/bucket/object?acl"]), [{"Date", Date}, {"Authorization","AWS auth:hoge"}]},
+                                                      ?TARGET_HOST, ":12345/bucket/object?acl"]), [{"Date", Date}, {"Authorization","AWS auth:hoge"}]},
                                   [], [{full_result, false}]),
                 ?assertEqual(200, SC),
                 {_XmlDoc, Rest} = xmerl_scan:string(Body),
@@ -795,7 +795,7 @@ range_object_base([_TermFun, _Node0, Node1], RangeValue) ->
                     httpc:request(get,
                                   {lists:append(["http://",
                                                  ?TARGET_HOST,
-                                                 ":8080/a/b.png"]),
+                                                 ":12345/a/b.png"]),
                                    [{"Date", Date},{"connection", "close"},{"range", RangeValue}]}, [], []),
                 ?assertEqual(206, SC),
                 ?assertEqual("od", Body)
@@ -826,7 +826,7 @@ delete_object_notfound_([_TermFun, Node0, Node1]) ->
                     httpc:request(delete,
                                   {lists:append(["http://",
                                                  ?TARGET_HOST,
-                                                 ":8080/a/b.png"]),
+                                                 ":12345/a/b.png"]),
                                    [{"Date", Date}, {"Authorization","auth"}]}, [], [{full_result, false}]),
                 ?assertEqual(204, SC)
             catch
@@ -852,7 +852,7 @@ delete_object_error_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, Body}} =
                     httpc:request(delete, {lists:append(["http://",
                                                          ?TARGET_HOST,
-                                                         ":8080/a/b.png"]),
+                                                         ":12345/a/b.png"]),
                                            [{"Date", Date}, {"Authorization","auth"}]}, [], [{full_result, false}]),
 
                 %% req id is empty for now
@@ -883,7 +883,7 @@ delete_object_normal1_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, _Body}} =
                     httpc:request(delete, {lists:append(["http://",
                                                          ?TARGET_HOST,
-                                                         ":8080/a/b.png"]),
+                                                         ":12345/a/b.png"]),
                                            [{"Date", Date}, {"Authorization","auth"}]}, [], [{full_result, false}]),
                 ?assertEqual(204, SC)
             catch
@@ -909,7 +909,7 @@ put_object_error_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, Body}} =
                     httpc:request(put, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/a/b.png"]),
+                                                      ":12345/a/b.png"]),
                                         [{"Date", Date}, {"Authorization","auth"}], "image/png", "body"},
                                   [], [{full_result, false}]),
                 %% req id is empty for now
@@ -937,7 +937,7 @@ put_object_error_metadata_too_large_([_TermFun, _Node0, _Node1]) ->
                 {ok, {SC, Body}} =
                     httpc:request(put, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/a/b.png"]),
+                                                      ":12345/a/b.png"]),
                                         [{"Date", Date}, {"Authorization","auth"}, {"x-amz-meta-test", Dummy}], "image/png", "body"},
                                   [], [{full_result, false}]),
                 %% req id is empty for now
@@ -966,7 +966,7 @@ put_object_normal1_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, _Body}} =
                     httpc:request(put, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/a/b.png"]),
+                                                      ":12345/a/b.png"]),
                                         [{"Date", Date}, {"Authorization","auth"}], "image/png", "body"},
                                   [], [{full_result, false}]),
                 ?assertEqual(200, SC)
@@ -1028,7 +1028,7 @@ put_object_aws_chunked_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, _Body}} =
                     httpc:request(put, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/testjv4/testFile.large.one"]),
+                                                      ":12345/testjv4/testFile.large.one"]),
                                         [{"Date", Date},
                                          {"authorization","AWS4-HMAC-SHA256 Credential=05236/20150706/us-east-1/s3/aws4_request, SignedHeaders=content-length, Signature=642797dcfdf817ac23b553420f52c160847d3747b2e86e5ac9d07cc5e7f60f63"},
                                          {"x-amz-content-sha256", "STREAMING-AWS4-HMAC-SHA256-PAYLOAD"},
@@ -1067,7 +1067,7 @@ put_object_aws_chunked_error_([_TermFun, _Node0, Node1]) ->
                 {ok, {SC, _Body}} =
                     httpc:request(put, {lists:append(["http://",
                                                       ?TARGET_HOST,
-                                                      ":8080/testjv4/testFile.large.one"]),
+                                                      ":12345/testjv4/testFile.large.one"]),
                                         [{"Date", Date},
                                          {"authorization","AWS4-HMAC-SHA256 Credential=05236/20150706/us-east-1/s3/aws4_request, SignedHeaders=content-length, Signature=642797dcfdf817ac23b553420f52c160847d3747b2e86e5ac9d07cc5e7f60f63"},
                                          {"x-amz-content-sha256", "STREAMING-AWS4-HMAC-SHA256-PAYLOAD"},

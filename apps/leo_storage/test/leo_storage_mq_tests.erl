@@ -140,12 +140,12 @@ setup() ->
                         {ok, []}
                 end),
 
-    meck:new(leo_logger_client_message, [non_strict]),
-    meck:expect(leo_logger_client_message, error,
+    meck:new(leo_logger_api, [non_strict]),
+    meck:expect(leo_logger_api, error,
                 fun(_) ->
                         ok
                 end),
-    meck:expect(leo_logger_client_message, warn,
+    meck:expect(leo_logger_api, warn,
                 fun(_) ->
                         ok
                 end),

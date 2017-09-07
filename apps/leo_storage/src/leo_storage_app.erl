@@ -51,7 +51,7 @@ prep_stop(_State) ->
     catch leo_mq_sup:stop(),
     catch leo_storage_handler_del_directory:stop(),
     catch leo_backend_db_sup:stop(),
-    catch leo_logger_sup:stop(),
+    catch leo_logger_api:stop(),
     catch leo_storage_sup:stop(),
     ok.
 
@@ -257,12 +257,12 @@ launch_logger() ->
                      DefLogDir
              end,
     LogLevel = ?env_log_level(leo_storage),
-    ok = leo_logger_client_message:new(LogDir, LogLevel, log_file_appender()),
+    ok = leo_logger_api:new(LogDir, LogLevel, log_file_appender()),
 
     %% access-logger (file-appender)
     case application:get_env(leo_storage, is_enable_access_log) of
         {ok, true} ->
-            ok = leo_logger_client_base:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
+            ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
                                             LogDir, ?LOG_FILENAME_ACCESS);
         _ ->
             void
