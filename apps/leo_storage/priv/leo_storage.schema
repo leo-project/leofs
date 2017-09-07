@@ -44,6 +44,15 @@
          {file, Path}
  end}.
 
+%% @doc The interval to check the disk usage in minutes
+{mapping,
+ "os_mon.disk_space_check_interval",
+ "os_mon.disk_space_check_interval",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
+
 %% @doc Restricts the error logging performed by the specified sasl_error_logger
 %%      to error reports, progress reports, or both.
 %%      errlog_type = [error | progress | all]
