@@ -45,7 +45,7 @@ start(_Type, _Args) ->
 prep_stop(_State) ->
     leo_redundant_manager_sup:stop(),
     leo_mq_sup:stop(),
-    leo_logger_sup:stop(),
+    leo_logger_api:stop(),
     ok.
 
 stop(_State) ->

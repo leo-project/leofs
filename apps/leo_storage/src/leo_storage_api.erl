@@ -610,7 +610,7 @@ update_conf(log_level, Val) when Val == ?LOG_LEVEL_DEBUG;
                                  Val == ?LOG_LEVEL_FATAL ->
     case application:set_env(leo_storage, log_level, Val) of
         ok ->
-            leo_logger_client_message:update_log_level(Val);
+            leo_logger_api:update_log_level(Val);
         _ ->
             {error, ?ERROR_COULD_NOT_UPDATE_LOG_LEVEL}
     end;

@@ -1442,7 +1442,7 @@ replicate_callback(Object) ->
 
 -ifdef(EUNIT).
 get_cmeta_test() ->
-    ok = leo_logger_client_message:new("./", ?LOG_LEVEL_WARN),
+    ok = leo_logger_api:new("./", ?LOG_LEVEL_WARN),
     %% destination side with custom metadata
     UDM = [{<<"name">>, <<"LeoFS">>},
            {<<"category">>, <<"distributed storage">>},

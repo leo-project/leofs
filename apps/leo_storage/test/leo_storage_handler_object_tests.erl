@@ -79,8 +79,8 @@ setup() ->
     true = rpc:call(Node0, code, add_path, ["../deps/meck/ebin"]),
     true = rpc:call(Node1, code, add_path, ["../deps/meck/ebin"]),
 
-    ok = leo_logger_client_message:new("./", ?LOG_LEVEL_WARN),
-    ok = leo_logger_client_base:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
+    ok = leo_logger_api:new("./", ?LOG_LEVEL_WARN),
+    ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
                                     "./", ?LOG_FILENAME_ACCESS),
     {Node0, Node1}.
 

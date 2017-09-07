@@ -62,7 +62,7 @@ api_test_() ->
             ]}}.
 
 setup() ->
-    ok = leo_logger_client_message:new("./", ?LOG_LEVEL_WARN),
+    ok = leo_logger_api:new("./", ?LOG_LEVEL_WARN),
     io:format(user, "cwd:~p~n",[os:cmd("pwd")]),
     [] = os:cmd("epmd -daemon"),
     {ok, Hostname} = inet:gethostname(),

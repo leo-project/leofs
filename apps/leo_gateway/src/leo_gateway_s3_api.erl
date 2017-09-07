@@ -573,6 +573,8 @@ put_object(?BIN_EMPTY, Req, Key, #req_params{bucket_name = BucketName,
                        {Val,_} ->
                            binary_to_integer(Val)
                    end,
+
+            ?debug("put_object/3", "Object Size: ~p", [Size]),
             case (Size >= Params#req_params.threshold_of_chunk_len) of
                 true when Size >= Params#req_params.max_len_of_obj ->
                     ?access_log_put(BucketName, Key, Size, ?HTTP_ST_BAD_REQ, BeginTime),
