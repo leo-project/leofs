@@ -1081,7 +1081,7 @@ exchange_datatype(float, Val) ->
 update_property_2(Node, Method, Args) when is_atom(Node) ->
     case leo_misc:node_existence(Node) of
         true ->
-            case rpc:call(Node, leo_watchdog_api, Method, Args) of
+            case rpc:call(Node, leo_watchdog_api, Method, Args, ?TIMEOUT_FOR_LEOFSADM) of
                 {badrpc,_} ->
                     {error, ?ERROR_COULD_NOT_CONNECT};
                 Res ->
@@ -1140,7 +1140,7 @@ dump_ring(Option) ->
     case ?get_tokens(Option, ?ERROR_NOT_SPECIFIED_NODE) of
         {ok, [Node|_]} ->
             rpc:call(list_to_atom(Node),
-                     leo_redundant_manager_api, dump, [both]);
+                     leo_redundant_manager_api, dump, [both], ?TIMEOUT_FOR_LEOFSADM);
         Error ->
             Error
     end.
@@ -1286,7 +1286,7 @@ join_cluster_2([Node|Rest] = RemoteNodes) ->
                            [] ->
                                [RPCNode];
                            [Partner|_] ->
-                               case rpc:call(Partner, leo_rpc, node, []) of
+                               case rpc:call(Partner, leo_rpc, node, [], ?TIMEOUT_FOR_LEOFSADM) of
                                    {_,_Cause} ->
                                        [RPCNode];
                                    Partner_1 ->
@@ -1479,7 +1479,7 @@ version_all(Option) ->
                                         [] ->
                                             {"not_found", ?ERROR_FAILED_GET_VERSION};
                                         [Partner|_] ->
-                                            case rpc:call(Partner, application, get_env, [leo_manager, system_version]) of
+                                            case rpc:call(Partner, application, get_env, [leo_manager, system_version], ?TIMEOUT_FOR_LEOFSADM) of
                                                 {badrpc, _} ->
                                                     {atom_to_list(Partner), ?ERROR_FAILED_GET_VERSION};
                                                 {ok, SV} ->
@@ -1494,7 +1494,7 @@ version_all(Option) ->
                            {ok, R1} ->
                                lists:map(fun(N) ->
                                                  Node = N#node_state.node,
-                                                 V = case rpc:call(Node, leo_storage_api, get_info, [version]) of
+                                                 V = case rpc:call(Node, leo_storage_api, get_info, [version], ?TIMEOUT_FOR_LEOFSADM) of
                                                          {badrpc, _} ->
                                                              ?ERROR_FAILED_GET_VERSION;
                                                          Res ->
@@ -1511,7 +1511,7 @@ version_all(Option) ->
                            {ok, R2} ->
                                lists:map(fun(N) ->
                                                  Node = N#node_state.node,
-                                                 V = case rpc:call(Node, leo_gateway_api, get_info, [version]) of
+                                                 V = case rpc:call(Node, leo_gateway_api, get_info, [version], ?TIMEOUT_FOR_LEOFSADM) of
                                                          {badrpc, _} ->
                                                              ?ERROR_FAILED_GET_VERSION;
                                                          Res ->

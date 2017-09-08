@@ -46,6 +46,8 @@
 -define(DEF_RING_SYNC_INTERVAL, 10000). %%  10sec
 -endif.
 
+-define(TIMEOUT_FOR_LEOFSADM, 5000). %% 5sec
+
 -define(SYSTEM_CONF_FILE, "conf/leofs.conf").
 
 

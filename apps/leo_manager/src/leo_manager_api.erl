@@ -349,7 +349,7 @@ get_node_status(Node_1) ->
         undefined ->
             {error, not_found};
         _ ->
-            case rpc:call(Node_2, Mod, get_node_status, [], ?DEF_TIMEOUT) of
+            case rpc:call(Node_2, Mod, get_node_status, [], ?TIMEOUT_FOR_LEOFSADM) of
                 {ok, Status} ->
                     {ok, {Type, Status}};
                 {_, Cause} ->
