@@ -21,7 +21,7 @@ RUNNER_USER=${RUNNER_USER:-leofs}
 
 # Make sure this script is running as the appropriate user
 if [ ! -z "$RUNNER_USER" ] && [ `whoami` != "$RUNNER_USER" ]; then
-    exec sudo -u $RUNNER_USER "$RUNNER_SCRIPT_DIR/$SCRIPT" "$@"
+    exec sudo -H -u $RUNNER_USER "$RUNNER_SCRIPT_DIR/$SCRIPT" "$@"
 fi
 
 # Make sure CWD is set to runner base dir
