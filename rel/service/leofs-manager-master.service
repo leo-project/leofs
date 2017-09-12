@@ -1,0 +1,22 @@
+[Unit]
+Description=LeoFS master management node
+After=network-online.target
+Wants=network-online.target
+After=leofs-epmd.socket leofs-epmd.service
+Requires=leofs-epmd.socket
+
+[Service]
+Type=simple
+User=leofs
+Group=leofs
+
+ExecStart=/usr/local/leofs/current/leo_manager_0/bin/leo_manager foreground_start
+
+Restart=on-failure
+RestartSec=20
+
+TimeoutStopSec=5min
+ExecStop=/usr/local/leofs/current/leo_manager_0/bin/leo_manager stop
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=Erlang Port Mapper Daemon
+After=network.target
+Wants=network.target
+Requires=leofs-epmd.socket
+
+[Service]
+ExecStart=/usr/local/leofs/current/leo_manager_0/%ERTS_VSN%/bin/epmd -systemd
+ExecStop=/usr/local/leofs/current/leo_manager_0/%ERTS_VSN%/bin/epmd -kill
+Type=notify
+Restart=always
+User=leofs
+Group=leofs
+
+[Install]
+Also=leofs-epmd.socket
+WantedBy=multi-user.target
