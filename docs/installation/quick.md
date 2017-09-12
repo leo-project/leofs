@@ -22,7 +22,8 @@ $ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{V
 $ sudo dpkg -i leofs_{VERSION}-1_erl-18.3_ubuntu-16.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
-drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
+drwxr-xr-x 6 root root 4096 Sep  8 20:52 {VERSION}
+lrwxrwxrwx 1 root root    5 Sep  8 20:33 current -> {VERSION}
 ```
 
 #### For Ubuntu 14.04
@@ -31,7 +32,8 @@ $ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{V
 $ sudo dpkg -i leofs_{VERSION}-1_erl-18.3_ubuntu-14.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
-drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
+drwxr-xr-x 6 root root 4096 Sep  8 20:52 {VERSION}
+lrwxrwxrwx 1 root root    5 Sep  8 20:33 current -> {VERSION}
 ```
 
 ### CentOS
@@ -48,7 +50,8 @@ $ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{V
 $ sudo rpm -ivh leofs-{VERSION}-1.erl-18.3.el6.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
-drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
+drwxr-xr-x 6 root root 4096 Sep  8 20:52 {VERSION}
+lrwxrwxrwx 1 root root    5 Sep  8 20:33 current -> {VERSION}
 ```
 
 #### For CentOS 7.x
@@ -58,7 +61,8 @@ $ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{V
 $ sudo rpm -ivh leofs-{VERSION}-1.erl-18.3.el7.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
-drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
+drwxr-xr-x 6 root root 4096 Sep  8 20:52 {VERSION}
+lrwxrwxrwx 1 root root    5 Sep  8 20:33 current -> {VERSION}
 ```
 
 ## Configuration
@@ -92,6 +96,13 @@ $ leo_manager_1/bin/leo_manager start
 $ leo_storage/bin/leo_storage start
 $ leo_gateway/bin/leo_gateway start
 ```
+
+For systemd-based distributions running v1.4.0 or later, you can use systemd units to launch LeoFS instead:
+```text
+# systemctl start leofs-manager-master leofs-manager-slave leofs-gateway leofs-storage
+```
+Please do not mix launching/stopping through systemctl and directly through launch scripts. More information is available at [For Administrators / System Operations / Systemd Services](/admin/system_operations/systemd.md).
+
 
 Then confirms whether the LeoManager nodes and the LeoStorage are running or not with the `leofs-adm status` command.
 
