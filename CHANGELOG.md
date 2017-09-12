@@ -19,7 +19,7 @@
 * [leo_logger v1.2.6](https://github.com/leo-project/leo_logger/releases/tag/1.2.6)
 * [leo_mcerl v0.6.6](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.6)
 * [leo_mq v1.5.8](https://github.com/leo-project/leo_mq/releases/tag/1.5.8)
-* [leo_object_storage v1.3.16](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.16)
+* [leo_object_storage v1.3.17](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.17)
 * [leo_ordning_reda v1.2.6](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.6)
 * [leo_pod v0.6.9](https://github.com/leo-project/leo_pod/releases/tag/0.6.9)
 * [leo_redundant_manager 1.9.50](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.50)
