@@ -1,6 +1,7 @@
 _build/
 deps/
 rel/leo_manager/leo_manager/
+rel/leo_manager/service/
 rel/leo_gateway/leo_gateway/
 rel/leo_storage/leo_storage/
 package/

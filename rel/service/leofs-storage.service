@@ -1,0 +1,23 @@
+[Unit]
+Description=LeoFS storage node
+After=network-online.target
+Wants=network-online.target
+After=leofs-epmd.socket leofs-epmd.service
+Requires=leofs-epmd.socket
+After=leofs-manager-master.service leofs-manager-slave.service
+
+[Service]
+Type=simple
+User=leofs
+Group=leofs
+
+ExecStart=/usr/local/leofs/current/leo_storage/bin/leo_storage foreground_start
+
+Restart=on-failure
+RestartSec=20
+
+TimeoutStopSec=30min
+ExecStop=/usr/local/leofs/current/leo_storage/bin/leo_storage stop
+
+[Install]
+WantedBy=multi-user.target
