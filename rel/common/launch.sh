@@ -31,7 +31,7 @@ cd $RUNNER_BASE_DIR
 mkdir -p $RUNNER_LOG_DIR
 
 help () {
-    echo "Usage: $SCRIPT [-type leo_manager|leo_gateway|leo_storage] {start|stop|restart|reboot|ping|console|console_clean|attach|remote_console}"
+    echo "Usage: $SCRIPT [-type leo_manager|leo_gateway|leo_storage] {start|stop|restart|foreground_start|reboot|ping|console|console_clean|attach|remote_console}"
     echo "Script type is picked from its name, but can be overriden with -type option"
     echo "leo_manager additionally supports commands {dump-mnesia-data|load-mnesia-data}"
 }
@@ -102,6 +102,7 @@ gen_config() {
     rm -f $RUNNER_ETC_DIR/app.*.config
     rm -f $RUNNER_ETC_DIR/vm.*.args
     ERTS_PATH=$RUNNER_BASE_DIR/erts-$ERTS_VSN/bin
+    NODETOOL_LITE="$ERTS_PATH/escript $ERTS_PATH/nodetool"
     # Check for presence of extra config files and process them in alphabetical order, if they exist
     ADDITIONAL_CONFIG_CMD=""
     if [ -d $RUNNER_ETC_DIR/$NODE_TYPE.d ] && ls -A $RUNNER_ETC_DIR/$NODE_TYPE.d/*.conf > /dev/null 2>&1
@@ -118,12 +119,17 @@ gen_config() {
 
     VM_ARGS=`find $RUNNER_ETC_DIR/ -type f | grep vm.*[0-9].args`
     mv $VM_ARGS $RUNNER_ETC_DIR/vm.args
+
+    # Sanity check the app.config file
+    RES=`$NODETOOL_LITE chkconfig $RUNNER_ETC_DIR/app.config`
+    if [ "$RES" != "ok" ]; then
+        echo "Error reading $RUNNER_ETC_DIR/app.config"
+        echo $RES
+        exit 1
+    fi
 }
 case "$1" in
-    start)
-        gen_config
-        ;;
-    console)
+    start|console|foreground_start)
         gen_config
         ;;
     *)
@@ -158,7 +164,6 @@ ERTS_PATH=$RUNNER_BASE_DIR/erts-$ERTS_VSN/bin
 
 # Setup command to control the node
 NODETOOL="$ERTS_PATH/escript $ERTS_PATH/nodetool $NAME_ARG $COOKIE_ARG"
-NODETOOL_LITE="$ERTS_PATH/escript $ERTS_PATH/nodetool"
 
 # Setup remote shell command to control node
 REMSH="$ERTS_PATH/erl $REMSH_NAME_ARG $REMSH_REMSH_ARG $COOKIE_ARG"
@@ -180,14 +185,6 @@ case "$1" in
         RES=`$NODETOOL ping`
         if [ "$RES" = "pong" ]; then
             echo "Node is already running!"
-            exit 1
-        fi
-
-        # Sanity check the app.config file
-        RES=`$NODETOOL_LITE chkconfig $RUNNER_ETC_DIR/app.config`
-        if [ "$RES" != "ok" ]; then
-            echo "Error reading $RUNNER_ETC_DIR/app.config"
-            echo $RES
             exit 1
         fi
 
@@ -300,19 +297,41 @@ case "$1" in
         exec $ERTS_PATH/to_erl $PIPE_DIR
         ;;
 
-    console|console_clean)
+    console|console_clean|foreground_start)
+        if [ "$1" = "foreground_start" ]
+        then
+            # Start in foreground and without run_erl wrapper (for systemd, docker etc)
+            # run_erl hides real exit code of erlexec, which prevents knowing if the process had crashed
+            # or exited cleanly
+            RES=`$NODETOOL ping`
+            if [ "$RES" = "pong" ]; then
+                echo "Node is already running!"
+                exit 1
+            fi
+
+            # Default value ERL_CRASH_DUMP_SECONDS=-1 will create dumps on every crash, which isn't desirable
+            # when external hearbeat (e.g. in systemd service) is used. 
+            # Comment the below two lines ONLY if you face leo_(manager|storage|gateway) restarted frequently
+            # in order to dig down further for identifying the root cause.
+            ERL_CRASH_DUMP_SECONDS=0
+            export ERL_CRASH_DUMP_SECONDS
+        fi
+
         # .boot file typically just $SCRIPT (ie, the app name)
         # however, for debugging, sometimes start_clean.boot is useful:
         case "$1" in
-            console)        BOOTFILE=$SCRIPT ;;
-            console_clean)  BOOTFILE=start_clean ;;
+            console|foreground_start)  BOOTFILE=$SCRIPT ;;
+            console_clean)             BOOTFILE=start_clean ;;
         esac
         # Setup beam-required vars
         ROOTDIR=$RUNNER_BASE_DIR
         BINDIR=$ROOTDIR/erts-$ERTS_VSN/bin
         EMU=beam
         PROGNAME=`echo $0 | sed 's/.*\\///'`
-        CMD="$BINDIR/erlexec -heart -boot $RUNNER_BASE_DIR/releases/$APP_VSN/$BOOTFILE -mode $ERLEXEC_MODE -config $CONFIG_PATH -args_file $VMARGS_PATH -- ${1+"$@"}"
+        case "$1" in
+            console*)          CMD="$BINDIR/erlexec -heart -boot $RUNNER_BASE_DIR/releases/$APP_VSN/$BOOTFILE -mode $ERLEXEC_MODE -config $CONFIG_PATH -args_file $VMARGS_PATH -- ${1+"$@"}" ;;
+            foreground_start)  CMD="$BINDIR/erlexec -noinput -boot $RUNNER_BASE_DIR/releases/$APP_VSN/$BOOTFILE -mode $ERLEXEC_MODE -config $CONFIG_PATH -args_file $VMARGS_PATH -- console" ;;
+        esac
         export EMU
         export ROOTDIR
         export BINDIR
@@ -322,8 +341,8 @@ case "$1" in
         echo "Exec: $CMD"
         echo "Root: $ROOTDIR"
 
-        # Log the startup
-        logger -t "$SCRIPT[$$]" "Starting up"
+        # Log the startup (only for "console" and "console_clean")
+        [ "$1" != "foreground_start" ] && logger -t "$SCRIPT[$$]" "Starting up"
 
         # Start the VM
         exec $CMD
