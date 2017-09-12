@@ -63,6 +63,7 @@ pages:
         - NFS v3: 'admin/protocols/nfs_v3.md'
     - System Operations:
         - Operation Flow: 'admin/system_operations/flow.md'
+        - Systemd Services: 'admin/system_operations/systemd.md'
         - S3-API related Operations: 'admin/system_operations/s3.md'
         - Cluster Operations: 'admin/system_operations/cluster.md'
         - Data Operations: 'admin/system_operations/data.md'
