@@ -7,12 +7,28 @@ SCRIPT=`basename "$0"`
 
 RUNNER_SCRIPT_DIR=$(cd ${0%/*} && pwd)
 RUNNER_BASE_DIR=${RUNNER_SCRIPT_DIR%/*}
+NODE_TYPE=$(basename "$RUNNER_BASE_DIR")
+
+# Load "GLOBAL_CONFIG" option from here (when it's "yes", it means that environment
+# file and config file will be picked from /etc/leofs/$NODE_TYPE instead)
+[ -f /etc/leofs/leofs.conf ] && . /etc/leofs/leofs.conf
 
 # Source environment script to allow redefining all other variables
-CONFIG_PATH=$RUNNER_BASE_DIR/etc/$SCRIPT.environment
+if [ "$GLOBAL_CONFIG" = "yes" ]
+then
+    CONFIG_PATH=/etc/leofs/$NODE_TYPE/$SCRIPT.environment
+else
+    CONFIG_PATH=$RUNNER_BASE_DIR/etc/$SCRIPT.environment
+fi
+
 [ -f $CONFIG_PATH ] && . $CONFIG_PATH
 
-RUNNER_ETC_DIR=${RUNNER_ETC_DIR:-$RUNNER_BASE_DIR/etc}
+if [ "$GLOBAL_CONFIG" = "yes" ]
+then
+    RUNNER_ETC_DIR=/etc/leofs/$NODE_TYPE
+else
+    RUNNER_ETC_DIR=${RUNNER_ETC_DIR:-$RUNNER_BASE_DIR/etc}
+fi
 RUNNER_SCHEMA_DIR=${RUNNER_SCHEMA_DIR:-$RUNNER_BASE_DIR/etc}
 RUNNER_LOG_DIR=${RUNNER_LOG_DIR:-$RUNNER_BASE_DIR/log}
 # Note the trailing slash on $PIPE_DIR/
