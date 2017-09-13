@@ -7,6 +7,7 @@
 * [#816](https://github.com/leo-project/leofs/issues/592) `leo_manager` `leo_storage` `mdc-replication` LeoFS 1.3.6 - MDC not replicating data
 * [#817](https://github.com/leo-project/leofs/issues/817) `leo_manager` leofs-adm "version all" and "status" hang when node is offline
 * [#821](https://github.com/leo-project/leofs/issues/821) `leo_storage` PR [#802](https://github.com/leo-project/leofs/pull/802) break listing objects
+* [#827](https://github.com/leo-project/leofs/issues/827) `leofs_package` Nodes fail to start on Ubuntu 16.04 (different sudo setup)
 
 
 ### Libraries
