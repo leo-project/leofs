@@ -12,6 +12,7 @@ NODE_TYPE=$(basename "$RUNNER_BASE_DIR")
 # Load "GLOBAL_CONFIG" option from here (when it's "yes", it means that environment
 # file and config file will be picked from /etc/leofs/$NODE_TYPE instead)
 [ -f /etc/leofs/leofs.conf ] && . /etc/leofs/leofs.conf
+GLOBAL_CONFIG="$(echo $GLOBAL_CONFIG | tr '[A-Z]' '[a-z]')"
 
 # Source environment script to allow redefining all other variables
 if [ "$GLOBAL_CONFIG" = "yes" ]
@@ -25,7 +26,7 @@ fi
 
 if [ "$GLOBAL_CONFIG" = "yes" ]
 then
-    RUNNER_ETC_DIR=/etc/leofs/$NODE_TYPE
+    RUNNER_ETC_DIR=${RUNNER_ETC_DIR:-/etc/leofs/$NODE_TYPE}
 else
     RUNNER_ETC_DIR=${RUNNER_ETC_DIR:-$RUNNER_BASE_DIR/etc}
 fi
@@ -354,6 +355,7 @@ case "$1" in
         export PROGNAME
 
         # Dump environment info for logging purposes
+        echo "Config path: $RUNNER_ETC_DIR"
         echo "Exec: $CMD"
         echo "Root: $ROOTDIR"
 
