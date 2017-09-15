@@ -929,6 +929,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#if-nodes-in-a-cluster-are-connected-using-dns-names-when-will-dns-lookups-happen" title="If nodes in a cluster are connected using DNS names, When will DNS lookups happen?" class="md-nav__link">
+    If nodes in a cluster are connected using DNS names, When will DNS lookups happen?
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1104,6 +1111,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#if-nodes-in-a-cluster-are-connected-using-dns-names-when-will-dns-lookups-happen" title="If nodes in a cluster are connected using DNS names, When will DNS lookups happen?" class="md-nav__link">
+    If nodes in a cluster are connected using DNS names, When will DNS lookups happen?
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1223,6 +1237,24 @@ To decrease the bandwidth and odds timeout could happen, you have two options.</
 <li>Increase <code class="codehilite">http.timeout_for_body</code></li>
 </ul>
 <p>Logically it's same between decreasing the buffer size and increasing the timeout. However there is one benefit using the former one rather than the latter. As the memory allocation request in Erlang VM happen in <code class="codehilite">large_object.reading_chunked_obj_len</code> unit, the larger buffer size we set, the more memory footprint the host running LeoGateway needs at once so that if LeoGateway accepts lots of connections and those try to upload very large files in parallel then the odds OOM could happen increase. That said, decreasing the buffer size should be the first try in terms of safety(less memory usages).</p>
+<h2 id="if-nodes-in-a-cluster-are-connected-using-dns-names-when-will-dns-lookups-happen">If nodes in a cluster are connected using DNS names, When will DNS lookups happen?<a class="headerlink" href="#if-nodes-in-a-cluster-are-connected-using-dns-names-when-will-dns-lookups-happen" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The short answer is<ul>
+<li>ONLY when starting each node</li>
+<li>Rarely when the network gets unstable, and TCP connections between nodes get disconnected and re-connected later (TCP connections between nodes in a cluster keep alive and being used for RPC(remote procedure call) and any Distributed Erlang<sup id="fnref3:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> feature, so once connected to others, No DNS lookups happen except abnormal cases as stated above)</li>
+</ul>
+</li>
+<li>The long/precious answer is depending on how Distributed Erlang<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> is implemented so you would have to become a master of Distributed Erlang<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> protocol, however in reality only remembering the short answer could help you in almost cases</li>
+</ul>
+<p>Given that the above answers, You would not need to be afraid of using hostnames instead of ip addresses.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
                 
                   
                 
