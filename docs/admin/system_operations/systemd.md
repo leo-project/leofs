@@ -66,7 +66,7 @@ Save and exit. Repeat for other unit files, if needed. For every node, user set 
 
 ### Long shutdown times
 
-In some cases (primary, LeoStorage under high write load) a node can take a long time to shutdown. When running node as systemd service, `reboot` command will ask node to shutdown safely before actually rebooting the system, which might take a long time under these conditions. Current limit for LeoStorage is set to 30 minutes, through this can be changed using systemd's override feature. Long shutdown / reboot times are expected for LeoStorage under high load.
+In some cases (primary, LeoStorage under high write load) a node can take a long time to shutdown. When running node as systemd service, `reboot` command will ask node to shutdown safely before actually rebooting the system, which might take a long time under these conditions. Current limit for LeoStorage is set to 30 minutes, though this can be changed using systemd's override feature. Long shutdown / reboot times are expected for LeoStorage under high load.
 
 
 ### Running LeoFS nodes on systems running other Erlang software

@@ -101,7 +101,9 @@ For systemd-based distributions running v1.4.0 or later, you can use systemd uni
 ```text
 # systemctl start leofs-manager-master leofs-manager-slave leofs-gateway leofs-storage
 ```
-Please do not mix launching/stopping through systemctl and directly through launch scripts. More information is available at [For Administrators / System Operations / Systemd Services](/admin/system_operations/systemd.md).
+
+!!! note "Note: Do not mix systemctl and launch scripts"
+    Please make sure not to mix launching/stopping through systemctl and directly through launch scripts. More information is available at [For Administrators / System Operations / Systemd Services](/admin/system_operations/systemd.md#mixing-old-and-new-way-to-launch-nodes).
 
 
 Then confirms whether the LeoManager nodes and the LeoStorage are running or not with the `leofs-adm status` command.
@@ -279,3 +281,4 @@ You now know how to setup a stand-alone LeoFS storage system, and make sure to h
 - [For Administrators / Settings / LeoManager Settings](/admin/settings/leo_manager.md)
 - [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
 - [For Administrators / Settings / LeoGateway Settings](/admin/settings/leo_gateway.md)
+- [For Administrators / System Operations / Systemd Services](/admin/system_operations/systemd.md)
