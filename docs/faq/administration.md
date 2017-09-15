@@ -137,3 +137,13 @@ To decrease the bandwidth and odds timeout could happen, you have two options.
 - Increase `http.timeout_for_body`
 
 Logically it's same between decreasing the buffer size and increasing the timeout. However there is one benefit using the former one rather than the latter. As the memory allocation request in Erlang VM happen in `large_object.reading_chunked_obj_len` unit, the larger buffer size we set, the more memory footprint the host running LeoGateway needs at once so that if LeoGateway accepts lots of connections and those try to upload very large files in parallel then the odds OOM could happen increase. That said, decreasing the buffer size should be the first try in terms of safety(less memory usages).
+
+## If nodes in a cluster are connected using DNS names, When will DNS lookups happen?
+* The short answer is
+    * ONLY when starting each node
+    * Rarely when the network gets unstable, and TCP connections between nodes get disconnected and re-connected later (TCP connections between nodes in a cluster keep alive and being used for RPC(remote procedure call) and any Distributed Erlang[^1] feature, so once connected to others, No DNS lookups happen except abnormal cases as stated above)
+* The long/precious answer is depending on how Distributed Erlang[^1] is implemented so you would have to become a master of Distributed Erlang[^1] protocol, however in reality only remembering the short answer could help you in almost cases
+
+Given that the above answers, You would not need to be afraid of using hostnames instead of ip addresses.
+
+[^1]: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a>
