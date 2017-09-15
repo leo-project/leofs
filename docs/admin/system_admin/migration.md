@@ -187,3 +187,4 @@ As described at the previous section, the default user running LeoFS processes h
 - [For Administrators / Settings / LeoManager Settings](/admin/settings/leo_manager.md)
 - [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
 - [For Administrators / Settings / LeoGateway Settings](/admin/settings/leo_gateway.md)
+- [For Administrators / System Operations / Systemd Services](/admin/system_operations/systemd.md)
