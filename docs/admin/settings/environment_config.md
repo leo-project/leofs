@@ -31,7 +31,8 @@ $ /usr/local/leofs/<new_version>/leo_manager_0/bin/leo_manager start
 
 With this, users can place actual config files (like `leo_manager.conf`) to the directory of their choice and change them independently of version upgrades, and the `.environment` files that need to be placed into installation tree don't need to be changed between versions. With the correct setup, since no work/temporary files will be kept in the installation tree, old version can be removed cleanly.
 
-*Please do not use example commands above (`leo_manager stop/start`) when managing nodes through systemd units for LeoFS v1.4.0 or later, use `systemctl stop/start leofs-manager-master` instead)*
+!!! note "Note: When managing nodes through systemd"
+    Please do not use example commands above (`leo_manager stop/start`) when running nodes as systemd services for LeoFS v1.4.0 or later, use `systemctl stop/start leofs-manager-master` instead.
 
 
 ## Example Configuration
