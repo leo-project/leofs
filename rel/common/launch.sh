@@ -14,10 +14,23 @@ NODE_TYPE=$(basename "$RUNNER_BASE_DIR")
 [ -f /etc/leofs/leofs.conf ] && . /etc/leofs/leofs.conf
 GLOBAL_CONFIG="$(echo $GLOBAL_CONFIG | tr '[A-Z]' '[a-z]')"
 
+
+# Check if we need to pick alternate set of config files. Compatible only with global config.
+if [ "$NODE_EXTRA_NAME" != "" ]
+then
+    CONFIG_DIR="${NODE_TYPE}_${NODE_EXTRA_NAME}"
+else
+    CONFIG_DIR="$NODE_TYPE"
+    # Define the variable, even if it wasn't before. We rely on it when parsing "ps" output for "stop" command
+    NODE_EXTRA_NAME=
+    export NODE_EXTRA_NAME
+fi
+
+
 # Source environment script to allow redefining all other variables
 if [ "$GLOBAL_CONFIG" = "yes" ]
 then
-    CONFIG_PATH=/etc/leofs/$NODE_TYPE/$SCRIPT.environment
+    CONFIG_PATH=/etc/leofs/$CONFIG_DIR/$SCRIPT.environment
 else
     CONFIG_PATH=$RUNNER_BASE_DIR/etc/$SCRIPT.environment
 fi
@@ -26,10 +39,11 @@ fi
 
 if [ "$GLOBAL_CONFIG" = "yes" ]
 then
-    RUNNER_ETC_DIR=${RUNNER_ETC_DIR:-/etc/leofs/$NODE_TYPE}
+    RUNNER_ETC_DIR=${RUNNER_ETC_DIR:-/etc/leofs/$CONFIG_DIR}
 else
     RUNNER_ETC_DIR=${RUNNER_ETC_DIR:-$RUNNER_BASE_DIR/etc}
 fi
+
 RUNNER_SCHEMA_DIR=${RUNNER_SCHEMA_DIR:-$RUNNER_BASE_DIR/etc}
 RUNNER_LOG_DIR=${RUNNER_LOG_DIR:-$RUNNER_BASE_DIR/log}
 # Note the trailing slash on $PIPE_DIR/
@@ -222,7 +236,14 @@ case "$1" in
     stop)
         # Wait for the node to completely stop...
         case `uname -s` in
-            Linux|Darwin|FreeBSD|DragonFly|NetBSD|OpenBSD)
+            Linux)
+                # Only look for processes launched with the same NODE_EXTRA_NAME env variable
+                # PID COMMAND+ENVIRONMENT
+                PID=`ps axeww o pid,args|\
+                    grep "NODE_EXTRA_NAME=$NODE_EXTRA_NAME" |\
+                    grep "$RUNNER_BASE_DIR/.*/[b]eam"|awk '{print $1}'`
+                ;;
+            Darwin|FreeBSD|DragonFly|NetBSD|OpenBSD)
                 # PID COMMAND
                 PID=`ps ax -o pid= -o command=|\
                     grep "$RUNNER_BASE_DIR/.*/[b]eam"|awk '{print $1}'`
