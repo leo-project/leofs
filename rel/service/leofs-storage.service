@@ -7,9 +7,11 @@ Requires=leofs-epmd.socket
 After=leofs-manager-master.service leofs-manager-slave.service
 
 [Service]
+Environment=NODE_EXTRA_NAME=
 Type=simple
 User=leofs
 Group=leofs
+LimitNOFILE=65535
 
 ExecStart=/usr/local/leofs/current/leo_storage/bin/leo_storage foreground_start
 

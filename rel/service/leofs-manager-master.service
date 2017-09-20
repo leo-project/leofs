@@ -6,6 +6,7 @@ After=leofs-epmd.socket leofs-epmd.service
 Requires=leofs-epmd.socket
 
 [Service]
+Environment=NODE_EXTRA_NAME=
 Type=simple
 User=leofs
 Group=leofs
