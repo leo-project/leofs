@@ -240,7 +240,7 @@ case "$1" in
                 # Only look for processes launched with the same NODE_EXTRA_NAME env variable
                 # PID COMMAND+ENVIRONMENT
                 PID=`ps axeww o pid,args|\
-                    grep "NODE_EXTRA_NAME=$NODE_EXTRA_NAME" |\
+                    grep "NODE_EXTRA_NAME=$NODE_EXTRA_NAME " |\
                     grep "$RUNNER_BASE_DIR/.*/[b]eam"|awk '{print $1}'`
                 ;;
             Darwin|FreeBSD|DragonFly|NetBSD|OpenBSD)
