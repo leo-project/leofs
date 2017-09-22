@@ -238,6 +238,7 @@ case "$1" in
         case `uname -s` in
             Linux)
                 # Only look for processes launched with the same NODE_EXTRA_NAME env variable
+                # This will fail (won't find anything) when stopping nodes launched by older version of script
                 # PID COMMAND+ENVIRONMENT
                 PID=`ps axeww o pid,args|\
                     grep "NODE_EXTRA_NAME=$NODE_EXTRA_NAME " |\
