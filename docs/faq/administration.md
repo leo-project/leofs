@@ -146,4 +146,8 @@ Logically it's same between decreasing the buffer size and increasing the timeou
 
 Given that the above answers, You would not need to be afraid of using hostnames instead of ip addresses.
 
+## Why doesn't leofs-adm respond to a command like leofs-adm status?
+The netcat installed on your env is probably the one distributed through netcat-traditional package and unfortunately that doesn't work for leofs-adm which requires netcat-openbsd instead. if that is the case, installing netcat-openbsd should solve the problem as reported on github issue[^2].
+
 [^1]: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a>
+[^2]: <a href="https://github.com/leo-project/leofs/issues/519" target="_blank">LEOFS' ISSUE_519</a>
