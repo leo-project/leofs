@@ -785,6 +785,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../admin/system_operations/systemd/" title="Systemd Services" class="md-nav__link">
+      Systemd Services
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../admin/system_operations/s3/" title="S3-API related Operations" class="md-nav__link">
       S3-API related Operations
     </a>
@@ -1214,11 +1226,13 @@
 2
 3
 4
-5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_erl-18.3_ubuntu-16.04_amd64.deb
+5
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_erl-18.3_ubuntu-16.04_amd64.deb
 $ sudo dpkg -i leofs_{VERSION}-1_erl-18.3_ubuntu-16.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
-drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
+drwxr-xr-x 6 root root 4096 Sep  8 20:52 {VERSION}
+lrwxrwxrwx 1 root root    5 Sep  8 20:33 current -&gt; {VERSION}
 </pre></div>
 </td></tr></table>
 
@@ -1227,11 +1241,13 @@ drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
 2
 3
 4
-5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_erl-18.3_ubuntu-14.04_amd64.deb
+5
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs_{VERSION}-1_erl-18.3_ubuntu-14.04_amd64.deb
 $ sudo dpkg -i leofs_{VERSION}-1_erl-18.3_ubuntu-14.04_amd64.deb
 $ ls -l /usr/local/leofs/
 total 4
-drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
+drwxr-xr-x 6 root root 4096 Sep  8 20:52 {VERSION}
+lrwxrwxrwx 1 root root    5 Sep  8 20:33 current -&gt; {VERSION}
 </pre></div>
 </td></tr></table>
 
@@ -1246,11 +1262,13 @@ drwxr-xr-x 6 root   root   4096 Jan 20 00:00 {VERSION}
 2
 3
 4
-5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.erl-18.3.el6.x86_64.rpm
+5
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.erl-18.3.el6.x86_64.rpm
 $ sudo rpm -ivh leofs-{VERSION}-1.erl-18.3.el6.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
-drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
+drwxr-xr-x 6 root root 4096 Sep  8 20:52 {VERSION}
+lrwxrwxrwx 1 root root    5 Sep  8 20:33 current -&gt; {VERSION}
 </pre></div>
 </td></tr></table>
 
@@ -1259,11 +1277,13 @@ drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
 2
 3
 4
-5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.erl-18.3.el7.x86_64.rpm
+5
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ wget https://github.com/leo-project/leofs/releases/download/{VERSION}/leofs-{VERSION}-1.erl-18.3.el7.x86_64.rpm
 $ sudo rpm -ivh leofs-{VERSION}-1.erl-18.3.el7.x86_64.rpm
 $ ls -l /usr/local/leofs/
 total 4
-drwxr-xr-x 6 root   root   4096 Jan 20 15:37 {VERSION}
+drwxr-xr-x 6 root root 4096 Sep  8 20:52 {VERSION}
+lrwxrwxrwx 1 root root    5 Sep  8 20:33 current -&gt; {VERSION}
 </pre></div>
 </td></tr></table>
 
@@ -1302,6 +1322,15 @@ $ leo_gateway/bin/leo_gateway start
 </pre></div>
 </td></tr></table>
 
+<p>For systemd-based distributions running v1.4.0 or later, you can use systemd units to launch LeoFS instead:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># systemctl start leofs-manager-master leofs-manager-slave leofs-gateway leofs-storage
+</pre></div>
+</td></tr></table>
+
+<div class="admonition note">
+<p class="admonition-title">Note: Do not mix systemctl and launch scripts</p>
+<p>Please make sure not to mix launching/stopping through systemctl and directly through launch scripts. More information is available at <a href="../../admin/system_operations/systemd/#mixing-old-and-new-way-to-launch-nodes">For Administrators / System Operations / Systemd Services</a>.</p>
+</div>
 <p>Then confirms whether the LeoManager nodes and the LeoStorage are running or not with the <code class="codehilite">leofs-adm status</code> command.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -1566,6 +1595,7 @@ delete: <span class="s1">&#39;s3://&lt;BUCKET&gt;/&lt;OBJECT&gt;&#39;</span>
 <li><a href="../../admin/settings/leo_manager/">For Administrators / Settings / LeoManager Settings</a></li>
 <li><a href="../../admin/settings/leo_storage/">For Administrators / Settings / LeoStorage Settings</a></li>
 <li><a href="../../admin/settings/leo_gateway/">For Administrators / Settings / LeoGateway Settings</a></li>
+<li><a href="../../admin/system_operations/systemd/">For Administrators / System Operations / Systemd Services</a></li>
 </ul>
                 
                   

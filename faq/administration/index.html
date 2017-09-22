@@ -599,6 +599,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../admin/system_operations/systemd/" title="Systemd Services" class="md-nav__link">
+      Systemd Services
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../admin/system_operations/s3/" title="S3-API related Operations" class="md-nav__link">
       S3-API related Operations
     </a>
@@ -936,6 +948,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#why-doesnt-leofs-adm-respond-to-a-command-like-leofs-adm-status" title="Why doesn't leofs-adm respond to a command like leofs-adm status?" class="md-nav__link">
+    Why doesn't leofs-adm respond to a command like leofs-adm status?
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1118,6 +1137,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#why-doesnt-leofs-adm-respond-to-a-command-like-leofs-adm-status" title="Why doesn't leofs-adm respond to a command like leofs-adm status?" class="md-nav__link">
+    Why doesn't leofs-adm respond to a command like leofs-adm status?
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1247,11 +1273,16 @@ To decrease the bandwidth and odds timeout could happen, you have two options.</
 <li>The long/precious answer is depending on how Distributed Erlang<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> is implemented so you would have to become a master of Distributed Erlang<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> protocol, however in reality only remembering the short answer could help you in almost cases</li>
 </ul>
 <p>Given that the above answers, You would not need to be afraid of using hostnames instead of ip addresses.</p>
+<h2 id="why-doesnt-leofs-adm-respond-to-a-command-like-leofs-adm-status">Why doesn't leofs-adm respond to a command like leofs-adm status?<a class="headerlink" href="#why-doesnt-leofs-adm-respond-to-a-command-like-leofs-adm-status" title="Permanent link">&para;</a></h2>
+<p>The netcat installed on your env is probably the one distributed through netcat-traditional package and unfortunately that doesn't work for leofs-adm which requires netcat-openbsd instead. if that is the case, installing netcat-openbsd should solve the problem as reported on github issue<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>.</p>
 <div class="footnote">
 <hr />
 <ol>
 <li id="fn:1">
 <p><a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://github.com/leo-project/leofs/issues/519" target="_blank">LEOFS' ISSUE_519</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
