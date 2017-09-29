@@ -79,55 +79,37 @@ LeoFS packages have been already provided on the Web. You're able to easily inst
 Here, we explain how to build LeoFS from source code.
 First, you have to install the following packages to build Erlang and LeoFS.
 
+### Build Dependencies
 ```bash
 ## [CentOS]
-$ sudo yum install libuuid-devel cmake check check-devel
+$ sudo yum install cmake check-devel gcc gcc-c++ make
 ## [Ubuntu]
-$ sudo apt-get install build-essential libtool libncurses5-dev libssl-dev cmake check
+$ sudo apt-get install gcc g++ cmake make check libtool
+### For Docker
+$ apt-get install lsb-release
 ```
 
-Then, install Erlang.
+### Install Erlang
 
+You can download and install Erlang package from Erlang Solutions
+https://www.erlang-solutions.com/resources/download.html
+
+#### For CentOS 7 (Example with Erlang OTP 18.3.4)
 ```bash
-##
-## 1. Install libatomic
-##
-$ wget http://www.ivmaisoft.com/_bin/atomic_ops/libatomic_ops-7.4.4.tar.gz
-$ tar xzvf libatomic_ops-7.4.4.tar.gz
-$ cd libatomic_ops-7.4.4
-$ ./configure --prefix=/usr/local
-$ make
-$ sudo make install
+$ wget https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_18.3.4-1~centos~7_amd64.rpm -O esl-erlang.rpm
+### Dependencies for esl-erlang
+$ sudo yum install epel-release
+### Install Erlang
+$ sudo yum localinstall esl-erlang.rpm
+```
 
-##
-## 2. Install Erlang (18.3)
-##
-$ wget http://erlang.org/download/otp_src_18.3.tar.gz
-$ tar xzf otp_src_18.3.tar.gz
-$ cd otp_src_18.3
-$ ./configure --prefix=/usr/local/erlang/18.3 \
-              --enable-smp-support \
-              --enable-m64-build \
-              --enable-halfword-emulator \
-              --enable-kernel-poll \
-              --without-javac \
-              --disable-native-libs \
-              --disable-hipe \
-              --disable-sctp \
-              --enable-threads \
-              --with-libatomic_ops=/usr/local
-$ make
-$ sudo make install
-
-##
-## 3. Set PATH
-##
-$ vi ~/.profile
-    ## append the follows:
-    export ERL_HOME=/usr/local/erlang/18.3
-    export PATH=$PATH:$ERL_HOME/bin
-
-$ source ~/.profile
+### For Ubuntu 16.04 (Example with Erlang OTP 18.3.4)
+```bash
+$ wget https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_18.3.4-1~ubuntu~xenial_amd64.deb -O esl-erlang.deb
+### Install Erlang
+$ sudo dpkg -i esl-erlang.deb
+### Fix depencies for esl-erlang
+$ sudo apt-get install -f
 ```
 
 Then, clone source of LeoFS and libraries from GitHub.
