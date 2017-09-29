@@ -85,6 +85,14 @@
   {default, 5}
  ]}.
 
+%% @doc Disable checking the disk usage with disksup by setting its threshold to 1.0(100%)
+{mapping,
+ "os_mon.disk_almost_full_threshold",
+ "os_mon.disk_almost_full_threshold",
+ [
+  {datatype, integer},
+  {default, 1}
+ ]}.
 
 %% --------------------------------------------------------------------
 %% MANAGER
