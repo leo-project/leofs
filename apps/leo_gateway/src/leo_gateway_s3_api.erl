@@ -362,7 +362,11 @@ put_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                             ?XML_ERROR_MSG_BucketAlreadyOwnedByYou, Key, <<>>, Req_1);
         {error, timeout} ->
             ?access_log_bucket_put(Bucket, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
-            ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req_1)
+            ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req_1);
+        {error, ?ERROR_SAME_BUCKET_EXISTS} ->
+            ?access_log_bucket_put(Bucket, ?HTTP_ST_CONFLICT, BeginTime),
+            ?reply_conflict([?SERVER_HEADER], ?XML_ERROR_CODE_OperationAborted,
+                            ?XML_ERROR_MSG_OperationAborted, Key, <<>>, Req_1)
     end;
 put_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                                  is_acl = true,
