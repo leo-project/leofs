@@ -12,6 +12,7 @@ If you would like to migrate a LeoFS system, you can achieve that by following t
 #### Takeover and Adjust Confugurations
 
 Before getting started with the migration of a LeoFS system, you need to take over the configuration, then adjust the paths and set the new configurations.
+It is possible to simplify this by storing node configuration in `/etc/leofs`, independent on version. Please refer to [For Administrators / System Administration / Persistent Configuration](/admin/system_admin/persistent_configuration.md) for instructions on enabling and using this feature.
 
 
 #### Added Or Changed LeoFS' Configurations
@@ -183,6 +184,7 @@ As described at the previous section, the default user running LeoFS processes h
 
 ## Related Links
 
+- [For Administrators / System Administration / Persistent Configuration Location](/admin/system_admin/persistent_configuration.md)
 - [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
 - [For Administrators / Settings / LeoManager Settings](/admin/settings/leo_manager.md)
 - [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
