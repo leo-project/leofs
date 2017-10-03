@@ -78,7 +78,7 @@ Please note that this list might be not complete as new options might be added t
     It is possible to run multiple instances of LeoManager as well, but the resulting configuration and `leofs-adm` operations would be more complicated, so it's not recommended (as results of error might be severe). It would be better to use separate VMs or containers for different LeoManagers.
 
 !!! note "Note: Interacting with other instances through launch script"
-    It is possible to interact with extra node instances through original launch script, however it requires a bit roundabout way of exporting environment variable as the owner of process. Example: `sudo -u leofs sh -c "export NODE_EXTRA_NAME=second; /usr/local/leofs/current/leo_storage/bin/leo_storage remote_console"`
+    It is possible to interact with extra node instances through original launch script, however it requires a bit roundabout way of exporting environment variable as the owner of process. Example: `sudo -H -u leofs sh -c "export NODE_EXTRA_NAME=second; /usr/local/leofs/current/leo_storage/bin/leo_storage remote_console"`
 
 ## Example configuration
 
