@@ -58,7 +58,7 @@ cache.cache_ram_capacity = 1073741824
 
 ## How to check which configuration directory is used
 
-On launch, nodes report which directory they load config files from (also, the same directory is mentioned in "Exec" line of that output). When launching nodes through scripts directly, like `/usr/local/leofs/current/leo_manager_1/bin/leo_manager_1 start` this information is available in erlang.log.* files. By default these files are located at `/usr/local/leofs/current/leo_*/log` (unless redefined with RUNNER_LOG_DIR= setting in environment config file). Please check which erlang.log.* file has the most recent date (it might be _not_ erlang.log.1). Example output:
+On launch, nodes report which directory they load config files from (also, the same directory is mentioned in "Exec" line of that output). When launching nodes through scripts directly, like `/usr/local/leofs/current/leo_manager_1/bin/leo_manager start` this information is available in erlang.log.* files. By default these files are located at `/usr/local/leofs/current/leo_*/log` (unless redefined with RUNNER_LOG_DIR= setting in environment config file). Please check which erlang.log.* file has the most recent date (it might be _not_ erlang.log.1). Example output:
 
 ```
 $ grep -h -e Config -e Exec /usr/local/leofs/current/leo_manager_1/log/erlang.log.3
