@@ -72,7 +72,7 @@ http.port
 http.ssl_port
 ```
 
-Please note that this list might be not complete as new options might be added to config files. When using this feature, **it's up to user to ensure that all paths above point to different directories**. Trying to share the same ports or snmp_conf setting between nodes would result in second instance failing to start, but trying to share log or queue directory could lead to disasterous results. **Always double-check that all paths are different before using this feature.**
+Please note that this list might be not complete as new options might be added to config files. When using this feature, **it's up to user to ensure that all paths above point to different directories**. Trying to share the same ports or snmp_conf setting between nodes would result in second instance failing to start, but trying to share log or queue directory could lead to disastrous results. **Always double-check that all paths are different before using this feature.**
 
 !!! note "Note: Multiple LeoManager instances"
     It is possible to run multiple instances of LeoManager as well, but the resulting configuration and `leofs-adm` operations would be more complicated, so it's not recommended (as results of error might be severe). It would be better to use separate VMs or containers for different LeoManagers.
