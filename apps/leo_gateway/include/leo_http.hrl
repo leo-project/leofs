@@ -160,6 +160,7 @@
 -define(XML_ERROR_CODE_SlowDown, "SlowDown").
 -define(XML_ERROR_CODE_BucketAlreadyExists, "BucketAlreadyExists").
 -define(XML_ERROR_CODE_BucketAlreadyOwnedByYou, "BucketAlreadyOwnedByYou").
+-define(XML_ERROR_CODE_OperationAborted, "OperationAborted").
 -define(XML_ERROR_CODE_MalformedXML, "MalformedXML").
 -define(XML_ERROR_CODE_BadDigest, "BadDigest").
 -define(XML_ERROR_CODE_InvalidBucketName, "InvalidBucketName").
@@ -179,6 +180,7 @@
 -define(XML_ERROR_MSG_SlowDown, "Please reduce your request rate.").
 -define(XML_ERROR_MSG_BucketAlreadyExists, "Please select a different name and try again.").
 -define(XML_ERROR_MSG_BucketAlreadyOwnedByYou, "Your previous request to create the named bucket succeeded and you already own it.").
+-define(XML_ERROR_MSG_OperationAborted, "A conflicting conditional operation is currently in progress against this resource. Try again.").
 -define(XML_ERROR_MSG_MalformedXML, "The XML you provided was not well-formed or did not alidate against our published schema").
 -define(XML_ERROR_MSG_BadDigest, "The Content-MD5 you specified did not match what we received.").
 -define(XML_ERROR_MSG_InvalidBucketName, "The specified bucket is not valid.").
