@@ -297,6 +297,9 @@
                 Val
         end).
 
+%% Special URLs
+-define(HTTP_SPECIAL_URL_HEALTH_CHECK, <<"leofs_adm/ping">>).
+
 %% canned ACLs
 -define(acl_read, "READ").
 -define(acl_read_acp, "READ_ACP").
