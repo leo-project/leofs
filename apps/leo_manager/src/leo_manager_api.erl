@@ -1382,16 +1382,7 @@ remove(Node) ->
 %% @private
 remove_1(Node) ->
     case string:tokens(Node, "@") of
-        [_, IP] ->
-            remove_2(Node, IP);
-        _ ->
-            {error, ?ERROR_INVALID_ARGS}
-    end.
-
-%% @private
-remove_2(Node, IP) ->
-    case string:tokens(IP, ".") of
-        [_,_,_,_] ->
+        [_, _IP] ->
             remove_3(list_to_atom(Node));
         _ ->
             {error, ?ERROR_INVALID_ARGS}
