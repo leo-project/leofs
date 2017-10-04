@@ -1192,8 +1192,6 @@ handle_multi_upload_1(true, Req, Path, UploadId,
 
     case leo_gateway_rpc_handler:get(Path4Conf) of
         {ok, #?METADATA{meta = CMetaBin}, _} ->
-            _ = leo_gateway_rpc_handler:delete(Path4Conf),
-
             BodyOpts = case TransferDecodeFun of
                            undefined ->
                                [];
@@ -1201,7 +1199,12 @@ handle_multi_upload_1(true, Req, Path, UploadId,
                                [{transfer_decode, TransferDecodeFun, TransferDecodeState}]
                        end,
             Ret = cowboy_req:body(Req, BodyOpts),
-            handle_multi_upload_2(Ret, Req, Path, ChunkedLen, BucketInfo, CMetaBin);
+            {ok, Req2} = handle_multi_upload_2(Ret, Req, Path, ChunkedLen, BucketInfo, CMetaBin),
+            %% Deleting a temporary object after getting the upload done could decrease the odds
+            %% inconsistencies against the temporary object could happen.
+            %% This hack should mitigate https://github.com/leo-project/leofs/issues/845
+            _ = leo_gateway_rpc_handler:delete(Path4Conf),
+            {ok, Req2};
         _ ->
             ?reply_service_unavailable_error([?SERVER_HEADER], Path, <<>>, Req)
     end;
