@@ -19,7 +19,7 @@
     
     
       
-        <title>Network Configurations - LeoFS Documentation</title>
+        <title>Persistent Configuration - LeoFS Documentation</title>
       
     
     
@@ -82,11 +82,11 @@
                 </span>
               
                 <span class="md-header-nav__parent">
-                  Setup
+                  System Administration
                 </span>
               
             
-            Network Configurations
+            Persistent Configuration
           
         </span>
       </div>
@@ -356,12 +356,10 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-1" type="checkbox" id="nav-5-1" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-1" type="checkbox" id="nav-5-1">
     
     <label class="md-nav__link" for="nav-5-1">
       Setup
@@ -379,7 +377,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../planning_for_production/" title="Planning for Production" class="md-nav__link">
+    <a href="../../setup/planning_for_production/" title="Planning for Production" class="md-nav__link">
       Planning for Production
     </a>
   </li>
@@ -391,7 +389,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../supported_platforms/" title="Supported Platforms" class="md-nav__link">
+    <a href="../../setup/supported_platforms/" title="Supported Platforms" class="md-nav__link">
       Supported Platforms
     </a>
   </li>
@@ -403,7 +401,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../hardware_requirements/" title="Hardware Requirements" class="md-nav__link">
+    <a href="../../setup/hardware_requirements/" title="Hardware Requirements" class="md-nav__link">
       Hardware Requirements
     </a>
   </li>
@@ -413,67 +411,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="toc">
-        Network Configurations
-      </label>
-    
-    <a href="./" title="Network Configurations" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../setup/network_config/" title="Network Configurations" class="md-nav__link">
       Network Configurations
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#firewall-rules" title="Firewall Rules" class="md-nav__link">
-    Firewall Rules
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-to-change-erlangs-port-range" title="How to Change Erlang's Port Range" class="md-nav__link">
-    How to Change Erlang's Port Range
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-links" title="Related Links" class="md-nav__link">
-    Related Links
-  </a>
-  
-</li>
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -726,10 +668,12 @@
           
           
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5" checked>
     
     <label class="md-nav__link" for="nav-5-5">
       System Administration
@@ -747,7 +691,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/log_management/" title="Log Management" class="md-nav__link">
+    <a href="../log_management/" title="Log Management" class="md-nav__link">
       Log Management
     </a>
   </li>
@@ -757,11 +701,95 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../system_admin/persistent_configuration/" title="Persistent Configuration" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Persistent Configuration
+      </label>
+    
+    <a href="./" title="Persistent Configuration" class="md-nav__link md-nav__link--active">
       Persistent Configuration
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#node-configuration-in-etcleofs" title="Node configuration in /etc/leofs" class="md-nav__link">
+    Node configuration in /etc/leofs
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#different-configuration-directory-for-each-leofs-version" title="Different configuration directory for each LeoFS version" class="md-nav__link">
+    Different configuration directory for each LeoFS version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#same-configuration-directory-for-all-versions" title="Same configuration directory for all versions" class="md-nav__link">
+    Same configuration directory for all versions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-details" title="Usage details" class="md-nav__link">
+    Usage details
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-check-which-configuration-directory-is-used" title="How to check which configuration directory is used" class="md-nav__link">
+    How to check which configuration directory is used
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-creation-of-etcleofs-hierarchy" title="Manual creation of /etc/leofs hierarchy" class="md-nav__link">
+    Manual creation of /etc/leofs hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -771,7 +799,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
+    <a href="../migration/" title="System Migration" class="md-nav__link">
       System Migration
     </a>
   </li>
@@ -783,7 +811,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/integration/" title="System Integration" class="md-nav__link">
+    <a href="../integration/" title="System Integration" class="md-nav__link">
       System Integration
     </a>
   </li>
@@ -795,7 +823,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/multiple_nodes/" title="Multiple Node Instances" class="md-nav__link">
+    <a href="../multiple_nodes/" title="Multiple Node Instances" class="md-nav__link">
       Multiple Node Instances
     </a>
   </li>
@@ -940,22 +968,50 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#firewall-rules" title="Firewall Rules" class="md-nav__link">
-    Firewall Rules
+  <a href="#node-configuration-in-etcleofs" title="Node configuration in /etc/leofs" class="md-nav__link">
+    Node configuration in /etc/leofs
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-to-change-erlangs-port-range" title="How to Change Erlang's Port Range" class="md-nav__link">
-    How to Change Erlang's Port Range
+  <a href="#different-configuration-directory-for-each-leofs-version" title="Different configuration directory for each LeoFS version" class="md-nav__link">
+    Different configuration directory for each LeoFS version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#same-configuration-directory-for-all-versions" title="Same configuration directory for all versions" class="md-nav__link">
+    Same configuration directory for all versions
   </a>
   
 </li>
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-details" title="Usage details" class="md-nav__link">
+    Usage details
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-check-which-configuration-directory-is-used" title="How to check which configuration directory is used" class="md-nav__link">
+    How to check which configuration directory is used
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-creation-of-etcleofs-hierarchy" title="Manual creation of /etc/leofs hierarchy" class="md-nav__link">
+    Manual creation of /etc/leofs hierarchy
+  </a>
   
 </li>
       
@@ -980,158 +1036,83 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/setup/network_config.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
+                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/system_admin/persistent_configuration.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
                 
                 
-                <h1 id="network-configurations">Network Configurations<a class="headerlink" href="#network-configurations" title="Permanent link">&para;</a></h1>
-<h2 id="firewall-rules">Firewall Rules<a class="headerlink" href="#firewall-rules" title="Permanent link">&para;</a></h2>
-<p>In order for a LeoFS system to operate correctly, it is necessary to set and check the firewall rules in your environment. LeoFS depends on <a href="http://www.erlang.org/" target="_blank">Erlang/OTP</a>'s RPC, which uses specified ports and provides LeoFS' SNMP agent which also uses a port per a LeoFS' component node - LeoStorage, LeoGateway, and LeoManager.</p>
+                <h1 id="persistent-configuration-location">Persistent Configuration Location<a class="headerlink" href="#persistent-configuration-location" title="Permanent link">&para;</a></h1>
+<h2 id="node-configuration-in-etcleofs">Node configuration in <code class="codehilite">/etc/leofs</code><a class="headerlink" href="#node-configuration-in-etcleofs" title="Permanent link">&para;</a></h2>
+<p>Starting from v1.4.0, LeoFS nodes support loading configuration from <code class="codehilite">/etc/leofs</code> hierarchy. This means that there are two locations from which nodes can load their configuration (but only one can be enabled at any time). Official Linux packages ship a copy of config files in <code class="codehilite">/etc/leofs/leo_*</code>, though the feature itself should work on any system. However, it is <strong>disabled</strong> by default for compatibility with older versions. </p>
+<h3 id="different-configuration-directory-for-each-leofs-version">Different configuration directory for each LeoFS version<a class="headerlink" href="#different-configuration-directory-for-each-leofs-version" title="Permanent link">&para;</a></h3>
+<p><strong>Currently, this is default for all installations.</strong></p>
+<p>Config files are loaded from these locations when <code class="codehilite">/etc/leofs/leofs.conf</code> does not exist, is empty or contains <code class="codehilite">GLOBAL_CONFIG=no</code> (default). "%(version)" here is LeoFS version like "1.3.7":</p>
 <table>
 <thead>
 <tr>
-<th>Subsystem</th>
-<th>Direction</th>
-<th align="right">Ports</th>
-<th>Description</th>
+<th>Node Type</th>
+<th>Full Path</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>LeoManager (master)</strong></td>
-<td></td>
-<td align="right"></td>
-<td></td>
+<td>Manager Master</td>
+<td>/usr/local/leofs/%(version)/leo_manager_0/etc</td>
 </tr>
 <tr>
-<td>LeoManager (master)</td>
-<td>Incoming</td>
-<td align="right">10010/*</td>
-<td>LeoManager console (text)</td>
+<td>Manager Slave</td>
+<td>/usr/local/leofs/%(version)/leo_manager_1/etc</td>
 </tr>
 <tr>
-<td>LeoManager (master)</td>
-<td>Incoming</td>
-<td align="right">10020/*</td>
-<td>LeoManager console (json)</td>
+<td>Storage</td>
+<td>/usr/local/leofs/%(version)/leo_storage/etc</td>
 </tr>
 <tr>
-<td>LeoManager (master)</td>
-<td>Incoming</td>
-<td align="right">4369/*</td>
-<td>Erlang Port Mapper</td>
-</tr>
-<tr>
-<td>LeoManager (master)</td>
-<td>Incoming</td>
-<td align="right">4020/*</td>
-<td>SNMP Listen Port</td>
-</tr>
-<tr>
-<td>LeoManager (master)</td>
-<td>Outgoing</td>
-<td align="right">*/4369</td>
-<td>Erlang Port Mapper</td>
-</tr>
-<tr>
-<td><strong>LeoManager (slave)</strong></td>
-<td></td>
-<td align="right"></td>
-<td></td>
-</tr>
-<tr>
-<td>LeoManager (slave)</td>
-<td>Incoming</td>
-<td align="right">10011/*</td>
-<td>LeoManager console (text)</td>
-</tr>
-<tr>
-<td>LeoManager (slave)</td>
-<td>Incoming</td>
-<td align="right">10021/*</td>
-<td>LeoManager console (json)</td>
-</tr>
-<tr>
-<td>LeoManager (slave)</td>
-<td>Incoming</td>
-<td align="right">4369/*</td>
-<td>Erlang Port Mapper</td>
-</tr>
-<tr>
-<td>LeoManager (slave)</td>
-<td>Incoming</td>
-<td align="right">4021/*</td>
-<td>SNMP Listen Port</td>
-</tr>
-<tr>
-<td>LeoManager (slave)</td>
-<td>Outgoing</td>
-<td align="right">*/4369</td>
-<td>Erlang Port Mapper</td>
-</tr>
-<tr>
-<td><strong>LeoStorage</strong></td>
-<td></td>
-<td align="right"></td>
-<td></td>
-</tr>
-<tr>
-<td>LeoStorage</td>
-<td>Incoming</td>
-<td align="right">4369/*</td>
-<td>Erlang Port Mapper</td>
-</tr>
-<tr>
-<td>LeoStorage</td>
-<td>Incoming</td>
-<td align="right">4010/*</td>
-<td>SNMP Listen Port</td>
-</tr>
-<tr>
-<td>LeoStorage</td>
-<td>Outgoing</td>
-<td align="right">*/4369</td>
-<td>Erlang Port Mapper</td>
-</tr>
-<tr>
-<td><strong>LeoGateway</strong></td>
-<td></td>
-<td align="right"></td>
-<td></td>
-</tr>
-<tr>
-<td>LeoGateway</td>
-<td>Incoming</td>
-<td align="right">8080/*</td>
-<td>HTTP listen port</td>
-</tr>
-<tr>
-<td>LeoGateway</td>
-<td>Incoming</td>
-<td align="right">8443/*</td>
-<td>HTTPS listen port</td>
-</tr>
-<tr>
-<td>LeoGateway</td>
-<td>Incoming</td>
-<td align="right">4369/*</td>
-<td>Erlang Port Mapper</td>
-</tr>
-<tr>
-<td>LeoGateway</td>
-<td>Incoming</td>
-<td align="right">4000/*</td>
-<td>SNMP Listen Port</td>
-</tr>
-<tr>
-<td>LeoGateway</td>
-<td>Outgoing</td>
-<td align="right">*/4369</td>
-<td>Erlang Port Mapper</td>
+<td>Gateway</td>
+<td>/usr/local/leofs/%(version)/leo_gateway/etc</td>
 </tr>
 </tbody>
 </table>
-<h3 id="how-to-change-erlangs-port-range">How to Change Erlang's Port Range<a class="headerlink" href="#how-to-change-erlangs-port-range" title="Permanent link">&para;</a></h3>
-<p>Port range can be specified by setting Erlang's kernel variables <code class="codehilite">inet_dist_listen_min</code> and <code class="codehilite">inet_dist_listen_max</code>. If you need to change those configuration items, you need to enter the Erlang console of a target node.</p>
+<p>For each LeoFS version, these directories will be different (e.g. <code class="codehilite">/usr/local/leofs/1.3.6/leo_storage/etc</code> and <code class="codehilite">/usr/local/leofs/1.3.7/leo_storage/etc</code>). Because of this, config files needs to be copied into new directory after each upgrade.</p>
+<div class="admonition note">
+<p class="admonition-title">Note: Relative config files locations</p>
+<p>The paths listed above work for default installation, but config files are actually loaded from directory relative to binaries. For example, if Manager Master is located in <code class="codehilite">/home/leofs/leo_manager_master</code>, config files will be picked from <code class="codehilite">/home/leofs/leo_manager_master/etc</code>.</p>
+</div>
+<h3 id="same-configuration-directory-for-all-versions">Same configuration directory for all versions<a class="headerlink" href="#same-configuration-directory-for-all-versions" title="Permanent link">&para;</a></h3>
+<p>For LeoFS v1.4.0 or later, when <code class="codehilite">/etc/leofs/leofs.conf</code> exists and contains <code class="codehilite">GLOBAL_CONFIG=yes</code>, configuration is loaded from these directories - independent from version or binaries location:</p>
+<table>
+<thead>
+<tr>
+<th>Node Type</th>
+<th>Full Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manager Master</td>
+<td>/etc/leofs/leo_manager_0</td>
+</tr>
+<tr>
+<td>Manager Slave</td>
+<td>/etc/leofs/leo_manager_1</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>/etc/leofs/leo_storage</td>
+</tr>
+<tr>
+<td>Gateway</td>
+<td>/etc/leofs/leo_gateway</td>
+</tr>
+</tbody>
+</table>
+<p>In this case config files don't need to be moved during upgrades. To enable this feature, edit <code class="codehilite">/etc/leofs/leofs.conf</code> file, setting</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>GLOBAL_CONFIG=yes
+</pre></div>
+</td></tr></table>
+
+<h2 id="usage-details">Usage details<a class="headerlink" href="#usage-details" title="Permanent link">&para;</a></h2>
+<p>The new configuration directories apply to main config files and <a href="../../settings/environment_config/">environment files</a> (leo_manager.conf/.environment, leo_storage.conf/.environment, leo_gateway.conf/.environment). This <strong>does not</strong> apply to anything else by default, e.g. server_cert.pem/server_key.pem won't be picked from <code class="codehilite">/etc/leofs/leo_gateway</code> unless explicitly set so in leo_gateway.conf. It does not apply to .schema files as well, but this can be changed by setting <code class="codehilite">RUNNER_SCHEMA_DIR</code> in .environment file, if required.</p>
+<p>Users have an option of either directly editing main config file (e.g.  <code class="codehilite">/etc/leofs/leo_gateway/leo_gateway.conf</code>), or creating a configuration override files in <code class="codehilite">/etc/leofs/leo_gateway/leo_gateway.d</code>, e.g. <code class="codehilite">/etc/leofs/leo_gateway/leo_gateway.d/local.conf</code>. If main config file was changed, all new package upgrades won't touch the changed file, leaving the task of merging new options and changed settings into current configuration to user. It might be a good idea to use configuration override files instead; if main config file was never edited, it will be replaced by newer version during package upgrades, while options that were changed will be loaded from configuration override directory after the main config file.</p>
+<p>Example minimal configuration, override-style is a file <code class="codehilite">/etc/leofs/leo_gateway/leo_gateway.d/20-leo_gateway.conf</code> containing the following:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1139,22 +1120,53 @@
 5
 6
 7
-8</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Example:</span>
-<span class="c1">##   - This forces Erlang to use only ports 9100--9105 for distributed Erlang traffic.</span>
-$ bin/leo_storage remote_console
+8</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="n">nodename</span> <span class="o">=</span> <span class="n">gateway_0</span><span class="mf">@192.168.0.20</span>
+<span class="n">managers</span> <span class="o">=</span> <span class="p">[</span><span class="n">manager_0</span><span class="mf">@192.168.0.10</span><span class="p">,</span> <span class="n">manager_1</span><span class="mf">@192.168.0.11</span><span class="p">]</span>
 
-<span class="o">(</span>storage_0@127.0.0.1<span class="o">)</span><span class="m">1</span>&gt; application:set_env<span class="o">(</span>kernel, inet_dist_listen_min, <span class="m">9100</span><span class="o">)</span>.
-<span class="o">(</span>storage_0@127.0.0.1<span class="o">)</span><span class="m">2</span>&gt; application:set_env<span class="o">(</span>kernel, inet_dist_listen_max, <span class="m">9105</span><span class="o">)</span>.
+<span class="n">protocol</span> <span class="o">=</span> <span class="n">s3</span>
+<span class="n">http</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="mi">8080</span>
 
-<span class="c1">## Press [CTRL+c] to exit the Erlang console</span>
+<span class="cp">## Increase RAM cache</span>
+<span class="n">cache</span><span class="p">.</span><span class="n">cache_ram_capacity</span> <span class="o">=</span> <span class="mi">1073741824</span>
 </pre></div>
 </td></tr></table>
 
+<h2 id="how-to-check-which-configuration-directory-is-used">How to check which configuration directory is used<a class="headerlink" href="#how-to-check-which-configuration-directory-is-used" title="Permanent link">&para;</a></h2>
+<p>On launch, nodes report which directory they load config files from (also, the same directory is mentioned in "Exec" line of that output). When launching nodes through scripts directly, like <code class="codehilite">/usr/local/leofs/current/leo_manager_1/bin/leo_manager start</code> this information is available in erlang.log.* files. By default these files are located at <code class="codehilite">/usr/local/leofs/current/leo_*/log</code> (unless redefined with RUNNER_LOG_DIR= setting in environment config file). Please check which erlang.log.* file has the most recent date (it might be <em>not</em> erlang.log.1). Example output:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ grep -h -e Config -e Exec /usr/local/leofs/current/leo_manager_1/log/erlang.log.3
+Config path: /etc/leofs/leo_manager_1
+Exec: /usr/local/leofs/current/leo_manager_1/erts-8.3/bin/erlexec -heart -boot /usr/local/leofs/current/leo_manager_1/releases/1/leo_manager -mode embedded -config /etc/leofs/leo_manager_1/app.config -args_file /etc/leofs/leo_manager_1/vm.args -- console
+</pre></div>
+</td></tr></table>
+
+<p>This shows that configuration was loaded from <code class="codehilite">/etc/leofs/leo_manager_1</code>.</p>
+<p>When launching nodes as <a href="../../system_operations/systemd/">systemd services</a>, this information is stored in journald and available through journalctl:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ journalctl -b -l -u leofs-manager-slave <span class="p">|</span> grep -e Config -e Exec
+Sep <span class="m">29</span> <span class="m">19</span>:45:42 leo-m1.dev leo_manager<span class="o">[</span><span class="m">19318</span><span class="o">]</span>: Config path: /usr/local/leofs/current/leo_manager_1/etc
+Sep <span class="m">29</span> <span class="m">19</span>:45:42 leo-m1.dev leo_manager<span class="o">[</span><span class="m">19318</span><span class="o">]</span>: Exec: /usr/local/leofs/current/leo_manager_1/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_manager_1/releases/1/leo_manager -mode embedded -config /usr/local/leofs/current/leo_manager_1/etc/app.config -args_file /usr/local/leofs/current/leo_manager_1/etc/vm.args -- console
+</pre></div>
+</td></tr></table>
+
+<p>This shows that configuration was loaded from <code class="codehilite">/usr/local/leofs/current/leo_manager_1/etc</code> and persistent configuration directories in <code class="codehilite">/etc/leofs</code> are <strong>not</strong> used.</p>
+<h2 id="manual-creation-of-etcleofs-hierarchy">Manual creation of /etc/leofs hierarchy<a class="headerlink" href="#manual-creation-of-etcleofs-hierarchy" title="Permanent link">&para;</a></h2>
+<p>This section applies only to non-Linux users and Linux users who are not using official packages.</p>
+<p>Configuration in <code class="codehilite">/etc/leofs</code> can be used even when it's not supplied with official packages; it should work if it's created properly. Here is example how to do it for LeoGateway:</p>
+<ol>
+<li>Create directories: <code class="codehilite">mkdir -p /etc/leofs/leo_gateway</code></li>
+<li>Make sure that config directories are <strong>writable</strong> by user running LeoFS, e.g.  <code class="codehilite">chown leofs:leofs /etc/leofs/leo_gateway</code>. This is crucial, as nodes need to create extra files in that directory at launch.</li>
+<li>Create copy of default configuration file, e.g. <code class="codehilite">cp /usr/local/leofs/%(version)/leo_gateway/etc/leo_gateway.conf /etc/leofs/leo_gateway/</code></li>
+<li>Optionally, create conf.d-style directories for changing only parts of configuration. E.g. <code class="codehilite">mkdir /etc/leofs/leo_gateway/leo_gateway.d</code></li>
+<li>Edit main config file (e.g. <code class="codehilite">/etc/leofs/leo_gateway/leo_gateway.conf</code>) or create configuration replacement file (e.g. <code class="codehilite">/etc/leofs/leo_gateway/leo_gateway.d/local.conf</code>). Optionally, create copy / edit environment file, if needed.</li>
+<li>Create <code class="codehilite">/etc/leofs/leofs.conf</code> and write <code class="codehilite">GLOBAL_CONFIG=yes</code> in there.</li>
+</ol>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../settings/leo_manager/">For Administrators / Settings / LeoManager Settings</a></li>
-<li><a href="../../settings/leo_storage/">For Administrators / Settings / LeoStorage Settings</a></li>
-<li><a href="../../settings/leo_gateway/">For Administrators / Settings / LeoGateway Settings</a></li>
+<li><a href="../../settings/environment_config/">For Administrators / Settings / Environment Configuration</a></li>
+<li><a href="../../system_operations/systemd/">For Administrators / System Operations / Systemd Services</a></li>
 </ul>
                 
                   
@@ -1174,7 +1186,7 @@ $ bin/leo_storage remote_console
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../hardware_requirements/" title="Hardware Requirements" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../log_management/" title="Log Management" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1183,19 +1195,19 @@ $ bin/leo_storage remote_console
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Hardware Requirements
+                Log Management
               </span>
             </div>
           </a>
         
         
-          <a href="../../settings/cluster/" title="Cluster Settings" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../migration/" title="System Migration" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Cluster Settings
+                System Migration
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

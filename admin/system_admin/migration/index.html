@@ -701,6 +701,18 @@
           
           
 
+
+  <li class="md-nav__item">
+    <a href="../persistent_configuration/" title="Persistent Configuration" class="md-nav__link">
+      Persistent Configuration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
   
 
 
@@ -922,6 +934,18 @@
   <li class="md-nav__item">
     <a href="../integration/" title="System Integration" class="md-nav__link">
       System Integration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../multiple_nodes/" title="Multiple Node Instances" class="md-nav__link">
+      Multiple Node Instances
     </a>
   </li>
 
@@ -1266,7 +1290,8 @@
 <li><a href="../../../assets/leofs-upgrade-flow-diagram.jpg" target="_blank">See the large diagram</a></li>
 </ul>
 <h4 id="takeover-and-adjust-confugurations">Takeover and Adjust Confugurations<a class="headerlink" href="#takeover-and-adjust-confugurations" title="Permanent link">&para;</a></h4>
-<p>Before getting started with the migration of a LeoFS system, you need to take over the configuration, then adjust the paths and set the new configurations.</p>
+<p>Before getting started with the migration of a LeoFS system, you need to take over the configuration, then adjust the paths and set the new configurations.
+It is possible to simplify this by storing node configuration in <code class="codehilite">/etc/leofs</code>, independent on version. Please refer to <a href="../persistent_configuration/">For Administrators / System Administration / Persistent Configuration</a> for instructions on enabling and using this feature.</p>
 <h4 id="added-or-changed-leofs-configurations">Added Or Changed LeoFS' Configurations<a class="headerlink" href="#added-or-changed-leofs-configurations" title="Permanent link">&para;</a></h4>
 <h5 id="leomanager-master">LeoManager Master<a class="headerlink" href="#leomanager-master" title="Permanent link">&para;</a></h5>
 <p><strong>[since v1.3.3]</strong> LeoFS' MDC replication feature was improved. Some configuration are added in <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_manager/priv/leo_manager_0.conf">the configuration of LeoManager's master</a>.</p>
@@ -1439,6 +1464,7 @@ In <code class="codehilite">environment config file</code>, set <code class="cod
 </ul>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../persistent_configuration/">For Administrators / System Administration / Persistent Configuration Location</a></li>
 <li><a href="../../settings/environment_config/">For Administrators / Settings / Environment Configuration</a></li>
 <li><a href="../../settings/leo_manager/">For Administrators / Settings / LeoManager Settings</a></li>
 <li><a href="../../settings/leo_storage/">For Administrators / Settings / LeoStorage Settings</a></li>
@@ -1463,7 +1489,7 @@ In <code class="codehilite">environment config file</code>, set <code class="cod
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../log_management/" title="Log Management" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../persistent_configuration/" title="Persistent Configuration" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1472,7 +1498,7 @@ In <code class="codehilite">environment config file</code>, set <code class="cod
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Log Management
+                Persistent Configuration
               </span>
             </div>
           </a>

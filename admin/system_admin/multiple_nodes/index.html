@@ -19,7 +19,7 @@
     
     
       
-        <title>System Integration - LeoFS Documentation</title>
+        <title>Multiple Node Instances - LeoFS Documentation</title>
       
     
     
@@ -86,7 +86,7 @@
                 </span>
               
             
-            System Integration
+            Multiple Node Instances
           
         </span>
       </div>
@@ -725,6 +725,18 @@
           
           
 
+
+  <li class="md-nav__item">
+    <a href="../integration/" title="System Integration" class="md-nav__link">
+      System Integration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
   
 
 
@@ -736,11 +748,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="toc">
-        System Integration
+        Multiple Node Instances
       </label>
     
-    <a href="./" title="System Integration" class="md-nav__link md-nav__link--active">
-      System Integration
+    <a href="./" title="Multiple Node Instances" class="md-nav__link md-nav__link--active">
+      Multiple Node Instances
     </a>
     
       
@@ -754,70 +766,30 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cdn-integration" title="CDN Integration" class="md-nav__link">
-    CDN Integration
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-to-integrate-leofs-with-cdn" title="How To Integrate LeoFS With CDN" class="md-nav__link">
-    How To Integrate LeoFS With CDN
+  <a href="#description-and-requirements" title="Description and requirements" class="md-nav__link">
+    Description and requirements
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-use-http_custom_headerconf" title="How To Use http_custom_header.conf" class="md-nav__link">
-    How To Use http_custom_header.conf
+      
+        <li class="md-nav__item">
+  <a href="#activating-more-instances-of-the-same-node" title="Activating more instances of the same node" class="md-nav__link">
+    Activating more instances of the same node
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-write-http_custom_headerconf" title="How To Write http_custom_header.conf" class="md-nav__link">
-    How To Write http_custom_header.conf
+      
+        <li class="md-nav__item">
+  <a href="#list-of-options-that-must-have-different-settings" title="List of options that must have different settings" class="md-nav__link">
+    List of options that must have different settings
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#use-cases" title="Use Cases" class="md-nav__link">
-    Use Cases
+      
+        <li class="md-nav__item">
+  <a href="#example-configuration" title="Example configuration" class="md-nav__link">
+    Example configuration
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#appendix" title="Appendix" class="md-nav__link">
-    Appendix
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#syntax-for-the-expire-field" title="Syntax for the expire field" class="md-nav__link">
-    Syntax for the expire field
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#list-of-verified-cdn-services" title="List of verified CDN services" class="md-nav__link">
-    List of verified CDN services
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -834,18 +806,6 @@
   
 </nav>
     
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../multiple_nodes/" title="Multiple Node Instances" class="md-nav__link">
-      Multiple Node Instances
-    </a>
   </li>
 
         
@@ -988,70 +948,30 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cdn-integration" title="CDN Integration" class="md-nav__link">
-    CDN Integration
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-to-integrate-leofs-with-cdn" title="How To Integrate LeoFS With CDN" class="md-nav__link">
-    How To Integrate LeoFS With CDN
+  <a href="#description-and-requirements" title="Description and requirements" class="md-nav__link">
+    Description and requirements
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-use-http_custom_headerconf" title="How To Use http_custom_header.conf" class="md-nav__link">
-    How To Use http_custom_header.conf
+      
+        <li class="md-nav__item">
+  <a href="#activating-more-instances-of-the-same-node" title="Activating more instances of the same node" class="md-nav__link">
+    Activating more instances of the same node
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-write-http_custom_headerconf" title="How To Write http_custom_header.conf" class="md-nav__link">
-    How To Write http_custom_header.conf
+      
+        <li class="md-nav__item">
+  <a href="#list-of-options-that-must-have-different-settings" title="List of options that must have different settings" class="md-nav__link">
+    List of options that must have different settings
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#use-cases" title="Use Cases" class="md-nav__link">
-    Use Cases
+      
+        <li class="md-nav__item">
+  <a href="#example-configuration" title="Example configuration" class="md-nav__link">
+    Example configuration
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#appendix" title="Appendix" class="md-nav__link">
-    Appendix
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#syntax-for-the-expire-field" title="Syntax for the expire field" class="md-nav__link">
-    Syntax for the expire field
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#list-of-verified-cdn-services" title="List of verified CDN services" class="md-nav__link">
-    List of verified CDN services
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1076,44 +996,126 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/system_admin/integration.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
+                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/system_admin/multiple_nodes.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
                 
                 
-                <h1 id="system-integration">System Integration<a class="headerlink" href="#system-integration" title="Permanent link">&para;</a></h1>
-<h2 id="cdn-integration">CDN Integration<a class="headerlink" href="#cdn-integration" title="Permanent link">&para;</a></h2>
-<h3 id="how-to-integrate-leofs-with-cdn">How To Integrate LeoFS With CDN<a class="headerlink" href="#how-to-integrate-leofs-with-cdn" title="Permanent link">&para;</a></h3>
-<p>There is nothing special to do for integrating LeoFS with CDN<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>. Since almost CDN service providers take care of a CacheControl Header received from an origin to determine how long a file should be cached on their edge servers, so if you want to modify TTL according to URLs, you can do it by using <code class="codehilite">http_custom_header.conf</code>.</p>
-<h3 id="how-to-use-http_custom_headerconf">How To Use <code class="codehilite">http_custom_header.conf</code><a class="headerlink" href="#how-to-use-http_custom_headerconf" title="Permanent link">&para;</a></h3>
-<p>Append the following line to <code class="codehilite">leo_gateway.conf</code> which contains a LeoGateway's directory. Arrange the <code class="codehilite">http_custom_header.conf</code> into the path specified at <code class="codehilite">leo_gateway.conf</code>.</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## HTTP custom header configuration file path</span>
-<span class="na">http.headers_config_file</span> <span class="o">=</span> <span class="s">./etc/http_custom_header.conf</span>
-</pre></div>
-</td></tr></table>
-
-<h3 id="how-to-write-http_custom_headerconf">How To Write <code class="codehilite">http_custom_header.conf</code><a class="headerlink" href="#how-to-write-http_custom_headerconf" title="Permanent link">&para;</a></h3>
-<p>The syntax is a subset of <strong>Nginx<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup> configuration</strong>. You can use location contexts to specify TTL and add any headers to the path.</p>
+                <h1 id="mutiple-instances-of-nodes-on-the-same-system">Mutiple instances of nodes on the same system<a class="headerlink" href="#mutiple-instances-of-nodes-on-the-same-system" title="Permanent link">&para;</a></h1>
+<h2 id="description-and-requirements">Description and requirements<a class="headerlink" href="#description-and-requirements" title="Permanent link">&para;</a></h2>
+<p>Starting from v1.4.0, there is support for running multiple instances of the same node types on a single system (without use of containers or other type of isolation). This is useful for users who want to do things like</p>
+<ul>
+<li>Running two (or more) gateways on the same system (in the same or different mode, e.g. S3 gateway + REST gateway)</li>
+<li>Running two (or more) completely isolated clusters with different settings on the same set of storage servers</li>
+</ul>
+<p>This feature currently works only on Linux. Other prerequisites for activating it are:</p>
+<ul>
+<li>Nodes must be launched as systemd services. See <a href="../../system_operations/systemd/">For Administrators / System Operations / Systemd Services</a> for details on enabling this feature.</li>
+<li>Nodes must load configuration from <code class="codehilite">/etc/leofs</code>. See <a href="../persistent_configuration/">For Administrators / System Administration / Persistent Configuration Location</a> for details on enabling this feature.</li>
+<li><strong>All paths and ports</strong> in config files must be explicitly set for each instance and point to different locations. It's up to user to ensure that there are no conflicting paths.</li>
+</ul>
+<p>This is advanced feature aimed at existing LeoFS users who need to run another cluster or more gateways using the same hardware; it is recommended to have a working cluster where all work and log directories are configured to use non-default locations before enabling this.</p>
+<h2 id="activating-more-instances-of-the-same-node">Activating more instances of the same node<a class="headerlink" href="#activating-more-instances-of-the-same-node" title="Permanent link">&para;</a></h2>
+<p>Let's say we have LeoStorage instance running through systemd (<code class="codehilite">leofs-storage</code> service) and currently it loads configuration from <code class="codehilite">/etc/leofs/leo_storage</code>. We want to run another instance on the same system; it needs separate name. In this example, we'll call it "second". To create such instance:</p>
+<ol>
+<li>Create local copy of systemd unit file with new name: <code class="codehilite">cp /usr/lib/systemd/system/leofs-storage.service /etc/systemd/system/leofs-storage-second.service</code></li>
+<li>Edit <code class="codehilite">/etc/systemd/system/leofs-storage-second.service</code>, changing <code class="codehilite">Environment=NODE_EXTRA_NAME=</code> line to <code class="codehilite">Environment=NODE_EXTRA_NAME=second</code>.</li>
+<li>Reload systemd configuration: <code class="codehilite">systemctl daemon-reload</code></li>
+</ol>
+<p>This instance would try to load configuration from <code class="codehilite">/etc/leofs/leo_storage_second</code> upon launch. This configuration hierarchy needs to be created as well:</p>
+<ol>
+<li>Create new configuration directory and *.d subdirectory: <code class="codehilite">mkdir -p /etc/leofs/leo_storage_second/leo_storage.d</code></li>
+<li>Change permissions of configuration directory so it's <strong>writable</strong> by user running LeoFS ("leofs", unless changed manually): <code class="codehilite">chown leofs:leofs /etc/leofs/leo_storage_second</code></li>
+<li>Copy main configuration file (if you plan to change it) or symlink it (if you only plan to use conf.d-style configuration override): <code class="codehilite">cp /etc/leofs/leo_storage/leo_storage.conf /etc/leofs/leo_storage_second/</code></li>
+<li>Change configuration of new node, ensuring all paths and ports point to different location from first instance of that node.</li>
+<li>Create directories (logs/queue/etc) for the new node and set appropriate permissions on them</li>
+</ol>
+<p>Now second instance can be started in parallel with the first one with <code class="codehilite">systemctl start leofs-storage-second</code> command.</p>
+<p>It is possible to check whether nodes actually try to load configuration from different directories (<a href="../persistent_configuration/#how-to-check-which-configuration-directory-is-used">described here in more detail</a>):</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
-5</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>location bucket/static {
-    expires    12h;
-    add_header Cache-Control public;
-    add_header X-OriginalHeader OriginalValue;
-}
+5
+6
+7</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># journalctl -l -u leofs-storage | grep -e Exec -e Config
+Sep 20 17:41:42 stor01.lan leo_storage[9513]: Config path: /etc/leofs/leo_storage
+Sep 20 17:41:42 stor01.lan leo_storage[9513]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage/app.config -args_file /etc/leofs/leo_storage/vm.args -- console
+
+# journalctl -l -u leofs-storage-second | grep -e Exec -e Config
+Sep 20 17:40:43 stor01.lan leo_storage[9065]: Config path: /etc/leofs/leo_storage_second
+Sep 20 17:40:43 stor01.lan leo_storage[9065]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage_second/app.config -args_file /etc/leofs/leo_storage_second/vm.args -- console
 </pre></div>
 </td></tr></table>
 
-<p>In this case, assuming that a CDN service already has been enabled, and there is a file at <code class="codehilite">bucket/static/path_to_file</code>, if a user browses that file via the CDN. The CDN will receive a response from a LeoFS system with customized Http headers.</p>
+<h2 id="list-of-options-that-must-have-different-settings">List of options that must have different settings<a class="headerlink" href="#list-of-options-that-must-have-different-settings" title="Permanent link">&para;</a></h2>
+<p>All these options must be explicitly set in config files and have different settings for each instance of the node on the same system. For gateway and storage:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>sasl.sasl_error_log
+sasl.error_logger_mf_dir
+
+log.erlang
+log.app
+log.member_dir
+log.ring_dir
+
+queue_dir
+erlang.crash_dump
+snmp_conf
+</pre></div>
+</td></tr></table>
+
+<p>For storage nodes, additionally:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="nt">Cache-Control</span><span class="o">:</span> <span class="nt">public</span><span class="o">,</span> <span class="nt">max-age</span><span class="o">=</span><span class="nt">43200</span><span class="o">;</span>
-<span class="nt">X-OriginalHeader</span><span class="o">:</span> <span class="nt">OriginalValue</span><span class="o">;</span>
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>rpc.server.listen_port
+obj_containers.path
+leo_ordning_reda.temp_stacked_dir
 </pre></div>
 </td></tr></table>
 
-<h3 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h3>
-<p>Specify TTL by the bucket.</p>
+<p>For gateways running in HTTP mode (S3 / REST), additionally:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>http.port
+http.ssl_port
+</pre></div>
+</td></tr></table>
+
+<p>Please note that this list might be not complete as new options might be added to config files. When using this feature, <strong>it's up to user to ensure that all paths above point to different directories</strong>. Trying to share the same ports or snmp_conf setting between nodes would result in second instance failing to start, but trying to share log or queue directory could lead to disastrous results. <strong>Always double-check that all paths are different before using this feature.</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note: Multiple LeoManager instances</p>
+<p>It is possible to run multiple instances of LeoManager as well, but the resulting configuration and <code class="codehilite">leofs-adm</code> operations would be more complicated, so it's not recommended (as results of error might be severe). It would be better to use separate VMs or containers for different LeoManagers.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note: Interacting with other instances through launch script</p>
+<p>It is possible to interact with extra node instances through original launch script, however it requires a bit roundabout way of exporting environment variable as the owner of process. Example: <code class="codehilite">sudo -H -u leofs sh -c &quot;export NODE_EXTRA_NAME=second; /usr/local/leofs/current/leo_storage/bin/leo_storage remote_console&quot;</code></p>
+</div>
+<h2 id="example-configuration">Example configuration<a class="headerlink" href="#example-configuration" title="Permanent link">&para;</a></h2>
+<p>Here is fully working configuration example for two storage nodes belonging to two different clusters and working on the same system. Second instance is called "second" here (unit file for it is located at <code class="codehilite">/etc/systemd/system/leofs-storage-second.service</code> and it contains <code class="codehilite">Environment=NODE_EXTRA_NAME=second</code> setting).</p>
+<p>Directories and permissions:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># ls -ld /etc/leofs/leo_storage /etc/leofs/leo_storage_second/
+drwxr-sr-x. 3 leofs leofs 4096 Sep 22 20:47 /etc/leofs/leo_storage
+drwxr-sr-x. 3 leofs leofs 4096 Sep 20 17:44 /etc/leofs/leo_storage_second/
+</pre></div>
+</td></tr></table>
+
+<p>Main configuration for second node is symlinked to first - preferred when configuring nodes through configuration override files. This allows automatically getting new default settings with package upgrades (which include new version of <code class="codehilite">/etc/leofs/leo_storage/leo_storage.conf</code>):</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># ls -l /etc/leofs/leo_storage_second/leo_storage.conf
+lrwxrwxrwx. 1 root leofs 31 Sep 19 21:09 /etc/leofs/leo_storage_second/leo_storage.conf -&gt; ../leo_storage/leo_storage.conf
+</pre></div>
+</td></tr></table>
+
+<p>Contents of <code class="codehilite">/etc/leofs/leo_storage/leo_storage.d/20-leo_storage.conf</code> - configuration for the first node:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -1125,54 +1127,104 @@
  9
 10
 11
-12</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>location bucket1 {
-    expires    1h;
-    add_header Cache-Control public;
-}
-location bucket2 {
-    expires    1d;
-    add_header Cache-Control public;
-}
-location bucket3 {
-    expires    1h30m;
-    add_header Cache-Control private;
-}
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="n">nodename</span> <span class="o">=</span> <span class="n">stor01</span><span class="mf">@192.168.0.20</span>
+<span class="n">managers</span> <span class="o">=</span> <span class="p">[</span><span class="n">manager_0</span><span class="mf">@192.168.0.10</span><span class="p">,</span> <span class="n">manager_1</span><span class="mf">@192.168.0.11</span><span class="p">]</span>
+
+<span class="n">obj_containers</span><span class="p">.</span><span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">avs</span><span class="o">/</span><span class="n">main</span><span class="p">]</span>
+<span class="n">obj_containers</span><span class="p">.</span><span class="n">num_of_containers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">64</span><span class="p">]</span>
+
+<span class="n">sasl</span><span class="p">.</span><span class="n">sasl_error_log</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">sasl</span><span class="o">/</span><span class="n">sasl</span><span class="o">-</span><span class="n">error</span><span class="p">.</span><span class="n">log</span>
+<span class="n">sasl</span><span class="p">.</span><span class="n">error_logger_mf_dir</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">sasl</span>
+
+<span class="n">log</span><span class="p">.</span><span class="n">erlang</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">erlang</span>
+<span class="n">log</span><span class="p">.</span><span class="n">app</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">app</span>
+<span class="n">log</span><span class="p">.</span><span class="n">member_dir</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">ring</span>
+<span class="n">log</span><span class="p">.</span><span class="n">ring_dir</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">ring</span>
+
+<span class="n">queue_dir</span>  <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">queue</span>
+<span class="n">leo_ordning_reda</span><span class="p">.</span><span class="n">temp_stacked_dir</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">ord_reda</span><span class="o">/</span>
+<span class="n">erlang</span><span class="p">.</span><span class="n">crash_dump</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage</span><span class="o">/</span><span class="n">erl_crash</span><span class="p">.</span><span class="n">dump</span>
+
+<span class="n">snmp_conf</span> <span class="o">=</span> <span class="p">.</span><span class="o">/</span><span class="n">snmp</span><span class="o">/</span><span class="n">snmpa_storage_0</span><span class="o">/</span><span class="n">leo_storage_snmp</span>
 </pre></div>
 </td></tr></table>
 
-<h3 id="appendix">Appendix<a class="headerlink" href="#appendix" title="Permanent link">&para;</a></h3>
-<h4 id="syntax-for-the-expire-field">Syntax for the expire field<a class="headerlink" href="#syntax-for-the-expire-field" title="Permanent link">&para;</a></h4>
-<p>LeoFS supports a part of measurement units which can be used in Nginx configuration. Following time intervals can be specified.</p>
+<p>Contents of <code class="codehilite">/etc/leofs/leo_storage_second/leo_storage.d/20-leo_storage.conf</code> - configuration for second node</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="n">nodename</span> <span class="o">=</span> <span class="n">stor_second01</span><span class="mf">@192.168.0.20</span>
+<span class="n">managers</span> <span class="o">=</span> <span class="p">[</span><span class="n">manager_0</span><span class="mf">@192.168.0.15</span><span class="p">,</span> <span class="n">manager_1</span><span class="mf">@192.168.0.16</span><span class="p">]</span>
+
+<span class="n">rpc</span><span class="p">.</span><span class="n">server</span><span class="p">.</span><span class="n">listen_port</span> <span class="o">=</span> <span class="mi">13078</span>
+
+<span class="n">obj_containers</span><span class="p">.</span><span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">avs</span><span class="o">/</span><span class="n">second</span><span class="p">]</span>
+<span class="n">obj_containers</span><span class="p">.</span><span class="n">num_of_containers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">32</span><span class="p">]</span>
+
+<span class="n">object_storage</span><span class="p">.</span><span class="n">is_strict_check</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="n">watchdog</span><span class="p">.</span><span class="n">error</span><span class="p">.</span><span class="n">is_enabled</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="n">autonomic_op</span><span class="p">.</span><span class="n">compaction</span><span class="p">.</span><span class="n">is_enabled</span> <span class="o">=</span> <span class="nb">true</span>
+
+<span class="n">sasl</span><span class="p">.</span><span class="n">sasl_error_log</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">sasl</span><span class="o">/</span><span class="n">sasl</span><span class="o">-</span><span class="n">error</span><span class="p">.</span><span class="n">log</span>
+<span class="n">sasl</span><span class="p">.</span><span class="n">error_logger_mf_dir</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">sasl</span>
+
+<span class="n">log</span><span class="p">.</span><span class="n">erlang</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">erlang</span>
+<span class="n">log</span><span class="p">.</span><span class="n">app</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">app</span>
+<span class="n">log</span><span class="p">.</span><span class="n">member_dir</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">ring</span>
+<span class="n">log</span><span class="p">.</span><span class="n">ring_dir</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">ring</span>
+
+<span class="n">queue_dir</span>  <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">queue</span>
+<span class="n">leo_ordning_reda</span><span class="p">.</span><span class="n">temp_stacked_dir</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">ord_reda</span><span class="o">/</span>
+<span class="n">erlang</span><span class="p">.</span><span class="n">crash_dump</span> <span class="o">=</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">leofs</span><span class="o">/</span><span class="n">leo_storage_second</span><span class="o">/</span><span class="n">erl_crash</span><span class="p">.</span><span class="n">dump</span>
+
+<span class="n">snmp_conf</span> <span class="o">=</span> <span class="p">.</span><span class="o">/</span><span class="n">snmp</span><span class="o">/</span><span class="n">snmpa_storage_1</span><span class="o">/</span><span class="n">leo_storage_snmp</span>
+</pre></div>
+</td></tr></table>
+
+<p>Each node requires own set of directories with appropriate permissiosn:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="n">s</span><span class="o">:</span> <span class="n">seconds</span>
-<span class="n">m</span><span class="o">:</span> <span class="n">minutes</span>
-<span class="n">h</span><span class="o">:</span> <span class="n">hours</span>
-<span class="n">d</span><span class="o">:</span> <span class="n">days</span>
+4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># mkdir -p /var/leofs/leo_storage/work/queue /var/log/leofs/leo_storage/app /var/leofs/leo_storage/work/ord_reda /var/log/leofs/leo_storage/sasl
+# chown -R leofs:leofs /var/leofs/leo_storage/ /var/log/leofs/
+# mkdir -p /var/leofs/leo_storage_second/work/queue /var/log/leofs/leo_storage_second/app /var/leofs/leo_storage_second/work/ord_reda /var/log/leofs/leo_storage_second/sasl
+# chown -R leofs:leofs /var/leofs/leo_storage_second/
 </pre></div>
 </td></tr></table>
 
-<h4 id="list-of-verified-cdn-services">List of verified CDN services<a class="headerlink" href="#list-of-verified-cdn-services" title="Permanent link">&para;</a></h4>
-<p>LeoFS Team tested the following CDN services with LeoFS. We recognize that other CDN services also should work.</p>
-<ul>
-<li><a href="https://aws.amazon.com/cloudfront/" target="_blank">Amazon CloudFront – Content Delivery Network (CDN)</a></li>
-</ul>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../settings/leo_gateway/">For Administrators / Settings / LeoGateway Settings</a></li>
+<li><a href="../../system_operations/systemd/">For Administrators / System Operations / Systemd Services</a></li>
+<li><a href="../persistent_configuration/">For Administrators / System Administration / Persistent Configuration Location</a></li>
 </ul>
-<div class="footnote">
-<hr />
-<ol>
-<li id="fn:1">
-<p><a href="https://en.wikipedia.org/wiki/Content_delivery_network" target="_blank">CDN, Content delivery network</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
-</li>
-<li id="fn:2">
-<p><a href="https://nginx.org/" target="_blank">Nginx, An HTTP and reverse proxy server</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
-</li>
-</ol>
-</div>
                 
                   
                 
@@ -1191,7 +1243,7 @@ location bucket3 {
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../migration/" title="System Migration" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../integration/" title="System Integration" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1200,19 +1252,19 @@ location bucket3 {
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                System Migration
+                System Integration
               </span>
             </div>
           </a>
         
         
-          <a href="../multiple_nodes/" title="Multiple Node Instances" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../index_of_commands/" title="Index of LeoFS' Commands" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Multiple Node Instances
+                Index of LeoFS' Commands
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
