@@ -101,14 +101,11 @@ handle(Req, State) ->
                 _ ->
                     case check_request(Req) of
                         ok ->
-                            AuthHeader = cowboy_req:header(?HTTP_HEAD_AUTHORIZATION, Req),
                             {Bucket, Path} = get_bucket_and_path(Req),
-                            case {Path, AuthHeader} of
-                                {?HTTP_SPECIAL_URL_HEALTH_CHECK, {undefined, _}} ->
+                            case Path of
+                                ?HTTP_SPECIAL_URL_HEALTH_CHECK ->
                                     % /leofs_adm/ping is a special URL for health check
-                                    % and is regarded as the special one ONLY in case the Authorization Header is absent
-                                    % That means users can use leofs_adm as the name of a bucket without any drawback.
-                                    {ok, Req2} = case do_health_check() of
+                                    {ok, Req2} = case leo_gateway_http_commons:do_health_check() of
                                         true ->
                                             ?reply_ok([?SERVER_HEADER], <<"OK">>, Req);
                                         false ->
@@ -132,29 +129,6 @@ handle(Req, State) ->
 %% @doc Terminater
 terminate(_Reason, _Req, _State) ->
     ok.
-
-
-%% @doc Do health check by net_adm:ping to storage nodes
-%%      Return true if at least one storage responds pong
-%%      Otherwise false.
-%% @private
--spec(do_health_check() -> boolean()).
-do_health_check() ->
-    case leo_redundant_manager_api:get_members_by_status(?STATE_RUNNING) of
-        {ok, Members} ->
-            do_health_check(Members);
-        _ ->
-            false
-    end.
-do_health_check([]) ->
-    false;
-do_health_check([#member{node = Node}|Rest]) ->
-    case net_adm:ping(Node) of
-        pong ->
-            true;
-        pang ->
-            do_health_check(Rest)
-    end.
 
 %% @doc Check whether request is valid or not
 %% @private
