@@ -63,7 +63,19 @@ init({_Any, http}, Req, Opts) ->
 %% @callback
 handle(Req, State) ->
     {_Bucket, Key}= gen_key(Req),
-    handle_1(Req, State, Key).
+    case Key of
+        ?HTTP_SPECIAL_URL_HEALTH_CHECK ->
+            % /leofs_adm/ping is a special URL for health check
+            {ok, Req2} = case leo_gateway_http_commons:do_health_check() of
+                true ->
+                    ?reply_ok([?SERVER_HEADER], <<"OK">>, Req);
+                false ->
+                    ?reply_internal_error_without_body([?SERVER_HEADER], Req)
+            end,
+            {ok, Req2, State};
+        _ ->
+            handle_1(Req, State, Key)
+    end.
 
 
 %% @doc Terminater

@@ -30,6 +30,7 @@
 -include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_bucket.hrl").
+-include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 -export([start/1, start/2]).
@@ -37,7 +38,8 @@
 -export([get_object/3, get_object_with_cache/4,
          put_object/3, put_small_object/3, put_large_object/4, move_large_object/3,
          delete_object/3, head_object/3,
-         range_object/3]).
+         range_object/3,
+         do_health_check/0]).
 
 -record(req_large_obj, {
           handler :: pid(),
@@ -276,6 +278,28 @@ onresponse(#cache_condition{expire = Expire} = Config, FunGenKey) ->
 %%--------------------------------------------------------------------
 %% Commons Request Handlers
 %%--------------------------------------------------------------------
+
+%%% @doc Do health check by net_adm:ping to storage nodes
+%%      Return true if at least one storage responds pong
+%%      Otherwise false.
+-spec(do_health_check() -> boolean()).
+do_health_check() ->
+    case leo_redundant_manager_api:get_members_by_status(?STATE_RUNNING) of
+        {ok, Members} ->
+            do_health_check(Members);
+        _ ->
+            false
+    end.
+do_health_check([]) ->
+    false;
+do_health_check([#member{node = Node}|Rest]) ->
+    case net_adm:ping(Node) of
+        pong ->
+            true;
+        pang ->
+            do_health_check(Rest)
+    end.
+
 %% @doc GET an object
 -spec(get_object(cowboy_req:req(), binary(), #req_params{}) ->
              {ok, cowboy_req:req()}).
