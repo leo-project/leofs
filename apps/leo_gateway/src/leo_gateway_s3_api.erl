@@ -101,8 +101,23 @@ handle(Req, State) ->
                 _ ->
                     case check_request(Req) of
                         ok ->
+                            AuthHeader = cowboy_req:header(?HTTP_HEAD_AUTHORIZATION, Req),
                             {Bucket, Path} = get_bucket_and_path(Req),
-                            handle_1(Req, State, Bucket, Path);
+                            case {Path, AuthHeader} of
+                                {?HTTP_SPECIAL_URL_HEALTH_CHECK, {undefined, _}} ->
+                                    % /leofs_adm/ping is a special URL for health check
+                                    % and is regarded as the special one ONLY in case the Authorization Header is absent
+                                    % That means users can use leofs_adm as the name of a bucket without any drawback.
+                                    {ok, Req2} = case do_health_check() of
+                                        true ->
+                                            ?reply_ok([?SERVER_HEADER], <<"OK">>, Req);
+                                        false ->
+                                            ?reply_internal_error_without_body([?SERVER_HEADER], Req)
+                                    end,
+                                    {ok, Req2, State};
+                                _ ->
+                                    handle_1(Req, State, Bucket, Path)
+                            end;
                         {error, Req2} ->
                             {ok, Req2, State}
                     end
@@ -118,6 +133,28 @@ handle(Req, State) ->
 terminate(_Reason, _Req, _State) ->
     ok.
 
+
+%% @doc Do health check by net_adm:ping to storage nodes
+%%      Return true if at least one storage responds pong
+%%      Otherwise false.
+%% @private
+-spec(do_health_check() -> boolean()).
+do_health_check() ->
+    case leo_redundant_manager_api:get_members_by_status(?STATE_RUNNING) of
+        {ok, Members} ->
+            do_health_check(Members);
+        _ ->
+            false
+    end.
+do_health_check([]) ->
+    false;
+do_health_check([#member{node = Node}|Rest]) ->
+    case net_adm:ping(Node) of
+        pong ->
+            true;
+        pang ->
+            do_health_check(Rest)
+    end.
 
 %% @doc Check whether request is valid or not
 %% @private
@@ -1192,8 +1229,6 @@ handle_multi_upload_1(true, Req, Path, UploadId,
 
     case leo_gateway_rpc_handler:get(Path4Conf) of
         {ok, #?METADATA{meta = CMetaBin}, _} ->
-            _ = leo_gateway_rpc_handler:delete(Path4Conf),
-
             BodyOpts = case TransferDecodeFun of
                            undefined ->
                                [];
@@ -1201,7 +1236,12 @@ handle_multi_upload_1(true, Req, Path, UploadId,
                                [{transfer_decode, TransferDecodeFun, TransferDecodeState}]
                        end,
             Ret = cowboy_req:body(Req, BodyOpts),
-            handle_multi_upload_2(Ret, Req, Path, ChunkedLen, BucketInfo, CMetaBin);
+            {ok, Req2} = handle_multi_upload_2(Ret, Req, Path, ChunkedLen, BucketInfo, CMetaBin),
+            %% Deleting a temporary object after getting the upload done could decrease the odds
+            %% inconsistencies against the temporary object could happen.
+            %% This hack should mitigate https://github.com/leo-project/leofs/issues/845
+            _ = leo_gateway_rpc_handler:delete(Path4Conf),
+            {ok, Req2};
         _ ->
             ?reply_service_unavailable_error([?SERVER_HEADER], Path, <<>>, Req)
     end;
