@@ -308,7 +308,16 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
                                  has_inner_cache = HasInnerCache,
                                  sending_chunked_obj_len = SendChunkLen,
                                  begin_time = BeginTime}) ->
+    IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
+                 {ok, undefined,_} ->
+                     0;
+                 {ok, IMSDateTime,_} ->
+                     calendar:datetime_to_gregorian_seconds(IMSDateTime)
+             end,
     case leo_gateway_rpc_handler:get(Key) of
+        %% For the case If-Modified-Since matches timestamp in metadata
+        {ok, #?METADATA{timestamp = IMSSec}, _Resp} ->
+            ?reply_not_modified([?SERVER_HEADER], Req);
         %% For regular case (NOT a chunked object)
         {ok, #?METADATA{cnumber = 0,
                         meta = CMetaBin} = Meta, RespObject} ->
@@ -394,6 +403,12 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                                       custom_header_settings = CustomHeaderSettings,
                                                       sending_chunked_obj_len = SendChunkLen,
                                                       begin_time = BeginTime}) ->
+    IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
+                 {ok, undefined,_} ->
+                     0;
+                 {ok, IMSDateTime,_} ->
+                     calendar:datetime_to_gregorian_seconds(IMSDateTime)
+             end,
     Path = CacheObj#cache.file_path,
     HasDiskCache = case Path of
                        [] ->
@@ -403,6 +418,10 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                    end,
 
     case leo_gateway_rpc_handler:get(Key, CacheObj#cache.etag) of
+        %% HIT: For the case If-Modified-Since matches mtime in cache
+        {ok, match} when CacheObj#cache.mtime == IMSSec ->
+            ?reply_not_modified([?SERVER_HEADER], Req);
+
         %% HIT: get an object from disc-cache
         {ok, match} when Path /= []
                          andalso HasDiskCache ->
@@ -486,6 +505,10 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                        end,
 
             ?reply_ok(Headers2, {CacheObj#cache.size, BodyFunc}, Req);
+
+        %% MISS: For the case If-Modified-Since matches timestamp in metadata
+        {ok, #?METADATA{timestamp = IMSSec}, _Resp} ->
+            ?reply_not_modified([?SERVER_HEADER], Req);
 
         %% MISS: get an object from storage (small-size)
         {ok, #?METADATA{cnumber = 0,
