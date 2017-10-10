@@ -336,6 +336,32 @@ case "$1" in
         exec $ERTS_PATH/to_erl $PIPE_DIR
         ;;
 
+    ready)
+        ## See if application is ready
+        $NODETOOL ready
+        ES=$?
+        if [ "$ES" -ne 0 ]; then
+            exit $ES
+        fi
+        ;;
+
+    wait_ready)
+        ## Wait until application is ready
+        ES=1
+        RETRY=0
+        until [ $ES -eq 0 -o $RETRY -ge 30 ]
+        do
+            $NODETOOL ready
+            ES=$?
+            RETRY=$((RETRY + 1))
+            sleep 1
+        done
+        if [ $ES -ne 0 ]; then
+            echo "Not ready after $RETRY reties"
+            exit 1
+        fi
+        ;;
+
     console|console_clean|foreground_start)
         if [ "$1" = "foreground_start" ]
         then
