@@ -76,6 +76,30 @@ main(Args) ->
                 Other ->
                     io:format("~p\n", [Other])
             end;
+        ["ready"] ->
+            case rpc:call(TargetNode, application, which_applications, [], 60000) of
+                {badrpc, Reason} ->
+                    io:format("RPC to ~p failed: ~p\n", [TargetNode, Reason]),
+                    halt(1);
+                List ->
+                    case lists:foldl(fun(_, ok) ->
+                                            ok;
+                                       ({leo_gateway, _, _}, _) ->
+                                            ok;
+                                       ({leo_manager, _, _}, _) ->
+                                            ok;
+                                       ({leo_storage, _, _}, _) ->
+                                            ok;
+                                       (_, Acc) ->
+                                            Acc
+                                    end, waiting, List) of
+                        ok ->
+                            io:format("Application is ready\n");
+                        _ ->
+                            io:format("Application is not ready\n"),
+                            halt(1)
+                    end
+            end;
         Other ->
             io:format("Other: ~p\n", [Other]),
             io:format("Usage: nodetool {ping|stop|restart|reboot}\n")
