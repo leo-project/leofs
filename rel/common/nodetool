@@ -85,18 +85,16 @@ main(Args) ->
                     io:format("RPC to ~p failed: ~p\n", [TargetNode, Reason]),
                     halt(1);
                 List ->
-                    case lists:foldl(fun(_, ok) ->
-                                            ok;
-                                       ({leo_gateway, _, _}, _) ->
-                                            ok;
-                                       ({leo_manager, _, _}, _) ->
-                                            ok;
-                                       ({leo_storage, _, _}, _) ->
-                                            ok;
-                                       (_, Acc) ->
-                                            Acc
-                                    end, waiting, List) of
-                        ok ->
+                    case lists:any(fun({leo_gateway, _, _}) ->
+                                           true;
+                                      ({leo_manager, _, _}) ->
+                                           true;
+                                      ({leo_storage, _, _}) ->
+                                           true;
+                                      (_) ->
+                                           false
+                                   end, List) of
+                        true ->
                             io:format("Application is ready\n");
                         _ ->
                             io:format("Application is not ready\n"),
