@@ -582,6 +582,26 @@ send_object_to_remote_node(Node, AddrId, Key) ->
                     ?MODULE:publish(?QUEUE_ID_PER_OBJECT, AddrId, Key,
                                     Node, true, ?ERR_TYPE_RECOVER_DATA)
             end;
+        {error, Ref, not_found} ->
+            %% for objects deleted
+            case leo_object_storage_api:head({AddrId, Key}) of
+                {ok, MetaBin} ->
+                    Metadata = binary_to_term(MetaBin),
+                    case rpc:call(Node, leo_sync_local_cluster, store,
+                          [Metadata, <<>>], ?DEF_REQ_TIMEOUT) of
+                        ok ->
+                            ok;
+                        {error, inconsistent_obj} ->
+                            ?MODULE:publish(?QUEUE_ID_PER_OBJECT,
+                                            AddrId, Key, ?ERR_TYPE_RECOVER_DATA);
+                        _ ->
+                            ?MODULE:publish(?QUEUE_ID_PER_OBJECT, AddrId, Key,
+                                            Node, true, ?ERR_TYPE_RECOVER_DATA)
+                    end;
+                _ ->
+                    ?MODULE:publish(?QUEUE_ID_PER_OBJECT, AddrId, Key,
+                                    Node, true, ?ERR_TYPE_RECOVER_DATA)
+            end;
         {error, Ref, Cause} ->
             {error, Cause};
         _Other ->
