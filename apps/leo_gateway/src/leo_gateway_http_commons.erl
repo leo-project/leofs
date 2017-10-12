@@ -317,7 +317,8 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
     case leo_gateway_rpc_handler:get(Key) of
         %% For the case If-Modified-Since matches timestamp in metadata
         {ok, #?METADATA{timestamp = IMSSec}, _Resp} ->
-            ?reply_not_modified([?SERVER_HEADER], Req);
+            {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
+            ?reply_not_modified([?SERVER_HEADER] ++ CustomHeaders, Req);
         %% For regular case (NOT a chunked object)
         {ok, #?METADATA{cnumber = 0,
                         meta = CMetaBin} = Meta, RespObject} ->
@@ -420,7 +421,8 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
     case leo_gateway_rpc_handler:get(Key, CacheObj#cache.etag) of
         %% HIT: For the case If-Modified-Since matches mtime in cache
         {ok, match} when CacheObj#cache.mtime == IMSSec ->
-            ?reply_not_modified([?SERVER_HEADER], Req);
+            {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
+            ?reply_not_modified([?SERVER_HEADER] ++ CustomHeaders, Req);
 
         %% HIT: get an object from disc-cache
         {ok, match} when Path /= []
@@ -508,7 +510,8 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
 
         %% MISS: For the case If-Modified-Since matches timestamp in metadata
         {ok, #?METADATA{timestamp = IMSSec}, _Resp} ->
-            ?reply_not_modified([?SERVER_HEADER], Req);
+            {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
+            ?reply_not_modified([?SERVER_HEADER] ++ CustomHeaders, Req);
 
         %% MISS: get an object from storage (small-size)
         {ok, #?METADATA{cnumber = 0,
