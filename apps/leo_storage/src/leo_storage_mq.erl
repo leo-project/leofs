@@ -608,8 +608,8 @@ send_object_to_remote_node(Node, AddrId, Key) ->
                 {'EXIT', Cause} ->
                     %% unexpected case now @vstax seems to face
                     %% invalid binary may be stored on leveldb if so have to vet the raw binary
-                    %% that can be retrieved from debug outputs below.
-                    ?debug("send_object_to_remote_node/3 - binary_to_term",
+                    %% that can be retrieved from error outputs below.
+                    ?error("send_object_to_remote_node/3 - binary_to_term",
                           [{node, Node},
                            {addr_id, AddrId},
                            {key, Key},
@@ -619,8 +619,8 @@ send_object_to_remote_node(Node, AddrId, Key) ->
         {'EXIT', Cause} ->
             %% unexpected case now @vstax seems to face
             %% invalid binary may be stored on leveldb so we have to vet the raw binary
-            %% that can be retrieved from debug outputs below.
-            ?debug("send_object_to_remote_node/3 - leo_object_storage_api:head",
+            %% that can be retrieved from error outputs below.
+            ?error("send_object_to_remote_node/3 - leo_object_storage_api:head",
                    [{node, Node},
                     {addr_id, AddrId},
                     {key, Key},
