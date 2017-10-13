@@ -2060,7 +2060,8 @@ recover(Socket, Option) ->
             leo_manager_api:rebuild_dir_metadata(Socket, Prms);
         {ok, [Op, Key |Rest]} when Rest == [] ->
             HasRoutingTable = (leo_redundant_manager_api:checksum(ring) >= 0),
-            case catch leo_manager_api:recover(Op, Key, HasRoutingTable) of
+            Key2 = escape_large_obj_sep(Key),
+            case catch leo_manager_api:recover(Op, Key2, HasRoutingTable) of
                 ok ->
                     ok;
                 {_, Cause} ->
