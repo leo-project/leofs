@@ -260,7 +260,7 @@ synchronize(InconsistentNodes, #?METADATA{addr_id = AddrId,
     leo_storage_handler_object:replicate(InconsistentNodes, AddrId, Key);
 
 synchronize(Key, ErrorType) ->
-    {ok, #redundancies{vnode_id_to = VNodeId}} =
+    {ok, #redundancies{id = VNodeId}} =
         leo_redundant_manager_api:get_redundancies_by_key(Key),
     leo_storage_mq:publish(?QUEUE_ID_PER_OBJECT, VNodeId, Key, ErrorType).
 
