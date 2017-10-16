@@ -568,24 +568,69 @@ recover_node_callback_2([SrcNode|Rest], AddrId, Key, FixedNode) ->
                                       Key::binary(),
                                       Cause::any()).
 send_object_to_remote_node(Node, AddrId, Key) ->
-    Ref = make_ref(),
-    case leo_storage_handler_object:get({Ref, Key}) of
-        {ok, Ref, Metadata, Bin} ->
-            case rpc:call(Node, leo_sync_local_cluster, store,
-                          [Metadata, Bin], ?DEF_REQ_TIMEOUT) of
-                ok ->
-                    ok;
-                {error, inconsistent_obj} ->
-                    ?MODULE:publish(?QUEUE_ID_PER_OBJECT,
-                                    AddrId, Key, ?ERR_TYPE_RECOVER_DATA);
-                _ ->
-                    ?MODULE:publish(?QUEUE_ID_PER_OBJECT, AddrId, Key,
-                                    Node, true, ?ERR_TYPE_RECOVER_DATA)
+    case catch leo_object_storage_api:head({AddrId, Key}) of
+        {ok, MetaBin} ->
+            case catch binary_to_term(MetaBin) of
+                #?METADATA{del = ?DEL_TRUE} = Meta ->
+                    %% for objects deleted
+                    case rpc:call(Node, leo_sync_local_cluster, store,
+                          [Meta, <<>>], ?DEF_REQ_TIMEOUT) of
+                        ok ->
+                            ok;
+                        {error, inconsistent_obj} ->
+                            ?MODULE:publish(?QUEUE_ID_PER_OBJECT,
+                                            AddrId, Key, ?ERR_TYPE_RECOVER_DATA);
+                        _ ->
+                            ?MODULE:publish(?QUEUE_ID_PER_OBJECT, AddrId, Key,
+                                            Node, true, ?ERR_TYPE_RECOVER_DATA)
+                    end;
+                #?METADATA{del = ?DEL_FALSE} = Meta ->
+                    %% for objects existing
+                    Ref = make_ref(),
+                    case leo_storage_handler_object:get({Ref, Key}) of
+                        {ok, Ref, Meta, Bin} ->
+                            case rpc:call(Node, leo_sync_local_cluster, store,
+                                          [Meta, Bin], ?DEF_REQ_TIMEOUT) of
+                                ok ->
+                                    ok;
+                                {error, inconsistent_obj} ->
+                                    ?MODULE:publish(?QUEUE_ID_PER_OBJECT,
+                                                    AddrId, Key, ?ERR_TYPE_RECOVER_DATA);
+                                _ ->
+                                    ?MODULE:publish(?QUEUE_ID_PER_OBJECT, AddrId, Key,
+                                                    Node, true, ?ERR_TYPE_RECOVER_DATA)
+                            end;
+                        {error, Ref, Cause} ->
+                            {error, Cause};
+                        _Other ->
+                            {error, invalid_response}
+                    end;
+                {'EXIT', Cause} ->
+                    %% unexpected case now @vstax seems to face
+                    %% invalid binary may be stored on leveldb if so have to vet the raw binary
+                    %% that can be retrieved from error outputs below.
+                    ?error("send_object_to_remote_node/3 - binary_to_term",
+                          [{node, Node},
+                           {addr_id, AddrId},
+                           {key, Key},
+                           {cause, Cause}]),
+                    {error, Cause}
             end;
-        {error, Ref, Cause} ->
+        {'EXIT', Cause} ->
+            %% unexpected case now @vstax seems to face
+            %% invalid binary may be stored on leveldb so we have to vet the raw binary
+            %% that can be retrieved from error outputs below.
+            ?error("send_object_to_remote_node/3 - leo_object_storage_api:head",
+                   [{node, Node},
+                    {addr_id, AddrId},
+                    {key, Key},
+                    {cause, Cause}]),
             {error, Cause};
-        _Other ->
-            {error, invalid_response}
+        not_found ->
+            %% no data to send remote nodes
+            ok;
+        {error, Cause} ->
+            {error, Cause}
     end.
 
 

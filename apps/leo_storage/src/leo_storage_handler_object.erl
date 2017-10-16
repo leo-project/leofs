@@ -46,6 +46,7 @@
          find_uploaded_objects_by_key/1,
          is_key_under_del_dir/1, can_compact_object/2
         ]).
+-export([debug_put/3, debug_delete/2]).
 
 -define(REP_LOCAL, 'local').
 -define(REP_REMOTE, 'remote').
@@ -1488,3 +1489,66 @@ get_cmeta_test() ->
 
     ok.
 -endif.
+
+%% @doc PUT an object having inconsistencies for test/debug
+debug_put(Key, Body, NumOfReplicas) ->
+    case leo_redundant_manager_api:get_redundancies_by_key(put, Key) of
+        {ok, #redundancies{nodes = Redundancies,
+                              id = AddrId,
+                               n = NumOfReplicasOrg,
+                               ring_hash = RingHash}} ->
+            NumOfReplicas2 = case NumOfReplicas > NumOfReplicasOrg of
+                                 true ->
+                                     NumOfReplicasOrg;
+                                 false ->
+                                     NumOfReplicas
+                             end,
+            Redundancies2 = lists:sublist(Redundancies, NumOfReplicas2),
+            Quorum = ?quorum(?CMD_PUT, NumOfReplicas2, NumOfReplicas2),
+            Object = #?OBJECT{method = ?CMD_PUT,
+                             addr_id = AddrId,
+                             key = Key,
+                             data = Body,
+                             dsize = size(Body),
+                             timestamp = leo_date:now(),
+                             clock = leo_date:clock(),
+                             ring_hash = RingHash},
+            leo_storage_replicator:replicate(
+                ?CMD_PUT, Quorum, Redundancies2,
+                Object,
+                replicate_callback(Object));
+        {error, Cause} ->
+            {error, Cause}
+    end.
+
+%% @doc DELETE an object having inconsistencies for test/debug
+debug_delete(Key, NumOfReplicas) ->
+    case leo_redundant_manager_api:get_redundancies_by_key(delete, Key) of
+        {ok, #redundancies{nodes = Redundancies,
+                              id = AddrId,
+                               n = NumOfReplicasOrg,
+                               ring_hash = RingHash}} ->
+            NumOfReplicas2 = case NumOfReplicas > NumOfReplicasOrg of
+                                 true ->
+                                     NumOfReplicasOrg;
+                                 false ->
+                                     NumOfReplicas
+                             end,
+            Redundancies2 = lists:sublist(Redundancies, NumOfReplicas2),
+            Quorum = ?quorum(?CMD_DELETE, NumOfReplicas2, NumOfReplicas2),
+            Object = #?OBJECT{method = ?CMD_DELETE,
+                             addr_id = AddrId,
+                             key = Key,
+                             data = <<>>,
+                             dsize = 0,
+                             timestamp = leo_date:now(),
+                             clock = leo_date:clock(),
+                             ring_hash = RingHash,
+                             del = ?DEL_TRUE},
+            leo_storage_replicator:replicate(
+                ?CMD_DELETE, Quorum, Redundancies2,
+                Object,
+                replicate_callback(Object));
+        {error, Cause} ->
+            {error, Cause}
+    end.
