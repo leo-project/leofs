@@ -79,9 +79,9 @@ setup() ->
     true = rpc:call(Node0, code, add_path, ["../deps/meck/ebin"]),
     true = rpc:call(Node1, code, add_path, ["../deps/meck/ebin"]),
 
-    ok = leo_logger_api:new("./", ?LOG_LEVEL_WARN),
-    ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                    "./", ?LOG_FILENAME_ACCESS),
+    catch leo_logger_api:new("./", ?LOG_LEVEL_WARN),
+    catch leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
+                             "./", ?LOG_FILENAME_ACCESS),
     {Node0, Node1}.
 
 teardown({_, Node1}) ->
