@@ -222,7 +222,7 @@ publish({?QUEUE_ID_DEL_DIR, WorkerId}, AddrId, Key, EnqueuedAt) ->
                                 addr_id = AddrId,
                                 key = Key,
                                 %% To compare it with its latest metadata
-                                %% See `compare_between_metadatas/1`
+                                %% See `compare_between_metadatas/2`
                                 meta = #?METADATA{addr_id = AddrId,
                                                   key = Key,
                                                   clock = EnqueuedAt},
@@ -343,7 +343,7 @@ handle_call({consume, ?QUEUE_ID_PER_OBJECT, MessageBin}) ->
                         true ->
                             send_object_to_remote_node(SyncNode, AddrId, Key);
                         false ->
-                            case compare_between_metadatas(Metadata) of
+                            case compare_between_metadatas(Metadata, false) of
                                 true ->
                                     case correct_redundancies(Key) of
                                         ok ->
@@ -1059,7 +1059,7 @@ remove_objects_under_dir(MessageBin) ->
                 {ok, #?MSG_ASYNC_DELETION{addr_id = AddrId,
                                           key = Key,
                                           meta = Metadata}} ->
-                    case compare_between_metadatas(Metadata) of
+                    case compare_between_metadatas(Metadata, true) of
                         true ->
                             case catch leo_storage_handler_object:delete(
                                          #?OBJECT{addr_id = AddrId,
@@ -1089,24 +1089,31 @@ remove_objects_under_dir(MessageBin) ->
 
 
 %% @doc Compare MQ's metadata with its latest metadata
--spec(compare_between_metadatas(Metadata) ->
+-spec(compare_between_metadatas(Metadata, IsDelete) ->
              Result | {error, Cause} when Metadata::#?METADATA{},
+                                          IsDelete::boolean(),
                                           Result::boolean(),
                                           Cause::any()).
-compare_between_metadatas(undefined) ->
+compare_between_metadatas(undefined, _) ->
     true;
 compare_between_metadatas(#?METADATA{addr_id = AddrId,
                                      key = Key,
-                                     clock = MsgClock}) ->
+                                     clock = MsgClock}, IsDelete) ->
     case leo_storage_handler_object:head(AddrId, Key, false) of
         {ok, #?METADATA{clock = Clock}} when MsgClock >= Clock ->
             true;
         {ok, _} ->
             false;
-        not_found ->
+        not_found when IsDelete =:= true ->
+            %% for remove_objects_under_dir
+            %% return false as the object already deleted on this node
             false;
+        not_found ->
+            %% for consume with QUEUE_ID_PER_OBJECT
+            %% return true as the object to be recovered on this node
+            true;
         {error, Cause} ->
-            ?error("compare_between_metadatas/1",
+            ?error("compare_between_metadatas/2",
                    [{addr_id, AddrId}, {key, Key},
                     {cause, Cause}]),
             {error, ?ERROR_COULD_NOT_GET_META}
