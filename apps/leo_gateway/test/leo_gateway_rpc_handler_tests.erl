@@ -106,6 +106,7 @@ teardown([_, Node1]) ->
     meck:unload(),
     net_kernel:stop(),
     slave:stop(Node1),
+    leo_logger_api:stop(),
     ok.
 
 head_object_notfound_([Node0, Node1]) ->

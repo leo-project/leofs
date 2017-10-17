@@ -88,6 +88,7 @@ teardown({_, Node1}) ->
     meck:unload(),
     net_kernel:stop(),
     slave:stop(Node1),
+    leo_logger_api:stop(),
     timer:sleep(100),
     ok.
 
