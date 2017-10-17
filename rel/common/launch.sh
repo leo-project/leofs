@@ -61,6 +61,11 @@ cd $RUNNER_BASE_DIR
 # Make sure log directory exists
 mkdir -p $RUNNER_LOG_DIR
 
+# Try to increase open files limit. Workaround for Ubuntu (and maybe others) default
+# sudo settings which don't use PAM to set limits automatically. Error is silenced because
+# there are known cases when limit can't be changed (e.g. launching managers under systemd)
+ulimit -n ${MAX_OPEN_FILES:-65535} 2> /dev/null
+
 help () {
     echo "Usage: $SCRIPT [-type leo_manager|leo_gateway|leo_storage] {start|stop|restart|foreground_start|reboot|ping|console|console_clean|attach|remote_console}"
     echo "Script type is picked from its name, but can be overriden with -type option"

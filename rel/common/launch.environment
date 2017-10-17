@@ -12,3 +12,6 @@
 
 # Defaults to "leofs"
 RUNNER_USER=
+
+# Defaults to 65535
+# MAX_OPEN_FILES=
