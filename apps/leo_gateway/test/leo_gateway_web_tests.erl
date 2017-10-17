@@ -253,6 +253,7 @@ teardown([TermFun, Node0, Node1]) ->
     application:stop(ranch),
     application:stop(cowboy),
     leo_cache_api:stop(),
+    leo_logger_api:stop(),
     timer:sleep(250),
     ok.
 
