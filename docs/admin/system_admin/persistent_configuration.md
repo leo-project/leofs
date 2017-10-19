@@ -2,7 +2,7 @@
 
 ## Node configuration in `/etc/leofs`
 
-Starting from v1.4.0, LeoFS nodes support loading configuration from `/etc/leofs` hierarchy. This means that there are two locations from which nodes can load their configuration (but only one can be enabled at any time). Official Linux packages ship a copy of config files in `/etc/leofs/leo_*`, though the feature itself should work on any system. However, it is **disabled** by default for compatibility with older versions. 
+Starting from v1.3.8, LeoFS nodes support loading configuration from `/etc/leofs` hierarchy. This means that there are two locations from which nodes can load their configuration (but only one can be enabled at any time). Official Linux packages ship a copy of config files in `/etc/leofs/leo_*`, though the feature itself should work on any system. However, it is **disabled** by default for compatibility with older versions.
 
 ### Different configuration directory for each LeoFS version
 
@@ -24,7 +24,7 @@ For each LeoFS version, these directories will be different (e.g. `/usr/local/le
 
 ### Same configuration directory for all versions
 
-For LeoFS v1.4.0 or later, when `/etc/leofs/leofs.conf` exists and contains `GLOBAL_CONFIG=yes`, configuration is loaded from these directories - independent from version or binaries location:
+For LeoFS v1.3.8 or later, when `/etc/leofs/leofs.conf` exists and contains `GLOBAL_CONFIG=yes`, configuration is loaded from these directories - independent from version or binaries location:
 
 | Node Type       | Full Path  |
 | --------------- | ---------- |
