@@ -533,32 +533,24 @@ recover_node_callback_1(AddrId, Key, Node, RedundantNodes) ->
                 [] ->
                     ok;
                 RedundantNodes_1 ->
-                    recover_node_callback_2(RedundantNodes_1, AddrId, Key, Node)
+                    recover_node_callback_2(lists:member(erlang:node(), RedundantNodes_1), AddrId, Key, Node)
             end;
         false ->
             ok
     end.
 
 %% @private
-recover_node_callback_2([],_AddrId,_Key,_FixedNode) ->
+recover_node_callback_2(false,_AddrId,_Key,_FixedNode) ->
+    %% the object is not belonged to this node
     ok;
-recover_node_callback_2([SrcNode|Rest], AddrId, Key, FixedNode) ->
-    case leo_misc:node_existence(SrcNode, ?DEF_REQ_TIMEOUT) of
-        true when SrcNode == erlang:node() ->
-            ?MODULE:publish(?QUEUE_ID_PER_OBJECT,
-                            AddrId, Key, FixedNode, true,
-                            ?ERR_TYPE_RECOVER_DATA);
-        true ->
-            case leo_redundant_manager_api:get_member_by_node(SrcNode) of
-                {ok, #member{state = ?STATE_RUNNING}} ->
-                    ok;
-                _ ->
-                    recover_node_callback_2(Rest, AddrId, Key, FixedNode)
-            end;
-        false ->
-            recover_node_callback_2(Rest, AddrId, Key, FixedNode)
-    end.
-
+recover_node_callback_2(true, AddrId, Key, FixedNode) ->
+    %% the object is belonged
+    %% then have to try to send the object regardress of the liveness of others,
+    %% because there is no guarantee others have the object stored properly
+    %% as reported on https://github.com/leo-project/leofs/issues/880
+    ?MODULE:publish(?QUEUE_ID_PER_OBJECT,
+                    AddrId, Key, FixedNode, true,
+                    ?ERR_TYPE_RECOVER_DATA).
 
 %% @doc Send object to a remote-node
 %% @private
