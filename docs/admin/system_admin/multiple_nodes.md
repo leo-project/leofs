@@ -2,7 +2,7 @@
 
 ## Description and requirements
 
-Starting from v1.4.0, there is support for running multiple instances of the same node types on a single system (without use of containers or other type of isolation). This is useful for users who want to do things like
+Starting from v1.3.8, there is support for running multiple instances of the same node types on a single system (without use of containers or other type of isolation). This is useful for users who want to do things like
 
 - Running two (or more) gateways on the same system (in the same or different mode, e.g. S3 gateway + REST gateway)
 - Running two (or more) completely isolated clusters with different settings on the same set of storage servers
@@ -148,7 +148,7 @@ erlang.crash_dump = /var/log/leofs/leo_storage_second/erl_crash.dump
 snmp_conf = ./snmp/snmpa_storage_1/leo_storage_snmp
 ```
 
-Each node requires own set of directories with appropriate permissiosn:
+Each node requires own set of directories with appropriate permissions:
 ```
 # mkdir -p /var/leofs/leo_storage/work/queue /var/log/leofs/leo_storage/app /var/leofs/leo_storage/work/ord_reda /var/log/leofs/leo_storage/sasl
 # chown -R leofs:leofs /var/leofs/leo_storage/ /var/log/leofs/
