@@ -51,6 +51,7 @@ pages:
         - Supported Platforms: 'admin/setup/supported_platforms.md'
         - Hardware Requirements: 'admin/setup/hardware_requirements.md'
         - Network Configurations: 'admin/setup/network_config.md'
+        - Load Balancing Configuration: 'admin/system_admin/load_balancing.md'
     - Settings:
         - Cluster Settings: 'admin/settings/cluster.md'
         - Environment Configuration: 'admin/settings/environment_config.md'
@@ -78,7 +79,6 @@ pages:
         ## - Backup and Restore: 'admin/system_admin/backup_and_restore.md'
         - System Integration: 'admin/system_admin/integration.md'
         - Multiple Node Instances: 'admin/system_admin/multiple_nodes.md'
-        - Health Check: 'admin/system_admin/health_check.md'
     - Index of LeoFS' Commands: 'admin/index_of_commands.md'
     ## - Troubleshooting: 'admin/troubleshooting.md'
 - Benchmark: 'benchmark/README.md'
