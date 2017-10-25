@@ -229,6 +229,10 @@ onresponse(CacheCondition) ->
              {ok, Req} when Req::cowboy_req:req(),
                             Key::binary(),
                             ReqParams::#req_params{}).
+get_bucket(Req, _Key, #req_params{is_location = true}) ->
+    Header = [?SERVER_HEADER,
+              {?HTTP_HEAD_RESP_CONTENT_TYPE, ?HTTP_CTYPE_XML}],
+    ?reply_ok(Header, ?XML_BUCKET_LOCATION, Req);
 get_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                                  is_acl = false,
                                  qs_prefix = Prefix,
@@ -1421,7 +1425,12 @@ request_params(Req, Params) ->
                        _ ->
                            false
                    end,
-    %% ?debug("request_params/2", "Is AWS Chunked: ~p", [IsAwsChunked]),
+    IsLocation = case cowboy_req:qs_val(?HTTP_QS_BIN_LOCATION, Req) of
+                     {undefined,_} ->
+                         false;
+                     _ ->
+                         true
+                 end,
 
     {Headers, _} = cowboy_req:headers(Req),
     {ok, CMetaBin} = parse_headers_to_cmeta(Headers),
@@ -1433,6 +1442,7 @@ request_params(Req, Params) ->
             Params#req_params{is_multi_delete = IsMultiDelete,
                               is_upload = IsUpload,
                               is_aws_chunked = IsAwsChunked,
+                              is_location = IsLocation,
                               upload_id = UploadId,
                               upload_part_num = PartNum,
                               custom_metadata = CMetaBin,
