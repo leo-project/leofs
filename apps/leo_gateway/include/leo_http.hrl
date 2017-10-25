@@ -99,6 +99,7 @@
 -define(HTTP_QS_BIN_MULTI_DELETE,<<"delete">>).
 -define(HTTP_QS_BIN_DELIMITER,   <<"delimiter">>).
 -define(HTTP_QS_BIN_VERSIONING,  <<"versioning">>).
+-define(HTTP_QS_BIN_LOCATION,    <<"location">>).
 
 -define(HTTP_ST_OK,                  200).
 -define(HTTP_ST_NO_CONTENT,          204).
@@ -378,6 +379,9 @@
         lists:append(["<Bucket><Name>~s</Name>",
                       "<CreationDate>~s</CreationDate></Bucket>"])).
 
+-define(XML_BUCKET_LOCATION,
+        <<"<VersioningConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"/>">>).
+
 -define(XML_DIR_PREFIX,
         lists:append(["<CommonPrefixes><Prefix>",
                       "~s",
@@ -542,6 +546,7 @@
           has_disk_cache = false     :: boolean(),              %% has disk cache?
           is_cached = false          :: boolean(),              %% is cached?
           is_dir = false             :: boolean(),              %% is directory?
+          is_location = false        :: boolean(),              %% is location?
           is_multi_delete = false    :: boolean(),              %% is multi delete request?
           %% for multipart upload
           dont_abort_cleanup = false :: boolean(),              %% whether removing related objects when handling abort MU request
@@ -549,6 +554,7 @@
           is_upload = false            :: boolean(),            %% is upload operation? (for multipart upload)
           is_aws_chunked = false       :: boolean(),            %% is AWS Chunked? (Signature V4)
           is_acl = false               :: boolean(),            %% is acl operation?
+          ia_location = false          :: boolean(),            %% is location operation?
           upload_id = <<>>             :: binary(),             %% upload id for multipart upload
           upload_part_num = 0          :: non_neg_integer(),    %% upload part number for multipart upload
           max_chunked_objs = 0         :: non_neg_integer(),    %% max chunked objects
