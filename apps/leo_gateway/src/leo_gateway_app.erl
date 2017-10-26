@@ -617,6 +617,12 @@ get_options() ->
                                               end
                                       end, [], List)
                             end,
+    HasDiskCache = case CacheDiscCapacity of
+                       DCSize when DCSize > 0 ->
+                           true;
+                       _ ->
+                           false
+                   end,
 
     %% Retrieve large-object-related properties:
     LargeObjectProp = ?env_large_object_properties(),
@@ -660,6 +666,7 @@ get_options() ->
                                 cache_max_content_len = CacheMaxContentLen,
                                 cachable_content_type = CachableContentTypes1,
                                 cachable_path_pattern = CachablePathPatterns1,
+                                has_disk_cache = HasDiskCache,
                                 max_chunked_objs = MaxChunkedObjs,
                                 max_len_of_obj = MaxObjLen,
                                 chunked_obj_len = ChunkedObjLen,

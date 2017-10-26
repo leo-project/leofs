@@ -506,6 +506,7 @@
           cache_max_content_len = 0    :: pos_integer(),  %% cache max content length (byte)
           cachable_content_type = []   :: list(),         %% cachable content types
           cachable_path_pattern = []   :: list(),         %% cachable path patterns
+          has_disk_cache = false       :: boolean(),      %% Has Disk Cache?
           %% for large-object
           max_chunked_objs = 0         :: pos_integer(),  %% max chunked objects
           max_len_of_obj = 0           :: pos_integer(),  %% max length a object (byte)
@@ -535,6 +536,7 @@
           range_header               :: string(),               %% range header
           custom_metadata = <<>>     :: binary(),
           has_inner_cache = false    :: boolean(),              %% has inner-cache?
+          has_disk_cache = false     :: boolean(),              %% has disk cache?
           is_cached = false          :: boolean(),              %% is cached?
           is_dir = false             :: boolean(),              %% is directory?
           is_multi_delete = false    :: boolean(),              %% is multi delete request?

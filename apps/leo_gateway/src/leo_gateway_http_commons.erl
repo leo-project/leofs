@@ -304,6 +304,7 @@ do_health_check([#member{node = Node}|Rest]) ->
 get_object(Req, Key, #req_params{bucket_name = BucketName,
                                  custom_header_settings = CustomHeaderSettings,
                                  has_inner_cache = HasInnerCache,
+                                 has_disk_cache = HasDiskCache,
                                  sending_chunked_obj_len = SendChunkLen,
                                  begin_time = BeginTime}) ->
     IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
@@ -378,7 +379,8 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
                                {ok, Pid} = leo_large_object_get_handler:start_link(
                                              {Key, #transport_record{transport = Transport,
                                                                      socket = Socket,
-                                                                     sending_chunked_obj_len = SendChunkLen}}),
+                                                                     sending_chunked_obj_len = SendChunkLen},
+                                             HasDiskCache}),
                                try
                                    Ret = leo_large_object_get_handler:get(
                                            Pid, TotalChunkedObjs, Req, Meta),
@@ -401,6 +403,7 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
 get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                                       custom_header_settings = CustomHeaderSettings,
                                                       sending_chunked_obj_len = SendChunkLen,
+                                                      has_disk_cache = HasDiskCache,
                                                       begin_time = BeginTime}) ->
     IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
                  {ok, undefined,_} ->
@@ -564,7 +567,8 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                {ok, Pid} = leo_large_object_get_handler:start_link(
                                              {Key, #transport_record{transport = Transport,
                                                                      socket = Socket,
-                                                                     sending_chunked_obj_len = SendChunkLen}}),
+                                                                     sending_chunked_obj_len = SendChunkLen},
+                                             HasDiskCache}),
                                try
                                    Ret = leo_large_object_get_handler:get(
                                            Pid, TotalChunkedObjs, Req, Meta),
