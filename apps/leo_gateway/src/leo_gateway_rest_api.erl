@@ -200,6 +200,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, _CustomHeaderSet
                                     min_layers = NumOfMinLayers,
                                     max_layers = NumOfMaxLayers,
                                     has_inner_cache = HasInnerCache,
+                                    has_disk_cache = Props#http_options.has_disk_cache,
                                     is_cached = true,
                                     max_chunked_objs = Props#http_options.max_chunked_objs,
                                     max_len_of_obj = Props#http_options.max_len_of_obj,

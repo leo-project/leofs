@@ -56,6 +56,7 @@
 -record(state, {
           key = <<>> :: binary(),
           transport_rec :: #transport_record{},
+          is_disc_cache_active :: boolean(),
           iterator :: leo_large_object_commons:iterator()
          }).
 
@@ -74,8 +75,8 @@
 %%====================================================================
 -spec(start_link(Args) ->
              ok | {error, any()} when Args::tuple()).
-start_link({Key, TransportRec}) ->
-    gen_server:start_link(?MODULE, [Key, TransportRec], []).
+start_link({Key, TransportRec, IsDiskCacheActive}) ->
+    gen_server:start_link(?MODULE, [Key, TransportRec, IsDiskCacheActive], []).
 
 
 %% @doc Stop this server
@@ -102,13 +103,24 @@ get(Pid, TotalOfChunkedObjs, Req, Meta) ->
 %%====================================================================
 %% GEN_SERVER CALLBACKS
 %%====================================================================
-init([Key, TransportRec]) ->
+init([Key, TransportRec, IsDiskCacheActive]) ->
     State = #state{key = Key,
-                   transport_rec = TransportRec},
+                   transport_rec = TransportRec,
+                   is_disc_cache_active = IsDiskCacheActive},
     {ok, State}.
 
 handle_call(stop, _From, State) ->
     {stop, normal, ok, State};
+
+handle_call({get, TotalOfChunkedObjs, Req, Meta}, _From,
+            #state{key = Key, transport_rec = TransportRec, is_disc_cache_active = false} = State) ->
+    Reply = handle_loop(TotalOfChunkedObjs,
+                        #req_info{key = Key,
+                                  chunk_key = Key,
+                                  request = Req,
+                                  metadata = Meta,
+                                  transport_rec = TransportRec}),
+    {reply, Reply, State};
 
 handle_call({get, TotalOfChunkedObjs, Req, Meta}, _From,
             #state{key = Key, transport_rec = TransportRec} = State) ->
