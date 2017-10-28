@@ -19,7 +19,7 @@
     
     
       
-        <title>Multi Data Center Replication - LeoFS Documentation</title>
+        <title>Load Balancing Configuration - LeoFS Documentation</title>
       
     
     
@@ -82,11 +82,11 @@
                 </span>
               
                 <span class="md-header-nav__parent">
-                  System Operations
+                  Setup
                 </span>
               
             
-            Multi Data Center Replication
+            Load Balancing Configuration
           
         </span>
       </div>
@@ -356,10 +356,12 @@
           
           
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-1" type="checkbox" id="nav-5-1">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-1" type="checkbox" id="nav-5-1" checked>
     
     <label class="md-nav__link" for="nav-5-1">
       Setup
@@ -423,11 +425,68 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../system_admin/load_balancing/" title="Load Balancing Configuration" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Load Balancing Configuration
+      </label>
+    
+    <a href="./" title="Load Balancing Configuration" class="md-nav__link md-nav__link--active">
       Load Balancing Configuration
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-configuration" title="Example configuration" class="md-nav__link">
+    Example configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-url" title="Health Check URL" class="md-nav__link">
+    Health Check URL
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#things-to-check-for-production-systems" title="Things to check for production systems" class="md-nav__link">
+    Things to check for production systems
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" title="Related Links" class="md-nav__link">
+    Related Links
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -584,12 +643,10 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-4" type="checkbox" id="nav-5-4" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-4" type="checkbox" id="nav-5-4">
     
     <label class="md-nav__link" for="nav-5-4">
       System Operations
@@ -607,7 +664,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../flow/" title="Operation Flow" class="md-nav__link">
+    <a href="../../system_operations/flow/" title="Operation Flow" class="md-nav__link">
       Operation Flow
     </a>
   </li>
@@ -619,7 +676,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../systemd/" title="Systemd Services" class="md-nav__link">
+    <a href="../../system_operations/systemd/" title="Systemd Services" class="md-nav__link">
       Systemd Services
     </a>
   </li>
@@ -631,7 +688,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../s3/" title="S3-API related Operations" class="md-nav__link">
+    <a href="../../system_operations/s3/" title="S3-API related Operations" class="md-nav__link">
       S3-API related Operations
     </a>
   </li>
@@ -643,7 +700,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../cluster/" title="Cluster Operations" class="md-nav__link">
+    <a href="../../system_operations/cluster/" title="Cluster Operations" class="md-nav__link">
       Cluster Operations
     </a>
   </li>
@@ -655,7 +712,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../data/" title="Data Operations" class="md-nav__link">
+    <a href="../../system_operations/data/" title="Data Operations" class="md-nav__link">
       Data Operations
     </a>
   </li>
@@ -665,114 +722,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="toc">
-        Multi Data Center Replication
-      </label>
-    
-    <a href="./" title="Multi Data Center Replication" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../system_operations/multi_dc_replication/" title="Multi Data Center Replication" class="md-nav__link">
       Multi Data Center Replication
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#configuration" title="Configuration" class="md-nav__link">
-    Configuration
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#leomanager-masters-configuration-for-mdcr" title="LeoManager Master's Configuration For MDCR" class="md-nav__link">
-    LeoManager Master's Configuration For MDCR
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-operate-multi-data-center-replication" title="How To Operate Multi Data Center Replication" class="md-nav__link">
-    How To Operate Multi Data Center Replication
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#commands" title="Commands" class="md-nav__link">
-    Commands
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#join-cluster" title="join-cluster" class="md-nav__link">
-    join-cluster
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remove-cluster" title="remove-cluster" class="md-nav__link">
-    remove-cluster
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cluster-status" title="cluster-status" class="md-nav__link">
-    cluster-status
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-links" title="Related Links" class="md-nav__link">
-    Related Links
-  </a>
-  
-</li>
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -806,7 +760,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/log_management/" title="Log Management" class="md-nav__link">
+    <a href="../log_management/" title="Log Management" class="md-nav__link">
       Log Management
     </a>
   </li>
@@ -818,7 +772,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/persistent_configuration/" title="Persistent Configuration" class="md-nav__link">
+    <a href="../persistent_configuration/" title="Persistent Configuration" class="md-nav__link">
       Persistent Configuration
     </a>
   </li>
@@ -830,7 +784,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
+    <a href="../migration/" title="System Migration" class="md-nav__link">
       System Migration
     </a>
   </li>
@@ -842,7 +796,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/integration/" title="System Integration" class="md-nav__link">
+    <a href="../integration/" title="System Integration" class="md-nav__link">
       System Integration
     </a>
   </li>
@@ -854,7 +808,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../system_admin/multiple_nodes/" title="Multiple Node Instances" class="md-nav__link">
+    <a href="../multiple_nodes/" title="Multiple Node Instances" class="md-nav__link">
       Multiple Node Instances
     </a>
   </li>
@@ -999,69 +953,23 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#configuration" title="Configuration" class="md-nav__link">
-    Configuration
+  <a href="#example-configuration" title="Example configuration" class="md-nav__link">
+    Example configuration
   </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#leomanager-masters-configuration-for-mdcr" title="LeoManager Master's Configuration For MDCR" class="md-nav__link">
-    LeoManager Master's Configuration For MDCR
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-to-operate-multi-data-center-replication" title="How To Operate Multi Data Center Replication" class="md-nav__link">
-    How To Operate Multi Data Center Replication
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#commands" title="Commands" class="md-nav__link">
-    Commands
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#join-cluster" title="join-cluster" class="md-nav__link">
-    join-cluster
+  <a href="#health-check-url" title="Health Check URL" class="md-nav__link">
+    Health Check URL
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#remove-cluster" title="remove-cluster" class="md-nav__link">
-    remove-cluster
+      
+        <li class="md-nav__item">
+  <a href="#things-to-check-for-production-systems" title="Things to check for production systems" class="md-nav__link">
+    Things to check for production systems
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cluster-status" title="cluster-status" class="md-nav__link">
-    cluster-status
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1086,97 +994,159 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/system_operations/multi_dc_replication.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
+                  <a href="https://github.com/leo-project/leofs/edit/master/docs/admin/system_admin/load_balancing.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
                 
                 
-                <h1 id="multi-data-center-replication">Multi Data Center Replication<a class="headerlink" href="#multi-data-center-replication" title="Permanent link">&para;</a></h1>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<p>LeoFS provides the multi data center replication related configuration items, which contain <code class="codehilite">leo_manager_0.conf</code>. Modify those configuration items to work its feature correctly.</p>
-<h3 id="leomanager-masters-configuration-for-mdcr">LeoManager Master's Configuration For MDCR<a class="headerlink" href="#leomanager-masters-configuration-for-mdcr" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code class="codehilite">mdc_replication.num_of_replicas_a_dc</code></td>
-<td>A remote cluster of a LeoFS system which receives this cluster's objects, and then replicates them, which adhere to a replication method of each object</td>
-</tr>
-<tr>
-<td><code class="codehilite">mdc_replication.consistency.write</code></td>
-<td>A number of replicas needed for a successful WRITE-operation</td>
-</tr>
-<tr>
-<td><code class="codehilite">mdc_replication.consistency.read</code></td>
-<td>A number of replicas needed for a successful READ-operation</td>
-</tr>
-<tr>
-<td><code class="codehilite">mdc_replication.consistency.delete</code></td>
-<td>A number of replicas needed for a successful DELETE-operation</td>
-</tr>
-</tbody>
-</table>
-<h2 id="how-to-operate-multi-data-center-replication">How To Operate Multi Data Center Replication<a class="headerlink" href="#how-to-operate-multi-data-center-replication" title="Permanent link">&para;</a></h2>
-<h3 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h3>
-<p>There are three commands, <code class="codehilite">join-cluster</code>, <code class="codehilite">remove-cluster</code>, and <code class="codehilite">cluster-status</code>. You can control the multi data center repliation by LeoFS' CUI, <code class="codehilite">leofs-adm</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code class="codehilite">join-cluster &lt;RMM&gt; &lt;RMS&gt;</code></td>
-<td>Begin to communicate between the local cluster and the remote cluster</td>
-</tr>
-<tr>
-<td><code class="codehilite">remove-cluster &lt;RMM&gt; &lt;RMS&gt;</code></td>
-<td>Terminate to communicate between the local cluster and the remote cluster</td>
-</tr>
-<tr>
-<td><code class="codehilite">cluster-status</code></td>
-<td>See the current state of cluster(s)</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><code class="codehilite">RMM</code>: A Remote cluster's LeoMnager-Master</li>
-<li><code class="codehilite">RMS</code>: A Remote cluster's LeoManager-Slave</li>
-</ul>
-<h4 id="join-cluster">join-cluster<a class="headerlink" href="#join-cluster" title="Permanent link">&para;</a></h4>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm join-cluster manager_10@127.0.0.1:13095 manager_11@127.0.0.1:13096
-OK
+                <h1 id="running-leofs-gateways-behind-load-balancer">Running LeoFS gateways behind load balancer<a class="headerlink" href="#running-leofs-gateways-behind-load-balancer" title="Permanent link">&para;</a></h1>
+<h2 id="example-configuration">Example configuration<a class="headerlink" href="#example-configuration" title="Permanent link">&para;</a></h2>
+<p>Using load balancer (LB) in front of at least two LeoGateways that are operating in S3 or REST mode is always a good idea for production and staging systems; besides distributing the load between multiple gateways, it provides ability to restart and upgrade gateway servers without affecting service. It's likely that any LB that works in HTTP mode can be used in front of LeoGateways (TCP and IP-level LBs are a bad choice for this). Here is example configuration for HAProxy<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> (tested on version 1.6) in front of 4 backends (LeoGateways).</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>global
+    log 127.0.0.1     local0
+    log 127.0.0.1     local1 notice
+    user haproxy
+    group haproxy
+    maxconn 90000
+    spread-checks 5
+
+defaults
+    log     global
+    option  dontlognull
+    option  redispatch
+    option  allbackups
+    no option  httpclose
+    retries 3
+    maxconn 90000
+    timeout connect 5000
+    timeout check   3000
+    timeout client  30000
+    timeout server  35000
+
+frontend leofs
+    bind    192.168.130.66:8080
+    mode    http
+    option  httplog
+    capture request header Host len 64
+    use_backend leofs_backend
+
+backend leofs_backend
+    mode    http
+    balance roundrobin
+    option  httpchk GET /_leofs_adm/ping HTTP/1.1\r\nHost:\ s3.amazonaws.com
+    timeout http-keep-alive 4500
+
+    server    gw0 gw0.lan:8081 weight 1 maxconn 10000 check
+    server    gw1 gw1.lan:8081 weight 1 maxconn 10000 check
+    server    gw2 gw2.lan:8081 weight 1 maxconn 10000 check
+    server    gw3 gw3.lan:8081 weight 1 maxconn 10000 check
 </pre></div>
 </td></tr></table>
 
-<h4 id="remove-cluster">remove-cluster<a class="headerlink" href="#remove-cluster" title="Permanent link">&para;</a></h4>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm remove-cluster manager_10@127.0.0.1:13095 manager_11@127.0.0.1:13096
-OK
-</pre></div>
-</td></tr></table>
-
-<h4 id="cluster-status">cluster-status<a class="headerlink" href="#cluster-status" title="Permanent link">&para;</a></h4>
+<h2 id="health-check-url">Health Check URL<a class="headerlink" href="#health-check-url" title="Permanent link">&para;</a></h2>
+<p>One of the important options here is <code class="codehilite">option httpchk</code>, which makes LB check if gateway is working and can connect to storage servers. Problematic gateways (which refuse connection, reply with an error or don't provide reply fast enough, which is controlled by <code class="codehilite">timeout check</code> parameter here) can be automatically disabled / re-enabled this way. The URL for health check is always <strong>/_leofs_adm/ping</strong>, regardless of gateway mode (S3 or REST). For S3 mode, "Host:" header is required as well (any S3 endpoint can be used there). Similar feature should be activated in configuration of any LB.</p>
+<div class="admonition note">
+<p class="admonition-title">Note: Health Check in REST mode</p>
+<p>You can't get an object stored at <strong>/_leofs_adm/ping</strong> as it's shadowed by the Health Check URL so be careful not to put any object at <strong>/_leofs_adm/ping</strong> in REST mode.</p>
+</div>
+<h2 id="things-to-check-for-production-systems">Things to check for production systems<a class="headerlink" href="#things-to-check-for-production-systems" title="Permanent link">&para;</a></h2>
+<p>Generally, it's best to use latest version of HAProxy (or, at very least, 1.6). This example is suited (and probably doesn't require much tweaking) for people who just need LB for extra reliability. However, please note that running a high load production system would require tweaking of various timeouts, LB / backend and LB / client connection parameters. Depending on clients and type of load, there is no single perfect solution; it requires tweaking, experimentation and performance measurements (most LBs have internal statistics which can help here), besides, often OS-level tweaking is required as well. Here are some important points both for tweaking this configuration to handle high load and for configuring other load balancers.</p>
+<p><strong>Open files limit</strong>: each connection uses an open file (socket), and operating system limits amount of open files for processes. Generally, for users of official Linux packages that are running LeoFS v1.3.8 and higher these limits should be increased automatically. For other cases, please consult documentation for your OS / distro on how to properly increase file limits for processes; it's a good idea to set this limit to high value like 65535 for LeoGateway (usually, default is 1024). Open files limit should be raised for LB as well, it should be bigger than maximum allowed amount of connections to all backend servers plus maximum amount of client connections; in case of HAProxy, it must be set higher than number in global <code class="codehilite">maxconn</code> option (e.g. 31000 for this example with <code class="codehilite">maxconn 30000</code>).</p>
+<p><strong>Request timeouts</strong>: LB can impose a time limit on how fast backend server must give a reply (time before it starts sending HTTP headers). In case of HAProxy, it's <code class="codehilite">timeout server</code> option: when backend takes more time to reply than the time specified there, HAProxy will send "504 Gateway Timeout" to client instead. However, since LeoGateway has its own timeout logic, aborting request like that is a bad idea, since gateway was still busy working on that request. Either LB timeouts or gateway timeouts (or both) should be tweaked and LB server-side timeout should be set <strong>bigger</strong> than timeouts in leo_gateway.conf (<code class="codehilite">timeout.get</code> and <code class="codehilite">timeout.ls</code>, which are 30 seconds by default). This way, gateway will give its own (503) reply to client when it can't process request due to high load and LB will generate "504 Gateway Timeout" only in special cases like network problem between LB and backend. Since timeouts in leo_gateway.conf are set for internal operation between LeoGateway and LeoStorage, the overall delay between request to gateway and reply might be bigger than that, so timeout in LB configuration should be set appropriately. Also, when requesting a large object, gateway can insert delays between chunks of data up to <code class="codehilite">timeout.get</code> value. Some LBs need to be tweaked to handle these delays without closing the connection (in case of HAProxy, it's <code class="codehilite">timeout tunnel</code> option), though generally it shouldn't be a problem.</p>
+<p>Example:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ leofs-adm cluster-status
-cluster id |   dc id    |    status    | # of storages  |          updated at
------------+------------+--------------+----------------+-----------------------------
-leofs_2    | dc_2       | running      |              3 | 2017-04-26 10:23:59 +0900
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># timeouts in leo_gateway.conf set to 30 seconds
+timeout.get = 30000
+timeout.ls = 30000
+
+# timeout for headers in haproxy.cfg set to higher value - 35 seconds
+# mid-stream inactivity timeout (both directions) set to 10 minutes
+backend
+    timeout server 35000
+    timeout tunnel 10m
 </pre></div>
 </td></tr></table>
 
+<p><strong>HTTP connection reuse</strong>: many LBs offer a feature of reusing the same connections to backends to handle requests from various clients. Generally this mode isn't default because it doesn't work with all types of backends. However, it works with LeoGateway since it operates in stateless (REST) mode (this includes operating in S3 protocol mode which follows REST as well). Under some conditions, like requests from very high amount of clients, this option can significantly decrease latency and reduce load on LB and gateway, since it allows to use much smaller amount of connections between LB and backend compared to amount of connections between LB and clients, and save time / CPU on re-establishing TCP connections to backend. In HAProxy, this is controlled by <code class="codehilite">http-reuse</code> directive, e.g. <code class="codehilite">http-reuse always</code>.</p>
+<p><strong>Long-lived keep-alive tunnels</strong>: alternative to the above, LBs can use one-on-one connection mappings between clients and backends. Each connection from client creates new connection to backend, which is closed when client closes the connection, so they behave like tunnels from client to backend. Under some conditions (clients use HTTP keep-alive, low amount of clients, long-lived connections with high rate of requests) this might be a better option compared to connection reuse. Modern versions of HAProxy use this mode by default, but older versions (1.5 or earlier) and other LBs might behave differently. With this style of connections, number of connections from clients that LB can handle is limited by maximum allowed amount of connections to all active backends. This mode shouldn't be confused with keep-alive connections only between clients and LB.</p>
+<p>Activating either of these features (reusing connection to backends or tunnels with keep-alive to both client and backend) can significantly reduce load and increase performance compared to establishing connection between LB and backend for every request. However, the downside is that memory requirements for LB are increased and some extra tweaking might be needed. The most important tweak is keep-alive timeout between LB and backend. LeoGateway has timeout parameters (<code class="codehilite">http.timeout_for_header</code> and <code class="codehilite">http.timeout_for_body</code>), first of which is set to 5s by default. It means that keep-alive connection without any traffic in it for 5 seconds will be closed by LeoGateway. It's a good idea to increase this parameter when operating in the above modes. Regardless whether it's increased or not, the similar parameter on LB side should be set to <strong>lower</strong> value than timeout on LeoGateway. In HAProxy, this is controlled by <code class="codehilite">timeout http-keep-alive</code> in the backend section. This is especially important when HTTP connections are reused, because it avoids the problem when LB tries to send data into existing connection at the same time as LeoGateway closes that connection. Ensuring that LeoGateway keeps the inactive connection open a bit longer than the time after which LB will close connection from its side solves this problem.</p>
+<p>Example:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># keep-alive timeout between requests in leo_gateway.conf set to 30 seconds
+http.timeout_for_header = 30000
+
+# keep-alive timeout in haproxy.cfg set to smaller value - 29 seconds
+backend
+    timeout http-keep-alive 29000
+</pre></div>
+</td></tr></table>
+
+<p><strong>SSL/TLS termination</strong>: obviously, for LB to work with LeoGateway in HTTP protocol mode, SSL has to be terminated on LB itself. Usually (e.g. in case of HAProxy in multi-process mode) it will provide much higher SSL performance compared to serving SSL from LeoGateway directly, so LeoGateway should always be configured to use HTTP when operating behind LB. In cases where secure traffic between LB and LeoGateway is a must, either LB should be configured to decrypt/re-encrypt SSL traffic (so it can still operate in HTTP and not in TCP tunneling mode), or some other layer of encryption, like VPN should be used.</p>
+<p><strong>High availability</strong>: a single load balancer becomes a point of failure (PoF) itself. For highly available configurations, at least two LBs are needed, configured for failover (e.g. using floating IP with Corosync / Pacemaker<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>). Alternatively, IP-level LB (e.g. Linux Virtual Server<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup>) can be set up in front of HTTP-level LBs. IP-level balancing solutions provide higher availability compared to failover and can distribute load between multiple HTTP-level LBs, but require dedicated hardware.</p>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../settings/leo_manager/">For Administrators / Settings / LeoManager Settings</a></li>
+<li><a href="../../settings/leo_gateway/">For Administrators / Settings / LeoGateway Settings</a></li>
 </ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="http://cbonte.github.io/haproxy-dconv/1.6/configuration.html" target="_blank">HAProxy version 1.6 - Configuration Manual</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www.clusterlabs.org/" target="_blank">High Availability Cluster Stack</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="http://www.linuxvirtualserver.org/" target="_blank">The Linux Virtual Server Project</a>&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
                 
                   
                 
@@ -1195,7 +1165,7 @@ leofs_2    | dc_2       | running      |              3 | 2017-04-26 10:23:59 +0
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../data/" title="Data Operations" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../setup/network_config/" title="Network Configurations" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1204,19 +1174,19 @@ leofs_2    | dc_2       | running      |              3 | 2017-04-26 10:23:59 +0
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Data Operations
+                Network Configurations
               </span>
             </div>
           </a>
         
         
-          <a href="../../system_admin/log_management/" title="Log Management" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../settings/cluster/" title="Cluster Settings" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Log Management
+                Cluster Settings
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

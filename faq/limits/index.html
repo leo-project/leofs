@@ -413,6 +413,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../admin/system_admin/load_balancing/" title="Load Balancing Configuration" class="md-nav__link">
+      Load Balancing Configuration
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -972,8 +984,9 @@
 <ul>
 <li>LeoFS have covered almost major <a href="" target="_blank">AWS S3-API</a> but not all APIs.</li>
 <li>If you use <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html" target="_blank">S3's Multi Part Upload API</a>, the size of a part of an object must be less than the size of a chunked object in LeoFS.</li>
+<li>When using the multi datacenter replication feature, we have supported up to 2 clusters with <code class="codehilite">LeoFS v1.2</code>, but we're going to support over 3 clusters replication with <code class="codehilite">LeoFS v2.0</code>.</li>
 <li>
-<p>When using the multi datacenter replication feature, we have supported up to 2 clusters with <code class="codehilite">LeoFS v1.2</code>, but we're going to support over 3 clusters replication with <code class="codehilite">LeoFS v2.0</code>.</p>
+<p>When you run recover-node while another recover-node is already working in-progress, objects that are not transmitted to the target node yet in the former recover-node are canceled and the latter recover-node will take place. To ensure that every recover-node completes its job, we'd recommend you to run recover-node one-by-one.</p>
 </li>
 <li>
 <p>Related Links:</p>
@@ -981,6 +994,7 @@
 <li><a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 REST API Introduction</a></li>
 <li><a href="https://github.com/leo-project/leofs/issues/177">LeoFS' ISSUE_177</a></li>
 <li><a href="https://github.com/leo-project/leofs/issues/338">LeoFS' ISSUE_338</a></li>
+<li><a href="https://github.com/leo-project/leofs/issues/880">LeoFS' ISSUE_880</a></li>
 </ul>
 </li>
 </ul>
