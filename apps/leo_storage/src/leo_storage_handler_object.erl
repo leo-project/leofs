@@ -110,6 +110,7 @@ get(ReadParameter, Redundancies) when Redundancies /= [] ->
     case read_and_repair(ReadParameter, Redundancies) of
         {ok, #?METADATA{meta = CMeta} = Meta, Bin} when CMeta =/= <<>> ->
             {ok, NewMeta} = get_cmeta(Meta),
+
             {ok, NewMeta, Bin};
         Other ->
             Other
@@ -1251,6 +1252,7 @@ read_and_repair_2(#read_parameter{addr_id = AddrId,
     %%     then compare it with requested 'Etag'
     HeadRet = case leo_object_storage_api:head({AddrId, Key}) of
                   {ok, MetaBin} ->
+
                       Metadata = binary_to_term(MetaBin),
                       case Metadata#?METADATA.checksum of
                           ETag ->
