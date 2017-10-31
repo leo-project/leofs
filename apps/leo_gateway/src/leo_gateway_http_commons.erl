@@ -241,12 +241,11 @@ onresponse(#cache_condition{expire = Expire} = Config, FunGenKey) ->
                                                            end
                                                    end, [], Header1),
                             CMetaBin = case MetaList of
-                                       [] ->
-                                           <<>>;
-                                       _ ->
-                                           term_to_binary(MetaList)
-                                   end,
-
+                                           [] ->
+                                               <<>>;
+                                           _ ->
+                                               term_to_binary(MetaList)
+                                       end,
                             Bin = term_to_binary(
                                     #cache{mtime = Now,
                                            etag = leo_hex:raw_binary_to_integer(crypto:hash(md5, Body)),
@@ -254,7 +253,6 @@ onresponse(#cache_condition{expire = Expire} = Config, FunGenKey) ->
                                            body = Body,
                                            cmeta = CMetaBin,
                                            msize = byte_size(CMetaBin),
-
                                            content_type = ?http_content_type(Header1)}),
                             catch leo_cache_api:put(Key, Bin),
                             Header2 = lists:keydelete(?HTTP_HEAD_LAST_MODIFIED, 1, Header1),
@@ -433,7 +431,7 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, leo_http:rfc1123_date(CacheObj#cache.mtime)},
                        {?HTTP_HEAD_X_FROM_CACHE, <<"True/via disk">>}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
-            
+
             case leo_gateway_rpc_handler:head(Key) of
                 {ok, #?METADATA{meta = CMetaBin}} ->
                     Headers2 = case CMetaBin of
@@ -767,11 +765,14 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
                   andalso binary_is_contained(Key, 10) == false) of
                 true  ->
                     Mime = leo_mime:guess_mime(Key),
+                    CMeta_1 = term_to_binary(
+                                leo_misc:get_value(
+                                  ?PROP_CMETA_UDM, binary_to_term(CMeta), [])),
                     Val = term_to_binary(#cache{etag = ETag,
                                                 mtime = leo_date:now(),
                                                 content_type = Mime,
                                                 body = Bin,
-                                                cmeta = CMeta,
+                                                cmeta = CMeta_1,
                                                 msize = byte_size(CMeta),
                                                 size = byte_size(Bin)
                                                }),
