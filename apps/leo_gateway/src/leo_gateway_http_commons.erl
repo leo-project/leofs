@@ -764,19 +764,27 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
             case (HasInnerCache
                   andalso binary_is_contained(Key, 10) == false) of
                 true  ->
+                    %% Stores an object into the cache
                     Mime = leo_mime:guess_mime(Key),
-                    CMeta_1 = term_to_binary(
-                                leo_misc:get_value(
-                                  ?PROP_CMETA_UDM, binary_to_term(CMeta), [])),
-                    Val = term_to_binary(#cache{etag = ETag,
-                                                mtime = leo_date:now(),
-                                                content_type = Mime,
-                                                body = Bin,
-                                                cmeta = CMeta_1,
-                                                msize = byte_size(CMeta),
-                                                size = byte_size(Bin)
-                                               }),
-                    catch leo_cache_api:put(Key, Val);
+                    case catch term_to_binary(
+                                 leo_misc:get_value(
+                                   ?PROP_CMETA_UDM, binary_to_term(CMeta), [])) of
+                        {'EXIT', Reason} ->
+                            ?error("put_small_object/3",
+                                   [{key, binary_to_list(Key)},
+                                    {simple_cause, "Invalid metadata"},
+                                    {cause, Reason}]);
+                        CMeta_1 ->
+                            Val = term_to_binary(#cache{etag = ETag,
+                                                        mtime = leo_date:now(),
+                                                        content_type = Mime,
+                                                        body = Bin,
+                                                        cmeta = CMeta_1,
+                                                        msize = byte_size(CMeta_1),
+                                                        size = byte_size(Bin)
+                                                       }),
+                            catch leo_cache_api:put(Key, Val)
+                    end;
                 false ->
                     void
             end,
