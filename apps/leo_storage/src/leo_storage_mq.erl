@@ -1030,7 +1030,7 @@ fix_consistency_between_clusters(#inconsistent_data_with_dc{
                           addr_id = AddrId,
                           key = Key,
                           dsize = 0,
-                          del = ?DEL_FALSE},
+                          del = ?DEL_TRUE},
     Object = leo_object_storage_transformer:metadata_to_object(Metadata),
     leo_sync_remote_cluster:stack(Object#?OBJECT{data = <<>>}).
 
