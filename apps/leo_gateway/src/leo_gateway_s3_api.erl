@@ -472,17 +472,17 @@ get_object(Req, Key, #req_params{is_acl = true,
                     XML = generate_acl_xml(BucketInfo),
                     Header = [?SERVER_HEADER,
                               {?HTTP_HEAD_RESP_CONTENT_TYPE, ?HTTP_CTYPE_XML}],
-                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_OK, BeginTime), 
+                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_OK, BeginTime),
                     ?reply_ok(Header, XML, Req);
                 not_found ->
-                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime), 
+                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime),
                     ?reply_not_found([?SERVER_HEADER], Bucket, <<>>, Req);
                 {error, _Cause} ->
                     ?access_log_get_acl(Bucket, Key, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
                     ?reply_internal_error([?SERVER_HEADER], Bucket, <<>>, Req)
             end;
         {ok, #?METADATA{del = 1}}->
-            ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime), 
+            ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime),
             ?reply_not_found([?SERVER_HEADER], Key, <<>>, Req);
         {error, Cause} ->
             ?reply_fun(Cause, get_acl, Bucket, Key, 0, Req, BeginTime)
@@ -2236,9 +2236,9 @@ parse_headers_to_cmeta(Headers) when is_list(Headers) ->
                            end, [], Headers),
     case MetaList of
         [] ->
-            {ok, <<>>};
+            {ok, term_to_binary([])};
         _ ->
-            {ok, term_to_binary(MetaList)}
+            {ok, term_to_binary([{?PROP_CMETA_UDM, MetaList}])}
     end;
 parse_headers_to_cmeta(_) ->
     {error, badarg}.
