@@ -813,6 +813,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                                   sending_chunked_obj_len = Props#http_options.sending_chunked_obj_len,
                                   reading_chunked_obj_len = Props#http_options.reading_chunked_obj_len,
                                   threshold_of_chunk_len = Props#http_options.threshold_of_chunk_len,
+                                  dont_abort_cleanup = Props#http_options.dont_abort_cleanup,
                                   begin_time = BeginTime}),
     case ReqParams of
         {error, metadata_too_large} ->
@@ -969,9 +970,24 @@ handle_2({ok,_AccessKeyId}, Req, ?HTTP_PUT,_Key,
         end,
     {ok, Req_2, State};
 
+%% For Multipart upload - Abort
+%% Nothing but removing a temporary object to deal with https://github.com/leo-project/leofs/issues/903
 handle_2({ok,_AccessKeyId}, Req, ?HTTP_DELETE,_Key,
          #req_params{path = Path,
+                     dont_abort_cleanup = true,
                      upload_id = UploadId}, State) when UploadId /= <<>> ->
+    TemporaryKey = << Path/binary, ?STR_NEWLINE, UploadId/binary >>,
+    _ = leo_gateway_rpc_handler:delete(TemporaryKey),
+    {ok, Req_2} = ?reply_no_content([?SERVER_HEADER], Req),
+    {ok, Req_2, State};
+%% For Multipart upload - Abort
+%% Removing all related objects: default behavior
+handle_2({ok,_AccessKeyId}, Req, ?HTTP_DELETE,_Key,
+         #req_params{path = Path,
+                     dont_abort_cleanup = false,
+                     upload_id = UploadId}, State) when UploadId /= <<>> ->
+
+
     {ok, Req_2} =
         case abort_multipart_upload(Path) of
             ok ->

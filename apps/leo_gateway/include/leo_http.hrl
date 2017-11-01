@@ -147,6 +147,7 @@
 -define(DEF_LOBJ_THRESHOLD_OF_CHUNK_LEN, 5767168).
 -define(DEF_S3API_MAX_KEYS, 1000).
 -define(DEF_MAX_NUM_OF_METADATAS, 50).
+-define(DEF_DONT_ABORT_CLEANUP, false).
 
 %% error codes used in a error response
 -define(XML_ERROR_CODE_EntityTooLarge, "EntityTooLarge").
@@ -506,6 +507,8 @@
           cache_max_content_len = 0    :: pos_integer(),  %% cache max content length (byte)
           cachable_content_type = []   :: list(),         %% cachable content types
           cachable_path_pattern = []   :: list(),         %% cachable path patterns
+          %% for multipart upload
+          dont_abort_cleanup = false   :: boolean(),      %% whether removing related objects when handling abort MU request
           %% for large-object
           max_chunked_objs = 0         :: pos_integer(),  %% max chunked objects
           max_len_of_obj = 0           :: pos_integer(),  %% max length a object (byte)
@@ -538,6 +541,8 @@
           is_cached = false          :: boolean(),              %% is cached?
           is_dir = false             :: boolean(),              %% is directory?
           is_multi_delete = false    :: boolean(),              %% is multi delete request?
+          %% for multipart upload
+          dont_abort_cleanup = false :: boolean(),              %% whether removing related objects when handling abort MU request
           %% for large-object
           is_upload = false            :: boolean(),            %% is upload operation? (for multipart upload)
           is_aws_chunked = false       :: boolean(),            %% is AWS Chunked? (Signature V4)
