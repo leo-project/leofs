@@ -498,6 +498,8 @@ get_object(Req, Key, Params) ->
                             Key::binary(),
                             CacheObj::#cache{},
                             ReqParams::#req_params{}).
+get_object_with_cache(Req, Key, _CacheObj, #req_params{is_acl = true} = Params) ->
+    leo_gateway_s3_api:get_object(Req, Key, Params);
 get_object_with_cache(Req, Key, CacheObj, Params) ->
     leo_gateway_http_commons:get_object_with_cache(Req, Key, CacheObj,  Params).
 
