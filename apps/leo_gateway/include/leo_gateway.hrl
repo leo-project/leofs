@@ -166,6 +166,12 @@
             _ -> []
         end).
 
+-define(env_multipart_properties(),
+        case application:get_env(leo_gateway, multipart) of
+            {ok, EnvMultiObject} -> EnvMultiObject;
+            _ -> []
+        end).
+
 -define(env_recover_properties(),
         case application:get_env(leo_gateway, recover) of
             {ok, EnvRecover} -> EnvRecover;
