@@ -335,6 +335,18 @@
   {default, 32}
  ]}.
 
+%% --------------------------------------------------------------------
+%% GATEWAY - Multipart
+%% --------------------------------------------------------------------
+%% @doc Whether removing related objects when handling abort MU request
+{mapping,
+ "multipart.dont_abort_cleanup",
+ "leo_gateway.multipart.dont_abort_cleanup",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
 
 %% --------------------------------------------------------------------
 %% GATEWAY - CACHE
