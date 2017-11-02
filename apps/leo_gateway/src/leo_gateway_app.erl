@@ -617,6 +617,16 @@ get_options() ->
                                               end
                                       end, [], List)
                             end,
+    HasDiskCache = case CacheDiscCapacity of
+                       DCSize when DCSize > 0 ->
+                           true;
+                       _ ->
+                           false
+                   end,
+
+    %% Retrieve multipart-upload-related properties
+    MultipartProp = ?env_multipart_properties(),
+    DontAbortCleanup = leo_misc:get_value('dont_abort_cleanup', MultipartProp, ?DEF_DONT_ABORT_CLEANUP),
 
     %% Retrieve large-object-related properties:
     LargeObjectProp = ?env_large_object_properties(),
@@ -660,6 +670,8 @@ get_options() ->
                                 cache_max_content_len = CacheMaxContentLen,
                                 cachable_content_type = CachableContentTypes1,
                                 cachable_path_pattern = CachablePathPatterns1,
+                                has_disk_cache = HasDiskCache,
+                                dont_abort_cleanup = DontAbortCleanup,
                                 max_chunked_objs = MaxChunkedObjs,
                                 max_len_of_obj = MaxObjLen,
                                 chunked_obj_len = ChunkedObjLen,
@@ -687,6 +699,7 @@ get_options() ->
     ?info("start/3", "cache_max_content_len: ~p", [CacheMaxContentLen]),
     ?info("start/3", "cacheable_content_types: ~p", [CachableContentTypes]),
     ?info("start/3", "cacheable_path_patterns: ~p", [CachablePathPatterns]),
+    ?info("start/3", "dont_abort_cleanup: ~p", [DontAbortCleanup]),
     ?info("start/3", "max_chunked_obj: ~p", [MaxChunkedObjs]),
     ?info("start/3", "max_len_of_obj: ~p", [MaxObjLen]),
     ?info("start/3", "chunked_obj_len: ~p", [ChunkedObjLen]),

@@ -344,10 +344,16 @@ stack_fun(ClusterId, #?OBJECT{addr_id = AddrId,
                  mdcr_r = MDCR_R,
                  mdcr_w = MDCR_W,
                  mdcr_d = MDCR_D}} ->
+            UDM_1 = case leo_object_storage_transformer:get_udm_from_cmeta_bin(CMeta) of
+                        {ok, UDM} when UDM /= [] ->
+                            UDM;
+                        _ ->
+                            []
+                    end,
             CMeta_1 = leo_object_storage_transformer:list_to_cmeta_bin(
                          [{?PROP_CMETA_CLUSTER_ID, MDC_ClusterId},
                           {?PROP_CMETA_NUM_OF_REPLICAS, MDCR_N},
-                          {?PROP_CMETA_UDM, leo_object_storage_transformer:get_udm_from_cmeta_bin(CMeta)}
+                          {?PROP_CMETA_UDM, UDM_1}
                          ]),
             CMetaLen = byte_size(CMeta_1),
             Object_1 =  Object#?OBJECT{cluster_id = MDC_ClusterId,
@@ -425,7 +431,6 @@ slice(StackedObjs) ->
     end.
 
 
-%% @TODO
 %% @doc Replicate an object between clusters
 %% @private
 -spec(replicate(atom(), #object{} | #object_1{} | #?OBJECT{}) ->

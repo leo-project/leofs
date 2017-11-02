@@ -241,12 +241,11 @@ onresponse(#cache_condition{expire = Expire} = Config, FunGenKey) ->
                                                            end
                                                    end, [], Header1),
                             CMetaBin = case MetaList of
-                                       [] ->
-                                           <<>>;
-                                       _ ->
-                                           term_to_binary(MetaList)
-                                   end,
-
+                                           [] ->
+                                               <<>>;
+                                           _ ->
+                                               term_to_binary(MetaList)
+                                       end,
                             Bin = term_to_binary(
                                     #cache{mtime = Now,
                                            etag = leo_hex:raw_binary_to_integer(crypto:hash(md5, Body)),
@@ -254,7 +253,6 @@ onresponse(#cache_condition{expire = Expire} = Config, FunGenKey) ->
                                            body = Body,
                                            cmeta = CMetaBin,
                                            msize = byte_size(CMetaBin),
-
                                            content_type = ?http_content_type(Header1)}),
                             catch leo_cache_api:put(Key, Bin),
                             Header2 = lists:keydelete(?HTTP_HEAD_LAST_MODIFIED, 1, Header1),
@@ -306,6 +304,7 @@ do_health_check([#member{node = Node}|Rest]) ->
 get_object(Req, Key, #req_params{bucket_name = BucketName,
                                  custom_header_settings = CustomHeaderSettings,
                                  has_inner_cache = HasInnerCache,
+                                 has_disk_cache = HasDiskCache,
                                  sending_chunked_obj_len = SendChunkLen,
                                  begin_time = BeginTime}) ->
     IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
@@ -380,7 +379,8 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
                                {ok, Pid} = leo_large_object_get_handler:start_link(
                                              {Key, #transport_record{transport = Transport,
                                                                      socket = Socket,
-                                                                     sending_chunked_obj_len = SendChunkLen}}),
+                                                                     sending_chunked_obj_len = SendChunkLen},
+                                             HasDiskCache}),
                                try
                                    Ret = leo_large_object_get_handler:get(
                                            Pid, TotalChunkedObjs, Req, Meta),
@@ -403,6 +403,7 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
 get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                                       custom_header_settings = CustomHeaderSettings,
                                                       sending_chunked_obj_len = SendChunkLen,
+                                                      has_disk_cache = HasDiskCache,
                                                       begin_time = BeginTime}) ->
     IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
                  {ok, undefined,_} ->
@@ -433,7 +434,7 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, leo_http:rfc1123_date(CacheObj#cache.mtime)},
                        {?HTTP_HEAD_X_FROM_CACHE, <<"True/via disk">>}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
-            
+
             case leo_gateway_rpc_handler:head(Key) of
                 {ok, #?METADATA{meta = CMetaBin}} ->
                     Headers2 = case CMetaBin of
@@ -566,7 +567,8 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                {ok, Pid} = leo_large_object_get_handler:start_link(
                                              {Key, #transport_record{transport = Transport,
                                                                      socket = Socket,
-                                                                     sending_chunked_obj_len = SendChunkLen}}),
+                                                                     sending_chunked_obj_len = SendChunkLen},
+                                             HasDiskCache}),
                                try
                                    Ret = leo_large_object_get_handler:get(
                                            Pid, TotalChunkedObjs, Req, Meta),
@@ -766,16 +768,27 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
             case (HasInnerCache
                   andalso binary_is_contained(Key, 10) == false) of
                 true  ->
+                    %% Stores an object into the cache
                     Mime = leo_mime:guess_mime(Key),
-                    Val = term_to_binary(#cache{etag = ETag,
-                                                mtime = leo_date:now(),
-                                                content_type = Mime,
-                                                body = Bin,
-                                                cmeta = CMeta,
-                                                msize = byte_size(CMeta),
-                                                size = byte_size(Bin)
-                                               }),
-                    catch leo_cache_api:put(Key, Val);
+                    case catch term_to_binary(
+                                 leo_misc:get_value(
+                                   ?PROP_CMETA_UDM, binary_to_term(CMeta), [])) of
+                        {'EXIT', Reason} ->
+                            ?error("put_small_object/3",
+                                   [{key, binary_to_list(Key)},
+                                    {simple_cause, "Invalid metadata"},
+                                    {cause, Reason}]);
+                        CMeta_1 ->
+                            Val = term_to_binary(#cache{etag = ETag,
+                                                        mtime = leo_date:now(),
+                                                        content_type = Mime,
+                                                        body = Bin,
+                                                        cmeta = CMeta_1,
+                                                        msize = byte_size(CMeta_1),
+                                                        size = byte_size(Bin)
+                                                       }),
+                            catch leo_cache_api:put(Key, Val)
+                    end;
                 false ->
                     void
             end,

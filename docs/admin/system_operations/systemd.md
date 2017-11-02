@@ -4,13 +4,13 @@ This section describes how to manage LeoFS nodes on systemd-based Linux distribu
 
 ## Requirements
 
-Users of LeoFS v1.4.0 or higher running official Linux packages under supported systemd-based Linux distros (currently: Ubuntu 16.04 and EL7-based) can use supplied systemd units for starting/stopping nodes. Advantages offered by doing so include:
+Users of LeoFS v1.3.8 or higher running official Linux packages under supported systemd-based Linux distros (currently: Ubuntu 16.04 and EL7-based) can use supplied systemd units for starting/stopping nodes. Advantages offered by doing so include:
 
 - Way to automatically start nodes on system startup and correctly shutdown them during power off / reboot.
 - Reliable way of controlling nodes (e.g. when LeoStorage node is launched in absence of LeoManager nodes, it will keep on restarting till LeoManager becomes available; nodes always being able to restart in case of unexpected situation such as crash or OOM kill)
 - Correct inter-node dependencies (affecting startup/shutdown order) for launching nodes in all-in-one cluster (when all nodes are running on the same system, e.g. for testing)
 
-It's possible to switch to systemd-based way to control nodes (and back) anytime for users of v1.4.0 and higher running any supported systemd-based Linux distro.
+It's possible to switch to systemd-based way to control nodes (and back) anytime for users of v1.3.8 and higher running any supported systemd-based Linux distro.
 
 
 ## Switching to systemd services
@@ -73,6 +73,6 @@ In some cases (primary, LeoStorage under high write load) a node can take a long
 
 This section only applies to people who need to run LeoFS node **and** some other Erlang software on the same system.
 
-LeoFS, as well as certain types of other Erlang software relies on Erlang Port Mapper Daemon (`epmd`). Usually there can be only single instance of `epmd` running on the same node. To ensure smooth LeoFS operation, v1.4.0 and higher packages ensure that `leofs-epmd.socket` is enabled on boot and started right after upgrade. This is the case even when not using systemd-based services to launch LeoFS nodes. This service is running as "leofs" user by default (there should be no need to change that).
+LeoFS, as well as certain types of other Erlang software relies on Erlang Port Mapper Daemon (`epmd`). Usually there can be only single instance of `epmd` running on the same node. To ensure smooth LeoFS operation, v1.3.8 and higher packages ensure that `leofs-epmd.socket` is enabled on boot and started right after upgrade. This is the case even when not using systemd-based services to launch LeoFS nodes. This service is running as "leofs" user by default (there should be no need to change that).
 
 Usually, service for LeoFS-supplied `epmd` (which uses socket activation) should work even for other Erlang software that might need `epmd` and there will be no problems. However, in case running some other instance of `epmd` is really needed, it should be possible to mask `leofs-epmd.socket` and `leofs-epmd.service` and remove dependencies on these units. It should work as long as `epmd` is always running before launching LeoFS nodes and is set up to listen on all interfaces (`0.0.0.0`), not just the local one.

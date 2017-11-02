@@ -476,17 +476,17 @@ get_object(Req, Key, #req_params{is_acl = true,
                     XML = generate_acl_xml(BucketInfo),
                     Header = [?SERVER_HEADER,
                               {?HTTP_HEAD_RESP_CONTENT_TYPE, ?HTTP_CTYPE_XML}],
-                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_OK, BeginTime), 
+                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_OK, BeginTime),
                     ?reply_ok(Header, XML, Req);
                 not_found ->
-                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime), 
+                    ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime),
                     ?reply_not_found([?SERVER_HEADER], Bucket, <<>>, Req);
                 {error, _Cause} ->
                     ?access_log_get_acl(Bucket, Key, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
                     ?reply_internal_error([?SERVER_HEADER], Bucket, <<>>, Req)
             end;
         {ok, #?METADATA{del = 1}}->
-            ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime), 
+            ?access_log_get_acl(Bucket, Key, ?HTTP_ST_NOT_FOUND, BeginTime),
             ?reply_not_found([?SERVER_HEADER], Key, <<>>, Req);
         {error, Cause} ->
             ?reply_fun(Cause, get_acl, Bucket, Key, 0, Req, BeginTime)
@@ -502,6 +502,8 @@ get_object(Req, Key, Params) ->
                             Key::binary(),
                             CacheObj::#cache{},
                             ReqParams::#req_params{}).
+get_object_with_cache(Req, Key, _CacheObj, #req_params{is_acl = true} = Params) ->
+    leo_gateway_s3_api:get_object(Req, Key, Params);
 get_object_with_cache(Req, Key, CacheObj, Params) ->
     leo_gateway_http_commons:get_object_with_cache(Req, Key, CacheObj,  Params).
 
@@ -805,6 +807,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                                   max_layers = NumOfMaxLayers,
                                   qs_prefix = Prefix,
                                   has_inner_cache = HasInnerCache,
+                                  has_disk_cache = Props#http_options.has_disk_cache,
                                   is_cached = true,
                                   is_dir = IsDir,
                                   is_acl = IsACL,
@@ -817,6 +820,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                                   sending_chunked_obj_len = Props#http_options.sending_chunked_obj_len,
                                   reading_chunked_obj_len = Props#http_options.reading_chunked_obj_len,
                                   threshold_of_chunk_len = Props#http_options.threshold_of_chunk_len,
+                                  dont_abort_cleanup = Props#http_options.dont_abort_cleanup,
                                   begin_time = BeginTime}),
     case ReqParams of
         {error, metadata_too_large} ->
@@ -973,9 +977,24 @@ handle_2({ok,_AccessKeyId}, Req, ?HTTP_PUT,_Key,
         end,
     {ok, Req_2, State};
 
+%% For Multipart upload - Abort
+%% Nothing but removing a temporary object to deal with https://github.com/leo-project/leofs/issues/903
 handle_2({ok,_AccessKeyId}, Req, ?HTTP_DELETE,_Key,
          #req_params{path = Path,
+                     dont_abort_cleanup = true,
                      upload_id = UploadId}, State) when UploadId /= <<>> ->
+    TemporaryKey = << Path/binary, ?STR_NEWLINE, UploadId/binary >>,
+    _ = leo_gateway_rpc_handler:delete(TemporaryKey),
+    {ok, Req_2} = ?reply_no_content([?SERVER_HEADER], Req),
+    {ok, Req_2, State};
+%% For Multipart upload - Abort
+%% Removing all related objects: default behavior
+handle_2({ok,_AccessKeyId}, Req, ?HTTP_DELETE,_Key,
+         #req_params{path = Path,
+                     dont_abort_cleanup = false,
+                     upload_id = UploadId}, State) when UploadId /= <<>> ->
+
+
     {ok, Req_2} =
         case abort_multipart_upload(Path) of
             ok ->
@@ -2246,9 +2265,9 @@ parse_headers_to_cmeta(Headers) when is_list(Headers) ->
                            end, [], Headers),
     case MetaList of
         [] ->
-            {ok, <<>>};
+            {ok, term_to_binary([])};
         _ ->
-            {ok, term_to_binary(MetaList)}
+            {ok, term_to_binary([{?PROP_CMETA_UDM, MetaList}])}
     end;
 parse_headers_to_cmeta(_) ->
     {error, badarg}.

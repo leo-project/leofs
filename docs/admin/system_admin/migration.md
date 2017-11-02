@@ -62,17 +62,17 @@ obj_containers.sync_interval_in_ms = 1000
 ```
 
 
-### Changes in LeoFS' Packages (1.4.0+)
+### Changes in LeoFS' Packages (1.3.8+)
 
-Starting from v1.4.0 there are changes in [the official Linux packages](http://leo-project.net/leofs/download.html). They should work out of the box for new installations and for new nodes on existing installations. However, one needs to pay special attention during upgrading existing nodes to v1.4.0.
+Starting from v1.3.8 there are changes in [the official Linux packages](http://leo-project.net/leofs/download.html). They should work out of the box for new installations and for new nodes on existing installations. However, one needs to pay special attention during upgrading existing nodes to v1.3.8.
 
 - for all supported distributions: there is now symlink `/usr/local/leofs/current` which points to `/usr/local/leofs/<version>`, this allows fixed path to launch scripts, independent of LeoFS version (e.g. `/usr/local/leofs/current/leo_manager_0/bin/leo_manager`). Users that created symlink with that name themselves should remove it before installing new package.
 - for EL6 / EL7 packages: installing multiple versions of LeoFS package is not supported anymore. There can be only one version of `leofs` package installed in system; new version should only be installed as upgrade, with `rpm -U` / `rpm -F`.
 - for systemd-based distributions (Ubuntu 16.04, EL7) special upgrade steps are needed.
 
-#### Procedure of installing v1.4.0 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)
+#### Procedure of installing v1.3.8 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)
 
-When upgrading existing node running LeoFS package 1.3.7 or earlier to v1.4.0 or later, please follow these steps:
+When upgrading existing node running LeoFS package 1.3.7 or earlier to v1.3.8 or later, please follow these steps:
 
 - Stop currently running LeoFS node. Backup current config files for that node, if needed.
 - Execute `pgrep -a epmd` and make sure there is **no output**, i.e. no instances of epmd are running. If there are any, kill them with `pkill epmd` command. Never kill `epmd` while LeoFS node is still running, though, because it will render it non-functional until restart.
@@ -91,7 +91,7 @@ In that case, users must do the following before trying to start the new version
 
 (or, alternatively, system reboot will take care of this problem as well).
 
-These special steps are not needed for installing upgrades after v1.4.0.
+These special steps are not needed for installing upgrades after v1.3.8.
 
 After upgrade, users of systemd-based distributions might be interested in switching to new way of launching nodes which offers improvements for system administration and new features like automatic startup/shutdown of LeoFS node on startup or reboot. Please read [For Administrators / System Operations / Systemd Services](/admin/system_operations/systemd.md) for more information.
 

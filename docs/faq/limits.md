@@ -7,11 +7,13 @@
 * LeoFS have covered almost major <a href="" target="_blank">AWS S3-API</a> but not all APIs.
 * If you use <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html" target="_blank">S3's Multi Part Upload API</a>, the size of a part of an object must be less than the size of a chunked object in LeoFS.
 * When using the multi datacenter replication feature, we have supported up to 2 clusters with `LeoFS v1.2`, but we're going to support over 3 clusters replication with `LeoFS v2.0`.
+* When you run recover-node while another recover-node is already working in-progress, objects that are not transmitted to the target node yet in the former recover-node are canceled and the latter recover-node will take place. To ensure that every recover-node completes its job, we'd recommend you to run recover-node one-by-one.
 
 * Related Links:
     * <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 REST API Introduction</a>
     * [LeoFS' ISSUE_177](https://github.com/leo-project/leofs/issues/177)
     * [LeoFS' ISSUE_338](https://github.com/leo-project/leofs/issues/338)
+    * [LeoFS' ISSUE_880](https://github.com/leo-project/leofs/issues/880)
 
 
 ## Operations

@@ -227,12 +227,9 @@ case "$1" in
         HEART_COMMAND="$RUNNER_BASE_DIR/bin/$SCRIPT start"
         export HEART_COMMAND
 
-        # Uncomment the below two lines ONLY if you face leo_(manager|storage|gateway) restarted frequently
-        # in order to dig down further for identifying the root cause.
-        # ERL_CRASH_DUMP_SECONDS=-1 means setting the environment variable to a negative value
-        # does not reboot the runtime system until the crash dump file is completely written.
-        ## ERL_CRASH_DUMP_SECONDS=-1
-        ## export ERL_CRASH_DUMP_SECONDS
+        ERL_CRASH_DUMP_SECONDS=${ERL_CRASH_DUMP_SECONDS:-0}
+        export ERL_CRASH_DUMP_SECONDS
+
         mkdir -p $PIPE_DIR
         shift # remove $1
         $ERTS_PATH/run_erl -daemon $PIPE_DIR $RUNNER_LOG_DIR "exec $RUNNER_BASE_DIR/bin/$SCRIPT console $@" 2>&1
@@ -379,11 +376,7 @@ case "$1" in
                 exit 1
             fi
 
-            # Default value ERL_CRASH_DUMP_SECONDS=-1 will create dumps on every crash, which isn't desirable
-            # when external hearbeat (e.g. in systemd service) is used. 
-            # Comment the below two lines ONLY if you face leo_(manager|storage|gateway) restarted frequently
-            # in order to dig down further for identifying the root cause.
-            ERL_CRASH_DUMP_SECONDS=0
+            ERL_CRASH_DUMP_SECONDS=${ERL_CRASH_DUMP_SECONDS:-0}
             export ERL_CRASH_DUMP_SECONDS
         fi
 
