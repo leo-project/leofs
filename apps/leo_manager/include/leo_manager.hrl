@@ -320,6 +320,7 @@
 -define(ERROR_FAIL_TO_UPDATE_ACL, "Fail to update acl of a bucket").
 -define(ERROR_FAIL_ACCESS_MNESIA, "Fail to access mnesia").
 -define(ERROR_ALREADY_HAS_SAME_CLUSTER, "Already has a same neme of cluster").
+-define(ERROR_INCOMPATIBLE_VERSION, "Incompatible Version").
 -define(ERROR_COULD_NOT_GET_CLUSTER_INFO,"Could not get cluster info").
 -define(ERROR_OVER_MAX_CLUSTERS, "Over max number of clusters").
 -define(ERROR_CLUSTER_NOT_FOUND, "Cluster not found").
