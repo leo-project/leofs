@@ -2408,6 +2408,9 @@ call_gateway_api(Method, Args) ->
 %% @doc Join a cluster (MDC-Replication)
 -spec(join_cluster([atom()], #?SYSTEM_CONF{}) ->
              {ok, #?SYSTEM_CONF{}} | {error, any()}).
+%% @doc Convert System Conf from ~1.3.2 cluster
+join_cluster(RemoteManagerNodes, #system_conf_2{} = SystemConf) ->
+    join_cluster(RemoteManagerNodes, leo_cluster_tbl_conf:transform(SystemConf));
 join_cluster(RemoteManagerNodes,
              #?SYSTEM_CONF{cluster_id = ClusterId,
                            dc_id = DCId,
@@ -2439,7 +2442,11 @@ join_cluster(RemoteManagerNodes,
             {error, ?ERROR_ALREADY_HAS_SAME_CLUSTER};
         Error ->
             Error
-    end.
+    end;
+join_cluster(RemoteManagerNodes, _) ->
+    ?error("join_cluster/2", [{cause, ?ERROR_INCOMPATIBLE_VERSION},
+                              {nodes, RemoteManagerNodes}]),
+    {error, ?ERROR_INCOMPATIBLE_VERSION}.
 
 
 %% @doc Synchronize mdc-related tables
