@@ -191,16 +191,23 @@ after_proc_1(true, Pid, Managers) ->
         end,
 
         %% Watchdog for notified messages
-        {ok, _} = supervisor:start_child(
-                    leo_watchdog_sup, {leo_storage_watchdog_msgs,
-                                       {leo_storage_watchdog_msgs, start_link,
-                                        [?env_threshold_num_of_notified_msgs(),
-                                         WatchdogInterval
-                                        ]},
-                                       permanent,
-                                       2000,
-                                       worker,
-                                       [leo_storage_watchdog_msgs]}),
+        case ?env_storage_watchdog_msgs_enabled() of
+            true ->
+                leo_storage_msg_collector:set_enabled(),
+                {ok, _} = supervisor:start_child(
+                         leo_watchdog_sup, {leo_storage_watchdog_msgs,
+                                            {leo_storage_watchdog_msgs, start_link,
+                                             [?env_threshold_num_of_notified_msgs(),
+                                              WatchdogInterval
+                                             ]},
+                                            permanent,
+                                            2000,
+                                            worker,
+                                            [leo_storage_watchdog_msgs]});
+            false ->
+                void
+        end,
+
         ok = leo_storage_watchdog_sub:start(),
 
         %% Launch statistics/mnesia-related processes
