@@ -531,6 +531,13 @@
                     _Time
             end
         end).
+-define(env_storage_watchdog_msgs_enabled(),
+        case application:get_env(leo_storage, watchdog_msgs_enabled) of
+            {ok, EnvWathdogMsgEnabled} ->
+                EnvWathdogMsgEnabled;
+            _ ->
+                false
+        end).
 
 %% @doc Storage autonomic-operation related
 -define(env_auto_compaction_enabled(),

@@ -37,6 +37,7 @@
 -export([start_link/0, stop/0]).
 -export([clear/0,
          get/0,
+         set_enabled/0,
          notify/3, notify/4
         ]).
 
@@ -53,6 +54,7 @@
 -define(TIMEOUT, timer:seconds(5)).
 -record(state, {
           messages = [] :: [term()],
+          enabled = false :: boolean(),
           interval = ?TIMEOUT :: pos_integer()
          }).
 
@@ -84,6 +86,9 @@ clear() ->
 get() ->
     gen_server:call(?MODULE, get, ?TIMEOUT).
 
+%% @doc Make it work to store messages
+set_enabled() ->
+    gen_server:call(?MODULE, set_enabled, ?TIMEOUT).
 
 %% @doc Operate the data
 -spec(notify(Msg, Method, Key) ->
@@ -121,16 +126,25 @@ handle_call(get, _From, #state{messages = Msg} = State) ->
     Ret = dict:to_list(Msg),
     {reply, {ok, Ret}, State};
 
-handle_call({notify, ?ERROR_MSG_TIMEOUT = Msg, Method, Key},
-            _From, #state{messages = Msg} = State) ->
-    Msg_1 = dict:append(?MSG_ITEM_TIMEOUT, {Method, Key}, Msg),
+handle_call(set_enabled, _From, State) ->
+    {reply, ok, State#state{enabled = true}};
+
+handle_call({notify, ?ERROR_MSG_TIMEOUT, _Method, _Key},
+            _From, #state{enabled = false} = State) ->
+    {reply, disabled, State};
+handle_call({notify, ?ERROR_MSG_TIMEOUT, Method, Key},
+            _From, #state{messages = Messages} = State) ->
+    Msg_1 = dict:append(?MSG_ITEM_TIMEOUT, {Method, Key}, Messages),
     {reply, ok, State#state{messages = Msg_1}};
 handle_call({notify,_Msg,_Method,_Key}, _From, State) ->
     {reply, ok, State};
 
-handle_call({notify, ?ERROR_MSG_SLOW_OPERATION = Msg, Method, Key, ProcessingTime},
-            _From, #state{messages = Msg} = State) ->
-    Msg_1 = dict:append(?MSG_ITEM_TIMEOUT, {Method, Key, ProcessingTime}, Msg),
+handle_call({notify, ?ERROR_MSG_SLOW_OPERATION, _Method, _Key, _ProcessingTime},
+            _From, #state{enabled = false} = State) ->
+    {reply, disabled, State};
+handle_call({notify, ?ERROR_MSG_SLOW_OPERATION, Method, Key, ProcessingTime},
+            _From, #state{messages = Messages} = State) ->
+    Msg_1 = dict:append(?MSG_ITEM_SLOW_OP, {Method, Key, ProcessingTime}, Messages),
     {reply, ok, State#state{messages = Msg_1}};
 handle_call({notify,_Msg,_Method,_Key,_ProcessingTime},_From, State) ->
     {reply, ok, State};

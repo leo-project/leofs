@@ -649,6 +649,17 @@
   {default, 100}
  ]}.
 
+%%
+%%  Watchdog.Messages
+%%
+%% @doc Messages - Is enabled
+{mapping,
+ "watchdog.msgs.is_enabled",
+ "leo_storage.watchdog_msgs_enabled",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
 
 %% --------------------------------------------------------------------
 %% STORAGE - Autonomic operation
