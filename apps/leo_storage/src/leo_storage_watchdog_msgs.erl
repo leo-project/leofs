@@ -136,16 +136,24 @@ handle_notified_messages(Id, NumOfNotifiedMsgs) ->
                     + erlang:length(leo_misc:get_value(?MSG_ITEM_SLOW_OP, Msgs, [])),
                 case (Len >= NumOfNotifiedMsgs) of
                     true ->
+						error_logger:warning_msg("~p,~p,~p,~p~n",
+                                                 [{module, ?MODULE_STRING},
+                                                  {function, "handle_notified_messages/2"},{line, ?LINE},
+                                                  {body, [{triggered_watchdog, num_of_notified_msgs, Len}]}]),
                         %% raise error
-                        elarm:raise(Id, ?WD_ITEM_ACTIVE_SIZE_RATIO,
+                        elarm:raise(Id, ?WD_ITEM_NOTIFIED_MSGS,
                                     #watchdog_state{id = Id,
                                                     level = ?WD_LEVEL_ERROR,
                                                     src   = ?WD_ITEM_NOTIFIED_MSGS,
                                                     props = [{num_of_notified_msgs, Len}
                                                             ]});
                     false when Len >= WarnNumOfNotifiedMsgs ->
+						error_logger:warning_msg("~p,~p,~p,~p~n",
+                                                 [{module, ?MODULE_STRING},
+                                                  {function, "handle_notified_messages/2"},{line, ?LINE},
+                                                  {body, [{triggered_watchdog, num_of_notified_msgs, Len}]}]),
                         %% raise warning
-                        elarm:raise(Id, ?WD_ITEM_ACTIVE_SIZE_RATIO,
+                        elarm:raise(Id, ?WD_ITEM_NOTIFIED_MSGS,
                                     #watchdog_state{id = Id,
                                                     level = ?WD_LEVEL_WARN,
                                                     src   = ?WD_ITEM_NOTIFIED_MSGS,
