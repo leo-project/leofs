@@ -1301,9 +1301,9 @@ handle_multi_upload_2({ok, Bin, Req}, _Req, Path,_ChunkedLen, BucketInfo, CMetaB
                                    [{key, binary_to_list(Path)}, {cause, Cause}]),
                             ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req)
                     end;
-                _ ->
+                Error ->
                     ?error("handle_multi_upload_2/5",
-                           [{key, binary_to_list(Path)}, {cause, invalid_metadata}]),
+                           [{key, binary_to_list(Path)}, {cause, Error}]),
                     ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req)
             end;
         {error, unavailable} ->
