@@ -908,9 +908,8 @@ handle_2({ok,_AccessKeyId}, Req, ?HTTP_POST,_Key, #req_params{bucket_info = Buck
     catch leo_cache_api:delete(Path),
 
     %% Insert a metadata into the storage-cluster
-    NowBin = list_to_binary(integer_to_list(leo_date:now())),
     UploadId = leo_hex:binary_to_hex(
-                 crypto:hash(md5, << Path/binary, NowBin/binary >>)),
+                 leo_misc:uuid(v4)),
     UploadIdBin = list_to_binary(UploadId),
     UploadKey = << Path/binary, ?STR_NEWLINE, UploadIdBin/binary >>,
 
