@@ -112,21 +112,28 @@ if [ $1 = "build" ]; then
 fi
 ./package/leo_manager_0/bin/leo_manager start
 sleep 1
+./package/leo_manager_0/bin/leo_manager wait_ready
+
 ./package/leo_manager_1/bin/leo_manager start
-sleep 1
+./package/leo_manager_1/bin/leo_manager wait_ready
+
 ./package/leo_storage_0/bin/leo_storage start
-sleep 1
+./package/leo_storage_0/bin/leo_storage wait_ready
+
 ./package/leo_storage_1/bin/leo_storage start
-sleep 1
+./package/leo_storage_1/bin/leo_storage wait_ready
+
 ./package/leo_storage_2/bin/leo_storage start
-sleep 1
+./package/leo_storage_2/bin/leo_storage wait_ready
+
 ./package/leo_storage_3/bin/leo_storage start
+./package/leo_storage_3/bin/leo_storage wait_ready
 
 echo ":::"
 echo "::: Starting the storages :::"
 echo ":::"
-sleep 30
 ./package/leo_gateway_0/bin/leo_gateway start
+./package/leo_gateway_0/bin/leo_gateway wait_ready
 
 ./leofs-adm start
 sleep 1
