@@ -1053,7 +1053,7 @@
                 
                 <h1 id="persistent-configuration-location">Persistent Configuration Location<a class="headerlink" href="#persistent-configuration-location" title="Permanent link">&para;</a></h1>
 <h2 id="node-configuration-in-etcleofs">Node configuration in <code class="codehilite">/etc/leofs</code><a class="headerlink" href="#node-configuration-in-etcleofs" title="Permanent link">&para;</a></h2>
-<p>Starting from v1.4.0, LeoFS nodes support loading configuration from <code class="codehilite">/etc/leofs</code> hierarchy. This means that there are two locations from which nodes can load their configuration (but only one can be enabled at any time). Official Linux packages ship a copy of config files in <code class="codehilite">/etc/leofs/leo_*</code>, though the feature itself should work on any system. However, it is <strong>disabled</strong> by default for compatibility with older versions. </p>
+<p>Starting from v1.3.8, LeoFS nodes support loading configuration from <code class="codehilite">/etc/leofs</code> hierarchy. This means that there are two locations from which nodes can load their configuration (but only one can be enabled at any time). Official Linux packages ship a copy of config files in <code class="codehilite">/etc/leofs/leo_*</code>, though the feature itself should work on any system. However, it is <strong>disabled</strong> by default for compatibility with older versions.</p>
 <h3 id="different-configuration-directory-for-each-leofs-version">Different configuration directory for each LeoFS version<a class="headerlink" href="#different-configuration-directory-for-each-leofs-version" title="Permanent link">&para;</a></h3>
 <p><strong>Currently, this is default for all installations.</strong></p>
 <p>Config files are loaded from these locations when <code class="codehilite">/etc/leofs/leofs.conf</code> does not exist, is empty or contains <code class="codehilite">GLOBAL_CONFIG=no</code> (default). "%(version)" here is LeoFS version like "1.3.7":</p>
@@ -1089,7 +1089,7 @@
 <p>The paths listed above work for default installation, but config files are actually loaded from directory relative to binaries. For example, if Manager Master is located in <code class="codehilite">/home/leofs/leo_manager_master</code>, config files will be picked from <code class="codehilite">/home/leofs/leo_manager_master/etc</code>.</p>
 </div>
 <h3 id="same-configuration-directory-for-all-versions">Same configuration directory for all versions<a class="headerlink" href="#same-configuration-directory-for-all-versions" title="Permanent link">&para;</a></h3>
-<p>For LeoFS v1.4.0 or later, when <code class="codehilite">/etc/leofs/leofs.conf</code> exists and contains <code class="codehilite">GLOBAL_CONFIG=yes</code>, configuration is loaded from these directories - independent from version or binaries location:</p>
+<p>For LeoFS v1.3.8 or later, when <code class="codehilite">/etc/leofs/leofs.conf</code> exists and contains <code class="codehilite">GLOBAL_CONFIG=yes</code>, configuration is loaded from these directories - independent from version or binaries location:</p>
 <table>
 <thead>
 <tr>

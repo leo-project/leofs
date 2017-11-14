@@ -809,16 +809,16 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changes-in-leofs-packages-140" title="Changes in LeoFS' Packages (1.4.0+)" class="md-nav__link">
-    Changes in LeoFS' Packages (1.4.0+)
+  <a href="#changes-in-leofs-packages-138" title="Changes in LeoFS' Packages (1.3.8+)" class="md-nav__link">
+    Changes in LeoFS' Packages (1.3.8+)
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#procedure-of-installing-v140-upgrade-for-systemd-based-distributions-ubuntu-1604-and-el7" title="Procedure of installing v1.4.0 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)" class="md-nav__link">
-    Procedure of installing v1.4.0 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)
+  <a href="#procedure-of-installing-v138-upgrade-for-systemd-based-distributions-ubuntu-1604-and-el7" title="Procedure of installing v1.3.8 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)" class="md-nav__link">
+    Procedure of installing v1.3.8 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)
   </a>
   
 </li>
@@ -1156,16 +1156,16 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changes-in-leofs-packages-140" title="Changes in LeoFS' Packages (1.4.0+)" class="md-nav__link">
-    Changes in LeoFS' Packages (1.4.0+)
+  <a href="#changes-in-leofs-packages-138" title="Changes in LeoFS' Packages (1.3.8+)" class="md-nav__link">
+    Changes in LeoFS' Packages (1.3.8+)
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#procedure-of-installing-v140-upgrade-for-systemd-based-distributions-ubuntu-1604-and-el7" title="Procedure of installing v1.4.0 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)" class="md-nav__link">
-    Procedure of installing v1.4.0 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)
+  <a href="#procedure-of-installing-v138-upgrade-for-systemd-based-distributions-ubuntu-1604-and-el7" title="Procedure of installing v1.3.8 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)" class="md-nav__link">
+    Procedure of installing v1.3.8 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)
   </a>
   
 </li>
@@ -1373,15 +1373,15 @@ It is possible to simplify this by storing node configuration in <code class="co
 </pre></div>
 </td></tr></table>
 
-<h3 id="changes-in-leofs-packages-140">Changes in LeoFS' Packages (1.4.0+)<a class="headerlink" href="#changes-in-leofs-packages-140" title="Permanent link">&para;</a></h3>
-<p>Starting from v1.4.0 there are changes in <a href="http://leo-project.net/leofs/download.html">the official Linux packages</a>. They should work out of the box for new installations and for new nodes on existing installations. However, one needs to pay special attention during upgrading existing nodes to v1.4.0.</p>
+<h3 id="changes-in-leofs-packages-138">Changes in LeoFS' Packages (1.3.8+)<a class="headerlink" href="#changes-in-leofs-packages-138" title="Permanent link">&para;</a></h3>
+<p>Starting from v1.3.8 there are changes in <a href="http://leo-project.net/leofs/download.html">the official Linux packages</a>. They should work out of the box for new installations and for new nodes on existing installations. However, one needs to pay special attention during upgrading existing nodes to v1.3.8.</p>
 <ul>
 <li>for all supported distributions: there is now symlink <code class="codehilite">/usr/local/leofs/current</code> which points to <code class="codehilite">/usr/local/leofs/&lt;version&gt;</code>, this allows fixed path to launch scripts, independent of LeoFS version (e.g. <code class="codehilite">/usr/local/leofs/current/leo_manager_0/bin/leo_manager</code>). Users that created symlink with that name themselves should remove it before installing new package.</li>
 <li>for EL6 / EL7 packages: installing multiple versions of LeoFS package is not supported anymore. There can be only one version of <code class="codehilite">leofs</code> package installed in system; new version should only be installed as upgrade, with <code class="codehilite">rpm -U</code> / <code class="codehilite">rpm -F</code>.</li>
 <li>for systemd-based distributions (Ubuntu 16.04, EL7) special upgrade steps are needed.</li>
 </ul>
-<h4 id="procedure-of-installing-v140-upgrade-for-systemd-based-distributions-ubuntu-1604-and-el7">Procedure of installing v1.4.0 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)<a class="headerlink" href="#procedure-of-installing-v140-upgrade-for-systemd-based-distributions-ubuntu-1604-and-el7" title="Permanent link">&para;</a></h4>
-<p>When upgrading existing node running LeoFS package 1.3.7 or earlier to v1.4.0 or later, please follow these steps:</p>
+<h4 id="procedure-of-installing-v138-upgrade-for-systemd-based-distributions-ubuntu-1604-and-el7">Procedure of installing v1.3.8 upgrade for systemd-based distributions (Ubuntu 16.04 and EL7)<a class="headerlink" href="#procedure-of-installing-v138-upgrade-for-systemd-based-distributions-ubuntu-1604-and-el7" title="Permanent link">&para;</a></h4>
+<p>When upgrading existing node running LeoFS package 1.3.7 or earlier to v1.3.8 or later, please follow these steps:</p>
 <ul>
 <li>Stop currently running LeoFS node. Backup current config files for that node, if needed.</li>
 <li>Execute <code class="codehilite">pgrep -a epmd</code> and make sure there is <strong>no output</strong>, i.e. no instances of epmd are running. If there are any, kill them with <code class="codehilite">pkill epmd</code> command. Never kill <code class="codehilite">epmd</code> while LeoFS node is still running, though, because it will render it non-functional until restart.</li>
@@ -1399,7 +1399,7 @@ It is possible to simplify this by storing node configuration in <code class="co
 <li>Execute <code class="codehilite">systemctl start leofs-epmd.socket</code> - there should be no output if everything was done correctly</li>
 </ul>
 <p>(or, alternatively, system reboot will take care of this problem as well).</p>
-<p>These special steps are not needed for installing upgrades after v1.4.0.</p>
+<p>These special steps are not needed for installing upgrades after v1.3.8.</p>
 <p>After upgrade, users of systemd-based distributions might be interested in switching to new way of launching nodes which offers improvements for system administration and new features like automatic startup/shutdown of LeoFS node on startup or reboot. Please read <a href="../../system_operations/systemd/">For Administrators / System Operations / Systemd Services</a> for more information.</p>
 <h3 id="changes-in-leofs-packages-133">Changes in LeoFS' Packages (1.3.3+)<a class="headerlink" href="#changes-in-leofs-packages-133" title="Permanent link">&para;</a></h3>
 <p>Starting from v1.3.3, all LeoFS nodes are running as non-privileged user <code class="codehilite">leofs</code> in <a href="http://leo-project.net/leofs/download.html">the official Linux packages</a>. It should work out of the box for new installations and for new nodes on existing installations. However, for existing nodes upgrading to v1.3.3 <em>(or later)</em> from previous versions, the change might be not seamless.</p>

@@ -1253,7 +1253,7 @@
 </tr>
 <tr>
 <td>obj_containers.num_of_containers</td>
-<td>A number of object-containers of each directory<p>( Default: [8] )</p></td>
+<td>A number of object-containers of each directory. As <strong>backend_db.eleveldb.write_buf_size</strong> * <strong>obj_containers.num_of_containers</strong> memory can be consumed in total, take both into account to meet with your memory footprint requirements on LeoStorage. <p>( Default: [8] )</p></td>
 </tr>
 <tr>
 <td>obj_containers.sync_mode</td>
@@ -1493,7 +1493,7 @@
 </tr>
 <tr>
 <td>backend_db.eleveldb.write_buf_size</td>
-<td>Write Buffer Size. Larger values increase performance, especially during bulk loads.<br/>Up to two write buffers may be held in memory at the same time, so you may wish to adjust this parameter to control memory usage.Also, a larger write buffer will result in a longer recovery time the next time the database is opened.<p>( Default: 62914560 )</p></td>
+<td>Write Buffer Size. Larger values increase performance, especially during bulk loads.<br/>Up to two write buffers may be held in memory at the same time, so you may wish to adjust this parameter to control memory usage.Also, a larger write buffer will result in a longer recovery time the next time the database is opened. As <strong>backend_db.eleveldb.write_buf_size</strong> * <strong>obj_containers.num_of_containers</strong> memory can be consumed in total, take both into account to meet with your memory footprint requirements on LeoStorage.<p>( Default: 62914560 )</p></td>
 </tr>
 <tr>
 <td>backend_db.eleveldb.max_open_files</td>

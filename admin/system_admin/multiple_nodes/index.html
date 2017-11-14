@@ -1013,7 +1013,7 @@
                 
                 <h1 id="mutiple-instances-of-nodes-on-the-same-system">Mutiple instances of nodes on the same system<a class="headerlink" href="#mutiple-instances-of-nodes-on-the-same-system" title="Permanent link">&para;</a></h1>
 <h2 id="description-and-requirements">Description and requirements<a class="headerlink" href="#description-and-requirements" title="Permanent link">&para;</a></h2>
-<p>Starting from v1.4.0, there is support for running multiple instances of the same node types on a single system (without use of containers or other type of isolation). This is useful for users who want to do things like</p>
+<p>Starting from v1.3.8, there is support for running multiple instances of the same node types on a single system (without use of containers or other type of isolation). This is useful for users who want to do things like</p>
 <ul>
 <li>Running two (or more) gateways on the same system (in the same or different mode, e.g. S3 gateway + REST gateway)</li>
 <li>Running two (or more) completely isolated clusters with different settings on the same set of storage servers</li>
@@ -1221,7 +1221,7 @@ lrwxrwxrwx. 1 root leofs 31 Sep 19 21:09 /etc/leofs/leo_storage_second/leo_stora
 </pre></div>
 </td></tr></table>
 
-<p>Each node requires own set of directories with appropriate permissiosn:</p>
+<p>Each node requires own set of directories with appropriate permissions:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
