@@ -785,8 +785,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#activating-more-instances-of-the-same-node" title="Activating more instances of the same node" class="md-nav__link">
-    Activating more instances of the same node
+  <a href="#preparing-more-instances-of-the-same-node" title="Preparing more instances of the same node" class="md-nav__link">
+    Preparing more instances of the same node
   </a>
   
 </li>
@@ -794,6 +794,13 @@
         <li class="md-nav__item">
   <a href="#list-of-options-that-must-have-different-settings" title="List of options that must have different settings" class="md-nav__link">
     List of options that must have different settings
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starting-other-node-instances" title="Starting other node instances" class="md-nav__link">
+    Starting other node instances
   </a>
   
 </li>
@@ -967,8 +974,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#activating-more-instances-of-the-same-node" title="Activating more instances of the same node" class="md-nav__link">
-    Activating more instances of the same node
+  <a href="#preparing-more-instances-of-the-same-node" title="Preparing more instances of the same node" class="md-nav__link">
+    Preparing more instances of the same node
   </a>
   
 </li>
@@ -976,6 +983,13 @@
         <li class="md-nav__item">
   <a href="#list-of-options-that-must-have-different-settings" title="List of options that must have different settings" class="md-nav__link">
     List of options that must have different settings
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starting-other-node-instances" title="Starting other node instances" class="md-nav__link">
+    Starting other node instances
   </a>
   
 </li>
@@ -1025,39 +1039,26 @@
 <li><strong>All paths and ports</strong> in config files must be explicitly set for each instance and point to different locations. It's up to user to ensure that there are no conflicting paths.</li>
 </ul>
 <p>This is advanced feature aimed at existing LeoFS users who need to run another cluster or more gateways using the same hardware; it is recommended to have a working cluster where all work and log directories are configured to use non-default locations before enabling this.</p>
-<h2 id="activating-more-instances-of-the-same-node">Activating more instances of the same node<a class="headerlink" href="#activating-more-instances-of-the-same-node" title="Permanent link">&para;</a></h2>
+<h2 id="preparing-more-instances-of-the-same-node">Preparing more instances of the same node<a class="headerlink" href="#preparing-more-instances-of-the-same-node" title="Permanent link">&para;</a></h2>
 <p>Let's say we have LeoStorage instance running through systemd (<code class="codehilite">leofs-storage</code> service) and currently it loads configuration from <code class="codehilite">/etc/leofs/leo_storage</code>. We want to run another instance on the same system; it needs separate name. In this example, we'll call it "second". To create such instance:</p>
 <ol>
-<li>Create local copy of systemd unit file with new name: <code class="codehilite">cp /usr/lib/systemd/system/leofs-storage.service /etc/systemd/system/leofs-storage-second.service</code></li>
+<li>Create local copy of systemd unit file with new name<ul>
+<li>EL7&nbsp;version: <code class="codehilite">cp /usr/lib/systemd/system/leofs-storage.service /etc/systemd/system/leofs-storage-second.service</code>.</li>
+<li>Ubuntu&nbsp;16.04&nbsp;version: <code class="codehilite">cp /lib/systemd/system/leofs-storage.service /etc/systemd/system/leofs-storage-second.service</code>.</li>
+</ul>
+</li>
 <li>Edit <code class="codehilite">/etc/systemd/system/leofs-storage-second.service</code>, changing <code class="codehilite">Environment=NODE_EXTRA_NAME=</code> line to <code class="codehilite">Environment=NODE_EXTRA_NAME=second</code>.</li>
-<li>Reload systemd configuration: <code class="codehilite">systemctl daemon-reload</code></li>
+<li>Reload systemd configuration: <code class="codehilite">systemctl daemon-reload</code>.</li>
 </ol>
+<p>First step here depends on distribution because default location of systemd unit file can differ; it can be checked in "UNIT FILE LOAD PATH" section of systemd.unit(5) man page.</p>
 <p>This instance would try to load configuration from <code class="codehilite">/etc/leofs/leo_storage_second</code> upon launch. This configuration hierarchy needs to be created as well:</p>
 <ol>
-<li>Create new configuration directory and *.d subdirectory: <code class="codehilite">mkdir -p /etc/leofs/leo_storage_second/leo_storage.d</code></li>
-<li>Change permissions of configuration directory so it's <strong>writable</strong> by user running LeoFS ("leofs", unless changed manually): <code class="codehilite">chown leofs:leofs /etc/leofs/leo_storage_second</code></li>
-<li>Copy main configuration file (if you plan to change it) or symlink it (if you only plan to use conf.d-style configuration override): <code class="codehilite">cp /etc/leofs/leo_storage/leo_storage.conf /etc/leofs/leo_storage_second/</code></li>
+<li>Create new configuration directory and *.d subdirectory: <code class="codehilite">mkdir -p /etc/leofs/leo_storage_second/leo_storage.d</code>.</li>
+<li>Change permissions of configuration directory so it's <strong>writable</strong> by user running LeoFS ("leofs", unless changed manually): <code class="codehilite">chown leofs:leofs /etc/leofs/leo_storage_second</code>.</li>
+<li>Copy main configuration file (if you plan to change it) or symlink it (if you only plan to use conf.d-style configuration override): <code class="codehilite">cp /etc/leofs/leo_storage/leo_storage.conf /etc/leofs/leo_storage_second/</code>.</li>
 <li>Change configuration of new node, ensuring all paths and ports point to different location from first instance of that node.</li>
-<li>Create directories (logs/queue/etc) for the new node and set appropriate permissions on them</li>
+<li>Create directories (logs/queue/etc) for the new node and set appropriate permissions on them.</li>
 </ol>
-<p>Now second instance can be started in parallel with the first one with <code class="codehilite">systemctl start leofs-storage-second</code> command.</p>
-<p>It is possible to check whether nodes actually try to load configuration from different directories (<a href="../persistent_configuration/#how-to-check-which-configuration-directory-is-used">described here in more detail</a>):</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># journalctl -l -u leofs-storage | grep -e Exec -e Config
-Sep 20 17:41:42 stor01.lan leo_storage[9513]: Config path: /etc/leofs/leo_storage
-Sep 20 17:41:42 stor01.lan leo_storage[9513]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage/app.config -args_file /etc/leofs/leo_storage/vm.args -- console
-
-# journalctl -l -u leofs-storage-second | grep -e Exec -e Config
-Sep 20 17:40:43 stor01.lan leo_storage[9065]: Config path: /etc/leofs/leo_storage_second
-Sep 20 17:40:43 stor01.lan leo_storage[9065]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage_second/app.config -args_file /etc/leofs/leo_storage_second/vm.args -- console
-</pre></div>
-</td></tr></table>
-
 <h2 id="list-of-options-that-must-have-different-settings">List of options that must have different settings<a class="headerlink" href="#list-of-options-that-must-have-different-settings" title="Permanent link">&para;</a></h2>
 <p>All these options must be explicitly set in config files and have different settings for each instance of the node on the same system. For gateway and storage:</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -1070,7 +1071,11 @@ Sep 20 17:40:43 stor01.lan leo_storage[9065]: Exec: /usr/local/leofs/current/leo
  8
  9
 10
-11</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>sasl.sasl_error_log
+11
+12
+13</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>nodename
+
+sasl.sasl_error_log
 sasl.error_logger_mf_dir
 
 log.erlang
@@ -1101,6 +1106,25 @@ http.ssl_port
 </td></tr></table>
 
 <p>Please note that this list might be not complete as new options might be added to config files. When using this feature, <strong>it's up to user to ensure that all paths above point to different directories</strong>. Trying to share the same ports or snmp_conf setting between nodes would result in second instance failing to start, but trying to share log or queue directory could lead to disastrous results. <strong>Always double-check that all paths are different before using this feature.</strong></p>
+<h2 id="starting-other-node-instances">Starting other node instances<a class="headerlink" href="#starting-other-node-instances" title="Permanent link">&para;</a></h2>
+<p>After second instance is properly configured, it can be started in parallel with the first one with <code class="codehilite">systemctl start leofs-storage-second</code> command.</p>
+<p>It is possible to check whether nodes actually try to load configuration from different directories (<a href="../persistent_configuration/#how-to-check-which-configuration-directory-is-used">described here in more detail</a>):</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="codehilite"><pre><span></span># journalctl -l -u leofs-storage | grep -e Exec -e Config
+Sep 20 17:41:42 stor01.lan leo_storage[9513]: Config path: /etc/leofs/leo_storage
+Sep 20 17:41:42 stor01.lan leo_storage[9513]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage/app.config -args_file /etc/leofs/leo_storage/vm.args -- console
+
+# journalctl -l -u leofs-storage-second | grep -e Exec -e Config
+Sep 20 17:40:43 stor01.lan leo_storage[9065]: Config path: /etc/leofs/leo_storage_second
+Sep 20 17:40:43 stor01.lan leo_storage[9065]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage_second/app.config -args_file /etc/leofs/leo_storage_second/vm.args -- console
+</pre></div>
+</td></tr></table>
+
 <div class="admonition note">
 <p class="admonition-title">Note: Multiple LeoManager instances</p>
 <p>It is possible to run multiple instances of LeoManager as well, but the resulting configuration and <code class="codehilite">leofs-adm</code> operations would be more complicated, so it's not recommended (as results of error might be severe). It would be better to use separate VMs or containers for different LeoManagers.</p>
