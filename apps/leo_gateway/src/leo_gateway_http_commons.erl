@@ -1391,4 +1391,12 @@ fix_range_end_test() ->
     [{0,1}, {0,3}] = fix_range_end([{0,1}, {0,4}], 4),
     [{-1}, {0,2}] = fix_range_end([{-1}, {0,2}], 4),
     ok.
+
+range_to_binary_test() ->
+    ?debugMsg("Testing Range to Binary"),
+    <<"0-99">> = range_to_binary([{0,99}],200),
+    <<"100-199">> = range_to_binary([-100],200),
+    <<"0-99,100-199">> = range_to_binary([{0,99},{100,199}],200),
+    <<"50-199">> = range_to_binary([{50,infinity}],200),
+    ok.
 -endif.
