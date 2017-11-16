@@ -403,7 +403,6 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
 get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                                       custom_header_settings = CustomHeaderSettings,
                                                       sending_chunked_obj_len = SendChunkLen,
-                                                      has_disk_cache = HasDiskCache,
                                                       begin_time = BeginTime}) ->
     IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
                  {ok, undefined,_} ->
