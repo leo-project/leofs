@@ -60,6 +60,7 @@
 -define(HTTP_HEAD_RESP_CONTENT_LENGTH,    <<"Content-Length">>).
 -define(HTTP_HEAD_RESP_CONTENT_MD5,       <<"Content-MD5">>).
 -define(HTTP_HEAD_RESP_CONTENT_TYPE,      <<"Content-Type">>).
+-define(HTTP_HEAD_RESP_CONTENT_RANGE,     <<"Content-Range">>).
 -define(HTTP_HEAD_RESP_ETAG,              <<"ETag">>).
 -define(HTTP_HEAD_RESP_IF_MODIFIED_SINCE, <<"If-Modified-Since">>).
 -define(HTTP_HEAD_RESP_LAST_MODIFIED,     <<"Last-Modified">>).

@@ -1024,6 +1024,8 @@ range_object(Req, Key, #req_params{bucket_name = BucketName,
 
 
 %% @private
+%% @TODO: Handle Multiple Part Range Request with "multipart/byteranges"
+%% RFC: 7233, https://tools.ietf.org/html/rfc7233#appendix-A
 get_range_object(Req, BucketName, Key, {error, badarg}, _, BeginTime) ->
     ?access_log_get(BucketName, Key, 0, ?HTTP_ST_BAD_RANGE, BeginTime),
     ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req);
@@ -1046,6 +1048,17 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
                                        CMeta = binary_to_term(CMetaBin),
                                        CMeta ++ Headers
                                end,
+                    %% Reply with Content Range
+                    %% RFC: 7233, https://tools.ietf.org/html/rfc7233#section-4.2
+                    Headers3 = case length(Range) of
+                                   1 ->
+                                       ContentRangeBin = range_to_binary(Range, ObjectSize),
+                                       ObjectSizeBin = integer_to_binary(ObjectSize),
+                                       [{?HTTP_HEAD_RESP_CONTENT_RANGE, 
+                                        <<"bytes ", ContentRangeBin/binary, "/", ObjectSizeBin/binary>>}] ++ Headers2;
+                                   _ ->
+                                       Headers2
+                               end,                                  
                     Req2 = cowboy_req:set_resp_body_fun(
                              Length,
                              fun(Socket, Transport) ->
@@ -1055,7 +1068,7 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
                                                                           sending_chunked_obj_len = SendChunkLen})
                              end,
                              Req),
-                    ?reply_partial_content(Headers2, Req2);
+                    ?reply_partial_content(Headers3, Req2);
                 {error, bad_range} ->
                     ?access_log_get(BucketName, Key, 0, ?HTTP_ST_BAD_RANGE, BeginTime),
                     ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req)
@@ -1083,9 +1096,6 @@ get_range_object_1(_Req,_BucketName,_Key,_, {error,_Reason}, #transport_record{s
     Transport:close(Socket);
 get_range_object_1(Req,_BucketName,_Key, [],_,_TransportRec) ->
     {ok, Req};
-get_range_object_1(Req, BucketName, Key, [{Start, infinity}|Rest],_, TransportRec) ->
-    Ret = get_range_object_2(Req, BucketName, Key, Start, 0, TransportRec),
-    get_range_object_1(Req, BucketName, Key, Rest, Ret, TransportRec);
 get_range_object_1(Req, BucketName, Key, [{Start, End}|Rest],_, TransportRec) ->
     Ret = get_range_object_2(Req, BucketName, Key, Start, End, TransportRec),
     get_range_object_1(Req, BucketName, Key, Rest, Ret, TransportRec);
@@ -1171,6 +1181,25 @@ fix_range_end_1([{Start, End}|Rest], ObjectSize, Acc) when is_integer(End),
 fix_range_end_1([Head|Rest], ObjectSize, Acc) ->
     fix_range_end_1(Rest, ObjectSize, [Head|Acc]).
 
+%% @private
+%% @doc Convert Range List to Content-Range Format
+range_to_binary(List, ObjectSize) ->
+    range_to_binary(List, ObjectSize, <<>>).
+
+range_to_binary([], _, Acc) ->
+    Acc;
+range_to_binary([{Start, infinity}|Rest], OS, Acc) ->
+    range_to_binary([{Start, OS - 1}|Rest], OS, Acc);
+range_to_binary([{Start, End}|Rest], OS, <<>>) ->
+    SB = integer_to_binary(Start),
+    EB = integer_to_binary(End),
+    range_to_binary(Rest, OS, <<SB/binary, "-", EB/binary>>);
+range_to_binary([{Start, End}|Rest], OS, Acc) ->
+    SB = integer_to_binary(Start),
+    EB = integer_to_binary(End),
+    range_to_binary(Rest, OS, <<Acc/binary, ",", SB/binary, "-", EB/binary>>);
+range_to_binary([End|Rest], OS, Acc) ->
+    range_to_binary([{OS + End, OS - 1}|Rest], OS, Acc).
 
 %% @private
 get_body_length(ObjectSize, Range) ->
@@ -1204,6 +1233,8 @@ move_current_pos_to_head(_Start, _ChunkedSize, CurPos, Idx) ->
 
 %% @doc
 %% @private
+calc_pos(StartPos, infinity, ObjectSize) ->
+    {StartPos, ObjectSize - 1};
 calc_pos(_StartPos, EndPos, ObjectSize) when EndPos < 0 ->
     NewStartPos = ObjectSize + EndPos,
     NewEndPos = ObjectSize - 1,
