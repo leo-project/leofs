@@ -2264,7 +2264,7 @@ parse_headers_to_cmeta(Headers) when is_list(Headers) ->
                            end, [], Headers),
     case MetaList of
         [] ->
-            {ok, term_to_binary([])};
+            {ok, <<>>};
         _ ->
             {ok, term_to_binary([{?PROP_CMETA_UDM, MetaList}])}
     end;
