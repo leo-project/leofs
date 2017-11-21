@@ -769,24 +769,48 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
                 true  ->
                     %% Stores an object into the cache
                     Mime = leo_mime:guess_mime(Key),
-                    case catch term_to_binary(
-                                 leo_misc:get_value(
-                                   ?PROP_CMETA_UDM, binary_to_term(CMeta), [])) of
-                        {'EXIT', Reason} ->
-                            ?error("put_small_object/3",
-                                   [{key, binary_to_list(Key)},
-                                    {simple_cause, "Invalid metadata"},
-                                    {cause, Reason}]);
-                        CMeta_1 ->
+                    RetCMeta =
+                        case CMeta of
+                            <<>> ->
+                                {ok, CMeta};
+                            _ ->
+                                case catch leo_misc:get_value(
+                                             ?PROP_CMETA_UDM, binary_to_term(CMeta)) of
+                                    {'EXIT', Reason} ->
+                                        ?error("put_small_object/3",
+                                               [{key, binary_to_list(Key)},
+                                                {simple_cause, "Invalid metadata"},
+                                                {cause, Reason}]),
+                                        {error, Reason};
+                                    undefined ->
+                                        {ok, <<>>};
+                                    UDM ->
+                                        case catch term_to_binary(UDM) of
+                                            {'EXIT', Why} ->
+                                                ?error("put_small_object/3",
+                                                       [{key, binary_to_list(Key)},
+                                                        {simple_cause, "Invalid metadata"},
+                                                        {cause, Why}]),
+                                                {error, Why};
+                                            CMeta_1 ->
+                                                {ok, CMeta_1}
+                                        end
+                                end
+                        end,
+
+                    case RetCMeta of
+                        {ok, CMeta_2} ->
                             Val = term_to_binary(#cache{etag = ETag,
                                                         mtime = leo_date:now(),
                                                         content_type = Mime,
                                                         body = Bin,
-                                                        cmeta = CMeta_1,
-                                                        msize = byte_size(CMeta_1),
+                                                        cmeta = CMeta_2,
+                                                        msize = byte_size(CMeta_2),
                                                         size = byte_size(Bin)
                                                        }),
-                            catch leo_cache_api:put(Key, Val)
+                            catch leo_cache_api:put(Key, Val);
+                        _ ->
+                            void
                     end;
                 false ->
                     void
@@ -1054,11 +1078,11 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
                                    1 ->
                                        ContentRangeBin = range_to_binary(Range, ObjectSize),
                                        ObjectSizeBin = integer_to_binary(ObjectSize),
-                                       [{?HTTP_HEAD_RESP_CONTENT_RANGE, 
+                                       [{?HTTP_HEAD_RESP_CONTENT_RANGE,
                                         <<"bytes ", ContentRangeBin/binary, "/", ObjectSizeBin/binary>>}] ++ Headers2;
                                    _ ->
                                        Headers2
-                               end,                                  
+                               end,
                     Req2 = cowboy_req:set_resp_body_fun(
                              Length,
                              fun(Socket, Transport) ->
