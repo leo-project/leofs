@@ -2410,7 +2410,12 @@ call_gateway_api(Method, Args) ->
              {ok, #?SYSTEM_CONF{}} | {error, any()}).
 %% @doc Convert System Conf from ~1.3.2 cluster
 join_cluster(RemoteManagerNodes, #system_conf_2{} = SystemConf) ->
-    join_cluster(RemoteManagerNodes, leo_cluster_tbl_conf:transform(SystemConf));
+    case join_cluster(RemoteManagerNodes, leo_cluster_tbl_conf:transform(SystemConf)) of
+        {ok, #?SYSTEM_CONF{} = Conf} ->
+            {ok, leo_cluster_tbl_conf:transform_to_confv2(Conf)};
+        Others ->
+            Others
+    end;
 join_cluster(RemoteManagerNodes,
              #?SYSTEM_CONF{cluster_id = ClusterId,
                            dc_id = DCId,

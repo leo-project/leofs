@@ -908,9 +908,8 @@ handle_2({ok,_AccessKeyId}, Req, ?HTTP_POST,_Key, #req_params{bucket_info = Buck
     catch leo_cache_api:delete(Path),
 
     %% Insert a metadata into the storage-cluster
-    NowBin = list_to_binary(integer_to_list(leo_date:now())),
     UploadId = leo_hex:binary_to_hex(
-                 crypto:hash(md5, << Path/binary, NowBin/binary >>)),
+                 leo_misc:uuid(v4)),
     UploadIdBin = list_to_binary(UploadId),
     UploadKey = << Path/binary, ?STR_NEWLINE, UploadIdBin/binary >>,
 
@@ -1301,9 +1300,9 @@ handle_multi_upload_2({ok, Bin, Req}, _Req, Path,_ChunkedLen, BucketInfo, CMetaB
                                    [{key, binary_to_list(Path)}, {cause, Cause}]),
                             ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req)
                     end;
-                _ ->
+                Error ->
                     ?error("handle_multi_upload_2/5",
-                           [{key, binary_to_list(Path)}, {cause, invalid_metadata}]),
+                           [{key, binary_to_list(Path)}, {cause, Error}]),
                     ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req)
             end;
         {error, unavailable} ->
@@ -2265,7 +2264,7 @@ parse_headers_to_cmeta(Headers) when is_list(Headers) ->
                            end, [], Headers),
     case MetaList of
         [] ->
-            {ok, term_to_binary([])};
+            {ok, <<>>};
         _ ->
             {ok, term_to_binary([{?PROP_CMETA_UDM, MetaList}])}
     end;

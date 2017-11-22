@@ -15,39 +15,32 @@ This feature currently works only on Linux. Other prerequisites for activating i
 
 This is advanced feature aimed at existing LeoFS users who need to run another cluster or more gateways using the same hardware; it is recommended to have a working cluster where all work and log directories are configured to use non-default locations before enabling this.
 
-## Activating more instances of the same node
+## Preparing more instances of the same node
 
 Let's say we have LeoStorage instance running through systemd (`leofs-storage` service) and currently it loads configuration from `/etc/leofs/leo_storage`. We want to run another instance on the same system; it needs separate name. In this example, we'll call it "second". To create such instance:
 
-1. Create local copy of systemd unit file with new name: `cp /usr/lib/systemd/system/leofs-storage.service /etc/systemd/system/leofs-storage-second.service`
+1. Create local copy of systemd unit file with new name
+    - EL7&nbsp;version: `cp /usr/lib/systemd/system/leofs-storage.service /etc/systemd/system/leofs-storage-second.service`.
+    - Ubuntu&nbsp;16.04&nbsp;version: `cp /lib/systemd/system/leofs-storage.service /etc/systemd/system/leofs-storage-second.service`.
 2. Edit `/etc/systemd/system/leofs-storage-second.service`, changing `Environment=NODE_EXTRA_NAME=` line to `Environment=NODE_EXTRA_NAME=second`.
-3. Reload systemd configuration: `systemctl daemon-reload`
+3. Reload systemd configuration: `systemctl daemon-reload`.
+
+First step here depends on distribution because default location of systemd unit file can differ; it can be checked in "UNIT FILE LOAD PATH" section of systemd.unit(5) man page.
 
 This instance would try to load configuration from `/etc/leofs/leo_storage_second` upon launch. This configuration hierarchy needs to be created as well:
 
-1. Create new configuration directory and *.d subdirectory: `mkdir -p /etc/leofs/leo_storage_second/leo_storage.d`
-2. Change permissions of configuration directory so it's **writable** by user running LeoFS ("leofs", unless changed manually): `chown leofs:leofs /etc/leofs/leo_storage_second`
-3. Copy main configuration file (if you plan to change it) or symlink it (if you only plan to use conf.d-style configuration override): `cp /etc/leofs/leo_storage/leo_storage.conf /etc/leofs/leo_storage_second/`
+1. Create new configuration directory and *.d subdirectory: `mkdir -p /etc/leofs/leo_storage_second/leo_storage.d`.
+2. Change permissions of configuration directory so it's **writable** by user running LeoFS ("leofs", unless changed manually): `chown leofs:leofs /etc/leofs/leo_storage_second`.
+3. Copy main configuration file (if you plan to change it) or symlink it (if you only plan to use conf.d-style configuration override): `cp /etc/leofs/leo_storage/leo_storage.conf /etc/leofs/leo_storage_second/`.
 4. Change configuration of new node, ensuring all paths and ports point to different location from first instance of that node.
-5. Create directories (logs/queue/etc) for the new node and set appropriate permissions on them
-
-Now second instance can be started in parallel with the first one with `systemctl start leofs-storage-second` command.
-
-It is possible to check whether nodes actually try to load configuration from different directories ([described here in more detail](/admin/system_admin/persistent_configuration.md#how-to-check-which-configuration-directory-is-used)):
-```
-# journalctl -l -u leofs-storage | grep -e Exec -e Config
-Sep 20 17:41:42 stor01.lan leo_storage[9513]: Config path: /etc/leofs/leo_storage
-Sep 20 17:41:42 stor01.lan leo_storage[9513]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage/app.config -args_file /etc/leofs/leo_storage/vm.args -- console
-
-# journalctl -l -u leofs-storage-second | grep -e Exec -e Config
-Sep 20 17:40:43 stor01.lan leo_storage[9065]: Config path: /etc/leofs/leo_storage_second
-Sep 20 17:40:43 stor01.lan leo_storage[9065]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage_second/app.config -args_file /etc/leofs/leo_storage_second/vm.args -- console
-```
+5. Create directories (logs/queue/etc) for the new node and set appropriate permissions on them.
 
 ## List of options that must have different settings
 
 All these options must be explicitly set in config files and have different settings for each instance of the node on the same system. For gateway and storage:
 ```
+nodename
+
 sasl.sasl_error_log
 sasl.error_logger_mf_dir
 
@@ -73,6 +66,21 @@ http.ssl_port
 ```
 
 Please note that this list might be not complete as new options might be added to config files. When using this feature, **it's up to user to ensure that all paths above point to different directories**. Trying to share the same ports or snmp_conf setting between nodes would result in second instance failing to start, but trying to share log or queue directory could lead to disastrous results. **Always double-check that all paths are different before using this feature.**
+
+## Starting other node instances
+
+After second instance is properly configured, it can be started in parallel with the first one with `systemctl start leofs-storage-second` command.
+
+It is possible to check whether nodes actually try to load configuration from different directories ([described here in more detail](/admin/system_admin/persistent_configuration.md#how-to-check-which-configuration-directory-is-used)):
+```
+# journalctl -l -u leofs-storage | grep -e Exec -e Config
+Sep 20 17:41:42 stor01.lan leo_storage[9513]: Config path: /etc/leofs/leo_storage
+Sep 20 17:41:42 stor01.lan leo_storage[9513]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage/app.config -args_file /etc/leofs/leo_storage/vm.args -- console
+
+# journalctl -l -u leofs-storage-second | grep -e Exec -e Config
+Sep 20 17:40:43 stor01.lan leo_storage[9065]: Config path: /etc/leofs/leo_storage_second
+Sep 20 17:40:43 stor01.lan leo_storage[9065]: Exec: /usr/local/leofs/current/leo_storage/erts-9.0/bin/erlexec -noinput -boot /usr/local/leofs/current/leo_storage/releases/1/leo_storage -mode minimal -config /etc/leofs/leo_storage_second/app.config -args_file /etc/leofs/leo_storage_second/vm.args -- console
+```
 
 !!! note "Note: Multiple LeoManager instances"
     It is possible to run multiple instances of LeoManager as well, but the resulting configuration and `leofs-adm` operations would be more complicated, so it's not recommended (as results of error might be severe). It would be better to use separate VMs or containers for different LeoManagers.

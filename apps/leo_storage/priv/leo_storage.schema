@@ -649,6 +649,17 @@
   {default, 100}
  ]}.
 
+%%
+%%  Watchdog.Messages
+%%
+%% @doc Messages - Is enabled
+{mapping,
+ "watchdog.msgs.is_enabled",
+ "leo_storage.watchdog_msgs_enabled",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
 
 %% --------------------------------------------------------------------
 %% STORAGE - Autonomic operation
@@ -1002,14 +1013,6 @@
  "leo_storage.queue_dir",
  [
   {default, "./work/queue"}
- ]}.
-
-%% @doc Directory of db for del-bucket/del-directory
-{mapping,
- "del_bucket_state_dir",
- "leo_storage.del_bucket_state_dir",
- [
-  {default, "./work/db/del_bucket/state"}
  ]}.
 
 %% @doc Directory of SNMP agent configuration

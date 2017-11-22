@@ -292,7 +292,8 @@ write_large2any(Key, Start, End, Bin, SrcMetadata) ->
                                        LargeObjectProp, ?DEF_LOBJ_CHUNK_OBJ_LEN),
     IndexStart = Start div ChunkedObjLen + 1,
     IndexEnd = End div ChunkedObjLen + 1,
-    _LastChunkSize = case IndexStart =:= IndexEnd of
+
+    case IndexStart =:= IndexEnd of
         true ->
             Offset = Start rem ChunkedObjLen,
             Size = End - Start + 1,
@@ -300,7 +301,8 @@ write_large2any(Key, Start, End, Bin, SrcMetadata) ->
                 {error, Cause} ->
                     throw({error, Cause});
                 _ ->
-                    Offset + Size
+                    %% Offset + Size
+                    void
             end;
         false ->
             %% head
@@ -310,8 +312,10 @@ write_large2any(Key, Start, End, Bin, SrcMetadata) ->
             case large_obj_partial_update(Key, HeadBin, IndexStart, HeadOffset, HeadSize) of
                 {error, Cause} ->
                     throw({error, Cause});
-                _ -> nop
+                _ ->
+                    void
             end,
+
             %% middle
             Rest3 = lists:foldl(
                       fun(Index, << MidBin:ChunkedObjLen/binary, Rest2/binary >>) ->
@@ -324,6 +328,7 @@ write_large2any(Key, Start, End, Bin, SrcMetadata) ->
                       end,
                       Rest,
                       lists:seq(IndexStart + 1, IndexEnd - 1)),
+
             %% tail
             TailOffset = 0,
             TailSize = End rem ChunkedObjLen + 1,
@@ -331,9 +336,11 @@ write_large2any(Key, Start, End, Bin, SrcMetadata) ->
                 {error, Cause3} ->
                     throw({error, Cause3});
                 _ ->
-                    TailSize
+                    %% TailSize
+                    void
             end
     end,
+
     NumChunks = erlang:max(IndexEnd, SrcMetadata#?METADATA.cnumber),
     %% https://github.com/leo-project/leofs/issues/596 revealed the below fix was wrong.
     %% - https://github.com/leo-project/leofs/issues/537

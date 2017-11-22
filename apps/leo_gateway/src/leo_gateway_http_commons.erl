@@ -403,7 +403,6 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
 get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                                       custom_header_settings = CustomHeaderSettings,
                                                       sending_chunked_obj_len = SendChunkLen,
-                                                      has_disk_cache = HasDiskCache,
                                                       begin_time = BeginTime}) ->
     IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
                  {ok, undefined,_} ->
@@ -770,24 +769,48 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
                 true  ->
                     %% Stores an object into the cache
                     Mime = leo_mime:guess_mime(Key),
-                    case catch term_to_binary(
-                                 leo_misc:get_value(
-                                   ?PROP_CMETA_UDM, binary_to_term(CMeta), [])) of
-                        {'EXIT', Reason} ->
-                            ?error("put_small_object/3",
-                                   [{key, binary_to_list(Key)},
-                                    {simple_cause, "Invalid metadata"},
-                                    {cause, Reason}]);
-                        CMeta_1 ->
+                    RetCMeta =
+                        case CMeta of
+                            <<>> ->
+                                {ok, CMeta};
+                            _ ->
+                                case catch leo_misc:get_value(
+                                             ?PROP_CMETA_UDM, binary_to_term(CMeta)) of
+                                    {'EXIT', Reason} ->
+                                        ?error("put_small_object/3",
+                                               [{key, binary_to_list(Key)},
+                                                {simple_cause, "Invalid metadata"},
+                                                {cause, Reason}]),
+                                        {error, Reason};
+                                    undefined ->
+                                        {ok, <<>>};
+                                    UDM ->
+                                        case catch term_to_binary(UDM) of
+                                            {'EXIT', Why} ->
+                                                ?error("put_small_object/3",
+                                                       [{key, binary_to_list(Key)},
+                                                        {simple_cause, "Invalid metadata"},
+                                                        {cause, Why}]),
+                                                {error, Why};
+                                            CMeta_1 ->
+                                                {ok, CMeta_1}
+                                        end
+                                end
+                        end,
+
+                    case RetCMeta of
+                        {ok, CMeta_2} ->
                             Val = term_to_binary(#cache{etag = ETag,
                                                         mtime = leo_date:now(),
                                                         content_type = Mime,
                                                         body = Bin,
-                                                        cmeta = CMeta_1,
-                                                        msize = byte_size(CMeta_1),
+                                                        cmeta = CMeta_2,
+                                                        msize = byte_size(CMeta_2),
                                                         size = byte_size(Bin)
                                                        }),
-                            catch leo_cache_api:put(Key, Val)
+                            catch leo_cache_api:put(Key, Val);
+                        _ ->
+                            void
                     end;
                 false ->
                     void
@@ -1025,6 +1048,8 @@ range_object(Req, Key, #req_params{bucket_name = BucketName,
 
 
 %% @private
+%% @TODO: Handle Multiple Part Range Request with "multipart/byteranges"
+%% RFC: 7233, https://tools.ietf.org/html/rfc7233#appendix-A
 get_range_object(Req, BucketName, Key, {error, badarg}, _, BeginTime) ->
     ?access_log_get(BucketName, Key, 0, ?HTTP_ST_BAD_RANGE, BeginTime),
     ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req);
@@ -1047,6 +1072,17 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
                                        CMeta = binary_to_term(CMetaBin),
                                        CMeta ++ Headers
                                end,
+                    %% Reply with Content Range
+                    %% RFC: 7233, https://tools.ietf.org/html/rfc7233#section-4.2
+                    Headers3 = case length(Range) of
+                                   1 ->
+                                       ContentRangeBin = range_to_binary(Range, ObjectSize),
+                                       ObjectSizeBin = integer_to_binary(ObjectSize),
+                                       [{?HTTP_HEAD_RESP_CONTENT_RANGE,
+                                        <<"bytes ", ContentRangeBin/binary, "/", ObjectSizeBin/binary>>}] ++ Headers2;
+                                   _ ->
+                                       Headers2
+                               end,
                     Req2 = cowboy_req:set_resp_body_fun(
                              Length,
                              fun(Socket, Transport) ->
@@ -1056,7 +1092,7 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
                                                                           sending_chunked_obj_len = SendChunkLen})
                              end,
                              Req),
-                    ?reply_partial_content(Headers2, Req2);
+                    ?reply_partial_content(Headers3, Req2);
                 {error, bad_range} ->
                     ?access_log_get(BucketName, Key, 0, ?HTTP_ST_BAD_RANGE, BeginTime),
                     ?reply_bad_range([?SERVER_HEADER], Key, <<>>, Req)
@@ -1084,9 +1120,6 @@ get_range_object_1(_Req,_BucketName,_Key,_, {error,_Reason}, #transport_record{s
     Transport:close(Socket);
 get_range_object_1(Req,_BucketName,_Key, [],_,_TransportRec) ->
     {ok, Req};
-get_range_object_1(Req, BucketName, Key, [{Start, infinity}|Rest],_, TransportRec) ->
-    Ret = get_range_object_2(Req, BucketName, Key, Start, 0, TransportRec),
-    get_range_object_1(Req, BucketName, Key, Rest, Ret, TransportRec);
 get_range_object_1(Req, BucketName, Key, [{Start, End}|Rest],_, TransportRec) ->
     Ret = get_range_object_2(Req, BucketName, Key, Start, End, TransportRec),
     get_range_object_1(Req, BucketName, Key, Rest, Ret, TransportRec);
@@ -1172,6 +1205,25 @@ fix_range_end_1([{Start, End}|Rest], ObjectSize, Acc) when is_integer(End),
 fix_range_end_1([Head|Rest], ObjectSize, Acc) ->
     fix_range_end_1(Rest, ObjectSize, [Head|Acc]).
 
+%% @private
+%% @doc Convert Range List to Content-Range Format
+range_to_binary(List, ObjectSize) ->
+    range_to_binary(List, ObjectSize, <<>>).
+
+range_to_binary([], _, Acc) ->
+    Acc;
+range_to_binary([{Start, infinity}|Rest], OS, Acc) ->
+    range_to_binary([{Start, OS - 1}|Rest], OS, Acc);
+range_to_binary([{Start, End}|Rest], OS, <<>>) ->
+    SB = integer_to_binary(Start),
+    EB = integer_to_binary(End),
+    range_to_binary(Rest, OS, <<SB/binary, "-", EB/binary>>);
+range_to_binary([{Start, End}|Rest], OS, Acc) ->
+    SB = integer_to_binary(Start),
+    EB = integer_to_binary(End),
+    range_to_binary(Rest, OS, <<Acc/binary, ",", SB/binary, "-", EB/binary>>);
+range_to_binary([End|Rest], OS, Acc) ->
+    range_to_binary([{OS + End, OS - 1}|Rest], OS, Acc).
 
 %% @private
 get_body_length(ObjectSize, Range) ->
@@ -1205,6 +1257,8 @@ move_current_pos_to_head(_Start, _ChunkedSize, CurPos, Idx) ->
 
 %% @doc
 %% @private
+calc_pos(StartPos, infinity, ObjectSize) ->
+    {StartPos, ObjectSize - 1};
 calc_pos(_StartPos, EndPos, ObjectSize) when EndPos < 0 ->
     NewStartPos = ObjectSize + EndPos,
     NewEndPos = ObjectSize - 1,
@@ -1360,5 +1414,13 @@ fix_range_end_test() ->
     [{0,2}] = fix_range_end([{0,2}], 4),
     [{0,1}, {0,3}] = fix_range_end([{0,1}, {0,4}], 4),
     [{-1}, {0,2}] = fix_range_end([{-1}, {0,2}], 4),
+    ok.
+
+range_to_binary_test() ->
+    ?debugMsg("Testing Range to Binary"),
+    <<"0-99">> = range_to_binary([{0,99}],200),
+    <<"100-199">> = range_to_binary([-100],200),
+    <<"0-99,100-199">> = range_to_binary([{0,99},{100,199}],200),
+    <<"50-199">> = range_to_binary([{50,infinity}],200),
     ok.
 -endif.
