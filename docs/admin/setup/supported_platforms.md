@@ -10,8 +10,8 @@ LeoFS supports popular operating systems and virtual environments.
 | <a href="https://www.ubuntu.com/download/alternative-downloads" target="_blank">Ubuntu Linux</a> | 14.04 | 64 bit | Development, testing and production |
 | AWS.EC2 Red Hat Enterprise Linux | 7        | 64 bit    | Development, testing |
 | AWS.EC2 Red Hat Enterprise Linux | 6        | 64 bit    | Development, testing |
-| AWS.EC2 Ubnutu                   | 16.04    | 64 bit    | Development, testing |
-| AWS.EC2 Ubnutu                   | 14.04    | 64 bit    | Development, testing |
+| AWS.EC2 Ubuntu                   | 16.04    | 64 bit    | Development, testing |
+| AWS.EC2 Ubuntu                   | 14.04    | 64 bit    | Development, testing |
 
 
 ## Related Links
