@@ -1180,9 +1180,14 @@ get_active_redundancies(_, []) ->
 get_active_redundancies(Quorum, Redundancies) ->
     AvailableNodes = [RedundantNode ||
                          #redundant_node{available = true} = RedundantNode <- Redundancies],
+    HasUnavailableNodes = lists:any(fun(#redundant_node{available = false}) ->
+                                            true;
+                                       (_) ->
+                                            false
+                                    end, Redundancies),
     case (Quorum =< erlang:length(AvailableNodes)) of
         true ->
-            {ok, AvailableNodes};
+            {ok, AvailableNodes, HasUnavailableNodes};
         false ->
             {error, ?ERROR_NOT_SATISFY_QUORUM}
     end.
@@ -1200,19 +1205,31 @@ get_active_redundancies(Quorum, Redundancies) ->
                                  Cause::any()).
 read_and_repair(#read_parameter{quorum = Q} = ReadParams, Redundancies) ->
     case get_active_redundancies(Q, Redundancies) of
-        {ok, AvailableNodes} ->
-            read_and_repair_1(ReadParams, AvailableNodes, AvailableNodes, []);
+        {ok, AvailableNodes, HasUnavailableNodes} ->
+            read_and_repair_1(ReadParams, AvailableNodes, AvailableNodes, HasUnavailableNodes, []);
         Error ->
             Error
     end.
 
 %% @private
-read_and_repair_1(_,[],_,[Error|_]) ->
-    {error, Error};
-read_and_repair_1(ReadParams, [Node|Rest], AvailableNodes, Errors) ->
+read_and_repair_1(_,[],_, false, Errors) ->
+    case lists:any(fun(not_found) ->
+                           false;
+                      (_) ->
+                           true
+                   end, Errors) of
+        false ->
+            {error, not_found};
+        _ ->
+            %% If some nodes are missing, reply the state is uncertain
+            {error, ?ERROR_RECOVER_FAILURE}
+    end;
+read_and_repair_1(_,[],_,_,_) ->
+    {error, ?ERROR_RECOVER_FAILURE};
+read_and_repair_1(ReadParams, [Node|Rest], AvailableNodes, HasUnavailableNodes, Errors) ->
     case read_and_repair_2(ReadParams, Node, AvailableNodes) of
         {error, Cause} ->
-            read_and_repair_1(ReadParams, Rest, AvailableNodes, [Cause|Errors]);
+            read_and_repair_1(ReadParams, Rest, AvailableNodes, HasUnavailableNodes, [Cause|Errors]);
         Ret ->
             Ret
     end.

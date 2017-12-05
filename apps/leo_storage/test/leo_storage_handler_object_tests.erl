@@ -54,6 +54,8 @@ object_handler_test_() ->
     {foreach, fun setup/0, fun teardown/1,
      [{with, [T]} || T <- [fun get_a0_/1,
                            fun get_a1_/1,
+                           fun get_nodedown/1,
+                           fun get_unavailablenode/1,
                            %% fun get_b0_/1,
                            %% fun get_b1_/1,
                            %% fun get_b2_/1,
@@ -168,6 +170,92 @@ get_a1_({Node0, Node1}) ->
     Ref = make_ref(),
     Res = leo_storage_handler_object:get({Ref, ?TEST_KEY_0}),
     ?assertEqual({ok, Ref, ?TEST_META_0, <<>>}, Res),
+    ok.
+
+%% @doc  Get Test when One Node is up but another is down, up node does not hold the object
+%% @@ private
+get_nodedown({Node0, Node1}) ->
+    %% leo_redundant_manager_api
+    meck:new(leo_redundant_manager_api, [non_strict]),
+    meck:expect(leo_redundant_manager_api, get_redundancies_by_addr_id,
+                fun(get, _AddrId) ->
+                        {ok, #redundancies{id = 0,
+                                           nodes = [#redundant_node{node = Node0,
+                                                                    available = true},
+                                                    #redundant_node{node = Node1,
+                                                                    available = true}],
+                                           n = 2, r = 1, w = 1, d = 1}}
+                end),
+
+    %% leo_object_storage_api
+    meck:new(leo_object_storage_api, [non_strict]),
+    meck:expect(leo_object_storage_api, get,
+                fun(_Key, _StartPos, _EndPos) ->
+                        {error, not_found}
+                end),
+    meck:expect(leo_object_storage_api, get,
+                fun(_Key, _StartPos, _EndPos, _IsForcedCheck) ->
+                        {error, not_found}
+                end),
+
+    meck:new(rpc, [unstick, passthrough]),
+    meck:expect(rpc, nb_yield,
+                fun(_, _) ->
+                        {value, {badrpc, nodedown}}
+                end),
+
+    meck:new(leo_metrics_req, [non_strict]),
+    meck:expect(leo_metrics_req, notify, fun(_) -> ok end),
+
+    meck:new(leo_watchdog_state, [non_strict]),
+    meck:expect(leo_watchdog_state, find_not_safe_items, fun(_) -> not_found end),
+
+    meck:new(leo_storage_watchdog_error, [non_strict]),
+    meck:expect(leo_storage_watchdog_error, push, fun(_) -> ok end),
+
+    AddrId = 0,
+    ReqId = 0,
+    Res = leo_storage_handler_object:get(AddrId, ?TEST_KEY_0, ReqId),
+    ?assertNotEqual({error, not_found}, Res),
+    ok.
+
+get_unavailablenode({Node0, Node1}) ->
+    %% leo_redundant_manager_api
+    meck:new(leo_redundant_manager_api, [non_strict]),
+    meck:expect(leo_redundant_manager_api, get_redundancies_by_addr_id,
+                fun(get, _AddrId) ->
+                        {ok, #redundancies{id = 0,
+                                           nodes = [#redundant_node{node = Node0,
+                                                                    available = true},
+                                                    #redundant_node{node = Node1,
+                                                                    available = false}],
+                                           n = 2, r = 1, w = 1, d = 1}}
+                end),
+
+    %% leo_object_storage_api
+    meck:new(leo_object_storage_api, [non_strict]),
+    meck:expect(leo_object_storage_api, get,
+                fun(_Key, _StartPos, _EndPos) ->
+                        {error, not_found}
+                end),
+    meck:expect(leo_object_storage_api, get,
+                fun(_Key, _StartPos, _EndPos, _IsForcedCheck) ->
+                        {error, not_found}
+                end),
+
+    meck:new(leo_metrics_req, [non_strict]),
+    meck:expect(leo_metrics_req, notify, fun(_) -> ok end),
+
+    meck:new(leo_watchdog_state, [non_strict]),
+    meck:expect(leo_watchdog_state, find_not_safe_items, fun(_) -> not_found end),
+
+    meck:new(leo_storage_watchdog_error, [non_strict]),
+    meck:expect(leo_storage_watchdog_error, push, fun(_) -> ok end),
+
+    AddrId = 0,
+    ReqId = 0,
+    Res = leo_storage_handler_object:get(AddrId, ?TEST_KEY_0, ReqId),
+    ?assertNotEqual({error, not_found}, Res),
     ok.
 
 %%--------------------------------------------------------------------
