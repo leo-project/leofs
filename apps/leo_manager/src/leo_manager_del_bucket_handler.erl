@@ -40,6 +40,9 @@
 -undef(DEF_TIMEOUT).
 -define(DEF_TIMEOUT, timer:seconds(30)).
 
+%% Timeout for communicating with leo_storage
+%% This value should be as small as possible to solve https://github.com/leo-project/leofs/issues/892
+-define(TIMEOUT_FOR_RPC, timer:seconds(5)).
 
 %%====================================================================
 %% API
@@ -275,7 +278,7 @@ dequeue([#del_bucket_state{bucket_name = BucketName,
 %% @private
 notify_fun(?NODE_TYPE_STORAGE, Node, BucketName) ->
     case rpc:call(Node, leo_storage_handler_del_directory, enqueue,
-                  [BucketName], ?DEF_TIMEOUT) of
+                  [BucketName], ?TIMEOUT_FOR_RPC) of
         ok ->
             ?info("notify_fun/3", [{"node", Node},
                                    {"bucket_name", BucketName}]),

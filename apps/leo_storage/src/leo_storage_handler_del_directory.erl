@@ -56,6 +56,10 @@
 -undef(INTERVAL).
 -define(INTERVAL, timer:seconds(3)).
 
+%% Timeout for communicating with leo_manager
+%% This value should be as small as possible to solve https://github.com/leo-project/leofs/issues/892
+-define(TIMEOUT_FOR_RPC, timer:seconds(5)).
+
 -record(state, {
           num_of_workers = 1 :: pos_integer(),
           manager_nodes = [] :: [node()],
@@ -639,7 +643,7 @@ run(?TYPE_DEL_BUCKET = Type, ?STATE_FINISHED = ProcState, MQId, Directory,
             fun(Manager, false) ->
                     case rpc:call(Manager, leo_manager_api,
                                   notify_del_dir_state,
-                                  [Node, Directory, ProcState_1], ?DEF_REQ_TIMEOUT) of
+                                  [Node, Directory, ProcState_1], ?TIMEOUT_FOR_RPC) of
                         ok ->
                             true;
                         not_found ->
@@ -748,7 +752,7 @@ notify_current_state_to_manager(ManagerNodes, [],_Directory,_ProcState) ->
 notify_current_state_to_manager(ManagerNodes, [Manager|Acc], Directory, ProcStateAtom) ->
     case rpc:call(Manager, leo_manager_api,
                   notify_del_dir_state,
-                  [node(), Directory, ProcStateAtom], ?DEF_REQ_TIMEOUT) of
+                  [node(), Directory, ProcStateAtom], ?TIMEOUT_FOR_RPC) of
         ok ->
             true;
         not_found ->
