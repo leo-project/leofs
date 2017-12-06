@@ -244,7 +244,7 @@ handle_loop(Index, TotalChunkObjs, #req_info{key = AcctualKey,
                     ?error("handle_loop/3",
                            [{key, binary_to_list(Key_1)},
                             {index, Index}, {cause, Cause}]),
-                    {error, Cause}
+                    erlang:error(Cause)
             end;
 
         %%
@@ -262,13 +262,13 @@ handle_loop(Index, TotalChunkObjs, #req_info{key = AcctualKey,
                     ?error("handle_loop/3",
                            [{key, binary_to_list(Key_1)},
                             {index, Index}, {cause, Cause}]),
-                    {error, Cause}
+                    erlang:error(Cause)
             end;
         {error, Cause} ->
             ?error("handle_loop/3",
                    [{key, binary_to_list(Key_1)},
                     {index, Index}, {cause, Cause}]),
-            {error, Cause}
+            erlang:error(Cause)
     end.
 
 
