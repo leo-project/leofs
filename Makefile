@@ -44,7 +44,20 @@ generate:
 	(cd rel/leo_manager && ../../rebar generate)
 	(cd rel/leo_storage && ../../rebar generate)
 	(cd rel/leo_gateway && ../../rebar generate)
-release:
+sd_notify:
+	make -C deps/sd_notify
+reltool:
+ifeq ($(with_sd_notify),yes)
+	for reltool_config in rel/leo_*/reltool.config.in; do \
+		sed 's/%% SD_NOTIFY_PLACEHOLDER/,{app, sd_notify,             [{incl_cond, include}]}/' \
+			$$reltool_config > $${reltool_config/.in/}; \
+		done
+else
+	for reltool_config in rel/leo_*/reltool.config.in; do \
+		sed '/%% SD_NOTIFY_PLACEHOLDER/d' $$reltool_config > $${reltool_config/.in/}; \
+	done
+endif
+release: reltool
 	@./rebar compile
 	rm -rf package/leo_*
 	#
