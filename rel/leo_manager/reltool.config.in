@@ -79,6 +79,7 @@
        {app, leo_statistics,        [{incl_cond, include}]},
        {app, recon,                 [{incl_cond, include}]},
        {app, savanna_commons,       [{incl_cond, include}]}
+       %% SD_NOTIFY_PLACEHOLDER
       ]}.
 
 {target_dir,   "leo_manager"}.

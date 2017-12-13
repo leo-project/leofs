@@ -12,6 +12,11 @@ rel/leo_manager/files/leo_manager.schema
 # ignore this because it is env dependent
 rel/common/launch.environment
 
+# reltool.config files are generated from reltool.config.in
+rel/leo_gateway/reltool.config
+rel/leo_manager/reltool.config
+rel/leo_storage/reltool.config
+
 apps/leo_gateway/cache/
 
 docs/_book/
