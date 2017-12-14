@@ -407,6 +407,7 @@ after_process_1(Pid, Managers) ->
                     [SVManagers, QoS_StatEnabled]},
                    permanent, 2000, worker, [leo_gateway_qos_stat]},
     {ok,_} = supervisor:start_child(leo_gateway_sup, ChildSpec_2),
+    ok = leo_misc:startup_notification(),
 
     %% Check status of the storage-cluster
     inspect_cluster_status({ok, Pid}, Managers).

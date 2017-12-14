@@ -104,6 +104,7 @@ start_link() ->
                                             [X|Acc]
                                     end, []) of
                 [] ->
+                    ok = leo_misc:startup_notification(),
                     timer:apply_after(?CHECK_INTERVAL, ?MODULE,
                                       create_mnesia_tables, [Mode, ReplicaNodes_2]);
                 _ ->
@@ -383,6 +384,7 @@ create_mnesia_tables_2(Mode) ->
                   ?error("create_mnesia_tables_2/1", [{cause, Reason}]),
                   {error, ?ERROR_MNESIA_GET_TABLE_INFO_ERROR};
               Tbls when length(Tbls) > 1 ->
+                  ok = leo_misc:startup_notification(),
                   case load_tables(Tbls) of
                       ok ->
                           try
