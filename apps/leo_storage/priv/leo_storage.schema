@@ -216,6 +216,17 @@
   {default, 'leveldb'}
  ]}.
 
+%% Leo' Object-Storage (v1.4.0-)
+%% @doc eleveldb Fadvise Will Need
+
+{mapping,
+ "backend_db.eleveldb.fadvise_willneed",
+ "leo_backend_db.eleveldb_fadvise_willneed",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
 %% Leo' Object-Storage (v1.3.1-)
 %% @doc eleveldb Write Buffer Size
 {mapping,
