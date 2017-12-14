@@ -32,6 +32,7 @@ clean:
 distclean:
 	@./rebar delete-deps
 	@./rebar clean
+	rm -f rel/leo_*/reltool.config
 test:
 	(cd apps/leo_manager && make)
 	(cd apps/leo_gateway && make)

@@ -8,11 +8,12 @@ After=leofs-manager-master.service leofs-manager-slave.service
 
 [Service]
 Environment=NODE_EXTRA_NAME=
-Type=simple
+Type=notify
 User=leofs
 Group=leofs
 LimitNOFILE=65535
 
+TimeoutStartSec=2min
 ExecStart=/usr/local/leofs/current/leo_gateway/bin/leo_gateway foreground_start
 
 Restart=on-failure
