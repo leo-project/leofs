@@ -21,6 +21,10 @@
 #======================================================================
 .PHONY: all compile deps clean distclean test generate release replace_launch_env release_for_test pkgsrc
 
+ifneq ($(with_sd_notify),yes)
+with_sd_notify := no
+endif
+
 all: deps compile
 compile:
 	@./rebar compile
@@ -48,16 +52,9 @@ generate:
 sd_notify:
 	make -C deps/sd_notify
 reltool:
-ifeq ($(with_sd_notify),yes)
 	for reltool_config in rel/leo_*/reltool.config.in; do \
-		sed 's/%% SD_NOTIFY_PLACEHOLDER/,{app, sd_notify,             [{incl_cond, include}]}/' \
-			$$reltool_config > $${reltool_config/.in/}; \
-		done
-else
-	for reltool_config in rel/leo_*/reltool.config.in; do \
-		sed '/%% SD_NOTIFY_PLACEHOLDER/d' $$reltool_config > $${reltool_config/.in/}; \
+		./make_reltool.sh $(with_sd_notify) $$reltool_config > $${reltool_config/.in/}; \
 	done
-endif
 release: reltool
 	@./rebar compile
 	rm -rf package/leo_*

@@ -80,6 +80,8 @@
        {app, recon,                 [{incl_cond, include}]},
        {app, savanna_commons,       [{incl_cond, include}]}
        %% SD_NOTIFY_PLACEHOLDER
+       %% CAUTION: Don't remove the above line in reltool.config.in as it will be replaced through "make release"
+       %% to generate reltool.config
       ]}.
 
 {target_dir,   "leo_manager"}.
