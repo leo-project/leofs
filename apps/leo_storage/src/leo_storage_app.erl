@@ -131,10 +131,8 @@ after_proc({ok, Pid}) ->
     ensure_started(inet_db, inet_db, start_link, worker, 2000),
     ensure_started(net_sup, erl_distribution, start_link, supervisor, infinity),
 
-    %% Launch servers
+    %% Launch logger
     ok = launch_logger(),
-    ok = launch_object_storage(Pid),
-    ok = leo_ordning_reda_api:start(),
 
     %% Check the managers whether they are alive or not
     Managers = ?env_manager_nodes(leo_storage),
@@ -149,6 +147,13 @@ after_proc(Error) ->
 %% @private
 after_proc_1(true, Pid, Managers) ->
     try
+        %% Launch servers
+        %% launch_object_storage after checking if managers are alive
+        %% to fix slow down startup problem. Details can be found on
+        %% https://github.com/leo-project/leofs/issues/840#issuecomment-352072021 - how to reproduce
+        %% https://github.com/leo-project/leofs/issues/840#issuecomment-352627443 - reason why it happened
+        ok = launch_object_storage(Pid),
+        ok = leo_ordning_reda_api:start(),
         %% Launch MQ-servers
         QueueDir = ?env_queue_dir(leo_storage),
         ok = launch_redundant_manager(Pid, Managers, QueueDir),
