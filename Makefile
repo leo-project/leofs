@@ -53,7 +53,7 @@ sd_notify:
 	make -C deps/sd_notify
 reltool:
 	for reltool_config in rel/leo_*/reltool.config.in; do \
-		./make_reltool.sh $(with_sd_notify) $$reltool_config > $${reltool_config/.in/}; \
+		./make_reltool.sh $(with_sd_notify) $$reltool_config > $$(echo $$reltool_config | sed s/.in$$//); \
 	done
 release: reltool
 	@./rebar compile
