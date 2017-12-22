@@ -771,11 +771,12 @@ correct_redundancies_1(Key, AddrId, [#redundant_node{node = Node}|T], Metadatas,
         {ok, #member{state = ?STATE_RUNNING}} ->
             %% Retrieve a metadata from remote-node
             %% invoke head with NO retry option
-            RPCKey = rpc:async_call(Node, leo_storage_handler_object,
-                                    head, [AddrId, Key, false]),
+            RPCKey = rpc:async_call(Node, leo_object_storage_api,
+                                    head_with_check_avs, [{AddrId, Key}, check_header]),
 
             case rpc:nb_yield(RPCKey, ?DEF_REQ_TIMEOUT) of
-                {value, {ok, Metadata}} ->
+                {value, {ok, MetaBin}} ->
+                    Metadata = binary_to_term(MetaBin),
                     correct_redundancies_1(Key, AddrId, T,
                                            [{Node, Metadata}|Metadatas], ErrorNodes);
                 _Error ->

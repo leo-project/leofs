@@ -273,6 +273,11 @@ subscribe_1_({Test0Node, Test1Node}) ->
                                             fun(_InconsistentNodes, _CorrectMetadata) ->
                                                     ok
                                             end]),
+    ok = rpc:call(Test1Node, meck, new,    [leo_object_storage_api, [no_link, non_strict]]),
+    ok = rpc:call(Test1Node, meck, expect, [leo_object_storage_api, head_with_check_avs,
+                                            fun(_AddrIdAndKey, _CheckMethod) ->
+                                                    {error, invalid_object}
+                                            end]),
     meck:expect(leo_redundant_manager_api, get_member_by_node,
                 fun(_Node) ->
                         {ok, #member{state = ?STATE_RUNNING}}
@@ -281,6 +286,10 @@ subscribe_1_({Test0Node, Test1Node}) ->
     meck:new(leo_object_storage_api, [non_strict]),
     meck:expect(leo_object_storage_api, head,
                 fun({_AddrId, _Key}) ->
+                        {ok, term_to_binary(#?METADATA{num_of_replicas = 0})}
+                end),
+    meck:expect(leo_object_storage_api, head_with_check_avs,
+                fun({_AddrId, _Key}, _CheckMethod) ->
                         {ok, term_to_binary(#?METADATA{num_of_replicas = 0})}
                 end),
 
