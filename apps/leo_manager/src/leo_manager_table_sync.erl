@@ -24,6 +24,7 @@
 -behaviour(gen_server).
 
 -include("leo_manager.hrl").
+-include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_auth.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_bucket.hrl").
@@ -177,10 +178,7 @@ sync_1() ->
         not_found ->
             void;
         {error, Cause} ->
-            error_logger:error_msg("~p,~p,~p,~p~n",
-                                   [{module, ?MODULE_STRING},
-                                    {function, "sync/1"},
-                                    {line, ?LINE}, {body, Cause}])
+            ?error("sync_1/0", [{cause, Cause}])
     end,
     ok.
 
