@@ -89,31 +89,19 @@ store(#?METADATA{addr_id = AddrId,
                  clock = Clock} = Metadata, Bin) ->
     case leo_watchdog_state:find_not_safe_items(?WD_EXCLUDE_ITEMS) of
         not_found ->
-            case leo_storage_handler_object:head(AddrId, Key, false) of
-                {ok, #?METADATA{clock = Clock_1}} when Clock == Clock_1 ->
-                    ok;
-                {ok, #?METADATA{clock = Clock_1}} when Clock < Clock_1 ->
-                    {error, inconsistent_obj};
-                _ ->
-                    case leo_misc:get_env(leo_redundant_manager, ?PROP_RING_HASH) of
-                        {ok, RingHashCur} ->
-                            case leo_object_storage_api:store(
-                                   Metadata#?METADATA{ring_hash = RingHashCur}, Bin) of
-                                ok ->
-                                    ok;
-                                {error, Cause} ->
-                                    ?warn("store/2",
-                                          [{key, binary_to_list(Metadata#?METADATA.key)},
-                                           {cause, Cause}]),
-                                    {error, Cause}
-                            end;
+            case leo_object_storage_api:head_with_check_avs({AddrId, Key}, check_header) of
+                {ok, MetaBin} ->
+                    LocalMeta = binary_to_term(MetaBin),
+                    case LocalMeta#?METADATA.clock of
+                        Clock ->
+                            ok;
+                        Clock_1 when Clock < Clock_1 ->
+                            {error, inconsistent_obj};
                         _ ->
-                            Reason = "Current ring-hash is not found",
-                            ?warn("store/2",
-                                  [{key, binary_to_list(Metadata#?METADATA.key)},
-                                   {cause, Reason}]),
-                            {error, Reason}
-                    end
+                            store_2(Metadata, Bin)
+                    end;
+                _ ->
+                    store_2(Metadata, Bin)
             end;
         {ok, ErrorItems} ->
             ?debug("store/2", "error-items:~p", [ErrorItems]),
@@ -122,6 +110,28 @@ store(#?METADATA{addr_id = AddrId,
             {error, Cause}
     end.
 
+%% @private
+store_2(#?METADATA{key = Key} = Metadata, Object) ->
+    case leo_misc:get_env(leo_redundant_manager, ?PROP_RING_HASH) of
+        {ok, RingHashCur} ->
+            case leo_object_storage_api:store(
+                   Metadata#?METADATA{ring_hash = RingHashCur},
+                   Object) of
+                ok ->
+                    ok;
+                {error, Cause} ->
+                    ?warn("store_2/3",
+                          [{key, binary_to_list(Key)},
+                           {cause, Cause}]),
+                    {error, Cause}
+            end;
+        _ ->
+            Reason = "Current ring-hash is not found",
+            ?warn("store_2/3",
+                  [{key, binary_to_list(Key)},
+                   {cause, Reason}]),
+            {error, Reason}
+    end.
 
 %%--------------------------------------------------------------------
 %% Callback
