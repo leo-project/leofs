@@ -82,8 +82,8 @@ repair(#read_parameter{quorum = ReadQuorum,
                                   can_read_repair = true}) ->
                       spawn(fun() ->
                                     RPCKey = rpc:async_call(
-                                               Node, leo_storage_handler_object,
-                                               head, [AddrId, Key, false]),
+                                               Node, leo_object_storage_api,
+                                               head_with_check_avs, [{AddrId, Key}, check_header]),
                                     compare(Ref, From, RPCKey, Node, Params)
                             end)
               end, Redundancies),
@@ -144,12 +144,19 @@ compare(Ref, Pid, RPCKey, Node, #state{metadata = Metadata}) ->
                clock = Clock} = Metadata,
 
     Ret = case rpc:nb_yield(RPCKey, ?DEF_REQ_TIMEOUT) of
-              {value, {ok, #?METADATA{clock = RemoteClock}}} when Clock == RemoteClock ->
-                  ok;
-              {value, {ok, #?METADATA{clock = RemoteClock}}} when Clock  > RemoteClock ->
-                  {error, {Node, secondary_inconsistency}};
-              {value, {ok, #?METADATA{clock = RemoteClock}}} when Clock  < RemoteClock ->
-                  {error, {Node, primary_inconsistency}};
+              {value, {ok, MetaBin}} ->
+                  RemoteMeta = binary_to_term(MetaBin),
+                  case RemoteMeta#?METADATA.clock of
+                      RemoteClock when Clock == RemoteClock ->
+                          ok;
+                      RemoteClock when Clock > RemoteClock ->
+                          {error, {Node, secondary_inconsistency}};
+                      RemoteClock when Clock < RemoteClock ->
+                          {error, {Node, primary_inconsistency}}
+                  end;
+              {value, eof = Cause} ->
+                  %% have to handle eof in case of disk drive failure storing AVS
+                  {error, {Node, Cause}};
               {value, not_found = Cause} ->
                   {error, {Node, Cause}};
               {value, {error, Cause}} ->
