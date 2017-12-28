@@ -118,15 +118,12 @@ sleep 1
 ./package/leo_manager_1/bin/leo_manager wait_ready
 
 ./package/leo_storage_0/bin/leo_storage start
-./package/leo_storage_0/bin/leo_storage wait_ready
-
 ./package/leo_storage_1/bin/leo_storage start
-./package/leo_storage_1/bin/leo_storage wait_ready
-
 ./package/leo_storage_2/bin/leo_storage start
-./package/leo_storage_2/bin/leo_storage wait_ready
-
 ./package/leo_storage_3/bin/leo_storage start
+./package/leo_storage_0/bin/leo_storage wait_ready
+./package/leo_storage_1/bin/leo_storage wait_ready
+./package/leo_storage_2/bin/leo_storage wait_ready
 ./package/leo_storage_3/bin/leo_storage wait_ready
 
 echo ":::"
