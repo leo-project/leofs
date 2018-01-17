@@ -1076,7 +1076,7 @@ prefix_search_and_remove_objects(MQId, ParentDir, EnqueuedAt) ->
                           end
                   end
           end,
-    case catch leo_object_storage_api:fetch_by_key(ParentDir, Fun) of
+    case catch leo_object_storage_api:fetch_by_key_in_parallel(ParentDir, Fun, undefined) of
         {'EXIT', Cause} ->
             {error, Cause};
         {ok,_} ->
