@@ -580,8 +580,8 @@ prefix_search_({_Node0, _Node1}) ->
 
 prefix_search_and_remove_objects_(_) ->
     meck:new(leo_object_storage_api, [non_strict]),
-    meck:expect(leo_object_storage_api, fetch_by_key,
-                fun(_ParentDir, Fun) ->
+    meck:expect(leo_object_storage_api, fetch_by_key_in_parallel,
+                fun(_ParentDir, Fun,_) ->
                         Fun(?TEST_KEY_0, term_to_binary(#?METADATA{}), []),
                         Fun(?TEST_DIR_0, term_to_binary(#?METADATA{}), [#?METADATA{key=?TEST_KEY_0}]),
                         Fun(?TEST_KEY_1, term_to_binary(#?METADATA{}), [#?METADATA{key=?TEST_KEY_0}]),
