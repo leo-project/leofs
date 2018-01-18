@@ -551,7 +551,7 @@ usage_create_user() {
 }
 
 usage_import_user() {
-    USAGE="import-user $USER_ID $ACCESS_KEY_ID $SECRET_ACCESS_KEY"
+    USAGE="import-user [-f] $USER_ID $ACCESS_KEY_ID $SECRET_ACCESS_KEY"
     case "$1" in
         min)
             output "$WHITESPACE $USAGE "
@@ -1471,6 +1471,16 @@ case "$1" in
     import-user)
         if [ $# -eq 4 ]; then
             send_command "$@"
+        elif [ $# -eq 5 ]; then
+            case "$2" in
+                -f)
+                    send_command "$@"
+                    ;;
+                *)
+                    usage_import_user
+                    exit 1
+                    ;;
+            esac
         else
             usage_import_user
         fi

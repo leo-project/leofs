@@ -2121,7 +2121,13 @@ create_user(Option) ->
 import_user(Option) ->
     Ret = case ?get_tokens(Option, ?ERROR_INVALID_ARGS) of
               {ok, [UserId, AccessKey, SecretKey]} ->
-                  {ok, {list_to_binary(UserId),
+                  {ok, {false,
+                        list_to_binary(UserId),
+                        list_to_binary(AccessKey),
+                        list_to_binary(SecretKey)}};
+              {ok, ["-f", UserId, AccessKey, SecretKey]} ->
+                  {ok, {true, %% force update (overwrite the existing records)
+                        list_to_binary(UserId),
                         list_to_binary(AccessKey),
                         list_to_binary(SecretKey)}};
               {ok,_} ->
@@ -2130,7 +2136,7 @@ import_user(Option) ->
                   Error
           end,
     case Ret of
-        {ok, {UserId_1, AccessKey_1, SecretKey_1}} ->
+        {ok, {false, UserId_1, AccessKey_1, SecretKey_1}} ->
             case leo_s3_user:import(UserId_1, AccessKey_1, SecretKey_1) of
                 {ok, Keys} ->
                     AccessKeyId     = leo_misc:get_value(access_key_id,     Keys),
@@ -2144,6 +2150,18 @@ import_user(Option) ->
                           {secret_access_key, SecretAccessKey}]};
 
                 %% User ID or Access Key ID Already Exists
+                {error, already_exists} ->
+                    {error, already_exists};
+                {error,_Cause} ->
+                    {error, ?ERROR_COULD_NOT_ADD_USER}
+            end;
+        {ok, {true, UserId_1, AccessKey_1, SecretKey_1}} ->
+            case leo_s3_user:force_import(UserId_1, AccessKey_1, SecretKey_1) of
+                {ok, Keys} ->
+                    AccessKeyId     = leo_misc:get_value(access_key_id,     Keys),
+                    SecretAccessKey = leo_misc:get_value(secret_access_key, Keys),
+                    {ok, [{access_key_id,     AccessKeyId},
+                          {secret_access_key, SecretAccessKey}]};
                 {error, already_exists} ->
                     {error, already_exists};
                 {error,_Cause} ->
@@ -2210,7 +2228,7 @@ update_user_password(Option) ->
 delete_user(Option) ->
     case ?get_tokens(Option, ?ERROR_INVALID_ARGS) of
         {ok, [UserId|_]} ->
-            case leo_s3_user:delete(list_to_binary(UserId)) of
+            case leo_s3_user:delete_all_related_records(list_to_binary(UserId)) of
                 ok ->
                     ok;
                 {error,_Cause} ->
