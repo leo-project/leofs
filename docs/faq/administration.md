@@ -150,7 +150,7 @@ Given that the above answers, You would not need to be afraid of using hostnames
 The netcat installed on your env is probably the one distributed through netcat-traditional package and unfortunately that doesn't work for leofs-adm which requires netcat-openbsd instead. if that is the case, installing netcat-openbsd should solve the problem as reported on github issue[^2].
 
 [^1]: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a>
-[^2]: <a href="https://github.com/leo-project/leofs/issues/519" target="_blank">LEOFS' ISSUE_519</a>
+[^2]: <a href="https://github.com/leo-project/leofs/issues/519" target="_blank">LeoFS' Issue #519, Deb (a LeoFS' package for Ubuntu) should require netcat-openbsd instead of netcat</a>
 
 ## Why doesn't leofs-adm import-user work even the user doesn't exist?
 If you are using LeoFS <= v1.3.8 then you probably hit the issue[^3]. If that is the case, we'd recommend you upgrade to the v1.4.0 or higher one in which version you can use import-user with the force update option (-f) that enables you to import the user with the existing access-key-id.

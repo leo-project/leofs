@@ -11,9 +11,9 @@
 
 * Related Links:
     * <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 REST API Introduction</a>
-    * [LeoFS' ISSUE_177](https://github.com/leo-project/leofs/issues/177)
-    * [LeoFS' ISSUE_338](https://github.com/leo-project/leofs/issues/338)
-    * [LeoFS' ISSUE_880](https://github.com/leo-project/leofs/issues/880)
+    * [LeoFS' Issue #177, Responds an incorrect MD5 of an large object](https://github.com/leo-project/leofs/issues/177)
+    * [LeoFS' Issue #338, Implements communication with three and over clusters](https://github.com/leo-project/leofs/issues/338)
+    * [LeoFS' Issue #880, Recover-node fails to recover all data on storage node](https://github.com/leo-project/leofs/issues/880)
 
 
 ## Operations
