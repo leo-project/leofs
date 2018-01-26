@@ -991,6 +991,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#why-doesnt-leofs-adm-import-user-work-even-the-user-doesnt-exist" title="Why doesn't leofs-adm import-user work even the user doesn't exist?" class="md-nav__link">
+    Why doesn't leofs-adm import-user work even the user doesn't exist?
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1180,6 +1187,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#why-doesnt-leofs-adm-import-user-work-even-the-user-doesnt-exist" title="Why doesn't leofs-adm import-user work even the user doesn't exist?" class="md-nav__link">
+    Why doesn't leofs-adm import-user work even the user doesn't exist?
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -1311,6 +1325,8 @@ To decrease the bandwidth and odds timeout could happen, you have two options.</
 <p>Given that the above answers, You would not need to be afraid of using hostnames instead of ip addresses.</p>
 <h2 id="why-doesnt-leofs-adm-respond-to-a-command-like-leofs-adm-status">Why doesn't leofs-adm respond to a command like leofs-adm status?<a class="headerlink" href="#why-doesnt-leofs-adm-respond-to-a-command-like-leofs-adm-status" title="Permanent link">&para;</a></h2>
 <p>The netcat installed on your env is probably the one distributed through netcat-traditional package and unfortunately that doesn't work for leofs-adm which requires netcat-openbsd instead. if that is the case, installing netcat-openbsd should solve the problem as reported on github issue<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>.</p>
+<h2 id="why-doesnt-leofs-adm-import-user-work-even-the-user-doesnt-exist">Why doesn't leofs-adm import-user work even the user doesn't exist?<a class="headerlink" href="#why-doesnt-leofs-adm-import-user-work-even-the-user-doesnt-exist" title="Permanent link">&para;</a></h2>
+<p>If you are using LeoFS &lt;= v1.3.8 then you probably hit the issue<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup>. If that is the case, we'd recommend you upgrade to the v1.4.0 or higher one in which version you can use import-user with the force update option (-f) that enables you to import the user with the existing access-key-id.</p>
 <div class="footnote">
 <hr />
 <ol>
@@ -1319,6 +1335,9 @@ To decrease the bandwidth and odds timeout could happen, you have two options.</
 </li>
 <li id="fn:2">
 <p><a href="https://github.com/leo-project/leofs/issues/519" target="_blank">LEOFS' ISSUE_519</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://github.com/leo-project/leofs/issues/964" target="_blank">LeoFS' Issue #964, import-user with the access-key-id belonging to a deleted user doesn't work</a>&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
