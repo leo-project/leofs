@@ -151,3 +151,8 @@ The netcat installed on your env is probably the one distributed through netcat-
 
 [^1]: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a>
 [^2]: <a href="https://github.com/leo-project/leofs/issues/519" target="_blank">LEOFS' ISSUE_519</a>
+
+## Why doesn't leofs-adm import-user work even the user doesn't exist?
+If you are using LeoFS <= v1.3.8 then you probably hit the issue[^3]. If that is the case, we'd recommend you upgrade to the v1.4.0 or higher one in which version you can use import-user with the force update option (-f) that enables you to import the user with the existing access-key-id.
+
+[^3]: <a href="https://github.com/leo-project/leofs/issues/964" target="_blank">LeoFS' Issue #964, import-user with the access-key-id belonging to a deleted user doesn't work</a>
