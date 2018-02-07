@@ -126,7 +126,7 @@ handle_fail(_Id,_Cause) ->
 %% @doc Handle a number of notified messages (timeout, slow-operation)
 %% @private
 handle_notified_messages(Id, NumOfNotifiedMsgs) ->
-    case leo_storage_msg_collector:get() of
+    case leo_object_storage_msg_collector:get() of
         {ok, []} ->
             elarm:clear(Id, ?WD_ITEM_NOTIFIED_MSGS);
         {ok, Msgs} ->
@@ -166,7 +166,7 @@ handle_notified_messages(Id, NumOfNotifiedMsgs) ->
                 _:_ ->
                     ok
             after
-                leo_storage_msg_collector:clear()
+                leo_object_storage_msg_collector:clear()
             end
     end,
     ok.

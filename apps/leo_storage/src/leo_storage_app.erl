@@ -199,7 +199,7 @@ after_proc_1(true, Pid, Managers) ->
         %% Watchdog for notified messages
         case ?env_storage_watchdog_msgs_enabled() of
             true ->
-                leo_storage_msg_collector:set_enabled(),
+                leo_object_storage_msg_collector:init(true),
                 {ok, _} = supervisor:start_child(
                          leo_watchdog_sup, {leo_storage_watchdog_msgs,
                                             {leo_storage_watchdog_msgs, start_link,
@@ -301,7 +301,7 @@ launch_object_storage(RefSup) ->
 
     ChildSpec = {leo_object_storage_sup,
                  {leo_object_storage_sup, start_link,
-                  [ObjStoageInfo, leo_storage_msg_collector]},
+                  [ObjStoageInfo]},
                  permanent, 2000, supervisor, [leo_object_storage_sup]},
     {ok, _} = supervisor:start_child(RefSup, ChildSpec),
     ok.

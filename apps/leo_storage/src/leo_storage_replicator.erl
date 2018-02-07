@@ -119,7 +119,7 @@ replicate_1([], Ref,_From, #state{method = Method,
             enqueue(Method, ?ERR_TYPE_REPLICATE_DATA, Metadata),
 
             %% for watchdog
-            ok = leo_storage_msg_collector:notify(?ERROR_MSG_TIMEOUT, Method, Key),
+            ok = leo_object_storage_msg_collector:notify(?MSG_ITEM_TIMEOUT, Method, Key),
             %% reply error
             Cause = timeout,
             ?warn("replicate/5",
