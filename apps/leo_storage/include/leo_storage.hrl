@@ -112,8 +112,8 @@
 
 
 %% @doc notified message items
--define(MSG_ITEM_TIMEOUT, 'timeout').
--define(MSG_ITEM_SLOW_OP, 'slow_op').
+%-define(MSG_ITEM_TIMEOUT, 'timeout').
+%-define(MSG_ITEM_SLOW_OP, 'slow_op').
 
 
 %% @doc request parameter for READ

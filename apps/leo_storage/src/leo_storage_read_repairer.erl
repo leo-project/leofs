@@ -116,7 +116,7 @@ loop(R, Ref, From, NumOfNodes, {ReqId, Key, E} = Args, Callback) ->
             case (R > 0) of
                 true ->
                     %% for watchdog
-                    ok = leo_storage_msg_collector:notify(?ERROR_MSG_TIMEOUT, get, Key),
+                    ok = leo_object_storage_msg_collector:notify(?MSG_ITEM_TIMEOUT, get, Key),
                     %% reply error
                     Cause = timeout,
                     ?warn("loop/6", [{key, Key}, {cause, Cause}]),
