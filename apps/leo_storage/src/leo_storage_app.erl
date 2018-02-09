@@ -236,6 +236,7 @@ after_proc_1(true, Pid, Managers) ->
         leo_backend_db_sup:start_child(leo_backend_db_sup, ?DEL_DIR_STATE_DB_ID,
                                        2, 'leveldb', ?env_del_dir_state_dir()),
         ok = leo_misc:startup_notification(),
+        leo_logger_api:reset_hwm(),
         {ok, Pid}
     catch
         _:Cause ->
