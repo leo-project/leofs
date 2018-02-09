@@ -110,6 +110,7 @@ start_link() ->
                 _ ->
                     create_mnesia_tables_2(Mode, ReplicaNodes_2)
             end,
+            leo_logger_api:reset_hwm(),
             {ok, Pid};
         Error ->
             Error
