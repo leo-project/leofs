@@ -1221,11 +1221,21 @@ read_and_repair_1(_,[],_, false, Errors) ->
         false ->
             {error, not_found};
         _ ->
+            %% dispatch the below function to check if the errors is unavailable(503) or not.
+            read_and_repair_1(void, [], void, true, Errors)
+    end;
+read_and_repair_1(_,[],_,_, Errors) ->
+    case lists:all(fun(unavailable) ->
+                           true;
+                      (_) ->
+                           false
+                   end, Errors) of
+        true ->
+            {error, unavailable};
+        false ->
             %% If some nodes are missing, reply the state is uncertain
             {error, ?ERROR_RECOVER_FAILURE}
     end;
-read_and_repair_1(_,[],_,_,_) ->
-    {error, ?ERROR_RECOVER_FAILURE};
 read_and_repair_1(ReadParams, [Node|Rest], AvailableNodes, HasUnavailableNodes, Errors) ->
     case read_and_repair_2(ReadParams, Node, AvailableNodes) of
         {error, Cause} ->
