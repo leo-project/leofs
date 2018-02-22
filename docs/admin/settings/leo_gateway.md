@@ -134,18 +134,18 @@ And also, when size of a requested object more than `cache.cache_max_content_len
 #### Configurations which may affect the cache behavior
 Whether or not an object is cached on LeoGateway is determined by below logics.
 
-- LeoGateway's cache feature is only available to small objects when cache.cache_disc_capacity = 0.
-- An object which size is larger than cache.cache_disc_threshold_len never be cached if cache.cache_disc_capacity = 0.
+- LeoGateway's cache feature is only available to small objects when `cache.cache_disc_capacity = 0`.
+- An object which size is larger than `cache.cache_disc_threshold_len` never be cached if `cache.cache_disc_capacity = 0`.
 
 How LeoGateway's cache feature works with cache related configurations is described below.
 
 - For small objects
     - Cache happens in both cases handling a PUT request in the write through way and handling a GET in the read through way
-    - Being stored into memory if the size of an object < cache.cache_disc_threshold_len
-    - Being stored into Disk if the size of an object >= cache.cache_disc_threshold_len
+    - Being stored into memory if the size of an object < `cache.cache_disc_threshold_len`
+    - Being stored into Disk if the size of an object >= `cache.cache_disc_threshold_len`
 - For large objects
     - Cache happens ONLY in case handling a GET request in the read through way
-    - Being stored into Disk ONLY if disk cache is enabled (cache_disc_capacity > 0)
+    - Being stored into Disk ONLY if disk cache is enabled (`cache.cache_disc_capacity` > 0)
     - The whole object is written as a file on the host file system during processing a GET request (a chunk level cache is not implemented)
 
 ## Related Links
