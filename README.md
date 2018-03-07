@@ -91,26 +91,37 @@ $ apt-get install lsb-release
 
 ### Install Erlang
 
-You can download and install Erlang package from Erlang Solutions
-https://www.erlang-solutions.com/resources/download.html
+You can install Erlang with [kerl](https://github.com/kerl/kerl).
 
-#### For CentOS 7 (Example with Erlang OTP 18.3.4)
+* Install [kerl](https://github.com/kerl/kerl)
+
 ```bash
-$ wget https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_18.3.4-1~centos~7_amd64.rpm -O esl-erlang.rpm
-### Dependencies for esl-erlang
-$ sudo yum install epel-release
-### Install Erlang
-$ sudo yum localinstall esl-erlang.rpm
+$ curl -O https://raw.githubusercontent.com/kerl/kerl/master/kerl
+$ chmod a+x kerl
+$ mkdir -p ~/bin
+$ mv kerl ~/bin/
+$ echo "export PATH=$PATH:~/bin" >> ~/.bashrc
+$ source ~/.bashrc
 ```
 
-### For Ubuntu 16.04 (Example with Erlang OTP 18.3.4)
+* Install Erlang (Erlang/OTP 19.3)
+
 ```bash
-$ wget https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_18.3.4-1~ubuntu~xenial_amd64.deb -O esl-erlang.deb
-### Install Erlang
-$ sudo dpkg -i esl-erlang.deb
-### Fix depencies for esl-erlang
-$ sudo apt-get install -f
+$ kerl build 19.3 19.3
+$ kerl list builds
+19.3,19.3
+
+$ kerl install 19.3 /path/to/19.3
+$  kerl list installations
+19.3 /path/to/19.3
+
+$ source /path/to/19.3/activate
+$ kerl active
+The current active installation is:
+/path/to/19.3
 ```
+
+### Install LeoFS
 
 Then, clone source of LeoFS and libraries from GitHub.
 
@@ -261,30 +272,34 @@ You can test LeoFS with <a target="_blank" href="https://github.com/leo-project/
         * [AWS Signature v4](http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html) support (v1.3.0)
         * Custom Metadata Support (v1.3.1)
 * *WIP* - v1.4
-    * Erasure Code
-    * Improve compatibility S3-APIs#7
-        * [Server Side Object Encryption](http://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html)
-    * Integration with distributed computing frameworks
+    * Improvement of the core features
+    * Integration with distributed computing frameworks#1
         * Hadoop integration
         * Spark integration
-* v1.5
-    * Hinted Hand-off
-    * LeoManager's cluster replaces from Erlang's mnesia dependensy to another implementation
 
 ### Version 2
-* v2.0
+* *WIP* - v2.0
+    * Erasure Code
+    * Improve Data Security for [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation) and Enterprise Storages
+    * Improve compatibility S3-APIs#7
+        * [Server Side Object Encryption](http://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html)
     * NFS v3 Support *(stable)*
         * Improve performance of the list objects, `the ls command`
     * Improvement of the Multi Data Center Replication
     * Searching objects by a custom-metadata
+* v2.1
+    * Hinted Hand-off
     * Improve compatibility S3-APIs#8
         * Objects Expiration into a Bucket
         * Object Versioning
+    * [Kubernetes Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) Support
+    * Integration with distributed computing frameworks#2
+        * Hadoop integration
+        * Spark integration
     * Improve Web GUI console, <a href="https://github.com/leo-project/leo_center" target="_blank">LeoFS Center</a> *(option)*
 * v2.2
-    * NFS v4 Support
     * Data Deduplication
-    * Improve compatibility S3-APIs#8
+    * Improve compatibility S3-APIs#9
 
 
 ## Versioning Policy
