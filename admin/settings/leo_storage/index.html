@@ -597,6 +597,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#configuration-which-can-affect-load-and-cpu-usage" title="Configuration which can affect Load and CPU usage" class="md-nav__link">
+    Configuration which can affect Load and CPU usage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#configuration-related-to-mq" title="Configuration related to MQ" class="md-nav__link">
     Configuration related to MQ
   </a>
@@ -1093,6 +1100,13 @@
           <li class="md-nav__item">
   <a href="#object95storageis95strict95check" title="object_storage.is_strict_check" class="md-nav__link">
     object_storage.is_strict_check
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-which-can-affect-load-and-cpu-usage" title="Configuration which can affect Load and CPU usage" class="md-nav__link">
+    Configuration which can affect Load and CPU usage
   </a>
   
 </li>
@@ -1663,6 +1677,33 @@
 
 <h4 id="object95storageis95strict95check">object_storage.is_strict_check<a class="headerlink" href="#object95storageis95strict95check" title="Permanent link">&para;</a></h4>
 <p>Without setting <code class="codehilite">object_storage.is_strict_check</code> to true, there is a little possibility your data could be broken without any caution even if a LeoFS system is running on a filesystem like ZFS<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> that protect both the metadata and the data blocks through the checksum when bugs of any unexpected or unknown software got AVS files broken.</p>
+<h4 id="configuration-which-can-affect-load-and-cpu-usage">Configuration which can affect Load and CPU usage<a class="headerlink" href="#configuration-which-can-affect-load-and-cpu-usage" title="Permanent link">&para;</a></h4>
+<p><code class="codehilite">mq.num_of_mq_procs</code> can affect not only the performance/load during recover/rebalance operations but the load while there is at least one node suspended/downed in the cluster. so that setting <code class="codehilite">mq.num_of_mq_procs</code> to an appropriate value based on the amount of expected traffic and hardware specs is really important. This section would give you the brief understanding on <code class="codehilite">mq.num_of_mq_procs</code> and how to choose the optimal value for your requirements.</p>
+<ul>
+<li>
+<p>How the <code class="codehilite">mq.num_of_mq_procs</code> setting affect the system operations</p>
+<ul>
+<li>High<ul>
+<li>Fast recover/rebalance time</li>
+<li>High CPU/Load on storage during recover/rebalance and also existing suspended/stopped nodes in the cluster</li>
+</ul>
+</li>
+<li>Low<ul>
+<li>Slow recover/rebalance time</li>
+<li>Low CPU/Load on storage during recover/rebalance and also existing suspended/stopped nodes in the cluster</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Recommend settings</p>
+<ul>
+<li>If you have enough CPU resources on storage nodes then set it to a higher one as long as it doesn't affect the operations coming from LeoGateway</li>
+<li>If you don't then set it to somewhat a lower one unless the recover take too much time</li>
+</ul>
+</li>
+</ul>
+<p>For more details, Please see Issue #987<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>.</p>
 <h4 id="configuration-related-to-mq">Configuration related to MQ<a class="headerlink" href="#configuration-related-to-mq" title="Permanent link">&para;</a></h4>
 <p>LeoStorage's MQ mechanism depends on the watchdog mechanism to reduce costs of a message consumption. The MQ dynamically updates <code class="codehilite">a number of batch processes</code> and <code class="codehilite">an interval of a message consumption</code>.</p>
 <p><em>Figure: Number-of-batch-processes and interval:</em></p>
@@ -1692,6 +1733,9 @@
 <ol>
 <li id="fn:1">
 <p><a href="https://en.wikipedia.org/wiki/ZFS" target="_blank">ZFS</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://github.com/leo-project/leofs/issues/987#issuecomment-371059490" target="_blank">LeoFS' Issue #987, Measure rebalance/recover-node performance according to mq.num_of_mq_procs</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>

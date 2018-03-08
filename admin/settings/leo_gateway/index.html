@@ -601,6 +601,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#configurations-which-may-affect-the-cache-behavior" title="Configurations which may affect the cache behavior" class="md-nav__link">
+    Configurations which may affect the cache behavior
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1069,6 +1076,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#configurations-which-may-affect-the-cache-behavior" title="Configurations which may affect the cache behavior" class="md-nav__link">
+    Configurations which may affect the cache behavior
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1490,6 +1504,27 @@
 <p>A total number of directories to store cache files is equal to <code class="codehilite">cache.cache_workers</code>. A maximum size of a cacheable object per a directory has been determined by <code class="codehilite">cache.cache_disc_capacity / cache.cache_workers</code>. If the size of a requested object more than the maximum size, LeoGateway avoids storing the object into the disk cache.</p>
 <p>And also, when size of a requested object more than <code class="codehilite">cache.cache_max_content_len</code>, LeoGateway similarly refuses to store the object into the disk cache.</p>
 <p><img alt="Figure: Disk Cache Limits" src="../../../assets/leofs-gateway-disk-cache-size.png" /></p>
+<h4 id="configurations-which-may-affect-the-cache-behavior">Configurations which may affect the cache behavior<a class="headerlink" href="#configurations-which-may-affect-the-cache-behavior" title="Permanent link">&para;</a></h4>
+<p>Whether or not an object is cached on LeoGateway is determined by below logics.</p>
+<ul>
+<li>LeoGateway's cache feature is only available to small objects when <code class="codehilite">cache.cache_disc_capacity = 0</code>.</li>
+<li>An object which size is larger than <code class="codehilite">cache.cache_disc_threshold_len</code> never be cached if <code class="codehilite">cache.cache_disc_capacity = 0</code>.</li>
+</ul>
+<p>How LeoGateway's cache feature works with cache related configurations is described below.</p>
+<ul>
+<li>For small objects<ul>
+<li>Cache happens in both cases handling a PUT request in the write through way and handling a GET in the read through way</li>
+<li>Being stored into memory if the size of an object &lt; <code class="codehilite">cache.cache_disc_threshold_len</code></li>
+<li>Being stored into Disk if the size of an object &gt;= <code class="codehilite">cache.cache_disc_threshold_len</code></li>
+</ul>
+</li>
+<li>For large objects<ul>
+<li>Cache happens ONLY in case handling a GET request in the read through way</li>
+<li>Being stored into Disk ONLY if disk cache is enabled (<code class="codehilite">cache.cache_disc_capacity</code> &gt; 0)</li>
+<li>The whole object is written as a file on the host file system during processing a GET request (a chunk level cache is not implemented)</li>
+</ul>
+</li>
+</ul>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../../architecture/leo_gateway/">Concept and Architecture / LeoGateway's Architecture</a></li>
