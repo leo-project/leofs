@@ -158,6 +158,24 @@ obj_containers.num_of_containers = [32, 64]
 
 Without setting `object_storage.is_strict_check ` to true, there is a little possibility your data could be broken without any caution even if a LeoFS system is running on a filesystem like ZFS[^1] that protect both the metadata and the data blocks through the checksum when bugs of any unexpected or unknown software got AVS files broken.
 
+#### Configuration which can affect Load and CPU usage
+
+`mq.num_of_mq_procs` can affect not only the performance/load during recover/rebalance operations but the load while there is at least one node suspended/downed in the cluster. so that setting `mq.num_of_mq_procs` to an appropriate value based on the amount of expected traffic and hardware specs is really important. This section would give you the brief understanding on `mq.num_of_mq_procs` and how to choose the optimal value for your requirements.
+
+- How the `mq.num_of_mq_procs` setting affect the system operations
+    - High
+        - Fast recover/rebalance time
+        - High CPU/Load on storage during recover/rebalance and also existing suspended/stopped nodes in the cluster
+    - Low
+        - Slow recover/rebalance time
+        - Low CPU/Load on storage during recover/rebalance and also existing suspended/stopped nodes in the cluster
+
+- Recommend settings
+    - If you have enough CPU resources on storage nodes then set it to a higher one as long as it doesn't affect the operations coming from LeoGateway
+    - If you don't then set it to somewhat a lower one unless the recover take too much time
+
+For more details, Please see Issue #987[^2].
+
 #### Configuration related to MQ
 
 LeoStorage's MQ mechanism depends on the watchdog mechanism to reduce costs of a message consumption. The MQ dynamically updates `a number of batch processes` and `an interval of a message consumption`.
@@ -206,5 +224,5 @@ When the each value reached the min value, the auto-compaction changes the statu
 - [For Administrators / System Operations / Data Operations](/admin/system_operations/data.md)
 - [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
 
-
 [^1]: <a href="https://en.wikipedia.org/wiki/ZFS" target="_blank">ZFS</a>
+[^2]: <a href="https://github.com/leo-project/leofs/issues/987#issuecomment-371059490" target="_blank">LeoFS' Issue #987, Measure rebalance/recover-node performance according to mq.num_of_mq_procs</a>
