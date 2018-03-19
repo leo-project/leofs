@@ -1537,21 +1537,47 @@ recover(?RECOVER_RING, Node, true) ->
 recover(?RECOVER_REMOTE_CLUSTER, ClusterId, true) when is_list(ClusterId) ->
     recover(?RECOVER_REMOTE_CLUSTER, list_to_atom(ClusterId), true);
 recover(?RECOVER_REMOTE_CLUSTER, ClusterId, true) ->
-    case is_allow_to_distribute_command() of
-        {true, Members} ->
-            case rpc:multicall(Members, leo_storage_handler_sync, force_sync,
-                               [ClusterId], ?DEF_TIMEOUT) of
-                {_RetL, []} ->
-                    ok;
-                {_, BadNodes} ->
-                    ?warn("recover/3",
-                          [{bad_nodes, BadNodes}]),
-                    {error, BadNodes}
+    %% Check whether the LeoFS is using 'multi-dc replication' or not
+    %% Reject the request in case of
+    %%     - 'cluster-id' is the local cluster
+    %%     - 'cluster-id' does not exist
+    case leo_cluster_tbl_conf:get() of
+        {ok, #?SYSTEM_CONF{cluster_id = ClusterId}} ->
+            {error, ?ERROR_NOT_REMOTE_CLUSTER};
+        {ok,_} ->
+            case leo_mdcr_tbl_cluster_stat:find_by_cluster_id(ClusterId) of
+                {ok,_} ->
+                    case is_allow_to_distribute_command() of
+                        {true, Members} ->
+                            %% Execute 'recover-cluster' to distribute its command
+                            %% to all nodes in the local cluster
+                            case rpc:multicall(
+                                   Members, leo_storage_handler_sync, force_sync,
+                                   [ClusterId], ?DEF_TIMEOUT) of
+                                {_RetL, []} ->
+                                    ok;
+                                {_, BadNodes} ->
+                                    ?warn("recover/3",
+                                          [{bad_nodes, BadNodes}]),
+                                    {error, BadNodes}
+                            end;
+                        _ ->
+                            {error, ?ERROR_NOT_SATISFY_CONDITION}
+                    end;
+                not_found ->
+                    {error, ?ERROR_CLUSTER_NOT_FOUND};
+                {error, Cause} ->
+                    ?error("recover/3 - recover-node",
+                           [{cause, Cause}]),
+                    {error, Cause}
             end;
-        _ ->
-            {error, ?ERROR_NOT_SATISFY_CONDITION}
+        not_found ->
+            {error, ?ERROR_COULD_NOT_GET_CONF};
+        {error, Cause} ->
+            ?error("recover/3 - recover-node",
+                   [{cause, Cause}]),
+            {error, Cause}
     end;
-
 recover(_,_,true) ->
     {error, ?ERROR_INVALID_ARGS};
 recover(_,_,false) ->
