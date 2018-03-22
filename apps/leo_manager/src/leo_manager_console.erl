@@ -2067,6 +2067,14 @@ recover(Socket, Option) ->
                 {_, Cause} ->
                     {error, Cause}
             end;
+        {ok, [?RECOVER_DISK, Node, Disk |Rest]} when Rest == [] ->
+            HasRoutingTable = (leo_redundant_manager_api:checksum(ring) >= 0),
+            case catch leo_manager_api:recover(?RECOVER_DISK, Node, Disk, HasRoutingTable) of
+                ok ->
+                    ok;
+                {_, Cause} ->
+                    {error, Cause}
+            end;
         _ ->
             {error, ?ERROR_INVALID_ARGS}
     end.

@@ -224,6 +224,7 @@ This section provides information about the recovery commands that can be used i
 | Shell | Description |
 |---    |---          |
 |leofs-adm recover-file \<file-path\>|Recover an inconsistent object specified by the file-path.|
+|leofs-adm recover-disk \<storage-node\> \<disk-id\>|Recover all inconsistent objects on the specified disk in the specified storage-node. Note that this command can be used ONLY in case all LeoStorage have the same obj_containers configuration.|
 |leofs-adm recover-node \<storage-node\>|Recover all inconsistent objects in the specified storage-node.|
 |leofs-adm recover-cluster \<cluster-id\>|Recover all inconsistent objects in the specified cluster-id.|
 
@@ -235,6 +236,22 @@ This section provides information about the recovery commands that can be used i
 $ leofs-adm recover-file leo/fast/storage.key
 OK
 ```
+
+#### recover-disk
+
+```bash
+## Example:
+## If you have the following configuration in leo_storage.conf
+## obj_containers.path = [./avs1,./avs2]
+## then the below command will recover files stored under ./avs1
+$ leofs-adm recover-disk storage_0@127.0.0.1 1
+OK
+
+## If you want to recover files stored under ./avs2 then issue the below one.
+$ leofs-adm recover-disk storage_0@127.0.0.1 2
+OK
+```
+
 #### recover-node
 
 ```bash
@@ -243,7 +260,7 @@ $ leofs-adm recover-node storage_0@127.0.0.1
 OK
 ```
 
-- recover-cluster
+#### recover-cluster
 
 ```bash
 ## Example:
@@ -257,7 +274,7 @@ OK
 When/How to use recover commands.
 
 - AVS/KVS Broken
-    - Invoke `recover-node` with a node having broken AVS/KVS files.
+    - Invoke `recover-node` with a node having broken AVS/KVS files or `recover-disk` with a disk having broken AVS/KVS files if you have multiple container directories.
 - Queue Broken
     - Invoke `recover-node` with every node except which having broken Queue files.
     - The procedure might be improved in future when [issue#618](https://github.com/leo-project/leofs/issues/618) solved.
@@ -265,7 +282,7 @@ When/How to use recover commands.
     - Invoke `suspend` with a node having broken Disk arrays and subsequently run `leo_storage stop`.
     - Exchange broken Disk arrays.
     - Run `leo_storage start` and subsequently Invoke `resume` with the node.
-    - Invoke `recover-node` with the node.
+    - Invoke `recover-node` with the node or `recover-disk` with the broken disk if you have multiple container directories.
 - Node Broken
     - Invoke `detach` with a broken node.
     - Prepare a new node that will take over all objects assigned to a detached node.

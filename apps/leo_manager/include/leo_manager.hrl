@@ -169,6 +169,7 @@
                    {?CMD_RECOVER, lists:append(
                                     ["recover file <path>", ?CRLF,
                                      "recover dir [<path>]", ?CRLF,
+                                     "recover disk <storage-node> <disk-id>", ?CRLF,
                                      "recover node <storage-node>", ?CRLF,
                                      "recover ring <storage-node>", ?CRLF,
                                      "recover cluster <cluster-id>"
@@ -248,6 +249,7 @@
 
 %% recover type
 -define(RECOVER_FILE, "file").
+-define(RECOVER_DISK, "disk").
 -define(RECOVER_NODE, "node").
 -define(RECOVER_RING, "ring").
 -define(RECOVER_REMOTE_CLUSTER, "cluster").
@@ -330,6 +332,7 @@
 -define(ERROR_FAILED_GET_VERSION, "Failed to get the version").
 -define(ERROR_FAILED_REGISTERING_DEL_BUCKET_MSG, "Failed to register a del-bucket's message").
 -define(ERROR_FAILED_REMOVING_DEL_BUCKET_MSG, "Failed to remove a del-bucket's message").
+-define(ERROR_FAILED_RECOVER_DISK_DUE_TO_DIFFERENT_AVS_CONF, "Failed to recover disk due to different AVS conf found").
 
 %% type of console
 -define(CONSOLE_CUI, 'cui').

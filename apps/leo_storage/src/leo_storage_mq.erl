@@ -107,7 +107,7 @@ start_1([{Id, Path}|Rest], Sup, Root) ->
 
 
 %% @doc Input a message into the queue.
--spec(publish(mq_id(), atom()|binary()) ->
+-spec(publish(mq_id(), atom()|binary()|{atom(),pos_integer()}) ->
              ok | {error, any()}).
 publish(?QUEUE_ID_RECOVERY_NODE = Id, Node) ->
     KeyBin = term_to_binary(Node),
@@ -412,6 +412,9 @@ handle_call({consume, ?QUEUE_ID_ASYNC_DELETION, MessageBin}) ->
 
 handle_call({consume, ?QUEUE_ID_RECOVERY_NODE, MessageBin}) ->
     case catch binary_to_term(MessageBin) of
+        #recovery_node_message{node = NodeAndDisk} when is_tuple(NodeAndDisk) ->
+            {Node, Disk} = NodeAndDisk,
+            recover_disk(Node, Disk);
         #recovery_node_message{node = Node} ->
             recover_node(Node);
         _ ->
@@ -492,6 +495,15 @@ handle_call(_,_,_) ->
 %% INNTERNAL FUNCTIONS-1
 %%--------------------------------------------------------------------
 %% @doc synchronize by vnode-id.
+%% @private
+-spec(recover_disk(Node, Disk) ->
+             ok when Node::node(),
+                     Disk::pos_integer()).
+recover_disk(Node, Disk) ->
+    Callback = recover_node_callback(Node),
+    _ = leo_object_storage_api:fetch_by_addr_id_and_disk(0, Disk, Callback),
+    ok.
+
 %% @private
 -spec(recover_node(Node) ->
              ok when Node::node()).
