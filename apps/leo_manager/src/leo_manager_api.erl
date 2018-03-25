@@ -67,7 +67,7 @@
 
 -export([register/4, register/7, register/8,
          notify/3, notify/4, purge/1, remove/1,
-         whereis/2, recover/3, rebuild_dir_metadata/2,
+         whereis/2, recover/3, recover/4, rebuild_dir_metadata/2,
          compact/2, compact/4, diagnose_data/1,
          stats/2,
          mq_stats/1, mq_suspend/2, mq_resume/2,
@@ -1583,6 +1583,87 @@ recover(_,_,true) ->
 recover(_,_,false) ->
     {error, ?ERROR_COULD_NOT_GET_RING}.
 
+recover(?RECOVER_DISK, Node, Disk, true) when is_list(Node) ->
+    recover(?RECOVER_DISK, list_to_atom(Node), Disk, true);
+recover(?RECOVER_DISK, Node, Disk, true) when is_list(Disk) ->
+    case catch list_to_integer(Disk) of
+        {'EXIT', _} ->
+            {error, ?ERROR_INVALID_ARGS};
+        Val ->
+            recover(?RECOVER_DISK, Node, Val, true)
+    end;
+recover(?RECOVER_DISK, Node, Disk, true) ->
+    %% Check the target node and system-state
+    case leo_misc:node_existence(Node) of
+        true ->
+            Ret = case leo_redundant_manager_api:get_member_by_node(Node) of
+                      {ok, #member{state = ?STATE_RUNNING}} ->
+                          true;
+                      _ ->
+                          false
+                  end,
+            recover_disk_1(Ret, Node, Disk);
+        false ->
+            {error, ?ERROR_COULD_NOT_CONNECT}
+    end;
+recover(_,_,_,true) ->
+    {error, ?ERROR_INVALID_ARGS};
+recover(_,_,_,false) ->
+    {error, ?ERROR_COULD_NOT_GET_RING}.
+
+%% @doc Execute recovery of the target disk
+%%      Check conditions
+%% @private
+recover_disk_1(true, Node, Disk) ->
+    {Ret, Members} = is_allow_to_distribute_command(Node),
+    recover_disk_2(Ret, Members, Node, Disk);
+recover_disk_1(false, _, _) ->
+    {error, ?ERROR_TARGET_NODE_NOT_RUNNING}.
+
+%% @doc Execute recovery of the target disk
+%% @private
+recover_disk_2(true, Members, Node, Disk) ->
+    case rpc:multicall(Members, ?API_STORAGE, get_node_status,
+                       [], ?DEF_TIMEOUT) of
+        {RetL, []} ->
+            case has_same_avs_conf(RetL) of
+                {true, Size} ->
+                    case 0 < Disk andalso Disk =< Size of
+                        true ->
+                            case rpc:multicall(Members, ?API_STORAGE, synchronize,
+                                               [{Node, Disk}], ?DEF_TIMEOUT) of
+                                {_RetL, []} ->
+                                    ok;
+                                {_, BadNodes} ->
+                                    ?warn("recover_disk_2/4",
+                                          [{bad_nodes, BadNodes}]),
+                                    {error, BadNodes}
+                            end;
+                        false ->
+                            {error, ?ERROR_INVALID_ARGS}
+                    end;
+                _ ->
+                    {error, ?ERROR_FAILED_RECOVER_DISK_DUE_TO_DIFFERENT_AVS_CONF}
+            end;
+        {_, BadNodes} ->
+            ?warn("recover_disk_2/4",
+                  [{bad_nodes, BadNodes}]),
+            {error, BadNodes}
+    end;
+recover_disk_2(false,_,_,_) ->
+    {error, ?ERROR_NOT_SATISFY_CONDITION}.
+
+%% @doc Check if every storage node has a same AVS config
+%% @private
+has_same_avs_conf(RetL) ->
+    ObjContainerConfList = [leo_misc:get_value('avs', Status, []) || {ok, Status} <- RetL],
+    NormalizedList = [lists:map(fun(Items) ->
+                                        leo_misc:get_value('num_of_containers', Items, 0)
+                                end, ObjContainer) || ObjContainer <- ObjContainerConfList],
+    [H|Rest] = NormalizedList,
+    {lists:all(fun(Elem) ->
+                       Elem == H
+               end, Rest), length(H)}.
 
 %% @doc Execute recovery of the target node
 %%      Check conditions

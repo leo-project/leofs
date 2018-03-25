@@ -246,7 +246,7 @@ attach(SystemConf) ->
 %% @doc synchronize a data.
 %%
 -spec(synchronize(Node) ->
-             ok | {error, any()} when Node::atom()).
+             ok | {error, any()} when Node::atom()|{atom(),pos_integer()}).
 synchronize(Node) ->
     leo_storage_mq:publish(?QUEUE_ID_RECOVERY_NODE, Node).
 

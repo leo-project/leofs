@@ -236,6 +236,20 @@ usage_recover_file() {
 # }
 # <<
 
+usage_recover_disk() {
+    USAGE="recover-disk $STORAGE_NODE <disk-id>"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Recover all inconsistent objects on the specified disk in the specified node"
+    esac
+}
+
 usage_recover_node() {
     USAGE="recover-node $STORAGE_NODE"
     case "$1" in
@@ -932,6 +946,7 @@ usage() {
     output ""
     output "      ${UNDERLINE}Recover Commands:${NONE}"
     usage_recover_file min
+    usage_recover_disk min
     usage_recover_node min
     usage_recover_ring min
     usage_recover_cluster min
@@ -1194,6 +1209,13 @@ case "$1" in
     #     fi
     #     ;;
     # <<
+    recover-disk)
+        if [ $# -eq 3 ]; then
+            send_command "recover disk $2 $3"
+        else
+            usage_recover_disk
+        fi
+        ;;
     recover-node)
         if [ $# -eq 2 ]; then
             case "$2" in
