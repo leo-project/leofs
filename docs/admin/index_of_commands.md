@@ -17,7 +17,7 @@
 | Command                               | Description |
 |---------------------------------------|-------------|
 | **General Commands:**                 | |
-| status `[<node>]`                     | Retrieve status of every node (default)<br/> Retrieve status of a specified node |
+| status `[<node>]`                     | Retrieve status of every node *(default)*<br/> Retrieve status of a specified node |
 | whereis `<file-path>`                 | Retrieve an assigned object by a file path |
 | **Storage Operation:**                | |
 | detach `<storage-node>`               | Remove a storage node in a LeoFS' storage cluster<br/>Current status: `running` OR `stop` |
@@ -28,11 +28,12 @@
 | mq-stats `<storage-node>`             | See statuses of message queues used in a LeoStorage node |
 | mq-suspend `<storage-node>` `<mq-id>` | Suspend a process consuming a message queue<br/>Active message queues only can be suspended<br/>While suspending, no messages are consumed |
 | mq-resume `<storage-node>` `<mq-id>`  | Resume a process consuming a message queue |
-| **Recover Commands:**                 | |
-| recover-file `<file-path>`            | Recover an inconsistent object specified by a file-path |
-| recover-node `<storage-node>`         | Recover all inconsistent objects in a specified node |
-| recover-ring `<storage-node>`         | Recover `RING`, a routing table of a specified node |
-| recover-cluster `<cluster-id>`        | Recover all inconsistent objects in a specified cluster in case of using the multi datacenter replication |
+| **Recover Commands:**                   | |
+| recover-file `<file-path>`              | Recover an inconsistent object specified by the file-path of the local cluster |
+| recover-disk `<storage-node>` <disk-id> | Recover all inconsistent objects on the specified disk in the specified node of the local cluster |
+| recover-node `<storage-node>`           | Recover all inconsistent objects in the specified node of the local cluster |
+| recover-ring `<storage-node>`           | Recover **RING, a routing table** of the specified node of the local cluster |
+| recover-cluster `<cluster-id>`          | Recover **all inconsistent objects in the specified remote cluste**r *(NOT the local cluster)* in case of using **the multi datacenter replication** |
 | **Compaction Commands:**              | |
 | compact-start `<node>` `<num-of-targets>` [`<number-of-compaction-procs>`] | Remove unnecessary objects from a specified node<br/> `num-of-targets`: It controls a number of containers in parallel <br/> `num-of-compaction-procs`: It controls a number of procs to execute the data compaction in parallel|
 | compact-suspend `<storage-node>`      | Suspend a data compaction processing |
