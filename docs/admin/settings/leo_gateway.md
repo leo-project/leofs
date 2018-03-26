@@ -150,12 +150,13 @@ How LeoGateway's cache feature works with cache related configurations is descri
 
 ## Related Links
 
-- [Concept and Architecture / LeoGateway's Architecture](../../architecture/leo_gateway.md)
-- [For Administrators / Interface / S3-API](../protocols/s3.md)
-- [For Administrators / Interface / REST-API](../protocols/rest.md)
-- [For Administrators / Interface / NFS v3](../protocols/nfs_v3.md)
-- [For Administrators / System Operations / S3-API related Operations](../system_operations/s3.md)
-- [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
+* [Concept and Architecture / LeoGateway's Architecture](/architecture/leo_gateway.md)
+* [For Administrators / Interface / S3-API](/admin/protocols/s3.md)
+* [For Administrators / Interface / REST-API](/admin/protocols/rest.md)
+* [For Administrators / Interface / NFS v3](/admin/protocols/nfs_v3.md)
+* [For Administrators / System Administration / System Monitoring](/admin/system_admin/monitoring.md)
+* [For Administrators / System Operations / S3-API related Operations](/admin/system_operations/s3.md)
+* [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
 
 [^1]: <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 API</a>
 [^2]: <a href="https://de.wikipedia.org/wiki/Network_File_System" target="_blank">Wikipedia: Network File System</a>
