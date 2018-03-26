@@ -842,8 +842,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#recover-disk" title="recover-disk" class="md-nav__link">
+    recover-disk
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#recover-node" title="recover-node" class="md-nav__link">
     recover-node
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recover-cluster" title="recover-cluster" class="md-nav__link">
+    recover-cluster
   </a>
   
 </li>
@@ -1276,8 +1290,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#recover-disk" title="recover-disk" class="md-nav__link">
+    recover-disk
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#recover-node" title="recover-node" class="md-nav__link">
     recover-node
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recover-cluster" title="recover-cluster" class="md-nav__link">
+    recover-cluster
   </a>
   
 </li>
@@ -1648,6 +1676,10 @@ Offset| RING&#39;s address-id                        | Filename                 
 <td>Recover an inconsistent object specified by the file-path.</td>
 </tr>
 <tr>
+<td>leofs-adm recover-disk \&lt;storage-node> \&lt;disk-id></td>
+<td>Recover all inconsistent objects on the specified disk in the specified storage-node. Note that this command can be used ONLY in case all LeoStorage have the same obj_containers configuration.</td>
+</tr>
+<tr>
 <td>leofs-adm recover-node \&lt;storage-node></td>
 <td>Recover all inconsistent objects in the specified storage-node.</td>
 </tr>
@@ -1666,6 +1698,29 @@ OK
 </pre></div>
 </td></tr></table>
 
+<h4 id="recover-disk">recover-disk<a class="headerlink" href="#recover-disk" title="Permanent link">&para;</a></h4>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Example:</span>
+<span class="c1">## If you have the following configuration in leo_storage.conf</span>
+<span class="c1">## obj_containers.path = [./avs1,./avs2]</span>
+<span class="c1">## then the below command will recover files stored under ./avs1</span>
+$ leofs-adm recover-disk storage_0@127.0.0.1 <span class="m">1</span>
+OK
+
+<span class="c1">## If you want to recover files stored under ./avs2 then issue the below one.</span>
+$ leofs-adm recover-disk storage_0@127.0.0.1 <span class="m">2</span>
+OK
+</pre></div>
+</td></tr></table>
+
 <h4 id="recover-node">recover-node<a class="headerlink" href="#recover-node" title="Permanent link">&para;</a></h4>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -1675,9 +1730,7 @@ OK
 </pre></div>
 </td></tr></table>
 
-<ul>
-<li>recover-cluster</li>
-</ul>
+<h4 id="recover-cluster">recover-cluster<a class="headerlink" href="#recover-cluster" title="Permanent link">&para;</a></h4>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Example:</span>
@@ -1690,7 +1743,7 @@ OK
 <p>When/How to use recover commands.</p>
 <ul>
 <li>AVS/KVS Broken<ul>
-<li>Invoke <code class="codehilite">recover-node</code> with a node having broken AVS/KVS files.</li>
+<li>Invoke <code class="codehilite">recover-node</code> with a node having broken AVS/KVS files or <code class="codehilite">recover-disk</code> with a disk having broken AVS/KVS files if you have multiple container directories.</li>
 </ul>
 </li>
 <li>Queue Broken<ul>
@@ -1702,7 +1755,7 @@ OK
 <li>Invoke <code class="codehilite">suspend</code> with a node having broken Disk arrays and subsequently run <code class="codehilite">leo_storage stop</code>.</li>
 <li>Exchange broken Disk arrays.</li>
 <li>Run <code class="codehilite">leo_storage start</code> and subsequently Invoke <code class="codehilite">resume</code> with the node.</li>
-<li>Invoke <code class="codehilite">recover-node</code> with the node.</li>
+<li>Invoke <code class="codehilite">recover-node</code> with the node or <code class="codehilite">recover-disk</code> with the broken disk if you have multiple container directories.</li>
 </ul>
 </li>
 <li>Node Broken<ul>
