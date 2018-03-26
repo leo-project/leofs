@@ -219,10 +219,11 @@ When the each value reached the min value, the auto-compaction changes the statu
 
 ## Related Links
 
-- [Concept and Architecture / LeoStorage's Architecture](../../architecture/leo_storage.md)
-- [For Administrators / System Operations / Cluster Operations](/admin/system_operations/cluster.md)
-- [For Administrators / System Operations / Data Operations](/admin/system_operations/data.md)
-- [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
+* [Concept and Architecture / LeoStorage's Architecture](/architecture/leo_storage.md)
+* [For Administrators / System Administration / System Monitoring](/admin/system_admin/monitoring.md)
+* [For Administrators / System Operations / Cluster Operations](/admin/system_operations/cluster.md)
+* [For Administrators / System Operations / Data Operations](/admin/system_operations/data.md)
+* [For Administrators / Settings / Environment Configuration](/admin/settings/environment_config.md)
 
 [^1]: <a href="https://en.wikipedia.org/wiki/ZFS" target="_blank">ZFS</a>
 [^2]: <a href="https://github.com/leo-project/leofs/issues/987#issuecomment-371059490" target="_blank">LeoFS' Issue #987, Measure rebalance/recover-node performance according to mq.num_of_mq_procs</a>
