@@ -10,7 +10,7 @@ A brief introduction how LeoFS organize data into actual OS files.
 
 ### Append-Only for Content
 
-Once a PUT/DELETE remote procedure call (**RPC**) arrives on LeoStorage appends new blocks including the object information such as the key, data itself and also various associated metadata to the end of a file.
+Once a PUT/DELETE remote procedure call, **RPC** arrives on LeoStorage appends new blocks including the object information such as the key, data itself and also various associated metadata to the end of a file.
 
 This *Append-Only-File* we call [AVS, Aria Vector Storage](/architecture/leo_storage/#data-structure) which is referenced when retrieving the data through *GET RPCs*. With its inherent nature of the *Append-Only-File*, a data-compaction process is needed to clean up the orphaned space in an AVS.
 
@@ -25,7 +25,7 @@ After having succeeded in appending new blocks to an AVS, then leo_object_storag
 Some data can be stored into a **Queue** for processing later in the case
 
 - A PUT/DELETE operation failed
-- A Multi DC Replication (**MDCR**) failed
+- A Multi DC Replication, **MDCR** failed
 - `rebalance/recover-(file|node|cluster)` invoked through leofs-adm
 
 
@@ -34,7 +34,7 @@ Some data can be stored into a **Queue** for processing later in the case
 Multiple AVS/KVS pairs can be placed on one node to enable LeoFS handling as much use cases and hardware requirements as possible. See [Concept and Architecture / LeoStorage's Architecture - Data Structure](/architecture/leo_storage/#data-structure).
 
 - **Container : AVS/KVS pair = 1 : N**
-    - Multiple AVS/KVS pairs can be stored under one OS directory (We call it **Container**).
+    - Multiple AVS/KVS pairs can be stored under one OS directory. It is called **Container**.
     - 'N' can be specified through [leo_storage.conf](https://github.com/leo-project/leofs/blob/master/apps/leo_storage/priv/leo_storage.conf).
     - How to choose optimal 'N'
         - As a data-compaction is executed per AVS/KVS pair, at least the size of a AVS/KVS pair is needed to run data-compaction so that the larger 'N', the less disk space LeoFS uses for data-compaction.
@@ -78,11 +78,11 @@ Commands related to Compaction as well as Disk Usage.
 | Shell | Description |
 |---    |---          |
 |**Compaction Commands**||
-| `leofs-adm compact-start <storage-node> (all/<num-of-targets>) [<num-of-compaction-proc>]` | Start Compaction (Transfer its state to **running**).<br/><br/>`num-of-targets`: How many AVS/KVS pairs are compacted.<br/>`num-of-compaction-pro`: How many processes are run in parallel. |
+| `leofs-adm compact-start <storage-node> (all/<num-of-targets>) [<num-of-compaction-proc>]` | Start Compaction *(Transfer its state to **running**)*.<br/><br/>`num-of-targets`: How many AVS/KVS pairs are compacted.<br/>`num-of-compaction-pro`: How many processes are run in parallel. |
 | `leofs-adm compact-suspend <storage-node>` | Suspend Compaction *(Transfer its state to 'suspend' from running)*.|
 | `leofs-adm compact-resume <storage-node>` | Resume Compaction *(Transfer its state to 'running' from suspend)*.|
 | `leofs-adm compact-status <storage-node>` | See the Current Compaction Status.|
-| `leofs-adm diagnose-start <storage-node>` | Start Diagnose (Not actually doing Compaction but scanning all AVS/KVS pairs and reporting what objects/metadatas exist as a file).|
+| `leofs-adm diagnose-start <storage-node>` | Start Diagnose *(Not actually doing Compaction but scanning all AVS/KVS pairs and reporting what objects/metadatas exist as a file)*.|
 |**Disk Usage**||
 | `leofs-adm du <storage-node>` | See the Current Disk Usage.|
 | `leofs-adm du detail <storage-node>` | See the Current Disk Usage in detail.|
@@ -91,13 +91,16 @@ Commands related to Compaction as well as Disk Usage.
 #### compact-start
 
 ```bash
+## Note:
+##   All AVS/KVS pairs on storage_0@127.0.0.1
+##   will be compacted with 3 concurrent processes (default concurrency is 3)
 ## Example:
-## All AVS/KVS pairs on storage_0@127.0.0.1 will be compacted with 3 concurrent processes
-## (default concurrency is 3)
 $ leofs-adm compact-start storage_0@127.0.0.1 all
 OK
 
-## 5 AVS/KVS pairs on storage_0@127.0.0.1 will be compacted with 2 concurrent processes
+## Note:
+##   Five AVS/KVS pairs on storage_0@127.0.0.1
+##   will be compacted with 2 concurrent processes
 $ leofs-adm compact-start storage_0@127.0.0.1 5 2
 OK
 ```
@@ -205,13 +208,13 @@ The file is formatted as Tab Separated Values *(TSV)* except headers *(head thre
 | Column Number | Description |
 |---            |---          |
 |1|byte-wise Offset where the object is located in an AVS.|
-|2|Address ID on RING (Distribute Hash Routing Table).|
+|2|Address ID on RING *(Distribute Hash Routing Table)*.|
 |3|File Name.|
 |4|The Number of Children in a File.|
 |5|File Size in bytes.|
 |6|Timestamp in Unix Time.|
 |7|Timestamp in Local Time.|
-|8|Flag (0/1) representing whether the object is removed.
+|8|Flag *(0/1)* representing whether the object is removed.
 
 
 ## Recover Objects
@@ -223,10 +226,11 @@ This section provides information about the recovery commands that can be used i
 
 | Shell | Description |
 |---    |---          |
-|leofs-adm recover-file \<file-path\>|Recover an inconsistent object specified by the file-path.|
-|leofs-adm recover-disk \<storage-node\> \<disk-id\>|Recover all inconsistent objects on the specified disk in the specified storage-node. Note that this command can be used ONLY in case all LeoStorage have the same obj_containers configuration.|
-|leofs-adm recover-node \<storage-node\>|Recover all inconsistent objects in the specified storage-node.|
-|leofs-adm recover-cluster \<cluster-id\>|Recover all inconsistent objects in the specified cluster-id.|
+|`leofs-adm recover-file <file-path>`              |Recover the inconsistent object specified by the file-path.|
+|`leofs-adm recover-disk <storage-node> <disk-id>` |Recover all inconsistent objects on the specified disk in the specified storage-node. **Note that this command can be used ONLY in case all LeoStorage have the same obj_containers configuration.**|
+|`leofs-adm recover-ring <storage-node>`           |Recover **RING, a routing table** of the specified node of the local cluster  |
+|`leofs-adm recover-node <storage-node>`           |Recover all inconsistent objects in the specified storage-node.|
+|`leofs-adm recover-cluster <remote-cluster-id>`   |Recover **all inconsistent objects in the specified remote cluster** *(NOT the local cluster)* in case of using **the multi datacenter replication**.|
 
 
 #### recover-file
@@ -240,14 +244,18 @@ OK
 #### recover-disk
 
 ```bash
+## Note:
+##   If you have the following configuration in leo_storage.conf
+##   obj_containers.path = [./avs1,./avs2]
+##   then the below command will recover files stored under ./avs1
 ## Example:
-## If you have the following configuration in leo_storage.conf
-## obj_containers.path = [./avs1,./avs2]
-## then the below command will recover files stored under ./avs1
 $ leofs-adm recover-disk storage_0@127.0.0.1 1
 OK
 
-## If you want to recover files stored under ./avs2 then issue the below one.
+## Note:
+##  If you want to recover files stored under ./avs2
+##  then issue the below one.
+## Example:
 $ leofs-adm recover-disk storage_0@127.0.0.1 2
 OK
 ```
@@ -263,8 +271,11 @@ OK
 #### recover-cluster
 
 ```bash
+## Note:
+##   If your LeoFS already uses the multi data center replication,
+##   you can execute this command.
 ## Example:
-$ leofs-adm recover-cluster cluster-1
+$ leofs-adm recover-cluster remote-leofs
 OK
 ```
 
@@ -289,7 +300,7 @@ When/How to use recover commands.
     - Invoke `rebalance`.
 - Source/Destination Cluster Down
     - Invoke `recover-cluster` with a downed cluster.
-- Source/Destination Cluster Down and delete operations on the other side got lost (compacted).
+- Source/Destination Cluster Down and delete operations on the other side got lost *(compacted)*.
     - Set up the cluster from scratch
     - invoke `recover-cluster` with the new cluster
     - See also [issue#636](https://github.com/leo-project/leofs/issues/636) for more information.
