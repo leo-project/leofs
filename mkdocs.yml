@@ -11,8 +11,8 @@ site_name: LeoFS Documentation
 repo_url: https://github.com/leo-project/leofs
 repo_name: 'GitHub'
 site_author: LeoProject
-site_favicon: favicon.ico
-copyright: (c) 2012-2017 LeoProject. All rights reserved.
+## site_favicon: favicon.ico
+copyright: (c) 2012-2018 LeoProject. All rights reserved.
 site_description: LeoProject makes LeoFS, which is an open source distributed object storage system and a highly available, distributed, eventually consistent storage system. LeoFS is supporting the following features:Multi-protocol Support - S3-API, REST-API and NFS v3, Large Object Support, Multi Data Center Replication and others.
 
 google_analytics: ['UA-5301881-3', 'leo-project.net']
