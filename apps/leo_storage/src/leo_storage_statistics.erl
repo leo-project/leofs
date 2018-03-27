@@ -104,21 +104,31 @@ get_and_set_mq_value([]) ->
 get_and_set_mq_value([{?SNMP_MQ_NUM_OF_DEL_DIR = Id, ?QUEUE_ID_DEL_DIR}|Rest]) ->
     V = lists:foldl(
           fun(QId, SoFar) ->
-                  N = case catch leo_mq_api:status(QId) of
+                  RetN = case catch leo_mq_api:status(QId) of
                           {ok, Ret} ->
-                              leo_misc:get_value(
-                                ?MQ_CNS_PROP_NUM_OF_MSGS, Ret, 0);
+                              case leo_misc:get_value(
+                                     ?MQ_CNS_PROP_NUM_OF_MSGS, Ret, 0) of
+                                  N when is_number(N) ->
+                                      N;
+                                  _ ->
+                                      0
+                              end;
                           _ ->
                               0
                       end,
-                  SoFar + N
+                  SoFar + RetN
           end, 0, ?del_dir_queue_list()),
     catch snmp_generic:variable_set(Id, V),
     get_and_set_mq_value(Rest);
 get_and_set_mq_value([{Id, QId}|Rest]) ->
     V = case catch leo_mq_api:status(QId) of
             {ok, Ret} ->
-                leo_misc:get_value(?MQ_CNS_PROP_NUM_OF_MSGS, Ret, 0);
+                case leo_misc:get_value(?MQ_CNS_PROP_NUM_OF_MSGS, Ret, 0) of
+                    N when is_integer(N) ->
+                        N;
+                    _ ->
+                        0
+                end;
             _ ->
                 0
         end,
@@ -214,7 +224,7 @@ to_unixtime(DateTime) ->
 
 
 %% @private
-check_number(V) ->
+check_number(V) when is_number(V) ->
     case (leo_math:power(2,32) =< V) of
         true ->
             4294967296;
@@ -222,4 +232,6 @@ check_number(V) ->
             0;
         false ->
             V
-    end.
+    end;
+check_number(_) ->
+    0.
