@@ -13,9 +13,9 @@
         <meta name="author" content="LeoProject">
       
       
-        <link rel="shortcut icon" href="../../../favicon.ico">
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
       
-      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-1.5.4">
+      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-1.5.4">
     
     
       
@@ -810,6 +810,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
     </a>
@@ -1071,160 +1083,160 @@
 <td></td>
 </tr>
 <tr>
-<td>manager.partner</td>
-<td>The partner of manager's alias. This configuration is necessary for communicationg between <code class="codehilite">LeoManager&#39;s master</code> and <code class="codehilite">LeoManager&#39;s slave</code>. <br/>( Default: manager_1@127.0.0.1 )</td>
+<td><code class="codehilite">manager.partner</code></td>
+<td>The partner of manager's alias. This configuration is necessary for communicationg between <code class="codehilite">LeoManager&#39;s master</code> and <code class="codehilite">LeoManager&#39;s slave</code>. <br/><em>( Default: manager_1@127.0.0.1 )</em></td>
 </tr>
 <tr>
-<td>console.port.cui</td>
-<td>The port number of LeoManager's console for text format<br/>( Default: 10010 )</td>
+<td><code class="codehilite">console.port.cui</code></td>
+<td>The port number of LeoManager's console for text format<br/><em>( Default: 10010 )</em></td>
 </tr>
 <tr>
-<td>console.port.json</td>
-<td>The port number of LeoManager's console for JSON format<br/>( Default: 10020 )</td>
+<td><code class="codehilite">console.port.json</code></td>
+<td>The port number of LeoManager's console for JSON format<br/><em>( Default: 10020 )</em></td>
 </tr>
 <tr>
-<td>console.acceptors.cui</td>
-<td>The maximum number of acceptors of LeoManager's console for text format<br/>( Default: 3 )</td>
+<td><code class="codehilite">console.acceptors.cui</code></td>
+<td>The maximum number of acceptors of LeoManager's console for text format<br/><em>( Default: 3 )</em></td>
 </tr>
 <tr>
-<td>console.acceptors.json</td>
-<td>The maximum number of acceptors of LeoManager's console for JSON format<br/>( Default:16 )</td>
+<td><code class="codehilite">console.acceptors.json</code></td>
+<td>The maximum number of acceptors of LeoManager's console for JSON format<br/><em>( Default:16 )</em></td>
 </tr>
 <tr>
 <td><strong>System</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>system.dc_id</td>
-<td><code class="codehilite">Datacenter ID</code> is necessary for using the data center replication<br/>( Default: dc_1 )</td>
+<td><code class="codehilite">system.dc_id</code></td>
+<td><code class="codehilite">Datacenter ID</code> is necessary for using the data center replication<br/><em>( Default: dc_1 )</em></td>
 </tr>
 <tr>
-<td>system.cluster_id</td>
-<td><code class="codehilite">Cluster ID</code> is also necessary for using the data center replication<br/>( Default: leofs_1 )</td>
+<td><code class="codehilite">system.cluster_id</code></td>
+<td><code class="codehilite">Cluster ID</code> is also necessary for using the data center replication<br/><em>( Default: leofs_1 )</em></td>
 </tr>
 <tr>
 <td><strong><a href="../cluster/">Consistency Level</a></strong></td>
 <td></td>
 </tr>
 <tr>
-<td>consistency.num_of_replicas</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies<br/>( Default: 1 )</td>
+<td><code class="codehilite">consistency.num_of_replicas</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies<br/><em>( Default: 1 )</em></td>
 </tr>
 <tr>
-<td>consistency.write</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies needed for a successful WRITE operation<br/>( Default: 1 )</td>
+<td><code class="codehilite">consistency.write</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies needed for a successful WRITE operation<br/><em>( Default: 1 )</em></td>
 </tr>
 <tr>
-<td>consistency.read</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies needed for a successful READ operation<br/>( Default: 1 )</td>
+<td><code class="codehilite">consistency.read</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies needed for a successful READ operation<br/><em>( Default: 1 )</em></td>
 </tr>
 <tr>
-<td>consistency.delete</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies needed for a successful DELETE operation<br/>( Default: 1 )</td>
+<td><code class="codehilite">consistency.delete</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies needed for a successful DELETE operation<br/><em>( Default: 1 )</em></td>
 </tr>
 <tr>
-<td>consistency.rack_aware_replicas</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies of rack-aware<br/>( Default: 0 )</td>
+<td><code class="codehilite">consistency.rack_aware_replicas</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The total number of object copies of rack-aware<br/><em>( Default: 0 )</em></td>
 </tr>
 <tr>
 <td><strong>Multi Data Center Replication</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>mdc_replication.max_targets</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The maximum number of replication targets of clusters OR data centers<br/>( Default: 2 )</td>
+<td><code class="codehilite">mdc_replication.max_targets</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> The maximum number of replication targets of clusters OR data centers<br/><em>( Default: 2 )</em></td>
 </tr>
 <tr>
-<td>mdc_replication.num_of_replicas_a_dc</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code><br/> A remote cluster of a LeoFS system which receives this cluster's objects, and then replicates them, which adhere to a replication method of each object<br/>( Default: 1 )</td>
+<td><code class="codehilite">mdc_replication.num_of_replicas_a_dc</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code><br/> A remote cluster of a LeoFS system which receives this cluster's objects, and then replicates them, which adhere to a replication method of each object<br/><em>( Default: 1 )</em></td>
 </tr>
 <tr>
-<td>mdc_replication.consistency.write</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful WRITE-operation<br/>( Default: 1 )</td>
+<td><code class="codehilite">mdc_replication.consistency.write</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful WRITE-operation<br/><em>( Default: 1 )</em></td>
 </tr>
 <tr>
-<td>mdc_replication.consistency.read</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful READ-operation<br/>( Default: 1 )</td>
+<td><code class="codehilite">mdc_replication.consistency.read</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful READ-operation<br/><em>( Default: 1 )</em></td>
 </tr>
 <tr>
-<td>mdc_replication.consistency.delete</td>
-<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful DELETE-operation<br/>( Default: 1 )</td>
+<td><code class="codehilite">mdc_replication.consistency.delete</code></td>
+<td><code class="codehilite">only LeoManager&#39;s master</code> <code class="codehilite">[since 1.3.3]</code> <br/> A number of replicas needed for a successful DELETE-operation<br/><em>( Default: 1 )</em></td>
 </tr>
 <tr>
 <td><strong>RPC for Multi Datacenter Replication</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>rpc.server.acceptors</td>
-<td>The total number of acceptor of the RPC server<br/>( Default: 16 )</td>
+<td><code class="codehilite">rpc.server.acceptors</code></td>
+<td>The total number of acceptor of the RPC server<br/><em>( Default: 16 )</em></td>
 </tr>
 <tr>
-<td>rpc.server.listen_port</td>
-<td>The listening port of the RPC server<br/>( Default: 13075 )</td>
+<td><code class="codehilite">rpc.server.listen_port</code></td>
+<td>The listening port of the RPC server<br/><em>( Default: 13075 )</em></td>
 </tr>
 <tr>
-<td>rpc.server.listen_timeout</td>
-<td>The listening timeout<br/>( Default: 5000 )</td>
+<td><code class="codehilite">rpc.server.listen_timeout</code></td>
+<td>The listening timeout<br/><em>( Default: 5000 )</em></td>
 </tr>
 <tr>
-<td>rpc.client.connection_pool_size</td>
-<td>A client is able to keep connections of a remote LeoFS up to the pool size<br/>( Default: 16 )</td>
+<td><code class="codehilite">rpc.client.connection_pool_size</code></td>
+<td>A client is able to keep connections of a remote LeoFS up to the pool size<br/><em>( Default: 16 )</em></td>
 </tr>
 <tr>
-<td>rpc.client.connection_buffer_size</td>
-<td>A client is able to increase connections of a remote LeoFS up to the buffer size<br/>( Default: 16 )</td>
+<td><code class="codehilite">rpc.client.connection_buffer_size</code></td>
+<td>A client is able to increase connections of a remote LeoFS up to the buffer size<br/><em>( Default: 16 )</em></td>
 </tr>
 <tr>
 <td><strong>Mnesia</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>mnesia.dir</td>
-<td>The directory of the database file of Mnesia*(Erlang distributed DB)*<br/>( Default: ./work/mnesia/127.0.0.1 )</td>
+<td><code class="codehilite">mnesia.dir</code></td>
+<td>The directory of the database file of Mnesia*(Erlang distributed DB)<em><br/></em>( Default: ./work/mnesia/127.0.0.1 )*</td>
 </tr>
 <tr>
-<td>mnesia.dump_log_write_threshold</td>
-<td>The maximum number of writes allowed to the transaction log before a new dump of the log is performed. Default is 100 log writes.<br/><br/>- See also: <a href="http://erlang.org/doc/man/mnesia.html#dump_log_write_threshold" target="_blank">Erlang Mnesia dump_log_write_threshold</a><br/>( Default: 50000 )</td>
+<td><code class="codehilite">mnesia.dump_log_write_threshold</code></td>
+<td>The maximum number of writes allowed to the transaction log before a new dump of the log is performed. Default is 100 log writes.<br/><br/>- See also: <a href="http://erlang.org/doc/man/mnesia.html#dump_log_write_threshold" target="_blank">Erlang Mnesia dump_log_write_threshold</a><br/><em>( Default: 50000 )</em></td>
 </tr>
 <tr>
-<td>mnesia.dc_dump_limit</td>
-<td>Mnesia's tables are dumped when <em>filesize(Log) &gt; (filesize(Tab)/Dc_dump_limit)</em>. Lower values reduce CPU overhead but increase disk space and startup times. Default is 4.<br/><br/>- See also: <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia</a><br/>( Default: 40 )</td>
+<td><code class="codehilite">mnesia.dc_dump_limit</code></td>
+<td>Mnesia's tables are dumped when <em>filesize(Log) &gt; (filesize(Tab)/Dc_dump_limit)</em>. Lower values reduce CPU overhead but increase disk space and startup times. Default is 4.<br/><br/>- See also: <a href="http://erlang.org/doc/man/mnesia.html" target="_blank">Erlang Mnesia</a><br/><em>( Default: 40 )</em></td>
 </tr>
 <tr>
 <td><strong>Log</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>log.log_level</td>
-<td>LeoManager's logger controls outputting logs by the log level:<ul><li>1: Info</li><li>2: Warn</li><li>3: Error</li></ul>( Default: 1 )</td>
+<td><code class="codehilite">log.log_level</code></td>
+<td>LeoManager's logger controls outputting logs by the log level:<ul><li>1: Info</li><li>2: Warn</li><li>3: Error</li></ul><em>( Default: 1 )</em></td>
 </tr>
 <tr>
-<td>log.erlang</td>
-<td>The output destination of Erlang's logs<br/>( Default: ./log/erlang )</td>
+<td><code class="codehilite">log.erlang</code></td>
+<td>The output destination of Erlang's logs<br/><em>( Default: ./log/erlang )</em></td>
 </tr>
 <tr>
-<td>log.app</td>
-<td>The output destination of LeoManager's logs<br/>( Default: ./log/app )</td>
+<td><code class="codehilite">log.app</code></td>
+<td>The output destination of LeoManager's logs<br/><em>( Default: ./log/app )</em></td>
 </tr>
 <tr>
-<td>log.member_dir</td>
-<td>The output destination of the member's dump file<br/>( Default: ./log/ring )</td>
+<td><code class="codehilite">log.member_dir</code></td>
+<td>The output destination of the member's dump file<br/><em>( Default: ./log/ring )</em></td>
 </tr>
 <tr>
-<td>log.ring_dir</td>
-<td>The output destination of the RING's dump file<br/>( Default: ./log/ring )</td>
+<td><code class="codehilite">log.ring_dir</code></td>
+<td>The output destination of the RING's dump file<br/><em>( Default: ./log/ring )</em></td>
 </tr>
 <tr>
 <td><strong>Other Directories</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>queue_dir</td>
-<td>The directory of the data file of LeoFS' MQ<br/>( Default: ./work/queue )</td>
+<td><code class="codehilite">queue_dir</code></td>
+<td>The directory of the data file of LeoFS' MQ<br/><em>( Default: ./work/queue )</em></td>
 </tr>
 <tr>
-<td>snmp_agent</td>
-<td>The directory of the snmp agent file of LeoFS<br/>( Default: ./snmp/snmpa_manager_0/LEO-MANAGER )</td>
+<td><code class="codehilite">snmp_agent</code></td>
+<td>The directory of the snmp agent file of LeoFS<br/><em>( Default: ./snmp/snmpa_manager_0/LEO-MANAGER )</em></td>
 </tr>
 </tbody>
 </table>
@@ -1238,40 +1250,60 @@
 </thead>
 <tbody>
 <tr>
-<td>nodename</td>
-<td>The format of the node name is <code class="codehilite">&lt;NAME&gt;@&lt;IP-ADDRESS&gt;</code>, which must be unique always in a LeoFS system<br/>( Default: manager_0@127.0.0.1 )</td>
+<td><code class="codehilite">nodename</code></td>
+<td>The format of the node name is <code class="codehilite">&lt;NAME&gt;@&lt;IP-ADDRESS&gt;</code>, which must be unique always in a LeoFS system<p><em>( Default: manager_0@127.0.0.1 )</em></p></td>
 </tr>
 <tr>
-<td>distributed_cookie</td>
-<td>Sets the magic cookie of the node to <code class="codehilite">Cookie</code>. <br/><br/>- See also: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a><br/>( Default: 401321b4 )</td>
+<td><code class="codehilite">distributed_cookie</code></td>
+<td>Sets the magic cookie of the node to <code class="codehilite">Cookie</code>. <br/><br/>- See also: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a><p><em>( Default: 401321b4 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.kernel_poll</td>
-<td>Kernel poll reduces LeoFS' CPU usage when it has hundreds (or more) network connections<br/>( Default: true )</td>
+<td><code class="codehilite">erlang.kernel_poll</code></td>
+<td>Kernel poll reduces LeoFS' CPU usage when it has hundreds (or more) network connections.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>erlang.asyc_threads</td>
-<td>The total number of Erlang aynch threads for the async thread pool. <em>The asynchronous thread pool</em> are OS threads which are userd for I/O operations.<br/>( Default: 32 )</td>
+<td><code class="codehilite">erlang.asyc_threads</code></td>
+<td>The total number of Erlang aynch threads<p>( Default: 32 )</p></td>
 </tr>
 <tr>
-<td>erlang.max_ports</td>
-<td>The max_ports sets the default value of maximum number of ports.<br/><br/>- See also: <a href="http://erlang.org/doc/man/erlang.html">Erlang erlang:open_port/2</a><br/>( Default: 64000 )</td>
+<td><code class="codehilite">erlang.max_ports</code></td>
+<td>The max_ports sets the default value of maximum number of ports.<br/><br/>- See also: <a href="http://erlang.org/doc/man/erlang.html">Erlang erlang:open_port/2</a><p><em>( Default: 64000 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.crash_dump</td>
-<td>The output destination of an Erlang crash dump<br/>( Default: ./log/erl_crash.dump )</td>
+<td><code class="codehilite">erlang.crash_dump</code></td>
+<td>The output destination of an Erlang crash dump<p><em>( Default: ./log/erl_crash.dump )</em></p></td>
 </tr>
 <tr>
-<td>erlang.max_ets_tables</td>
-<td>The maxinum number of <a href="http://erlang.org/doc/man/ets.html" target="_blank">Erlagn ETS</a> tables<br/>( Default: 256000 )</td>
+<td><code class="codehilite">erlang.max_ets_tables</code></td>
+<td>The maxinum number of <a href="http://erlang.org/doc/man/ets.html" target="_blank">Erlagn ETS</a> tables<p><em>( Default: 256000 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.smp</td>
-<td><code class="codehilite">-smp</code> enable and <code class="codehilite">-smp</code> start the Erlang runtime system with <a href="https://en.wikipedia.org/wiki/Symmetric_multiprocessing" target="_blank">SMP</a> support enabled<br/>( Default: enable )</td>
+<td><code class="codehilite">erlang.smp</code></td>
+<td><code class="codehilite">-smp</code> enable and <code class="codehilite">-smp</code> start the Erlang runtime system with <a href="https://en.wikipedia.org/wiki/Symmetric_multiprocessing" target="_blank">SMP</a> support enabled.<p><em>( Default: enable )</em></p></td>
 </tr>
 <tr>
-<td>process_limit</td>
-<td>The maxinum number of Erlang processes. Sets the maximum number of simultaneously existing processes for this system if a Number is passed as value. Valid range for Number is [1024-134217727]<br/>( Default: 1048576 )</td>
+<td><code class="codehilite">erlang.schedulers.compaction_of_load</code></td>
+<td>Enables or disables scheduler compaction of load. If it's enabled, the Erlang VM will attempt to fully load as many scheduler threads as mush as possible.<p><em>( Default: true )</em></p></td>
+</tr>
+<tr>
+<td><code class="codehilite">erlang.schedulers.utilization_balancing</code></td>
+<td>Enables or disables scheduler utilization balancing of load. By default scheduler utilization balancing is disabled and instead scheduler compaction of load is enabled, which strives for a load distribution that causes as many scheduler threads as possible to be fully loaded (that is, not run out of work).<p><em>( Default: false )</em></p></td>
+</tr>
+<tr>
+<td><code class="codehilite">erlang.distribution_buffer_size</code></td>
+<td>Sender-side network distribution buffer size <em>(unit: KB)</em><p><em>( Default: 32768 )</em></p></td>
+</tr>
+<tr>
+<td><code class="codehilite">erlang.fullsweep_after</code></td>
+<td>Option fullsweep_after makes it possible to specify the maximum number of generational collections before forcing a fullsweep, even if there is room on the old heap. Setting the number to zero disables the general collection algorithm, that is, all live data is copied at every garbage collection.<p><em>( Default: 0 )</em></p></td>
+</tr>
+<tr>
+<td><code class="codehilite">erlang.secio</code></td>
+<td>Enables or disables eager check I/O scheduling. The flag effects when schedulers will check for I/O operations possible to execute, and when such I/O operations will execute.<p><em>( Default: true )</em></p></td>
+</tr>
+<tr>
+<td><code class="codehilite">process_limit</code></td>
+<td>The maxinum number of Erlang processes. Sets the maximum number of simultaneously existing processes for this system if a Number is passed as value. Valid range for Number is [1024-134217727]<p><em>( Default: 1048576 )</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1280,6 +1312,7 @@
 <li><a href="../../../architecture/leo_manager/">Concept and Architecture / LeoManager's Architecture</a></li>
 <li><a href="../cluster/">For Administrators / Settings / Cluster Settings</a></li>
 <li><a href="../environment_config/">For Administrators / Settings / Environment Configuration</a></li>
+<li><a href="../../system_admin/monitoring/">For Administrators / System Administration / System Monitoring</a></li>
 <li><a href="../../system_operations/multi_dc_replication/">For Administrators / System Operations / Multi Data Center Replication</a></li>
 </ul>
                 
@@ -1337,7 +1370,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            (c) 2012-2017 LeoProject. All rights reserved.
+            (c) 2012-2018 LeoProject. All rights reserved.
           </div>
         
         powered by

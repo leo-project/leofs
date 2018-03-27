@@ -13,9 +13,9 @@
         <meta name="author" content="LeoProject">
       
       
-        <link rel="shortcut icon" href="../../../favicon.ico">
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
       
-      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-1.5.4">
+      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-1.5.4">
     
     
       
@@ -865,6 +865,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
     </a>
@@ -1181,22 +1193,22 @@
 <td></td>
 </tr>
 <tr>
-<td>obj_containers.path</td>
+<td><code class="codehilite">obj_containers.path</code></td>
 <td>Modifiable with condition</td>
 <td>Able to change the directory of the container(s) but not able to add or remove the directory(s). You need to move the data files which are <code class="codehilite">&lt;obj_containers.path&gt;/avs/object</code> and <code class="codehilite">&lt;obj_containers.path&gt;/avs/metadata</code>, which adhere to this configuration.</td>
 </tr>
 <tr>
-<td>obj_containers.num_of_containers</td>
+<td><code class="codehilite">obj_containers.num_of_containers</code></td>
 <td>Yes</td>
 <td>Not able to change the configuration because LeoStorage cannot retrieve objects or metadatas.</td>
 </tr>
 <tr>
-<td>obj_containers.metadata_storage</td>
+<td><code class="codehilite">obj_containers.metadata_storage</code></td>
 <td>Yes</td>
 <td>As above</td>
 </tr>
 <tr>
-<td>num_of_vnodes`</td>
+<td><code class="codehilite">num_of_vnodes</code></td>
 <td>Yes</td>
 <td>As above</td>
 </tr>
@@ -1206,12 +1218,12 @@
 <td></td>
 </tr>
 <tr>
-<td>mq.backend_db</td>
+<td><code class="codehilite">mq.backend_db</code></td>
 <td>Modifiable with condition</td>
 <td>Lose all the MQ's data after changing</td>
 </tr>
 <tr>
-<td>mq.num_of_mq_procs</td>
+<td><code class="codehilite">mq.num_of_mq_procs</code></td>
 <td>Modifiable with condition</td>
 <td>As above</td>
 </tr>
@@ -1221,7 +1233,7 @@
 <td></td>
 </tr>
 <tr>
-<td>replication.rack_awareness.rack_id</td>
+<td><code class="codehilite">replication.rack_awareness.rack_id</code></td>
 <td>Yes</td>
 <td>Not able to change the configuration because LeoFS cannot retrieve objects or metadatas.</td>
 </tr>
@@ -1231,7 +1243,7 @@
 <td></td>
 </tr>
 <tr>
-<td>queue_dir</td>
+<td><code class="codehilite">queue_dir</code></td>
 <td>Modifiable with condition</td>
 <td>Able to change the MQ's directory but you need to move the MQ's data, which adhere to this configuration.</td>
 </tr>
@@ -1254,168 +1266,168 @@
 <td></td>
 </tr>
 <tr>
-<td>managers</td>
-<td>Name of LeoManager nodes. This configuration is necessary for communicating with <code class="codehilite">LeoManager&#39;s master</code> and <code class="codehilite">LeoManager&#39;s slave</code>.<p>( Default: [manager_0@127.0.0.1, manager_1@127.0.0.1] )</p></td>
+<td><code class="codehilite">managers</code></td>
+<td>Name of LeoManager nodes. This configuration is necessary for communicating with <code class="codehilite">LeoManager&#39;s master</code> and <code class="codehilite">LeoManager&#39;s slave</code>.<p><em>( Default: [manager_0@127.0.0.1, manager_1@127.0.0.1] )</em></p></td>
 </tr>
 <tr>
 <td><strong>LeoStorage Basic</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>obj_containers.path</td>
-<td>Directories of object-containers<p>( Default: [./avs] )</p></td>
+<td><code class="codehilite">obj_containers.path</code></td>
+<td>Directories of object-containers<p><em>( Default: [./avs] )</em></p></td>
 </tr>
 <tr>
-<td>obj_containers.num_of_containers</td>
-<td>A number of object-containers of each directory. As <strong>backend_db.eleveldb.write_buf_size</strong> * <strong>obj_containers.num_of_containers</strong> memory can be consumed in total, take both into account to meet with your memory footprint requirements on LeoStorage. <p>( Default: [8] )</p></td>
+<td><code class="codehilite">obj_containers.num_of_containers</code></td>
+<td>A number of object-containers of each directory. As <strong>backend_db.eleveldb.write_buf_size</strong> * <strong>obj_containers.num_of_containers</strong> memory can be consumed in total, take both into account to meet with your memory footprint requirements on LeoStorage. <p><em>( Default: [8] )</em></p></td>
 </tr>
 <tr>
-<td>obj_containers.sync_mode</td>
-<td>Mode of the data synchronization. There're three modes:<ul><li><code class="codehilite">none</code>: Not synchronization every time <em>(default)</em></li><li><code class="codehilite">periodic</code>: Periodic synchronization which depends on <code class="codehilite">obj_containers.sync_interval_in_ms</code></li><li><code class="codehilite">writethrough</code>: Ensures that any buffers kept by the OS are written to disk every time</li></ul><p>( Default: none )</p></td>
+<td><code class="codehilite">obj_containers.sync_mode</code></td>
+<td>Mode of the data synchronization. There're three modes:<ul><li><code class="codehilite">none</code>: Not synchronization every time <em>(default)</em></li><li><code class="codehilite">periodic</code>: Periodic synchronization which depends on <code class="codehilite">obj_containers.sync_interval_in_ms</code></li><li><code class="codehilite">writethrough</code>: Ensures that any buffers kept by the OS are written to disk every time</li></ul><p><em>( Default: none )</em></p></td>
 </tr>
 <tr>
-<td>obj_containers.sync_interval_in_ms</td>
-<td>Interval in ms of the data synchronization<p>( Default: 1000, Unit: <code class="codehilite">msec</code> )</p></td>
+<td><code class="codehilite">obj_containers.sync_interval_in_ms</code></td>
+<td>Interval in ms of the data synchronization<p><em>( Default: 1000, Unit: <code class="codehilite">msec</code> )</em></p></td>
 </tr>
 <tr>
-<td>obj_containers.metadata_storage</td>
-<td>The metadata storage feature is pluggable which depends on <a href="https://github.com/basho/bitcask" target="_blank">bitcask</a> and <a href="https://github.com/basho/eleveldb" target="blank">leveldb</a>.<p>( Default: leveldb )</p></td>
+<td><code class="codehilite">obj_containers.metadata_storage</code></td>
+<td>The metadata storage feature is pluggable which depends on <a href="https://github.com/basho/bitcask" target="_blank">bitcask</a> and <a href="https://github.com/basho/eleveldb" target="blank">leveldb</a>.<p><em>( Default: leveldb )</em></p></td>
 </tr>
 <tr>
-<td>num_of_vnodes</td>
-<td>The total number of virtual-nodes of a LeoStorage node for generating the distributed hashtable (RING)<p>( Default: 168 )</p></td>
+<td><code class="codehilite">num_of_vnodes</code></td>
+<td>The total number of virtual-nodes of a LeoStorage node for generating the distributed hashtable, RING<p><em>( Default: 168 )</em></p></td>
 </tr>
 <tr>
-<td>object_storage.is_strict_check</td>
-<td>Enable strict check between checksum of a metadata and checksum of an object.<p>( Default: false )</p></td>
+<td><code class="codehilite">object_storage.is_strict_check</code></td>
+<td>Enable strict check between checksum of a metadata and checksum of an object.<p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>object_storage.threshold_of_slow_processing</td>
-<td>Threshold of slow processing<p>( Default: 1000, Unit: <code class="codehilite">msec</code> )</p></td>
+<td><code class="codehilite">object_storage.threshold_of_slow_processing</code></td>
+<td>Threshold of slow processing<p><em>( Default: 1000, Unit: <code class="codehilite">msec</code> )</em></p></td>
 </tr>
 <tr>
-<td>seeking_timeout_per_metadata</td>
-<td>Timeout of seeking metadatas per a metadata<p>( Default: 10, Unit: <code class="codehilite">msec</code> )</p></td>
+<td><code class="codehilite">seeking_timeout_per_metadata</code></td>
+<td>Timeout of seeking metadatas per a metadata<p><em>( Default: 10, Unit: <code class="codehilite">msec</code> )</em></p></td>
 </tr>
 <tr>
-<td>max_num_of_procs</td>
-<td>Maximum number of processes for both write and read operation<p>( Default: 3000 )</p></td>
+<td><code class="codehilite">max_num_of_procs</code></td>
+<td>Maximum number of processes for both write and read operation<p><em>( Default: 3000 )</em></p></td>
 </tr>
 <tr>
-<td>num_of_obj_storage_read_procs</td>
-<td>Total number of obj-storage-read processes per object-container, AVS<ul><li>Range: [1..100]</li></ul><p>( Default: 3 )</p></td>
+<td><code class="codehilite">num_of_obj_storage_read_procs</code></td>
+<td>Total number of obj-storage-read processes per object-container, AVS<ul><li>Range: [1..100]</li></ul><p><em>( Default: 3 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Watchdog</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>watchdog.common.loosen_control_at_safe_count</td>
-<td>When reach a number of safe <em>(clear watchdog)</em>, a watchdog loosen the control<p>( Default: 1 )</p></td>
+<td><code class="codehilite">watchdog.common.loosen_control_at_safe_count</code></td>
+<td>When reach a number of safe <em>(clear watchdog)</em>, a watchdog loosen the control<p><em>( Default: 1 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Watchdog / REX</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>watchdog.rex.is_enabled</td>
-<td>Enables or disables the rex-watchdog which monitors the memory usage of <em>Erlang's RPC component</em>.<p>( Default: true )</p></td>
+<td><code class="codehilite">watchdog.rex.is_enabled</code></td>
+<td>Enables or disables the rex-watchdog which monitors the memory usage of <em>Erlang's RPC component</em>.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.rex.interval</td>
-<td>An interval of executing the watchdog processing<p>( Default: 10, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">watchdog.rex.interval</code></td>
+<td>An interval of executing the watchdog processing<p><em>( Default: 10, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.rex.threshold_mem_capacity</td>
-<td>Threshold of memory capacity of binary for Erlang rex<p>( Default: 33554432, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">watchdog.rex.threshold_mem_capacity</code></td>
+<td>Threshold of memory capacity of binary for Erlang rex<p><em>( Default: 33554432, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>Watchdog / CPU</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>watchdog.cpu.is_enabled</td>
-<td>Enables or disables the CPU-watchdog which monitors both <em>CPU load average</em> and <em>CPU utilization</em><p>( Default: false )</p></td>
+<td><code class="codehilite">watchdog.cpu.is_enabled</code></td>
+<td>Enables or disables the CPU-watchdog which monitors both <em>CPU load average</em> and <em>CPU utilization</em><p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cpu.raised_error_times</td>
-<td>Times of raising error to a client<p>( Default: 5 )</p></td>
+<td><code class="codehilite">watchdog.cpu.raised_error_times</code></td>
+<td>Times of raising error to a client<p><em>( Default: 5 )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cpu.interval</td>
-<td>An interval of executing the watchdog processing<p>( Default: 10, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">watchdog.cpu.interval</code></td>
+<td>An interval of executing the watchdog processing<p><em>( Default: 10, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cpu.threshold_cpu_load_avg</td>
-<td>Threshold of CPU load average<p>( Default: 5.0 )</p></td>
+<td><code class="codehilite">watchdog.cpu.threshold_cpu_load_avg</code></td>
+<td>Threshold of CPU load average<p><em>( Default: 5.0 )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cpu.threshold_cpu_util</td>
-<td>Threshold of CPU utilization<p>( Default: 100 )</p></td>
+<td><code class="codehilite">watchdog.cpu.threshold_cpu_util</code></td>
+<td>Threshold of CPU utilization<p><em>( Default: 100 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Watchdog / DISK</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>watchdog.disk.is_enabled</td>
-<td>Enables or disables the <p>( Default: false )</p></td>
+<td><code class="codehilite">watchdog.disk.is_enabled</code></td>
+<td>Enables or disables the <p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.disk.raised_error_times</td>
-<td>Times of raising error to a client<p>( Default: 5 )</p></td>
+<td><code class="codehilite">watchdog.disk.raised_error_times</code></td>
+<td>Times of raising error to a client<p><em>( Default: 5 )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.disk.interval</td>
-<td>An interval of executing the watchdog processing<p>( Default: 10, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">watchdog.disk.interval</code></td>
+<td>An interval of executing the watchdog processing<p><em>( Default: 10, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.disk.threshold_disk_use</td>
-<td>Threshold of Disk use(%) of a target disk's capacity<p>( Default: 85, Unit: <code class="codehilite">percent</code> )</p></td>
+<td><code class="codehilite">watchdog.disk.threshold_disk_use</code></td>
+<td>Threshold of Disk use(%) of a target disk's capacity<p><em>( Default: 85, Unit: <code class="codehilite">percent</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.disk.threshold_disk_util</td>
-<td>Threshold of Disk utilization<p>( Default: 90, Unit: <code class="codehilite">percent</code> )</p></td>
+<td><code class="codehilite">watchdog.disk.threshold_disk_util</code></td>
+<td>Threshold of Disk utilization<p><em>( Default: 90, Unit: <code class="codehilite">percent</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.disk.threshold_disk_rkb</td>
-<td>Threshold of disk read KB/sec<p>( Default: 98304, Unit: <code class="codehilite">KB</code> )</p></td>
+<td><code class="codehilite">watchdog.disk.threshold_disk_rkb</code></td>
+<td>Threshold of disk read KB/sec<p><em>( Default: 98304, Unit: <code class="codehilite">KB</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.disk.threshold_disk_wkb</td>
-<td>Threshold of disk write KB/sec<p>( Default: 98304, Unit: <code class="codehilite">KB</code> )</p></td>
+<td><code class="codehilite">watchdog.disk.threshold_disk_wkb</code></td>
+<td>Threshold of disk write KB/sec<p><em>( Default: 98304, Unit: <code class="codehilite">KB</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.disk.target_devices</td>
-<td>Target devices for checking disk utilization<p>( Default: [] )</p></td>
+<td><code class="codehilite">watchdog.disk.target_devices</code></td>
+<td>Target devices for checking disk utilization<p><em>( Default: [] )</em></p></td>
 </tr>
 <tr>
 <td><strong>Watchdog / CLUSTER</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>watchdog.cluster.is_enabled</td>
-<td>Enables or disables the <p>( Default: false )</p></td>
+<td><code class="codehilite">watchdog.cluster.is_enabled</code></td>
+<td>Enables or disables the <p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cluster.interval</td>
-<td>An interval of executing the watchdog processing<p>( Default: 10 )</p></td>
+<td><code class="codehilite">watchdog.cluster.interval</code></td>
+<td>An interval of executing the watchdog processing<p><em>( Default: 10 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Watchdog / ERRORS</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>watchdog.error.is_enabled</td>
-<td>Enables or disables the <p>( Default: false )</p></td>
+<td><code class="codehilite">watchdog.error.is_enabled</code></td>
+<td>Enables or disables the <p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.error.interval</td>
-<td>An interval of executing the watchdog processing<p>( Default: 60 )</p></td>
+<td><code class="codehilite">watchdog.error.interval</code></td>
+<td>An interval of executing the watchdog processing<p><em>( Default: 60 )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.error.threshold_count</td>
-<td>Total counts of raising error to a client<p>( Default: 100 )</p></td>
+<td><code class="codehilite">watchdog.error.threshold_count</code></td>
+<td>Total counts of raising error to a client<p><em>( Default: 100 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Data Compaction</strong></td>
@@ -1426,176 +1438,176 @@
 <td></td>
 </tr>
 <tr>
-<td>compaction.limit_num_of_compaction_procs</td>
-<td>Limit of a number of procs to execute data-compaction in parallel<p>( Default: 4 )</p></td>
+<td><code class="codehilite">compaction.limit_num_of_compaction_procs</code></td>
+<td>Limit of a number of procs to execute data-compaction in parallel<p><em>( Default: 4 )</em></p></td>
 </tr>
 <tr>
-<td>compaction.skip_prefetch_size</td>
-<td>Perfetch size when skipping garbage<p>( Default: 512 )</p></td>
+<td><code class="codehilite">compaction.skip_prefetch_size</code></td>
+<td>Perfetch size when skipping garbage<p><em>( Default: 512 )</em></p></td>
 </tr>
 <tr>
-<td>compaction.waiting_time_regular</td>
-<td>Regular value of compaction-proc waiting time/batch-proc<p>( Default: 500, Unit: <code class="codehilite">msec</code> )</p></td>
+<td><code class="codehilite">compaction.waiting_time_regular</code></td>
+<td>Regular value of compaction-proc waiting time/batch-proc<p><em>( Default: 500, Unit: <code class="codehilite">msec</code> )</em></p></td>
 </tr>
 <tr>
-<td>compaction.waiting_time_max</td>
-<td>Maximum value of compaction-proc waiting time/batch-proc<p>( Default: 3000, Unit: <code class="codehilite">msec</code> )</p></td>
+<td><code class="codehilite">compaction.waiting_time_max</code></td>
+<td>Maximum value of compaction-proc waiting time/batch-proc<p><em>( Default: 3000, Unit: <code class="codehilite">msec</code> )</em></p></td>
 </tr>
 <tr>
-<td>compaction.batch_procs_regular</td>
-<td>Total number of regular compaction batch processes<p>( Default: 1000 )</p></td>
+<td><code class="codehilite">compaction.batch_procs_regular</code></td>
+<td>Total number of regular compaction batch processes<p><em>( Default: 1000 )</em></p></td>
 </tr>
 <tr>
-<td>compaction.batch_procs_max</td>
-<td>Maximum number of compaction batch processes<p>( Default: 1500 )</p></td>
+<td><code class="codehilite">compaction.batch_procs_max</code></td>
+<td>Maximum number of compaction batch processes<p><em>( Default: 1500 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Data Compaction / Automated Data Compaction</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>autonomic_op.compaction.is_enabled</td>
-<td>Enables or disables the auto-compaction<p>( Default: false )</p></td>
+<td><code class="codehilite">autonomic_op.compaction.is_enabled</code></td>
+<td>Enables or disables the auto-compaction<p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>autonomic_op.compaction.parallel_procs</td>
-<td>Total number of parallel processes<p>( Default: 1 )</p></td>
+<td><code class="codehilite">autonomic_op.compaction.parallel_procs</code></td>
+<td>Total number of parallel processes<p><em>( Default: 1 )</em></p></td>
 </tr>
 <tr>
-<td>autonomic_op.compaction.interval</td>
-<td>An interval time of between auto-comcations<p>( Default: 3600, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">autonomic_op.compaction.interval</code></td>
+<td>An interval time of between auto-comcations<p><em>( Default: 3600, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
-<td>autonomic_op.compaction.warn_active_size_ratio</td>
-<td>Warning ratio of active size<p>( Default: 70, Unit: <code class="codehilite">percent</code> )</p></td>
+<td><code class="codehilite">autonomic_op.compaction.warn_active_size_ratio</code></td>
+<td>Warning ratio of active size<p><em>( Default: 70, Unit: <code class="codehilite">percent</code> )</em></p></td>
 </tr>
 <tr>
-<td>autonomic_op.compaction.threshold_active_size_ratio</td>
-<td>Threshold ratio of active size. LeoStorage start data-comaction after reaching it<p>( Default: 60, <code class="codehilite">percent</code> )</p></td>
+<td><code class="codehilite">autonomic_op.compaction.threshold_active_size_ratio</code></td>
+<td>Threshold ratio of active size. LeoStorage start data-comaction after reaching it<p><em>( Default: 60, <code class="codehilite">percent</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>MQ</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>mq.backend_db</td>
-<td>The MQ storage feature is pluggable which depends on <a href="https://github.com/basho/bitcask" target="_blank">bitcask</a> and <a href="https://github.com/basho/eleveldb" target="blank">leveldb</a>.<p>( Default: leveldb )</p></td>
+<td><code class="codehilite">mq.backend_db</code></td>
+<td>The MQ storage feature is pluggable which depends on <a href="https://github.com/basho/bitcask" target="_blank">bitcask</a> and <a href="https://github.com/basho/eleveldb" target="blank">leveldb</a>.<p><em>( Default: leveldb )</em></p></td>
 </tr>
 <tr>
-<td>mq.num_of_mq_procs</td>
-<td>A number of mq-server's processes<p>( Default: 8 )</p></td>
+<td><code class="codehilite">mq.num_of_mq_procs</code></td>
+<td>A number of mq-server's processes<p><em>( Default: 8 )</em></p></td>
 </tr>
 <tr>
-<td>mq.num_of_batch_process_max</td>
-<td>Maximum number of bach processes of message<p>( Default: 3000 )</p></td>
+<td><code class="codehilite">mq.num_of_batch_process_max</code></td>
+<td>Maximum number of bach processes of message<p><em>( Default: 3000 )</em></p></td>
 </tr>
 <tr>
-<td>mq.num_of_batch_process_regular</td>
-<td>Regular value of bach processes of message<p>( Default: 1600 )</p></td>
+<td><code class="codehilite">mq.num_of_batch_process_regular</code></td>
+<td>Regular value of bach processes of message<p><em>( Default: 1600 )</em></p></td>
 </tr>
 <tr>
-<td>mq.interval_between_batch_procs_max</td>
-<td>Maximum value of interval between batch-procs<p>( Default: 3000, Unit: <code class="codehilite">msec</code> )</p></td>
+<td><code class="codehilite">mq.interval_between_batch_procs_max</code></td>
+<td>Maximum value of interval between batch-procs<p><em>( Default: 3000, Unit: <code class="codehilite">msec</code> )</em></p></td>
 </tr>
 <tr>
-<td>mq.interval_between_batch_procs_regular</td>
-<td>Regular value of interval between batch-procs<p>( Default: 500, Unit: <code class="codehilite">msec</code> )</p></td>
+<td><code class="codehilite">mq.interval_between_batch_procs_regular</code></td>
+<td>Regular value of interval between batch-procs<p><em>( Default: 500, Unit: <code class="codehilite">msec</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>Backend DB / eleveldb</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>backend_db.eleveldb.write_buf_size</td>
+<td><code class="codehilite">backend_db.eleveldb.write_buf_size</code></td>
 <td>Write Buffer Size. Larger values increase performance, especially during bulk loads.<br/>Up to two write buffers may be held in memory at the same time, so you may wish to adjust this parameter to control memory usage.Also, a larger write buffer will result in a longer recovery time the next time the database is opened. As <strong>backend_db.eleveldb.write_buf_size</strong> * <strong>obj_containers.num_of_containers</strong> memory can be consumed in total, take both into account to meet with your memory footprint requirements on LeoStorage.<p>( Default: 62914560 )</p></td>
 </tr>
 <tr>
-<td>backend_db.eleveldb.max_open_files</td>
-<td>Max Open Files. Number of open files that can be used by the DB. You may need to increase this if your database has a large working set <em>(budget one open file per 2MB of working set)</em>.<p>( Default: 1000 )</p></td>
+<td><code class="codehilite">backend_db.eleveldb.max_open_files</code></td>
+<td>Max Open Files. Number of open files that can be used by the DB. You may need to increase this if your database has a large working set <em>(budget one open file per 2MB of working set)</em>.<p><em>( Default: 1000 )</em></p></td>
 </tr>
 <tr>
-<td>backend_db.eleveldb.sst_block_size</td>
-<td>The size of a data block is controlled by the SST block size. The size represents a threshold, not a fixed count. Whenever a newly created block reaches this uncompressed size, leveldb considers it full and writes the block with its metadata to disk. The number of keys contained in the block depends upon the size of the values and keys.<p>( Default: 4096 )</p></td>
+<td><code class="codehilite">backend_db.eleveldb.sst_block_size</code></td>
+<td>The size of a data block is controlled by the SST block size. The size represents a threshold, not a fixed count. Whenever a newly created block reaches this uncompressed size, leveldb considers it full and writes the block with its metadata to disk. The number of keys contained in the block depends upon the size of the values and keys.<p><em>( Default: 4096 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Replication and Recovery object(s)</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>replication.rack_awareness.rack_id</td>
+<td><code class="codehilite">replication.rack_awareness.rack_id</code></td>
 <td><em>Rack-Id</em> for the rack-awareness replica placement feature</td>
 </tr>
 <tr>
-<td>replication.recovery.size_of_stacked_objs</td>
-<td>Size of stacked objects. Objects are stacked to send as a bulked object to remote nodes.<p>( Default: 5242880, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">replication.recovery.size_of_stacked_objs</code></td>
+<td>Size of stacked objects. Objects are stacked to send as a bulked object to remote nodes.<p><em>( Default: 5242880, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
-<td>replication.recovery.stacking_timeout</td>
-<td>Stacking timeout. A bulked object are sent to a remote node after reaching the timeout.<p>( Default: 1, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">replication.recovery.stacking_timeout</code></td>
+<td>Stacking timeout. A bulked object are sent to a remote node after reaching the timeout.<p><em>( Default: 1, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>Multi Data Center Replication / Basic</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>mdc_replication.size_of_stacked_objs</td>
-<td>Size of stacked objects. Objects are stacked to send as a bulked object to a remote cluster.<p>( Default: 33554432, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">mdc_replication.size_of_stacked_objs</code></td>
+<td>Size of stacked objects. Objects are stacked to send as a bulked object to a remote cluster.<p><em>( Default: 33554432, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
-<td>mdc_replication.stacking_timeout</td>
-<td>Stacking timeout. A bulked object are sent to a remote cluster after reaching the timeout.<p>( Default: 30, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">mdc_replication.stacking_timeout</code></td>
+<td>Stacking timeout. A bulked object are sent to a remote cluster after reaching the timeout.<p><em>( Default: 30, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
-<td>mdc_replication.req_timeout</td>
-<td>Request timeout between clusters<p>( Default: 30000, Unit: <code class="codehilite">msec</code> )</p></td>
+<td><code class="codehilite">mdc_replication.req_timeout</code></td>
+<td>Request timeout between clusters<p><em>( Default: 30000, Unit: <code class="codehilite">msec</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>Log</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>log.log_level</td>
-<td>Log level:<ul><li>0:debug</li><li>1:info</li><li>2:warn</li><li>3:error</li></ul><p>( Default: 1 )</p></td>
+<td><code class="codehilite">log.log_level</code></td>
+<td>Log level:<ul><li>0:debug</li><li>1:info</li><li>2:warn</li><li>3:error</li></ul><p><em>( Default: 1 )</em></p></td>
 </tr>
 <tr>
-<td>log.is_enable_access_log</td>
-<td>Enables or disables the access-log feature<p>( Default: false )</p></td>
+<td><code class="codehilite">log.is_enable_access_log</code></td>
+<td>Enables or disables the access-log feature<p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>log.access_log_level</td>
-<td>Access log's level:<ul><li>0: only regular case</li><li>1: includes error cases</li></ul><p>( Default: 0 )</p></td>
+<td><code class="codehilite">log.access_log_level</code></td>
+<td>Access log's level:<ul><li>0: only regular case</li><li>1: includes error cases</li></ul><p><em>( Default: 0 )</em></p></td>
 </tr>
 <tr>
-<td>log.erlang</td>
-<td>Destination of log file(s) of Erlang's log<p>( Default: ./log/erlang )</p></td>
+<td><code class="codehilite">log.erlang</code></td>
+<td>Destination of log file(s) of Erlang's log<p><em>( Default: ./log/erlang )</em></p></td>
 </tr>
 <tr>
-<td>log.app</td>
-<td>Destination of log file(s) of LeoStorage<p>( Default: ./log/app )</p></td>
+<td><code class="codehilite">log.app</code></td>
+<td>Destination of log file(s) of LeoStorage<p><em>( Default: ./log/app )</em></p></td>
 </tr>
 <tr>
-<td>log.member_dir</td>
-<td>Destination of log file(s) of members of storage-cluster<p>( Default: ./log/ring )</p></td>
+<td><code class="codehilite">log.member_dir</code></td>
+<td>Destination of log file(s) of members of storage-cluster<p><em>( Default: ./log/ring )</em></p></td>
 </tr>
 <tr>
-<td>log.ring_dir</td>
-<td>Destination of log file(s) of RING<p>( Default: ./log/ring )</p></td>
+<td><code class="codehilite">log.ring_dir</code></td>
+<td>Destination of log file(s) of RING<p><em>( Default: ./log/ring )</em></p></td>
 </tr>
 <tr>
-<td>log.is_enable_diagnosis_log</td>
-<td>Destination of data-diagnosis log(s)<p>( Default: true )</p></td>
+<td><code class="codehilite">log.is_enable_diagnosis_log</code></td>
+<td>Destination of data-diagnosis log(s)<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
 <td><strong>Other Directories Settings</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>queue_dir</td>
-<td>Directory of queue for monitoring "RING"<p>( Default: ./work/queue )</p></td>
+<td><code class="codehilite">queue_dir</code></td>
+<td>Directory of queue for monitoring "RING"<p><em>( Default: ./work/queue )</em></p></td>
 </tr>
 <tr>
-<td>snmp_agent</td>
-<td>Directory of SNMP agent configuration<p>( Default: ./snmp/snmpa_storage_0/LEO-STORAGE )</p></td>
+<td><code class="codehilite">snmp_agent</code></td>
+<td>Directory of SNMP agent configuration<p><em>( Default: ./snmp/snmpa_storage_0/LEO-STORAGE )</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1609,60 +1621,60 @@
 </thead>
 <tbody>
 <tr>
-<td>nodename</td>
-<td>The format of the node name is <code class="codehilite">&lt;NAME&gt;@&lt;IP-ADDRESS&gt;</code>, which must be unique always in a LeoFS system<p>( Default: storage_0@127.0.0.1 )</p></td>
+<td><code class="codehilite">nodename</code></td>
+<td>The format of the node name is <code class="codehilite">&lt;NAME&gt;@&lt;IP-ADDRESS&gt;</code>, which must be unique always in a LeoFS system<p><em>( Default: storage_0@127.0.0.1 )</em></p></td>
 </tr>
 <tr>
-<td>distributed_cookie</td>
-<td>Sets the magic cookie of the node to <code class="codehilite">Cookie</code>. <br/><br/>- See also: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a><p>( Default: 401321b4 )</p></td>
+<td><code class="codehilite">distributed_cookie</code></td>
+<td>Sets the magic cookie of the node to <code class="codehilite">Cookie</code>. <br/><br/>- See also: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a><p><em>( Default: 401321b4 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.kernel_poll</td>
-<td>Kernel poll reduces LeoFS' CPU usage when it has hundreds (or more) network connections.<p>( Default: true )</p></td>
+<td><code class="codehilite">erlang.kernel_poll</code></td>
+<td>Kernel poll reduces LeoFS' CPU usage when it has hundreds (or more) network connections.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>erlang.asyc_threads</td>
+<td><code class="codehilite">erlang.asyc_threads</code></td>
 <td>The total number of Erlang aynch threads<p>( Default: 32 )</p></td>
 </tr>
 <tr>
-<td>erlang.max_ports</td>
-<td>The max_ports sets the default value of maximum number of ports.<br/><br/>- See also: <a href="http://erlang.org/doc/man/erlang.html">Erlang erlang:open_port/2</a><p>( Default: 64000 )</p></td>
+<td><code class="codehilite">erlang.max_ports</code></td>
+<td>The max_ports sets the default value of maximum number of ports.<br/><br/>- See also: <a href="http://erlang.org/doc/man/erlang.html">Erlang erlang:open_port/2</a><p><em>( Default: 64000 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.crash_dump</td>
-<td>The output destination of an Erlang crash dump<p>( Default: ./log/erl_crash.dump )</p></td>
+<td><code class="codehilite">erlang.crash_dump</code></td>
+<td>The output destination of an Erlang crash dump<p><em>( Default: ./log/erl_crash.dump )</em></p></td>
 </tr>
 <tr>
-<td>erlang.max_ets_tables</td>
-<td>The maxinum number of <a href="http://erlang.org/doc/man/ets.html" target="_blank">Erlagn ETS</a> tables<p>( Default: 256000 )</p></td>
+<td><code class="codehilite">erlang.max_ets_tables</code></td>
+<td>The maxinum number of <a href="http://erlang.org/doc/man/ets.html" target="_blank">Erlagn ETS</a> tables<p><em>( Default: 256000 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.smp</td>
-<td><code class="codehilite">-smp</code> enable and <code class="codehilite">-smp</code> start the Erlang runtime system with <a href="https://en.wikipedia.org/wiki/Symmetric_multiprocessing" target="_blank">SMP</a> support enabled.<p>( Default: enable )</p></td>
+<td><code class="codehilite">erlang.smp</code></td>
+<td><code class="codehilite">-smp</code> enable and <code class="codehilite">-smp</code> start the Erlang runtime system with <a href="https://en.wikipedia.org/wiki/Symmetric_multiprocessing" target="_blank">SMP</a> support enabled.<p><em>( Default: enable )</em></p></td>
 </tr>
 <tr>
-<td>erlang.schedulers.compaction_of_load</td>
-<td>Enables or disables scheduler compaction of load. If it's enabled, the Erlang VM will attempt to fully load as many scheduler threads as mush as possible.<p>( Default: true )</p></td>
+<td><code class="codehilite">erlang.schedulers.compaction_of_load</code></td>
+<td>Enables or disables scheduler compaction of load. If it's enabled, the Erlang VM will attempt to fully load as many scheduler threads as mush as possible.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>erlang.schedulers.utilization_balancing</td>
-<td>Enables or disables scheduler utilization balancing of load. By default scheduler utilization balancing is disabled and instead scheduler compaction of load is enabled, which strives for a load distribution that causes as many scheduler threads as possible to be fully loaded (that is, not run out of work).<p>( Default: false )</p></td>
+<td><code class="codehilite">erlang.schedulers.utilization_balancing</code></td>
+<td>Enables or disables scheduler utilization balancing of load. By default scheduler utilization balancing is disabled and instead scheduler compaction of load is enabled, which strives for a load distribution that causes as many scheduler threads as possible to be fully loaded (that is, not run out of work).<p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>erlang.distribution_buffer_size</td>
-<td>Sender-side network distribution buffer size <em>(unit: KB)</em><p>( Default: 32768 )</p></td>
+<td><code class="codehilite">erlang.distribution_buffer_size</code></td>
+<td>Sender-side network distribution buffer size <em>(unit: KB)</em><p><em>( Default: 32768 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.fullsweep_after</td>
-<td>Option fullsweep_after makes it possible to specify the maximum number of generational collections before forcing a fullsweep, even if there is room on the old heap. Setting the number to zero disables the general collection algorithm, that is, all live data is copied at every garbage collection.<p>( Default: 0 )</p></td>
+<td><code class="codehilite">erlang.fullsweep_after</code></td>
+<td>Option fullsweep_after makes it possible to specify the maximum number of generational collections before forcing a fullsweep, even if there is room on the old heap. Setting the number to zero disables the general collection algorithm, that is, all live data is copied at every garbage collection.<p><em>( Default: 0 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.secio</td>
-<td>Enables or disables eager check I/O scheduling. The flag effects when schedulers will check for I/O operations possible to execute, and when such I/O operations will execute.<p>( Default: true )</p></td>
+<td><code class="codehilite">erlang.secio</code></td>
+<td>Enables or disables eager check I/O scheduling. The flag effects when schedulers will check for I/O operations possible to execute, and when such I/O operations will execute.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>process_limit</td>
-<td>The maxinum number of Erlang processes. Sets the maximum number of simultaneously existing processes for this system if a Number is passed as value. Valid range for Number is [1024-134217727]<p>( Default: 1048576 )</p></td>
+<td><code class="codehilite">process_limit</code></td>
+<td>The maxinum number of Erlang processes. Sets the maximum number of simultaneously existing processes for this system if a Number is passed as value. Valid range for Number is [1024-134217727]<p><em>( Default: 1048576 )</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1724,6 +1736,7 @@
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../../architecture/leo_storage/">Concept and Architecture / LeoStorage's Architecture</a></li>
+<li><a href="../../system_admin/monitoring/">For Administrators / System Administration / System Monitoring</a></li>
 <li><a href="../../system_operations/cluster/">For Administrators / System Operations / Cluster Operations</a></li>
 <li><a href="../../system_operations/data/">For Administrators / System Operations / Data Operations</a></li>
 <li><a href="../environment_config/">For Administrators / Settings / Environment Configuration</a></li>
@@ -1794,7 +1807,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            (c) 2012-2017 LeoProject. All rights reserved.
+            (c) 2012-2018 LeoProject. All rights reserved.
           </div>
         
         powered by

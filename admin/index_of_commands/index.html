@@ -13,9 +13,9 @@
         <meta name="author" content="LeoProject">
       
       
-        <link rel="shortcut icon" href="../../favicon.ico">
+        <link rel="shortcut icon" href="../../assets/images/favicon.png">
       
-      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-1.5.4">
+      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-1.5.4">
     
     
       
@@ -721,6 +721,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
     </a>
@@ -936,7 +948,7 @@
 </tr>
 <tr>
 <td>status <code class="codehilite">[&lt;node&gt;]</code></td>
-<td>Retrieve status of every node (default)<br/> Retrieve status of a specified node</td>
+<td>Retrieve status of every node <em>(default)</em><br/> Retrieve status of a specified node</td>
 </tr>
 <tr>
 <td>whereis <code class="codehilite">&lt;file-path&gt;</code></td>
@@ -984,19 +996,23 @@
 </tr>
 <tr>
 <td>recover-file <code class="codehilite">&lt;file-path&gt;</code></td>
-<td>Recover an inconsistent object specified by a file-path</td>
+<td>Recover an inconsistent object specified by the file-path of the local cluster</td>
+</tr>
+<tr>
+<td>recover-disk <code class="codehilite">&lt;storage-node&gt;</code> <disk-id></td>
+<td>Recover all inconsistent objects on the specified disk in the specified node of the local cluster</td>
 </tr>
 <tr>
 <td>recover-node <code class="codehilite">&lt;storage-node&gt;</code></td>
-<td>Recover all inconsistent objects in a specified node</td>
+<td>Recover all inconsistent objects in the specified node of the local cluster</td>
 </tr>
 <tr>
 <td>recover-ring <code class="codehilite">&lt;storage-node&gt;</code></td>
-<td>Recover <code class="codehilite">RING</code>, a routing table of a specified node</td>
+<td>Recover <strong>RING, a routing table</strong> of the specified node of the local cluster</td>
 </tr>
 <tr>
 <td>recover-cluster <code class="codehilite">&lt;cluster-id&gt;</code></td>
-<td>Recover all inconsistent objects in a specified cluster in case of using the multi datacenter replication</td>
+<td>Recover **all inconsistent objects in the specified remote cluste**r <em>(NOT the local cluster)</em> in case of using <strong>the multi datacenter replication</strong></td>
 </tr>
 <tr>
 <td><strong>Compaction Commands:</strong></td>
@@ -1219,7 +1235,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            (c) 2012-2017 LeoProject. All rights reserved.
+            (c) 2012-2018 LeoProject. All rights reserved.
           </div>
         
         powered by

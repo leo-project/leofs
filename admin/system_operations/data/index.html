@@ -13,9 +13,9 @@
         <meta name="author" content="LeoProject">
       
       
-        <link rel="shortcut icon" href="../../../favicon.ico">
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
       
-      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-1.5.4">
+      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-1.5.4">
     
     
       
@@ -961,6 +961,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
     </a>
@@ -1356,7 +1368,7 @@
 <h2 id="storage-architecture">Storage Architecture<a class="headerlink" href="#storage-architecture" title="Permanent link">&para;</a></h2>
 <p>A brief introduction how LeoFS organize data into actual OS files.</p>
 <h3 id="append-only-for-content">Append-Only for Content<a class="headerlink" href="#append-only-for-content" title="Permanent link">&para;</a></h3>
-<p>Once a PUT/DELETE remote procedure call (<strong>RPC</strong>) arrives on LeoStorage appends new blocks including the object information such as the key, data itself and also various associated metadata to the end of a file.</p>
+<p>Once a PUT/DELETE remote procedure call, <strong>RPC</strong> arrives on LeoStorage appends new blocks including the object information such as the key, data itself and also various associated metadata to the end of a file.</p>
 <p>This <em>Append-Only-File</em> we call <a href="../../../architecture/leo_storage/#data-structure">AVS, Aria Vector Storage</a> which is referenced when retrieving the data through <em>GET RPCs</em>. With its inherent nature of the <em>Append-Only-File</em>, a data-compaction process is needed to clean up the orphaned space in an AVS.</p>
 <h3 id="embedded-kvs-for-metadata">Embedded KVS for Metadata<a class="headerlink" href="#embedded-kvs-for-metadata" title="Permanent link">&para;</a></h3>
 <p>After having succeeded in appending new blocks to an AVS, then leo_object_storage updates a corresponding <strong>KVS</strong> file with the key and its associated metadata <em>(same information stored in the AVS except for the data itself)</em> and its offset where the new blocks stored in AVS as a value. This KVS file is referenced when retrieving the data/metadata through GET/HEAD RPCs.</p>
@@ -1364,14 +1376,14 @@
 <p>Some data can be stored into a <strong>Queue</strong> for processing later in the case</p>
 <ul>
 <li>A PUT/DELETE operation failed</li>
-<li>A Multi DC Replication (<strong>MDCR</strong>) failed</li>
+<li>A Multi DC Replication, <strong>MDCR</strong> failed</li>
 <li><code class="codehilite">rebalance/recover-(file|node|cluster)</code> invoked through leofs-adm</li>
 </ul>
 <h3 id="file-structure">File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h3>
 <p>Multiple AVS/KVS pairs can be placed on one node to enable LeoFS handling as much use cases and hardware requirements as possible. See <a href="../../../architecture/leo_storage/#data-structure">Concept and Architecture / LeoStorage's Architecture - Data Structure</a>.</p>
 <ul>
 <li><strong>Container : AVS/KVS pair = 1 : N</strong><ul>
-<li>Multiple AVS/KVS pairs can be stored under one OS directory (We call it <strong>Container</strong>).</li>
+<li>Multiple AVS/KVS pairs can be stored under one OS directory. It is called <strong>Container</strong>.</li>
 <li>'N' can be specified through <a href="https://github.com/leo-project/leofs/blob/master/apps/leo_storage/priv/leo_storage.conf">leo_storage.conf</a>.</li>
 <li>How to choose optimal 'N'<ul>
 <li>As a data-compaction is executed per AVS/KVS pair, at least the size of a AVS/KVS pair is needed to run data-compaction so that the larger 'N', the less disk space LeoFS uses for data-compaction.</li>
@@ -1425,7 +1437,7 @@
 </tr>
 <tr>
 <td><code class="codehilite">leofs-adm compact-start &lt;storage-node&gt; (all/&lt;num-of-targets&gt;) [&lt;num-of-compaction-proc&gt;]</code></td>
-<td>Start Compaction (Transfer its state to <strong>running</strong>).<br/><br/><code class="codehilite">num-of-targets</code>: How many AVS/KVS pairs are compacted.<br/><code class="codehilite">num-of-compaction-pro</code>: How many processes are run in parallel.</td>
+<td>Start Compaction <em>(Transfer its state to <strong>running</strong>)</em>.<br/><br/><code class="codehilite">num-of-targets</code>: How many AVS/KVS pairs are compacted.<br/><code class="codehilite">num-of-compaction-pro</code>: How many processes are run in parallel.</td>
 </tr>
 <tr>
 <td><code class="codehilite">leofs-adm compact-suspend &lt;storage-node&gt;</code></td>
@@ -1441,7 +1453,7 @@
 </tr>
 <tr>
 <td><code class="codehilite">leofs-adm diagnose-start &lt;storage-node&gt;</code></td>
-<td>Start Diagnose (Not actually doing Compaction but scanning all AVS/KVS pairs and reporting what objects/metadatas exist as a file).</td>
+<td>Start Diagnose <em>(Not actually doing Compaction but scanning all AVS/KVS pairs and reporting what objects/metadatas exist as a file)</em>.</td>
 </tr>
 <tr>
 <td><strong>Disk Usage</strong></td>
@@ -1458,21 +1470,27 @@
 </tbody>
 </table>
 <h4 id="compact-start">compact-start<a class="headerlink" href="#compact-start" title="Permanent link">&para;</a></h4>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Example:</span>
-<span class="c1">## All AVS/KVS pairs on storage_0@127.0.0.1 will be compacted with 3 concurrent processes</span>
-<span class="c1">## (default concurrency is 3)</span>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Note:</span>
+<span class="c1">##   All AVS/KVS pairs on storage_0@127.0.0.1</span>
+<span class="c1">##   will be compacted with 3 concurrent processes (default concurrency is 3)</span>
+<span class="c1">## Example:</span>
 $ leofs-adm compact-start storage_0@127.0.0.1 all
 OK
 
-<span class="c1">## 5 AVS/KVS pairs on storage_0@127.0.0.1 will be compacted with 2 concurrent processes</span>
+<span class="c1">## Note:</span>
+<span class="c1">##   Five AVS/KVS pairs on storage_0@127.0.0.1</span>
+<span class="c1">##   will be compacted with 2 concurrent processes</span>
 $ leofs-adm compact-start storage_0@127.0.0.1 <span class="m">5</span> <span class="m">2</span>
 OK
 </pre></div>
@@ -1632,7 +1650,7 @@ Offset| RING&#39;s address-id                        | Filename                 
 </tr>
 <tr>
 <td>2</td>
-<td>Address ID on RING (Distribute Hash Routing Table).</td>
+<td>Address ID on RING <em>(Distribute Hash Routing Table)</em>.</td>
 </tr>
 <tr>
 <td>3</td>
@@ -1656,7 +1674,7 @@ Offset| RING&#39;s address-id                        | Filename                 
 </tr>
 <tr>
 <td>8</td>
-<td>Flag (0/1) representing whether the object is removed.</td>
+<td>Flag <em>(0/1)</em> representing whether the object is removed.</td>
 </tr>
 </tbody>
 </table>
@@ -1672,20 +1690,24 @@ Offset| RING&#39;s address-id                        | Filename                 
 </thead>
 <tbody>
 <tr>
-<td>leofs-adm recover-file \&lt;file-path></td>
-<td>Recover an inconsistent object specified by the file-path.</td>
+<td><code class="codehilite">leofs-adm recover-file &lt;file-path&gt;</code></td>
+<td>Recover the inconsistent object specified by the file-path.</td>
 </tr>
 <tr>
-<td>leofs-adm recover-disk \&lt;storage-node> \&lt;disk-id></td>
-<td>Recover all inconsistent objects on the specified disk in the specified storage-node. Note that this command can be used ONLY in case all LeoStorage have the same obj_containers configuration.</td>
+<td><code class="codehilite">leofs-adm recover-disk &lt;storage-node&gt; &lt;disk-id&gt;</code></td>
+<td>Recover all inconsistent objects on the specified disk in the specified storage-node. <strong>Note that this command can be used ONLY in case all LeoStorage have the same obj_containers configuration.</strong></td>
 </tr>
 <tr>
-<td>leofs-adm recover-node \&lt;storage-node></td>
+<td><code class="codehilite">leofs-adm recover-ring &lt;storage-node&gt;</code></td>
+<td>Recover <strong>RING, a routing table</strong> of the specified node of the local cluster</td>
+</tr>
+<tr>
+<td><code class="codehilite">leofs-adm recover-node &lt;storage-node&gt;</code></td>
 <td>Recover all inconsistent objects in the specified storage-node.</td>
 </tr>
 <tr>
-<td>leofs-adm recover-cluster \&lt;cluster-id></td>
-<td>Recover all inconsistent objects in the specified cluster-id.</td>
+<td><code class="codehilite">leofs-adm recover-cluster &lt;remote-cluster-id&gt;</code></td>
+<td>Recover <strong>all inconsistent objects in the specified remote cluster</strong> <em>(NOT the local cluster)</em> in case of using <strong>the multi datacenter replication</strong>.</td>
 </tr>
 </tbody>
 </table>
@@ -1708,14 +1730,22 @@ OK
  7
  8
  9
-10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Example:</span>
-<span class="c1">## If you have the following configuration in leo_storage.conf</span>
-<span class="c1">## obj_containers.path = [./avs1,./avs2]</span>
-<span class="c1">## then the below command will recover files stored under ./avs1</span>
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Note:</span>
+<span class="c1">##   If you have the following configuration in leo_storage.conf</span>
+<span class="c1">##   obj_containers.path = [./avs1,./avs2]</span>
+<span class="c1">##   then the below command will recover files stored under ./avs1</span>
+<span class="c1">## Example:</span>
 $ leofs-adm recover-disk storage_0@127.0.0.1 <span class="m">1</span>
 OK
 
-<span class="c1">## If you want to recover files stored under ./avs2 then issue the below one.</span>
+<span class="c1">## Note:</span>
+<span class="c1">##  If you want to recover files stored under ./avs2</span>
+<span class="c1">##  then issue the below one.</span>
+<span class="c1">## Example:</span>
 $ leofs-adm recover-disk storage_0@127.0.0.1 <span class="m">2</span>
 OK
 </pre></div>
@@ -1733,8 +1763,14 @@ OK
 <h4 id="recover-cluster">recover-cluster<a class="headerlink" href="#recover-cluster" title="Permanent link">&para;</a></h4>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
-3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Example:</span>
-$ leofs-adm recover-cluster cluster-1
+3
+4
+5
+6</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Note:</span>
+<span class="c1">##   If your LeoFS already uses the multi data center replication,</span>
+<span class="c1">##   you can execute this command.</span>
+<span class="c1">## Example:</span>
+$ leofs-adm recover-cluster remote-leofs
 OK
 </pre></div>
 </td></tr></table>
@@ -1768,7 +1804,7 @@ OK
 <li>Invoke <code class="codehilite">recover-cluster</code> with a downed cluster.</li>
 </ul>
 </li>
-<li>Source/Destination Cluster Down and delete operations on the other side got lost (compacted).<ul>
+<li>Source/Destination Cluster Down and delete operations on the other side got lost <em>(compacted)</em>.<ul>
 <li>Set up the cluster from scratch</li>
 <li>invoke <code class="codehilite">recover-cluster</code> with the new cluster</li>
 <li>See also <a href="https://github.com/leo-project/leofs/issues/636">issue#636</a> for more information.</li>
@@ -1834,7 +1870,7 @@ OK
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            (c) 2012-2017 LeoProject. All rights reserved.
+            (c) 2012-2018 LeoProject. All rights reserved.
           </div>
         
         powered by

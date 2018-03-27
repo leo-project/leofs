@@ -13,9 +13,9 @@
         <meta name="author" content="LeoProject">
       
       
-        <link rel="shortcut icon" href="../../../favicon.ico">
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
       
-      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-1.5.4">
+      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-1.5.4">
     
     
       
@@ -844,6 +844,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../system_admin/monitoring/" title="System Monitoring" class="md-nav__link">
+      System Monitoring
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../system_admin/migration/" title="System Migration" class="md-nav__link">
       System Migration
     </a>
@@ -1137,159 +1149,159 @@
 <td></td>
 </tr>
 <tr>
-<td>managers</td>
-<td>Name of LeoManager nodes. This configuration is necessary for communicating with <code class="codehilite">LeoManager&#39;s master</code> and <code class="codehilite">LeoManager&#39;s slave</code>.<p>( Default: [manager_0@127.0.0.1, manager_1@127.0.0.1] )</p></td>
+<td><code class="codehilite">managers</code></td>
+<td>Name of LeoManager nodes. This configuration is necessary for communicating with <code class="codehilite">LeoManager&#39;s master</code> and <code class="codehilite">LeoManager&#39;s slave</code>.<p><em>( Default: [manager_0@127.0.0.1, manager_1@127.0.0.1] )</em></p></td>
 </tr>
 <tr>
 <td><strong>LeoGateway Basic</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>protocol</td>
-<td>Gateway Protocol - [s3/rest/embed/nfs] <p>( Default: s3 )</p></td>
+<td><code class="codehilite">protocol</code></td>
+<td>Gateway Protocol - [s3/rest/embed/nfs] <p><em>( Default: s3 )</em></p></td>
 </tr>
 <tr>
 <td><strong>HTTP Related (S3/REST)</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>http.port</td>
-<td>Port number the Gateway uses for HTTP connections <p>( Default: 8080 )</p></td>
+<td><code class="codehilite">http.port</code></td>
+<td>Port number the Gateway uses for HTTP connections <p><em>( Default: 8080 )</em></p></td>
 </tr>
 <tr>
-<td>http.num_of_acceptors</td>
-<td>Numbers of processes listening for connections <p>( Default: 128 )</p></td>
+<td><code class="codehilite">http.num_of_acceptors</code></td>
+<td>Numbers of processes listening for connections <p><em>( Default: 128 )</em></p></td>
 </tr>
 <tr>
-<td>http.max_keepalive</td>
-<td>Maximum number of requests allowed in a single keep-alive session <p>( Default: 4096 )</p></td>
+<td><code class="codehilite">http.max_keepalive</code></td>
+<td>Maximum number of requests allowed in a single keep-alive session <p><em>( Default: 4096 )</em></p></td>
 </tr>
 <tr>
-<td>http.layer_of_dirs</td>
-<td>Maximum number of virtual directory levels <p>( Default: 12 )</p></td>
+<td><code class="codehilite">http.layer_of_dirs</code></td>
+<td>Maximum number of virtual directory levels <p><em>( Default: 12 )</em></p></td>
 </tr>
 <tr>
-<td>http.ssl_port</td>
-<td>Port number the Gateway uses for HTTPS connections <p>( Default: 8443 )</p></td>
+<td><code class="codehilite">http.ssl_port</code></td>
+<td>Port number the Gateway uses for HTTPS connections <p><em>( Default: 8443 )</em></p></td>
 </tr>
 <tr>
-<td>http.ssl_certfile</td>
-<td>SSL Certificate file <p>( Default: ./etc/server_cert.pem )</p></td>
+<td><code class="codehilite">http.ssl_certfile</code></td>
+<td>SSL Certificate file <p><em>( Default: ./etc/server_cert.pem )</em></p></td>
 </tr>
 <tr>
-<td>http.ssl_keyfile</td>
-<td>SSL key file <p>( Default: ./etc/server_key.pem )</p></td>
+<td><code class="codehilite">http.ssl_keyfile</code></td>
+<td>SSL key file <p><em>( Default: ./etc/server_key.pem )</em></p></td>
 </tr>
 <tr>
-<td>http.headers_config_file</td>
-<td>HTTP custom header configuration file <p>( Default: ./etc/http_custom_header.conf )</p></td>
+<td><code class="codehilite">http.headers_config_file</code></td>
+<td>HTTP custom header configuration file <p><em>( Default: ./etc/http_custom_header.conf )</em></p></td>
 </tr>
 <tr>
-<td>http.timeout_for_header</td>
-<td>HTTP timeout for reading header<p>( Default: 5000, Unit: <code class="codehilite">msec</code>)</p></td>
+<td><code class="codehilite">http.timeout_for_header</code></td>
+<td>HTTP timeout for reading header<p><em>( Default: 5000, Unit: <code class="codehilite">msec</code>)</em></p></td>
 </tr>
 <tr>
-<td>http.timeout_for_body</td>
-<td>HTTP timeout for reading body<p>( Default: 15000, Unit: <code class="codehilite">msec</code>)</p></td>
+<td><code class="codehilite">http.timeout_for_body</code></td>
+<td>HTTP timeout for reading body<p><em>( Default: 15000, Unit: <code class="codehilite">msec</code>)</em></p></td>
 </tr>
 <tr>
 <td><strong>Bucket Related</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>bucket_prop_sync_interval</td>
-<td>Synchronization Interval of Bucket Properties<p>( Default: 300, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">bucket_prop_sync_interval</code></td>
+<td>Synchronization Interval of Bucket Properties<p><em>( Default: 300, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>NFS-related configurations</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>nfs.mountd.port</td>
-<td>Mountd’s port number <p>( Default: 22050 )</p></td>
+<td><code class="codehilite">nfs.mountd.port</code></td>
+<td>Mountd’s port number <p><em>( Default: 22050 )</em></p></td>
 </tr>
 <tr>
-<td>nfs.mountd.acceptors</td>
-<td>Mountd’s the number of acceptors <p>( Default: 128 )</p></td>
+<td><code class="codehilite">nfs.mountd.acceptors</code></td>
+<td>Mountd’s the number of acceptors <p><em>( Default: 128 )</em></p></td>
 </tr>
 <tr>
-<td>nfs.nfsd.port</td>
-<td>NFSd’s port number <p>( Default: 2049 )</p></td>
+<td><code class="codehilite">nfs.nfsd.port</code></td>
+<td>NFSd’s port number <p><em>( Default: 2049 )</em></p></td>
 </tr>
 <tr>
-<td>nfs.nfsd.acceptors</td>
-<td>NFSd’s the number of acceptors <p>( Default: 128 )</p></td>
+<td><code class="codehilite">nfs.nfsd.acceptors</code></td>
+<td>NFSd’s the number of acceptors <p><em>( Default: 128 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Large object processing configuration</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>large_object.max_chunked_objs</td>
-<td>Maximum number of chunked objects <p>( Default: 1000 )</p></td>
+<td><code class="codehilite">large_object.max_chunked_objs</code></td>
+<td>Maximum number of chunked objects <p><em>( Default: 1000 )</em></p></td>
 </tr>
 <tr>
-<td>large_object.chunked_obj_len</td>
-<td>Length of a chunked object. This value must be &gt;= <code class="codehilite">large_object.reading_chunked_obj_len</code> <p>( Default: 5242880, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">large_object.chunked_obj_len</code></td>
+<td>Length of a chunked object. This value must be &gt;= <code class="codehilite">large_object.reading_chunked_obj_len</code> <p><em>( Default: 5242880, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
-<td>large_object.threshold_of_chunk_len</td>
-<td>Threshold when object is chunked <p>( Default: 5767168, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">large_object.threshold_of_chunk_len</code></td>
+<td>Threshold when object is chunked <p><em>( Default: 5767168, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
-<td>large_object.reading_chunked_obj_len</td>
-<td>Read length of a chunked object. This value must be &lt;= <code class="codehilite">large_object.chunked_obj_len</code> <p>( Default: 5242880, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">large_object.reading_chunked_obj_len</code></td>
+<td>Read length of a chunked object. This value must be &lt;= <code class="codehilite">large_object.chunked_obj_len</code> <p><em>( Default: 5242880, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>Cache configuration</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>cache.http_cache</td>
-<td>Enable HTTP-Cache mode, working like Varnish/Squid. Otherwise as Object Cache<p>( Default: false )</p></td>
+<td><code class="codehilite">cache.http_cache</code></td>
+<td>Enable HTTP-Cache mode, working like Varnish/Squid. Otherwise as Object Cache<p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>cache.cache_workers</td>
-<td>Number of cache workers <p>( Default: 16 )</p></td>
+<td><code class="codehilite">cache.cache_workers</code></td>
+<td>Number of cache workers <p><em>( Default: 16 )</em></p></td>
 </tr>
 <tr>
-<td>cache.cache_ram_capacity</td>
-<td>Memory Cache Capacity, divide across workers. This has to satisfy <code class="codehilite">(8 * 1024 * 1024) * cache.cache_workers &gt;= cache.cache_ram_capacity</code> <p>( Default: 268435456, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">cache.cache_ram_capacity</code></td>
+<td>Memory Cache Capacity, divide across workers. This has to satisfy <code class="codehilite">(8 * 1024 * 1024) * cache.cache_workers &gt;= cache.cache_ram_capacity</code> <p><em>( Default: 268435456, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
-<td>cache.cache_disc_capacity</td>
-<td>Disk Cache Capacity, divide across workers. This has to satisfy <code class="codehilite">(8 * 1024 * 1024) * cache.cache_workers &gt;= cache.cache_disc_capacity</code> <p>( Default: 524288000, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">cache.cache_disc_capacity</code></td>
+<td>Disk Cache Capacity, divide across workers. This has to satisfy <code class="codehilite">(8 * 1024 * 1024) * cache.cache_workers &gt;= cache.cache_disc_capacity</code> <p><em>( Default: 524288000, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
-<td>cache.cache_disc_threshold_len</td>
-<td>Threshold when object is stored in disk cache <p>( Default: 1048576, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">cache.cache_disc_threshold_len</code></td>
+<td>Threshold when object is stored in disk cache <p><em>( Default: 1048576, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
-<td>cache.cache_disc_dir_data</td>
-<td>Directory for disk cache data <p>( Default: ./cache/data )</p></td>
+<td><code class="codehilite">cache.cache_disc_dir_data</code></td>
+<td>Directory for disk cache data <p><em>( Default: ./cache/data )</em></p></td>
 </tr>
 <tr>
-<td>cache.cache_disc_dir_journal</td>
-<td>Directory for disk cache journal <p>( Default: ./cache/journal )</p></td>
+<td><code class="codehilite">cache.cache_disc_dir_journal</code></td>
+<td>Directory for disk cache journal <p><em>( Default: ./cache/journal )</em></p></td>
 </tr>
 <tr>
 <td><strong>HTTP-Cache related</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>cache.cache_expire</td>
-<td>Cache expiry time <p>( Default: 300, Unit: <code class="codehilite">sec</code>)</p></td>
+<td><code class="codehilite">cache.cache_expire</code></td>
+<td>Cache expiry time <p><em>( Default: 300, Unit: <code class="codehilite">sec</code>)</em></p></td>
 </tr>
 <tr>
-<td>cache.cache_max_content_len</td>
-<td>Maximum length of cached object <p>( Default: 1048576, Unit: <code class="codehilite">byte</code> )</td>
+<td><code class="codehilite">cache.cache_max_content_len</code></td>
+<td>Maximum length of cached object <p><em>( Default: 1048576, Unit: <code class="codehilite">byte</code> )</em></td>
 </tr>
 <tr>
-<td>cache.cachable_content_type</td>
+<td><code class="codehilite">cache.cachable_content_type</code></td>
 <td>Object types to be cached</td>
 </tr>
 <tr>
-<td>cache.cachable_path_pattern</td>
+<td><code class="codehilite">cache.cachable_path_pattern</code></td>
 <td>Path pattern(s) to be cached (regular expression)</td>
 </tr>
 <tr>
@@ -1297,128 +1309,128 @@
 <td></td>
 </tr>
 <tr>
-<td>watchdog.rex.is_enabled</td>
-<td>Enables or disables the rex-watchdog which monitors the memory usage of <em>Erlangs RPC component</em>.<p>( Default: true )</p></td>
+<td><code class="codehilite">watchdog.rex.is_enabled</code></td>
+<td>Enables or disables the rex-watchdog which monitors the memory usage of <em>Erlangs RPC component</em>.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.rex.interval</td>
-<td>An interval of executing the watchdog processing<p>( Default: 10, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">watchdog.rex.interval</code></td>
+<td>An interval of executing the watchdog processing<p><em>( Default: 10, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>Watchdog / CPU</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>watchdog.cpu.is_enabled</td>
-<td>Enables or disables the CPU-watchdog which monitors both <em>CPU load average</em> and <em>CPU utilization</em><p>( Default: false )</p></td>
+<td><code class="codehilite">watchdog.cpu.is_enabled</code></td>
+<td>Enables or disables the CPU-watchdog which monitors both <em>CPU load average</em> and <em>CPU utilization</em><p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cpu.raised_error_times</td>
-<td>Times of raising error to a client<p>( Default: 5 )</p></td>
+<td><code class="codehilite">watchdog.cpu.raised_error_times</code></td>
+<td>Times of raising error to a client<p><em>( Default: 5 )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cpu.interval</td>
-<td>An interval of executing the watchdog processing<p>( Default: 10, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">watchdog.cpu.interval</code></td>
+<td>An interval of executing the watchdog processing<p><em>( Default: 10, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cpu.threshold_cpu_load_avg</td>
-<td>Threshold of CPU load average<p>( Default: 5.0 )</p></td>
+<td><code class="codehilite">watchdog.cpu.threshold_cpu_load_avg</code></td>
+<td>Threshold of CPU load average<p><em>( Default: 5.0 )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.cpu.threshold_cpu_util</td>
-<td>Threshold of CPU utilization<p>( Default: 100 )</p></td>
+<td><code class="codehilite">watchdog.cpu.threshold_cpu_util</code></td>
+<td>Threshold of CPU utilization<p><em>( Default: 100 )</em></p></td>
 </tr>
 <tr>
 <td><strong>Watchdog / IO (Erlang VM Internal Traffic)</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>watchdog.io.is_enabled</td>
-<td>Enables or disables the IO-watchdog which monitors the <em>Erlang VM Internal Traffic</em> <p>( Default: false )</p></td>
+<td><code class="codehilite">watchdog.io.is_enabled</code></td>
+<td>Enables or disables the IO-watchdog which monitors the <em>Erlang VM Internal Traffic</em> <p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.io.interval</td>
-<td>Watchdog interval <p>( Default: 1, Unit: <code class="codehilite">sec</code> )</p></td>
+<td><code class="codehilite">watchdog.io.interval</code></td>
+<td>Watchdog interval <p><em>( Default: 1, Unit: <code class="codehilite">sec</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.io.threshold_input_per_sec</td>
-<td>Threshold input per second <p>( Default: 134217728, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">watchdog.io.threshold_input_per_sec</code></td>
+<td>Threshold input per second <p><em>( Default: 134217728, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
-<td>watchdog.io.threshold_output_per_sec</td>
-<td>Threshold output per second <p>( Default: 134217728, Unit: <code class="codehilite">byte</code> )</p></td>
+<td><code class="codehilite">watchdog.io.threshold_output_per_sec</code></td>
+<td>Threshold output per second <p><em>( Default: 134217728, Unit: <code class="codehilite">byte</code> )</em></p></td>
 </tr>
 <tr>
 <td><strong>Timeout</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>timeout.level_1</td>
-<td>Timeout when put object to LeoStorage <em>(~65536 bytes)</em> <p> ( Default: 5000, Unit: <code class="codehilite">msec</code> )</td>
+<td><code class="codehilite">timeout.level_1</code></td>
+<td>Timeout when put object to LeoStorage <em>(~65536 bytes)</em> <p> <em>( Default: 5000, Unit: <code class="codehilite">msec</code> )</em></td>
 </tr>
 <tr>
-<td>timeout.level_2</td>
-<td>Timeout when put object to LeoStorage <em>(~131071 bytes)</em> <p> ( Default: 7000, Unit: <code class="codehilite">msec</code> )</td>
+<td><code class="codehilite">timeout.level_2</code></td>
+<td>Timeout when put object to LeoStorage <em>(~131071 bytes)</em> <p> <em>( Default: 7000, Unit: <code class="codehilite">msec</code> )</em></td>
 </tr>
 <tr>
-<td>timeout.level_3</td>
-<td>Timeout when put object to LeoStorage <em>(~524287 bytes)</em> <p> ( Default: 10000, Unit: <code class="codehilite">msec</code> )</td>
+<td><code class="codehilite">timeout.level_3</code></td>
+<td>Timeout when put object to LeoStorage <em>(~524287 bytes)</em> <p> <em>( Default: 10000, Unit: <code class="codehilite">msec</code> )</em></td>
 </tr>
 <tr>
-<td>timeout.level_4</td>
-<td>Timeout when put object to LeoStorage <em>(~1048576 bytes)</em> <p> ( Default: 20000, Unit: <code class="codehilite">msec</code> )</td>
+<td><code class="codehilite">timeout.level_4</code></td>
+<td>Timeout when put object to LeoStorage <em>(~1048576 bytes)</em> <p> <em>( Default: 20000, Unit: <code class="codehilite">msec</code> )</em></td>
 </tr>
 <tr>
-<td>timeout.level_5</td>
-<td>Timeout when put object to LeoStorage <em>(1048576~ bytes)</em> <p> ( Default: 30000, Unit: <code class="codehilite">msec</code> )</td>
+<td><code class="codehilite">timeout.level_5</code></td>
+<td>Timeout when put object to LeoStorage <em>(1048576~ bytes)</em> <p> <em>( Default: 30000, Unit: <code class="codehilite">msec</code> )</em></td>
 </tr>
 <tr>
-<td>timeout.get</td>
-<td>Timeout when get object from LeoStorage<p> ( Default: 30000, Unit: <code class="codehilite">msec</code> )</td>
+<td><code class="codehilite">timeout.get</code></td>
+<td>Timeout when get object from LeoStorage<p> <em>( Default: 30000, Unit: <code class="codehilite">msec</code> )</em></td>
 </tr>
 <tr>
-<td>timeout.ls</td>
-<td>Timeout when list object from LeoStorage<p> ( Default: 30000, Unit: <code class="codehilite">msec</code> )</td>
+<td><code class="codehilite">timeout.ls</code></td>
+<td>Timeout when list object from LeoStorage<p> <em>( Default: 30000, Unit: <code class="codehilite">msec</code> )</em></td>
 </tr>
 <tr>
 <td><strong>Log</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>log.log_level</td>
-<td>Log level:<ul><li>0:debug</li><li>1:info</li><li>2:warn</li><li>3:error</li></ul><p>( Default: 1 )</p></td>
+<td><code class="codehilite">log.log_level</code></td>
+<td>Log level:<ul><li>0:debug</li><li>1:info</li><li>2:warn</li><li>3:error</li></ul><p><em>( Default: 1 )</em></p></td>
 </tr>
 <tr>
-<td>log.is_enable_access_log</td>
-<td>Enables or disables the access-log feature<p>( Default: false )</p></td>
+<td><code class="codehilite">log.is_enable_access_log</code></td>
+<td>Enables or disables the access-log feature<p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>log.erlang</td>
-<td>Destination of log file(s) of Erlang's log<p>( Default: ./log/erlang )</p></td>
+<td><code class="codehilite">log.erlang</code></td>
+<td>Destination of log file(s) of Erlang's log<p><em>( Default: ./log/erlang )</em></p></td>
 </tr>
 <tr>
-<td>log.app</td>
-<td>Destination of log file(s) of LeoStorage<p>( Default: ./log/app )</p></td>
+<td><code class="codehilite">log.app</code></td>
+<td>Destination of log file(s) of LeoStorage<p><em>( Default: ./log/app )</em></p></td>
 </tr>
 <tr>
-<td>log.member_dir</td>
-<td>Destination of log file(s) of members of storage-cluster<p>( Default: ./log/ring )</p></td>
+<td><code class="codehilite">log.member_di</code>r</td>
+<td>Destination of log file(s) of members of storage-cluster<p><em>( Default: ./log/ring )</em></p></td>
 </tr>
 <tr>
-<td>log.ring_dir</td>
-<td>Destination of log file(s) of RING<p>( Default: ./log/ring )</p></td>
+<td><code class="codehilite">log.ring_dir</code></td>
+<td>Destination of log file(s) of RING<p><em>( Default: ./log/ring )</em></p></td>
 </tr>
 <tr>
 <td><strong>Other Directories Settings</strong></td>
 <td></td>
 </tr>
 <tr>
-<td>queue_dir</td>
-<td>Directory of queue for monitoring "RING"<p>( Default: ./work/queue )</p></td>
+<td><code class="codehilite">queue_dir</code></td>
+<td>Directory of queue for monitoring "RING"<p><em>( Default: ./work/queue )</em></p></td>
 </tr>
 <tr>
-<td>snmp_agent</td>
-<td>Directory of SNMP agent configuration<p>( Default: ./snmp/snmpa_gateway_0/LEO-GATEWAY )</p></td>
+<td><code class="codehilite">snmp_agent</code></td>
+<td>Directory of SNMP agent configuration<p><em>( Default: ./snmp/snmpa_gateway_0/LEO-GATEWAY )</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1432,60 +1444,60 @@
 </thead>
 <tbody>
 <tr>
-<td>nodename</td>
-<td>The format of the node name is <code class="codehilite">&lt;NAME&gt;@&lt;IP-ADDRESS&gt;</code>, which must be unique always in a LeoFS system<p>( Default: storage_0@127.0.0.1 )</p></td>
+<td><code class="codehilite">nodename</code></td>
+<td>The format of the node name is <code class="codehilite">&lt;NAME&gt;@&lt;IP-ADDRESS&gt;</code>, which must be unique always in a LeoFS system<p><em>( Default: storage_0@127.0.0.1 )</em></p></td>
 </tr>
 <tr>
-<td>distributed_cookie</td>
-<td>Sets the magic cookie of the node to <code class="codehilite">Cookie</code>. <br/><br/>- See also: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a><p>( Default: 401321b4 )</p></td>
+<td><code class="codehilite">distributed_cookie</code></td>
+<td>Sets the magic cookie of the node to <code class="codehilite">Cookie</code>. <br/><br/>- See also: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a><p><em>( Default: 401321b4 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.kernel_poll</td>
-<td>Kernel poll reduces LeoFS' CPU usage when it has hundreds (or more) network connections.<p>( Default: true )</p></td>
+<td><code class="codehilite">erlang.kernel_poll</code></td>
+<td>Kernel poll reduces LeoFS' CPU usage when it has hundreds (or more) network connections.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>erlang.asyc_threads</td>
-<td>The total number of Erlang aynch threads<p>( Default: 32 )</p></td>
+<td><code class="codehilite">erlang.asyc_threads</code></td>
+<td>The total number of Erlang aynch threads<p><em>( Default: 32 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.max_ports</td>
-<td>The max_ports sets the default value of maximum number of ports.<br/><br/>- See also: <a href="http://erlang.org/doc/man/erlang.html">Erlang erlang:open_port/2</a><p>( Default: 64000 )</p></td>
+<td><code class="codehilite">erlang.max_ports</code></td>
+<td>The max_ports sets the default value of maximum number of ports.<br/><br/>- See also: <a href="http://erlang.org/doc/man/erlang.html">Erlang erlang:open_port/2</a><p><em>( Default: 64000 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.crash_dump</td>
-<td>The output destination of an Erlang crash dump<p>( Default: ./log/erl_crash.dump )</p></td>
+<td><code class="codehilite">erlang.crash_dump</code></td>
+<td>The output destination of an Erlang crash dump<p><em>( Default: ./log/erl_crash.dump )</em></p></td>
 </tr>
 <tr>
-<td>erlang.max_ets_tables</td>
-<td>The maxinum number of <a href="http://erlang.org/doc/man/ets.html" target="_blank">Erlagn ETS</a> tables<p>( Default: 256000 )</p></td>
+<td><code class="codehilite">erlang.max_ets_tables</code></td>
+<td>The maxinum number of <a href="http://erlang.org/doc/man/ets.html" target="_blank">Erlagn ETS</a> tables<p><em>( Default: 256000 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.smp</td>
-<td><code class="codehilite">-smp</code> enable and <code class="codehilite">-smp</code> start the Erlang runtime system with <a href="https://en.wikipedia.org/wiki/Symmetric_multiprocessing" target="_blank">SMP</a> support enabled.<p>( Default: enable )</p></td>
+<td><code class="codehilite">erlang.smp</code></td>
+<td><code class="codehilite">-smp</code> enable and <code class="codehilite">-smp</code> start the Erlang runtime system with <a href="https://en.wikipedia.org/wiki/Symmetric_multiprocessing" target="_blank">SMP</a> support enabled.<p><em>( Default: enable )</em></p></td>
 </tr>
 <tr>
-<td>erlang.schedulers.compaction_of_load</td>
-<td>Enables or disables scheduler compaction of load. If it's enabled, the Erlang VM will attempt to fully load as many scheduler threads as mush as possible.<p>( Default: true )</p></td>
+<td><code class="codehilite">erlang.schedulers.compaction_of_load</code></td>
+<td>Enables or disables scheduler compaction of load. If it's enabled, the Erlang VM will attempt to fully load as many scheduler threads as mush as possible.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>erlang.schedulers.utilization_balancing</td>
-<td>Enables or disables scheduler utilization balancing of load. By default scheduler utilization balancing is disabled and instead scheduler compaction of load is enabled, which strives for a load distribution that causes as many scheduler threads as possible to be fully loaded (that is, not run out of work).<p>( Default: false )</p></td>
+<td><code class="codehilite">erlang.schedulers.utilization_balancing</code></td>
+<td>Enables or disables scheduler utilization balancing of load. By default scheduler utilization balancing is disabled and instead scheduler compaction of load is enabled, which strives for a load distribution that causes as many scheduler threads as possible to be fully loaded (that is, not run out of work).<p><em>( Default: false )</em></p></td>
 </tr>
 <tr>
-<td>erlang.distribution_buffer_size</td>
-<td>Sender-side network distribution buffer size <em>(unit: KB)</em><p>( Default: 32768 )</p></td>
+<td><code class="codehilite">erlang.distribution_buffer_size</code></td>
+<td>Sender-side network distribution buffer size <em>(unit: KB)</em><p><em>( Default: 32768 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.fullsweep_after</td>
-<td>Option fullsweep_after makes it possible to specify the maximum number of generational collections before forcing a fullsweep, even if there is room on the old heap. Setting the number to zero disables the general collection algorithm, that is, all live data is copied at every garbage collection.<p>( Default: 0 )</p></td>
+<td><code class="codehilite">erlang.fullsweep_after</code></td>
+<td>Option fullsweep_after makes it possible to specify the maximum number of generational collections before forcing a fullsweep, even if there is room on the old heap. Setting the number to zero disables the general collection algorithm, that is, all live data is copied at every garbage collection.<p><em>( Default: 0 )</em></p></td>
 </tr>
 <tr>
-<td>erlang.secio</td>
-<td>Enables or disables eager check I/O scheduling. The flag effects when schedulers will check for I/O operations possible to execute, and when such I/O operations will execute.<p>( Default: true )</p></td>
+<td><code class="codehilite">erlang.secio</code></td>
+<td>Enables or disables eager check I/O scheduling. The flag effects when schedulers will check for I/O operations possible to execute, and when such I/O operations will execute.<p><em>( Default: true )</em></p></td>
 </tr>
 <tr>
-<td>process_limit</td>
-<td>The maxinum number of Erlang processes. Sets the maximum number of simultaneously existing processes for this system if a Number is passed as value. Valid range for Number is [1024-134217727]<p>( Default: 1048576 )</p></td>
+<td><code class="codehilite">process_limit</code></td>
+<td>The maxinum number of Erlang processes. Sets the maximum number of simultaneously existing processes for this system if a Number is passed as value. Valid range for Number is [1024-134217727]<p><em>( Default: 1048576 )</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1531,6 +1543,7 @@
 <li><a href="../../protocols/s3/">For Administrators / Interface / S3-API</a></li>
 <li><a href="../../protocols/rest/">For Administrators / Interface / REST-API</a></li>
 <li><a href="../../protocols/nfs_v3/">For Administrators / Interface / NFS v3</a></li>
+<li><a href="../../system_admin/monitoring/">For Administrators / System Administration / System Monitoring</a></li>
 <li><a href="../../system_operations/s3/">For Administrators / System Operations / S3-API related Operations</a></li>
 <li><a href="../environment_config/">For Administrators / Settings / Environment Configuration</a></li>
 </ul>
@@ -1600,7 +1613,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            (c) 2012-2017 LeoProject. All rights reserved.
+            (c) 2012-2018 LeoProject. All rights reserved.
           </div>
         
         powered by
