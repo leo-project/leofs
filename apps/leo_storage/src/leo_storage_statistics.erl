@@ -118,7 +118,7 @@ get_and_set_mq_value([{?SNMP_MQ_NUM_OF_DEL_DIR = Id, ?QUEUE_ID_DEL_DIR}|Rest]) -
                       end,
                   SoFar + RetN
           end, 0, ?del_dir_queue_list()),
-    catch snmp_generic:variable_set(Id, V),
+    catch snmp_generic:variable_set(Id, check_number(V)),
     get_and_set_mq_value(Rest);
 get_and_set_mq_value([{Id, QId}|Rest]) ->
     V = case catch leo_mq_api:status(QId) of
@@ -132,7 +132,7 @@ get_and_set_mq_value([{Id, QId}|Rest]) ->
             _ ->
                 0
         end,
-    catch snmp_generic:variable_set(Id, V),
+    catch snmp_generic:variable_set(Id, check_number(V)),
     get_and_set_mq_value(Rest).
 
 
@@ -225,9 +225,10 @@ to_unixtime(DateTime) ->
 
 %% @private
 check_number(V) when is_number(V) ->
-    case (leo_math:power(2,32) =< V) of
+    Max = leo_math:power(2, 32),
+    case (Max =< V) of
         true ->
-            4294967296;
+            Max;
         false when V < 0 ->
             0;
         false ->
