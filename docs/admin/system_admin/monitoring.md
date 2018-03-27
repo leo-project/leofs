@@ -66,10 +66,10 @@ SNMPv2-SMI::enterprises.35450.15.15.0 = Gauge32: 88735915
 |------|---------------|
 | Port | 4010..4014 |
 | Branch | 1.3.6.1.4.1.35450 |
-| [snmpa\_storage\_0](https://github.com/leo-project/leofs/tree/master/apps/leo_storage/snmp/snmpa_storage_0) | Port: 4020 |
-| [snmpa\_storage\_1](https://github.com/leo-project/leofs/tree/master/apps/leo_storage/snmp/snmpa_storage_1) | Port: 4021 |
-| [snmpa\_storage\_2](https://github.com/leo-project/leofs/tree/master/apps/leo_storage/snmp/snmpa_storage_2) | Port: 14020 |
-| [snmpa\_storage\_3](https://github.com/leo-project/leofs/tree/master/apps/leo_storage/snmp/snmpa_storage_3) | Port: 14021 |
+| [snmpa\_storage\_0](https://github.com/leo-project/leofs/tree/master/apps/leo_storage/snmp/snmpa_storage_0) | Port: 4010 |
+| [snmpa\_storage\_1](https://github.com/leo-project/leofs/tree/master/apps/leo_storage/snmp/snmpa_storage_1) | Port: 4011 |
+| [snmpa\_storage\_2](https://github.com/leo-project/leofs/tree/master/apps/leo_storage/snmp/snmpa_storage_2) | Port: 4012 |
+| [snmpa\_storage\_3](https://github.com/leo-project/leofs/tree/master/apps/leo_storage/snmp/snmpa_storage_3) | Port: 4013 |
 
 #### SNMPA Items of Erlang-VM
 
