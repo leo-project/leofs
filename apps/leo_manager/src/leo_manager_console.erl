@@ -2045,7 +2045,8 @@ escape_large_obj_sep(SrcKey) ->
             Len = length(SrcKey),
             DstKey = string:substr(SrcKey, 1, Index - 1),
             CNum = string:substr(SrcKey, Index + 2, Len - Index + 1),
-            string:join([DstKey, CNum], "\n")
+            %% This tail recursive call is needed to deal with an object having a grandparent
+            escape_large_obj_sep(string:join([DstKey, CNum], "\n"))
     end.
 
 %% @doc Recover object(s) by a key/node

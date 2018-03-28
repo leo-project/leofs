@@ -1363,7 +1363,7 @@ whereis(AssignedInfo) ->
                                  %% <<<
 
                                  CSize = leo_misc:get_value('csize', ItemL),
-                                 HasChildren = leo_misc:get_value('has_children', ItemL, false),
+                                 HasChildren = ChunkedObjs > 0,
                                  DelFlag = leo_misc:get_value('del', ItemL),
 
                                  %% === NOTE: for 1.4 >>>

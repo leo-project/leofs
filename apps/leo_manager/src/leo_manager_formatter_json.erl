@@ -684,7 +684,7 @@ whereis(AssignedInfo) ->
                              %% ECParams = leo_misc:get_value('ec_params', ItemL),
                              %% <<<
                              CSize = leo_misc:get_value('csize', ItemL),
-                             HasChildren = leo_misc:get_value('has_children', ItemL),
+                             HasChildren = ChunkedObjs > 0,
                              DelFlag = leo_misc:get_value('del', ItemL),
 
                              %% === NOTE: for 1.4 >>>
