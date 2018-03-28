@@ -489,13 +489,37 @@ delete_chunked_objects(CIndex, ParentKey) ->
     Key    = << ParentKey/binary, "\n", IndexBin/binary >>,
     AddrId = leo_redundant_manager_chash:vnode_id(Key),
 
-    case delete(#?OBJECT{addr_id = AddrId,
-                         key = Key,
-                         cindex = CIndex,
-                         clock = leo_date:clock(),
-                         timestamp = leo_date:now(),
-                         del = ?DEL_TRUE}, 0, false, storage) of
-        ok ->
+    case leo_storage_handler_object:head(AddrId, Key) of
+        {ok, #?METADATA{cnumber = 0} = _Meta} ->
+            case delete(#?OBJECT{addr_id = AddrId,
+                                 key = Key,
+                                 cindex = CIndex,
+                                 clock = leo_date:clock(),
+                                 timestamp = leo_date:now(),
+                                 del = ?DEL_TRUE}, 0, false, storage) of
+                ok ->
+                    delete_chunked_objects(CIndex - 1, ParentKey);
+                {error, Cause} ->
+                    {error, Cause}
+            end;
+        {ok, #?METADATA{cnumber = CNumber} = _Meta} ->
+            case delete_chunked_objects(CNumber, Key) of
+                ok ->
+                    case delete(#?OBJECT{addr_id = AddrId,
+                                         key = Key,
+                                         cindex = CIndex,
+                                         clock = leo_date:clock(),
+                                         timestamp = leo_date:now(),
+                                         del = ?DEL_TRUE}, 0, false, storage) of
+                        ok ->
+                            delete_chunked_objects(CIndex - 1, ParentKey);
+                        {error, Cause} ->
+                            {error, Cause}
+                    end;
+                {error, Cause} ->
+                    {error, Cause}
+            end;
+        not_found ->
             delete_chunked_objects(CIndex - 1, ParentKey);
         {error, Cause} ->
             {error, Cause}
