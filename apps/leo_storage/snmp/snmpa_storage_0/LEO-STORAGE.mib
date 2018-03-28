@@ -205,7 +205,7 @@ storage-total-objects-sizes
 --
 -- MQ-related items
 --
-mq-num-of-msg-replicate
+mq-num-of-msg-replication
     OBJECT-TYPE
         SYNTAX Gauge32
         MAX-ACCESS read-only
@@ -378,7 +378,7 @@ leofsGroup OBJECT-GROUP
                  req-writes-1m, req-reads-1m, req-deletes-1m,
                  req-writes-5m, req-reads-5m, req-deletes-5m,
                  storage-active-objects, storage-total-objects, storage-active-objects-sizes, storage-total-objects-sizes,
-                 mq-num-of-msg-replicate, mq-num-of-msg-sync-vnode, mq-num-of-msg-rebalance,
+                 mq-num-of-msg-replication, mq-num-of-msg-sync-vnode, mq-num-of-msg-rebalance,
                  vm-used-per-allocated-mem-1m, vm-allocated-mem-1m,
                  vm-used-per-allocated-mem-5m, vm-allocated-mem-5m,
                  mq-num-of-msg-recovery-node, mq-num-of-msg-deletion-dir,
