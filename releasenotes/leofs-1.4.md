@@ -1,4 +1,4 @@
-# 1.4.0 (Mar 28, 2018)
+# 1.4.0 (Mar 29, 2018)
 ### Fixed Bugs
 #### LeoGateway
 
@@ -11,6 +11,7 @@
 * [#964](https://github.com/leo-project/leofs/issues/964) `import-user` with the `access-key-id` belonging to a deleted user doesn't work
 * [#989](https://github.com/leo-project/leofs/issues/989) Should return `503` in case `leo_watchdog` get triggered
 * [#1003](https://github.com/leo-project/leofs/issues/1003) To avoid executing recover-cluster in case of not using multi DC replication
+* [#1010](https://github.com/leo-project/leofs/issues/1010) The `whereis` command doesn't work for an object having grandchildren
 
 #### LeoStorage
 
@@ -24,6 +25,7 @@
 * [#963](https://github.com/leo-project/leofs/issues/963) Suppress error logs on start
 * [#966](https://github.com/leo-project/leofs/issues/966) Node entered "strange" state with internal crashes
 * [#975](https://github.com/leo-project/leofs/issues/975) `leo_objct_storage` Avoid `gen_server` crash due to timeout
+* [#1011](https://github.com/leo-project/leofs/issues/1011) The `delete` API *(S3-API)* doesn't delete grandchildren
 
 #### Others
 
