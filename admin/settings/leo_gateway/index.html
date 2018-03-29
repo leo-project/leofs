@@ -631,6 +631,33 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#uploading-objects" title="Uploading Objects" class="md-nav__link">
+    Uploading Objects
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upload-objects-in-a-single-operation" title="Upload objects in a single operation" class="md-nav__link">
+    Upload objects in a single operation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upload-objects-in-parts" title="Upload objects in parts" class="md-nav__link">
+    Upload objects in parts
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cache-consistency-between-leogateway-and-leostorage" title="Cache Consistency between LeoGateway and LeoStorage" class="md-nav__link">
     Cache Consistency between LeoGateway and LeoStorage
   </a>
@@ -1120,6 +1147,33 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#uploading-objects" title="Uploading Objects" class="md-nav__link">
+    Uploading Objects
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upload-objects-in-a-single-operation" title="Upload objects in a single operation" class="md-nav__link">
+    Upload objects in a single operation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upload-objects-in-parts" title="Upload objects in parts" class="md-nav__link">
+    Upload objects in parts
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cache-consistency-between-leogateway-and-leostorage" title="Cache Consistency between LeoGateway and LeoStorage" class="md-nav__link">
     Cache Consistency between LeoGateway and LeoStorage
   </a>
@@ -1549,6 +1603,16 @@
 </tbody>
 </table>
 <h3 id="notes-and-tips-of-the-configuration">Notes and Tips of the Configuration<a class="headerlink" href="#notes-and-tips-of-the-configuration" title="Permanent link">&para;</a></h3>
+<h4 id="uploading-objects">Uploading Objects<a class="headerlink" href="#uploading-objects" title="Permanent link">&para;</a></h4>
+<p>LeoFS has two options for uploading objects:</p>
+<h5 id="upload-objects-in-a-single-operation">Upload objects in a single operation<a class="headerlink" href="#upload-objects-in-a-single-operation" title="Permanent link">&para;</a></h5>
+<p>You can upload objects <strong>up to 5 GB</strong> in size with a single PUT operation. If you would like to change the limit, you need to modify one of the following settings or both of your LeoGateway's configuration, <code class="codehilite">leo_gateway.conf</code>:</p>
+<ul>
+<li><code class="codehilite">large_object.max_chunked_objs</code> <em>(default: 1000)</em></li>
+<li><code class="codehilite">large_object.chunked_obj_len</code> <em>(default: 5242880, Unit: <code class="codehilite">byte</code>)</em></li>
+</ul>
+<h5 id="upload-objects-in-parts">Upload objects in parts<a class="headerlink" href="#upload-objects-in-parts" title="Permanent link">&para;</a></h5>
+<p>You can upload large objects with using the multipart upload S3-API. You can upload objects in parts. The upper limit of one part is <strong>2 GB</strong>.</p>
 <h4 id="cache-consistency-between-leogateway-and-leostorage">Cache Consistency between LeoGateway and LeoStorage<a class="headerlink" href="#cache-consistency-between-leogateway-and-leostorage" title="Permanent link">&para;</a></h4>
 <p>LeoGateway's cache feature does not depend on the consistency level of a cluster. There is a possibility of object inconsistency.</p>
 <p>LeoGateway requests a storage node to compare a cached object's hash value with its stored object's hash value. LeoGateway selects a LeoStorage's node from RING, <em>a distributed hash table</em> by a target object name, then LeoGateway requests a LeoStorage node of the redundant node. If the requested object is inconsistent in the replicas and LeoGateway cached it, a client may get inconsistent objects.</p>
