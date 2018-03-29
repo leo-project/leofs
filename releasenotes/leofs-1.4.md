@@ -26,6 +26,8 @@
 * [#966](https://github.com/leo-project/leofs/issues/966) Node entered "strange" state with internal crashes
 * [#975](https://github.com/leo-project/leofs/issues/975) `leo_objct_storage` Avoid `gen_server` crash due to timeout
 * [#1011](https://github.com/leo-project/leofs/issues/1011) The `delete` API *(S3-API)* doesn't delete grandchildren
+* [#1014](https://github.com/leo-project/leofs/issues/1014) `data-compaction` After overwriting a large file and executing data-compaction, cannot retrieve the one
+* [#1017](https://github.com/leo-project/leofs/issues/1017) `data-compaction` Grandparent (root) objects can be removed unintentionally
 
 #### Others
 
