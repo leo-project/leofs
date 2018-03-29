@@ -108,6 +108,21 @@ If you want to customize settings like where to place `leo_gateway.conf`, what u
 | `process_limit`                           | The maxinum number of Erlang processes. Sets the maximum number of simultaneously existing processes for this system if a Number is passed as value. Valid range for Number is [1024-134217727]<p>*( Default: 1048576 )*</p> |
 
 ### Notes and Tips of the Configuration
+#### Uploading Objects
+
+LeoFS has two options for uploading objects:
+
+##### Upload objects in a single operation
+
+You can upload objects **up to 5 GB** in size with a single PUT operation. If you would like to change the limit, you need to modify one of the following settings or both of your LeoGateway's configuration, `leo_gateway.conf`:
+
+* `large_object.max_chunked_objs` *(default: 1000)*
+* `large_object.chunked_obj_len` *(default: 5242880, Unit: `byte`)*
+
+##### Upload objects in parts
+
+You can upload large objects with using the multipart upload S3-API. You can upload objects in parts. The upper limit of one part is **2 GB**.
+
 
 #### Cache Consistency between LeoGateway and LeoStorage
 
