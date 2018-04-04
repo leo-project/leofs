@@ -529,12 +529,19 @@ get_x_amz_meta_directive(Req, ?BIN_EMPTY) ->
 get_x_amz_meta_directive(_Req, Other) ->
     Other.
 
-
 %% @doc POST/PUT operation on Objects
 -spec(put_object(Req, Key, ReqParams) ->
              {ok, Req} when Req::cowboy_req:req(),
                             Key::binary(),
                             ReqParams::#req_params{}).
+put_object(Req, _Key, #req_params{is_acl = true} = _Params) ->
+    %% Need to return 200 in order to succeed the operation for DragonDisk
+    %% More proper IMPL would be checking the UA header and
+    %% return 200 if the UA indicates that the request comes from DragonDisk OR
+    %% return 501 otherwise.
+    %% However it's hard to maintain so we go for the former approach as other NOT_IMPLEMENTED API do.
+    ?reply_ok([?SERVER_HEADER], Req);
+
 put_object(Req, Key, Params) ->
     put_object(get_x_amz_meta_directive(Req), Req, Key, Params).
 
