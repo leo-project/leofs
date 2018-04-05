@@ -81,9 +81,14 @@ start_link() ->
             JSON_Console = #tcp_server_params{prefix_of_name  = "tcp_server_json_",
                                               port = ?env_listening_port_json(),
                                               num_of_listeners = ?env_num_of_acceptors_json()},
+            Listen = CUI_Console#tcp_server_params.listen,
+            BindAddress = get_bind_address(),
+            NewListen = [{ip, BindAddress}|Listen],
+            CUI_Console2 = CUI_Console#tcp_server_params{listen = NewListen},
+            JSON_Console2 = JSON_Console#tcp_server_params{listen = NewListen},
             PluginModConsole = ?env_plugin_mod_console(),
-            ok = leo_manager_console:start_link(leo_manager_formatter_text, CUI_Console,  PluginModConsole),
-            ok = leo_manager_console:start_link(leo_manager_formatter_json, JSON_Console, PluginModConsole),
+            ok = leo_manager_console:start_link(leo_manager_formatter_text, CUI_Console2,  PluginModConsole),
+            ok = leo_manager_console:start_link(leo_manager_formatter_json, JSON_Console2, PluginModConsole),
 
             %% Launch the components
             ok = start_logger(),
@@ -116,6 +121,19 @@ start_link() ->
             Error
     end.
 
+get_bind_address() ->
+    StringAddr = ?env_bind_address(),
+    case StringAddr of
+        "localhost" ->
+            loopback;
+        "loopback" ->
+            loopback;
+        "any" ->
+            any;
+        MaybeIPAddr ->
+            {ok, IPAddr} = inet:parse_address(MaybeIPAddr),
+            IPAddr
+    end.
 
 %% @doc Create mnesia tables
 -spec(create_mnesia_tables(master|slave, [atom()]) ->

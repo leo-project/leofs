@@ -530,6 +530,12 @@
             _ -> []
         end).
 
+-define(env_bind_address(),
+        case application:get_env(leo_manager, bind_address) of
+            {ok, EnvBindAddress} -> EnvBindAddress;
+            _ -> "localhost"
+        end).
+
 -define(env_listening_port_cui(),
         case application:get_env(leo_manager, port_cui) of
             {ok, EnvCUIListeningPort} -> EnvCUIListeningPort;
