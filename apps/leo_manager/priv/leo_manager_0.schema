@@ -121,6 +121,15 @@
          [Partner]
  end}.
 
+%% @doc Manager acceptable ip address
+{mapping,
+ "console.bind_address",
+ "leo_manager.bind_address",
+ [
+  {datatype, string},
+  {default, "loopback"}
+ ]}.
+
 %% @doc Manager acceptable port number
 {mapping,
  "console.port.cui",
