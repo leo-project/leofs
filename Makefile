@@ -113,3 +113,7 @@ release_for_test: replace_launch_env release
 
 pkgsrc: release
 	make -C pkg
+build_doc:
+	rm -rf site/ && mkdocs build
+serve_doc: build_doc
+	mkdocs serve --dev-addr 0.0.0.0:8000
