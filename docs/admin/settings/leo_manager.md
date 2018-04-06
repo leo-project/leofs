@@ -23,6 +23,7 @@ The default setting is to launch a LeoFS system on one node, whose setting canno
 |----------------------------------|------------------------------------------|
 | **Basic** |
 | `manager.partner`                  | The partner of manager's alias. This configuration is necessary for communicationg between `LeoManager's master` and `LeoManager's slave`. <br/>*( Default: manager_1@127.0.0.1 )*|
+| `console.bind_address`             | The IP address LeoManager listens on. You can set not only a specific IP address but also `any` which can be used to listen on all interfaces and `localhost` which can be used to listen on the loopback interface. <br/>*( Default: localhost )* |
 | `console.port.cui`                 | The port number of LeoManager's console for text format<br/>*( Default: 10010 )* |
 | `console.port.json`                | The port number of LeoManager's console for JSON format<br/>*( Default: 10020 )* |
 | `console.acceptors.cui`            | The maximum number of acceptors of LeoManager's console for text format<br/>*( Default: 3 )* |
