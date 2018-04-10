@@ -128,7 +128,7 @@
  "leo_gateway.system_version",
  [
   {datatype, string},
-  {default, "1.4.0"}
+  {default, "1.4.1"}
  ]}.
 
 
