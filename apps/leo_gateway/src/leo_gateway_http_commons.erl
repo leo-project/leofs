@@ -306,6 +306,7 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
                                  has_inner_cache = HasInnerCache,
                                  has_disk_cache = HasDiskCache,
                                  sending_chunked_obj_len = SendChunkLen,
+                                 sse_key = SSEKey,
                                  begin_time = BeginTime}) ->
     IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
                  {ok, undefined,_} ->
@@ -320,6 +321,8 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
             ?reply_not_modified([?SERVER_HEADER] ++ CustomHeaders, Req);
         %% For regular case (NOT a chunked object)
         {ok, #?METADATA{cnumber = 0,
+                        sse_keyhash = SSEKeyHash,
+                        sse_iv = SSEIV,
                         meta = CMetaBin} = Meta, RespObject} ->
             Mime = leo_mime:guess_mime(Key),
 
@@ -337,6 +340,14 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
                     void
             end,
 
+            {Object, Size} = case SSEKeyHash of
+                                 <<>> ->
+                                     {RespObject, Meta#?METADATA.dsize};
+                                 _ ->
+                                     {ok, Bin} = leo_ssec:decrypt_object(RespObject, SSEKey, SSEKeyHash, SSEIV),
+                                     {Bin, byte_size(Bin)}
+                             end,
+
             Headers = [?SERVER_HEADER,
                        {?HTTP_HEAD_RESP_CONTENT_TYPE, Mime},
                        {?HTTP_HEAD_RESP_ETAG, ?http_etag(Meta#?METADATA.checksum)},
@@ -352,11 +363,11 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
 
             BodyFunc = fun(Socket, Transport) ->
                                leo_net:chunked_send(
-                                 Transport, Socket, RespObject, SendChunkLen),
+                                 Transport, Socket, Object, SendChunkLen),
                                ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime)
                        end,
 
-            ?reply_ok(Headers2, {Meta#?METADATA.dsize, BodyFunc}, Req);
+            ?reply_ok(Headers2, {Size, BodyFunc}, Req);
 
         %% For a chunked object.
         {ok, #?METADATA{cnumber = TotalChunkedObjs,
@@ -755,14 +766,24 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
                                                           upload_part_num = UploadPartNum,
                                                           has_inner_cache = HasInnerCache,
                                                           bucket_info = BucketInfo,
+                                                          sse_key = SSEKey,
                                                           begin_time = BeginTime}) ->
+    {_Ret, Object, SSEKeyHash, SSEIV} = 
+        case SSEKey of
+            <<>> ->
+                {ok, Bin, <<>>, <<>>};
+            _ ->
+                leo_ssec:encrypt_object(Bin, SSEKey)
+        end,                
     case leo_gateway_rpc_handler:put(#put_req_params{path = Key,
-                                                     body = Bin,
+                                                     body = Object,
                                                      meta = CMeta,
                                                      msize = byte_size(CMeta),
-                                                     dsize = Size,
+                                                     dsize = byte_size(Object),
                                                      cindex = UploadPartNum,
-                                                     bucket_info = BucketInfo}) of
+                                                     bucket_info = BucketInfo,
+                                                     sse_keyhash = SSEKeyHash,
+                                                     sse_iv = SSEIV}) of
         {ok, ETag} ->
             case (HasInnerCache
                   andalso binary_is_contained(Key, 10) == false) of

@@ -72,7 +72,10 @@
 -define(HTTP_HEAD_X_AMZ_ACL,                    <<"x-amz-acl">>).
 -define(HTTP_HEAD_X_AMZ_CONTENT_SHA256,         <<"x-amz-content-sha256">>).
 -define(HTTP_HEAD_X_AMZ_DECODED_CONTENT_LENGTH, <<"x-amz-decoded-content-length">>).
--define(HTTP_HRAD_X_AMZ_DATE,                   <<"x-amz-date">>).
+-define(HTTP_HEAD_X_AMZ_DATE,                   <<"x-amz-date">>).
+-define(HTTP_HEAD_X_SSE_CUSTOM_ALGO,            <<"x-amz-server-side-encryption-customer-algorithm">>).
+-define(HTTP_HEAD_X_SSE_CUSTOM_KEY,             <<"x-amz-server-side-encryption-customer-key">>).
+-define(HTTP_HEAD_X_SSE_CUSTOM_KEY_MD5,         <<"x-amz-server-side-encryption-customer-key-MD5">>).
 -define(HTTP_HEAD_X_AMZ_META_DIRECTIVE_COPY,    <<"COPY">>).
 -define(HTTP_HEAD_X_AMZ_META_DIRECTIVE_REPLACE, <<"REPLACE">>).
 -define(HTTP_HEAD_X_FROM_CACHE,                 <<"x-from-cache">>).
@@ -190,6 +193,8 @@
 -define(XML_ERROR_MSG_SignatureDoesNotMatch, "The request signature we calculated does not match the signature you provided. Check your AWS secret access key and signing method.").
 -define(XML_ERROR_MSG_RequestTimeTooSkewed, "The difference between the request time and the server's time is too large.").
 -define(XML_ERROR_MSG_MetadataTooLarge, "Your metadata headers exceed the maximum allowed metadata size.").
+-define(XML_ERROR_MSG_EncryptKeyInvalid, "The secret key was invalid for the specified algorithm.").
+-define(XML_ERROR_MSG_EncryptKeyMD5NotMatch, "The calculated MD5 hash of the key did not match the hash that was provided.").
 
 %% Macros
 %% - code:200
@@ -566,6 +571,7 @@
           threshold_of_chunk_len = 0   :: non_neg_integer(),    %% threshold of chunk length for large-object (byte)
           transfer_decode_fun       :: function() | undefined,  %% transfer decode function
           transfer_decode_state     :: #aws_chunk_decode_state{} | undefined,   %% transfer decode state
+          sse_key = <<>>               :: binary(),             %% Server Side Encryption Key
           %% For Latency Measurement
           begin_time = 0               :: non_neg_integer()     %% Handle Start Time
          }).
@@ -580,7 +586,9 @@
           cindex = 0 :: non_neg_integer(),
           csize = 0 :: non_neg_integer(),
           digest = 0 :: non_neg_integer(),
-          bucket_info = undefined :: term()|undefined
+          bucket_info = undefined :: term()|undefined,
+          sse_keyhash = <<>> :: binary(),
+          sse_iv = <<>> :: binary()
           }).
 
 -record(transport_record, {
