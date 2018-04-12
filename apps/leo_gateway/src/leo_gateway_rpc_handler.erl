@@ -143,7 +143,9 @@ put(#put_req_params{path = Key,
                     total_chunks = TotalChunks,
                     cindex = ChunkIndex,
                     csize = ChunkedSize,
-                    digest = Digest
+                    digest = Digest,
+                    sse_keyhash = SSEKeyHash,
+                    sse_iv = SSEIV
                     %% === NOTE: for 1.4.0 >>>
                     %% bucket_info = BucketInfo
                     %% <<<
@@ -186,7 +188,9 @@ put(#put_req_params{path = Key,
                      csize = ChunkedSize,
                      cnumber = TotalChunks,
                      cindex = ChunkIndex,
-                     checksum = Digest
+                     checksum = Digest,
+                     sse_keyhash = SSEKeyHash,
+                     sse_iv = SSEIV
                      %% === NOTE: for 1.4.0 >>>
                      %% redundancy_method = RedMethod,
                      %% cp_params = CPParams,

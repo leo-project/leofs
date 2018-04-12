@@ -170,7 +170,7 @@ check_bad_date(Req) ->
 check_bad_date_1(Req) ->
     case cowboy_req:header(?HTTP_HEAD_DATE, Req) of
         {undefined, _} ->
-            case cowboy_req:header(?HTTP_HRAD_X_AMZ_DATE, Req) of
+            case cowboy_req:header(?HTTP_HEAD_X_AMZ_DATE, Req) of
                 {undefined, _} ->
                     {error, 403, ?XML_ERROR_CODE_AccessDenied, ?XML_ERROR_MSG_AccessDenied};
                 {Date, _} ->
@@ -1457,6 +1457,14 @@ request_params(Req, Params) ->
                          true
                  end,
 
+    %% TODO: SSEC, Check Key MD5, Algorithm
+    SSECKey = case element(1, cowboy_req:header(?HTTP_HEAD_X_SSE_CUSTOM_KEY, Req, <<>>)) of
+                  <<>> ->
+                      <<>>;
+                  EKey ->
+                      base64:decode(EKey)
+              end,
+
     {Headers, _} = cowboy_req:headers(Req),
     {ok, CMetaBin} = parse_headers_to_cmeta(Headers),
 
@@ -1471,6 +1479,7 @@ request_params(Req, Params) ->
                               upload_id = UploadId,
                               upload_part_num = PartNum,
                               custom_metadata = CMetaBin,
+                              sse_key = SSECKey,
                               range_header = Range}
     end.
 
