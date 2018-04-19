@@ -304,7 +304,13 @@ When/How to use recover commands.
     - Set up the cluster from scratch
     - invoke `recover-cluster` with the new cluster
     - See also [issue#636](https://github.com/leo-project/leofs/issues/636) for more information.
-
+- Regular Scrub
+    - In order to keep data consistent on the eventual consistent system, The regular scrub should be done.
+    - So we'd recommend users run `recover-node` regularly while keeping the below cautions in mind,
+        - Run `recover-node` one-by-one at the off-peak time of your system
+        - When some LeoStorage go down during the recover process, just do it over again once the downed nodes come back
+        - Generally speaking, it depends heavily on the size of your data and the consistency level(W and D) you chose.
+        - The lower consistency level you choose, The more frequently you should run `recover-node`.
 
 ## Related Links
 
