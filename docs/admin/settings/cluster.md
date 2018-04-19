@@ -49,6 +49,8 @@ This document delivers the relationship of `data availability` and `configuratio
 | High              | n=3, r=2<br/>w=3, d=3 | Data can not be input and removed even if one node goes down |
 | Extremely High    | n=3, r=3<br/>w=3, d=3 | Data can not be acquired even if one node goes down *(can not be recommended)*|
 
+!!! Warning "Warning: Rebalance with Extremely High Settings"
+    While rebalance is on-going, PUT/DELETE use an new RING and GET/HEAD use an old RING. That said, if any updates happen on existing objects then there can be inconsistent objects from the old RING perspective however thanks to the inherent nature of the consistent hashing, almost replicas keep staying at the same position so it should not be problem while operating LeoFS in a typical(Other than `Extremely High`) consistency level. But if you operate LeoFS in `Extremely High` then GET/HEAD to the existing object may fail during the rebalance process. If that is the case then you may be able to use `update-consistency-level` to lower the consistency level temporarily. Don't forget to set it back to the original setting once the rebalance finishes.
 
 ### How To Change Consistency Level
 
