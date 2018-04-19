@@ -1857,6 +1857,17 @@ OK
 <li>See also <a href="https://github.com/leo-project/leofs/issues/636">issue#636</a> for more information.</li>
 </ul>
 </li>
+<li>Regular Scrub<ul>
+<li>In order to keep data consistent on the eventual consistent system, The regular scrub should be done.</li>
+<li>So we'd recommend users run <code class="codehilite">recover-node</code> regularly while keeping the below cautions in mind,<ul>
+<li>Run <code class="codehilite">recover-node</code> one-by-one at the off-peak time of your system</li>
+<li>When some LeoStorage go down during the recover process, just do it over again once the downed nodes come back</li>
+<li>Generally speaking, it depends heavily on the size of your data and the consistency level(W and D) you chose.</li>
+<li>The lower consistency level you choose, The more frequently you should run <code class="codehilite">recover-node</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>

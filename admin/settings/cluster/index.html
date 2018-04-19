@@ -1252,6 +1252,10 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition warning">
+<p class="admonition-title">Warning: Rebalance with Extremely High Settings</p>
+<p>While rebalance is on-going, PUT/DELETE use an new RING and GET/HEAD use an old RING. That said, if any updates happen on existing objects then there can be inconsistent objects from the old RING perspective however thanks to the inherent nature of the consistent hashing, almost replicas keep staying at the same position so it should not be problem while operating LeoFS in a typical(Other than <code class="codehilite">Extremely High</code>) consistency level. But if you operate LeoFS in <code class="codehilite">Extremely High</code> then GET/HEAD to the existing object may fail during the rebalance process. If that is the case then you may be able to use <code class="codehilite">update-consistency-level</code> to lower the consistency level temporarily. Don't forget to set it back to the original setting once the rebalance finishes.</p>
+</div>
 <h3 id="how-to-change-consistency-level">How To Change Consistency Level<a class="headerlink" href="#how-to-change-consistency-level" title="Permanent link">&para;</a></h3>
 <p>You can change <code class="codehilite">consistency.write</code>, <code class="codehilite">consistency.read</code> and <code class="codehilite">consistency.delete</code> of the consistency level that you use the <code class="codehilite">leofs-adm update-consistency-level</code> command, but you cannot update <code class="codehilite">num_of_replicas</code> and <code class="codehilite">rack_aware_replicas</code>.</p>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
