@@ -79,6 +79,24 @@ main(Args) ->
                 Other ->
                     io:format("~p\n", [Other])
             end;
+        ["reload_http_conf"] ->
+            case rpc:call(TargetNode, leo_gateway_http_commons, reload_http_header_conf,
+                          [], 60000) of
+                {badrpc, Reason} ->
+                    io:format("RPC to ~p failed: ~p\n", [TargetNode, Reason]),
+                    halt(1);
+                Other ->
+                    io:format("~p\n", [Other])
+            end;
+        ["test_http_conf"] ->
+            case rpc:call(TargetNode, leo_gateway_http_commons, validate_http_header_conf,
+                          [], 60000) of
+                {badrpc, Reason} ->
+                    io:format("RPC to ~p failed: ~p\n", [TargetNode, Reason]),
+                    halt(1);
+                Other ->
+                    io:format("~p\n", [Other])
+            end;
         ["ready"] ->
             case rpc:call(TargetNode, application, which_applications, [], 60000) of
                 {badrpc, Reason} ->
