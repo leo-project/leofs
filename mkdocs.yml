@@ -88,3 +88,6 @@ pages:
     - LeoFS Administration: 'faq/administration.md'
     - LeoFS Clients: 'faq/client.md'
 - Production Checklist: 'production_checklist/README.md'
+- RFCS:
+    - Data Protection:
+        - Server Side Object Encryption with Customer-Provided Encryption Keys: 'RFCS/data_protection/ssec.md'
