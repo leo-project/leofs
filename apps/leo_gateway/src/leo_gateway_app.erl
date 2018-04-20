@@ -254,6 +254,10 @@ after_process_1(Pid, Managers) ->
     %% Retrieve http-options
     {ok, HttpOptions} = get_options(),
 
+    %% Store http-options for the graceful update to the http header config file
+    _ = ets:new(?ETS_HTTP_OPTION_TBL, [set, public, named_table]),
+    true = ets:insert(?ETS_HTTP_OPTION_TBL, {?ETS_HTTP_OPTION_KEY, HttpOptions}),
+
     %% Launch bucket-sync, s3-related-procs
     %% [S3, NFS]
     Handler = HttpOptions#http_options.handler,

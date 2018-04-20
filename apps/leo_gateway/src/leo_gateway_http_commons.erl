@@ -40,6 +40,7 @@
          delete_object/3, head_object/3,
          range_object/3,
          do_health_check/0]).
+-export([reload_http_header_conf/0, validate_http_header_conf/0]).
 
 -record(req_large_obj, {
           handler :: pid(),
@@ -140,6 +141,42 @@ start(Sup, Options) ->
     %% launch http-handler(s)
     start(Options).
 
+%% @doc Reload HTTP header conf
+%%
+-spec(reload_http_header_conf() -> ok | {error, any()}).
+reload_http_header_conf() ->
+    Ret = validate_http_header_conf(),
+    reload_http_header_conf(Ret).
+
+reload_http_header_conf({error, _Reason} = Err) ->
+    Err;
+reload_http_header_conf({ok, HttpOpts, CustomHeaderSettings}) ->
+    InternalCache = (HttpOpts#http_options.cache_method == 'inner'),
+    Dispatch      = cowboy_router:compile(
+                      [{'_', [{'_', HttpOpts#http_options.handler,
+                               [?env_layer_of_dirs(), InternalCache,
+                                CustomHeaderSettings, HttpOpts]}]}]),
+    ok = cowboy:set_env(HttpOpts#http_options.handler, dispatch, Dispatch).
+
+%% @doc Validate HTTP header conf
+%%
+-spec(validate_http_header_conf() -> {ok, #http_options{}, any()} | {error, any()}).
+validate_http_header_conf() ->
+
+    [{_Key, HttpOpts}] = ets:lookup(?ETS_HTTP_OPTION_TBL, ?ETS_HTTP_OPTION_KEY),
+    case leo_nginx_conf_parser:parse(HttpOpts#http_options.headers_config_file) of
+        {ok, CustomHeaderSettings} ->
+            {ok, HttpOpts, CustomHeaderSettings};
+        not_found ->
+            {error, not_found};
+        {error, enoent} ->
+            {error, enoent};
+        {error, Reason} ->
+            ?error("validate_http_header_conf/0",
+                   [{simple_cause, "reading http custom header file failed"},
+                    {cause, Reason}]),
+            {error, Reason}
+    end.
 
 %% @doc Handle request
 %%

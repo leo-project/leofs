@@ -112,6 +112,7 @@
 -define(HTTP_ST_CONFLICT,            409).
 -define(HTTP_ST_BAD_RANGE,           416).
 -define(HTTP_ST_INTERNAL_ERROR,      500).
+-define(HTTP_ST_NOT_IMPLEMENTED,     501).
 -define(HTTP_ST_SERVICE_UNAVAILABLE, 503).
 -define(HTTP_ST_GATEWAY_TIMEOUT,     504).
 
@@ -221,6 +222,9 @@
 %% - code:500
 -define(reply_internal_error_without_body(_H,_R),
         cowboy_req:reply(?HTTP_ST_INTERNAL_ERROR, _H,_R)).
+%% - code:501
+-define(reply_not_implemented_without_body(_H,_R),
+        cowboy_req:reply(?HTTP_ST_NOT_IMPLEMENTED, _H,_R)).
 %% - code:503
 -define(reply_timeout_without_body(_H,_R),
         cowboy_req:reply(?HTTP_ST_SERVICE_UNAVAILABLE,_H,_R)).
@@ -468,6 +472,10 @@
 
 -define(XML_BUCKET_VERSIONING,
         <<"<VersioningConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"/>">>).
+
+%% ETS Identifier
+-define(ETS_HTTP_OPTION_TBL, 'leo_gateway_http_opts_tbl').
+-define(ETS_HTTP_OPTION_KEY, 'leo_gateway_http_opts_key').
 
 %% Records
 -type aws_chunk_state() ::  wait_size | wait_head | read_chunk | error | done.
