@@ -338,6 +338,22 @@ case "$1" in
         exec $ERTS_PATH/to_erl $PIPE_DIR
         ;;
 
+    reload_http_conf)
+        $NODETOOL reload_http_conf
+        ES=$?
+        if [ "$ES" -ne 0 ]; then
+            exit $ES
+        fi
+        ;;
+
+    test_http_conf)
+        $NODETOOL test_http_conf
+        ES=$?
+        if [ "$ES" -ne 0 ]; then
+            exit $ES
+        fi
+        ;;
+
     ready)
         ## See if application is ready
         $NODETOOL ready
