@@ -35,6 +35,22 @@ Cache-Control: public, max-age=43200;
 X-OriginalHeader: OriginalValue;
 ```
 
+### How to Test whether a conf file has any errors
+
+You can do it using the leo_gateway startup script like the following.
+
+```shell
+# ./bin/leo_gateway test_http_conf
+```
+
+### How to Reload a conf file on the fly
+
+You can do it using the leo_gateway startup script like the following.
+
+```shell
+# ./bin/leo_gateway reload_http_conf
+```
+
 ### Use Cases
 
 Specify TTL by the bucket.
