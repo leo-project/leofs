@@ -1,9 +1,10 @@
-- Feature Name: <NAME>
+#  <Feature Name>
+
 - Status: draft/in-progress/completed/rejected/obsolete/postponed
 - Start Date: YYYY-MM-DD
 - LeoFS Issue: (one or more # from [LeoFS Issues](https://github.com/leo-project/leofs/issues))
 
-# Summary
+## Summary
 
 One paragraph explanation of the proposed change.
 
@@ -13,11 +14,11 @@ Suggested contents:
 - How (short plan)
 - Impact
 
-# Motivation
+## Motivation
 
 Why are we doing this? What use cases does it support? What is the expected outcome?
 
-# Guide-level explanation
+## Guide-level explanation
 
 How do we teach this?
 
@@ -39,7 +40,7 @@ the change, and give examples of its concrete impact. For policy RFCs,
 this section should provide an example-driven introduction to the
 policy, and explain its impact in concrete terms.
 
-# Reference-level explanation
+## Reference-level explanation
 
 This is the technical portion of the RFC. Explain the design in sufficient detail that:
 
