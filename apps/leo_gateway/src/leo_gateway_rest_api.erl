@@ -187,7 +187,7 @@ gen_key(Req) ->
 
 %% @doc Hande an http-request
 %% @private
-handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, _CustomHeaderSettings, Props] = State, Path) ->
+handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, CustomHeaderSettings, Props] = State, Path) ->
     BeginTime = leo_date:clock(),
     TokenLen = length(binary:split(Path, [?BIN_SLASH], [global, trim])),
     HTTPMethod = cowboy_req:get(method, Req),
@@ -205,6 +205,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, _CustomHeaderSet
                                     max_chunked_objs = Props#http_options.max_chunked_objs,
                                     max_len_of_obj = Props#http_options.max_len_of_obj,
                                     chunked_obj_len = Props#http_options.chunked_obj_len,
+                                    custom_header_settings = CustomHeaderSettings,
                                     timeout_for_header = Props#http_options.timeout_for_header,
                                     timeout_for_body = Props#http_options.timeout_for_body,
                                     sending_chunked_obj_len = Props#http_options.sending_chunked_obj_len,
