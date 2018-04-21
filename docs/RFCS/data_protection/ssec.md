@@ -38,7 +38,7 @@ In each of the following operations, LeoStorage handles encryption and decryptio
 * Multipart Upload
 * COPY
 
-LeoGateway never caches objects to securely protect data.
+LeoGateway never caches objects to securely protect.
 
 
 ### Request Handling on LeoGateway
@@ -83,7 +83,7 @@ Even when Range GET operation is requested, LeoStorage handles the same as GET o
 
 ## Drawbacks
 
-* LeoFS certainly degrade the read performance when retrieving an encrypted object *(secure data)* because LeoGateway never cache objects to securely protect data.
+* Compared with an unencrypted object, LeoFS certainly degrade the read performance when retrieving an encrypted object *(secure data)* because LeoGateway never caches the objects to securely protect.
 
 
 ## Rationale and Alternatives
@@ -93,7 +93,7 @@ Initially, we were considering **implementing object encryption and decryption o
 * LeoGateway's CPU usage tends to be high. We must not assign more processing, object encryption and decryption to LeoGateway.
 * In many cases, the number of LeoGateway is smaller than the number of LeoStorage. Load balancing cannot be expected.
 * In order to prevent vulnerabilities, secure data must not be cached.
-* When handling Range GET operation, LeoGateway retrieves an object in the specified range from LeoStorage, then decrypt it, finally returns it to a client. In this way, the data traffic is high than retrieving unencrypted objects.
+* When handling Range GET operation, LeoGateway retrieves an object in the specified range from LeoStorage, then decrypt it, finally returns it to a client. In this way, the data traffic is higher than retrieving unencrypted objects.
 
 
 ## Unresolved questions
