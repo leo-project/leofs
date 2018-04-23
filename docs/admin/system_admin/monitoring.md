@@ -257,8 +257,24 @@ SNMPv2-SMI::enterprises.35450.34.33.0 = Gauge32: 78
 SNMPv2-SMI::enterprises.35450.34.34.0 = Gauge32: 88735915
 ```
 
+
+## Using Grafana
+
+In order to easily monitor LeoFS, we provide LeoFS' input plugin of Telegraf[^1]. See more details on <a href ="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/leofs/" target="_blank">its documentation</a>.
+
+If you decide to utilize Telegraf[^1], you need to install InfluxDB[^2] and Grafana[^3].
+
+
+![](/assets/leofs-monitoring-with-grafana.png)
+
+
 ## Related Links
 
 - [Administrators / Settings / LeoManager Settings](../settings/leo_manager.md)
 - [Administrators / Settings / LeoStorage Settings](../settings/leo_storage.md)
 - [Administrators / Settings / LeoGateway Settings](../settings/leo_gateway.md)
+
+
+[^1]: <a href="https://github.com/influxdata/telegraf" target="_blank">InfluxData / Telegraf - The plugin-driven server agent for collecting & reporting metrics</a>
+[^2]: <a href="https://github.com/influxdata/influxdb">InfluxDB - An Open-Source Time Series Database</a>
+[^3]: <a href="https://grafana.com/" target="_blank">Grafana - The open platform for analytics and monitoring</a>
