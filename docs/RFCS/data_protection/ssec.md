@@ -56,7 +56,20 @@ When a requested object corresponds to Large Size Object, LeoGateway divides the
 |`x-amz-server-side​-encryption​-customer-key` | 256-bit, base64-encoded encryption key |
 | `x-amz-server-side​-encryption​-customer-key-MD5` | Base64-encoded 128-bit MD5 digest of the encryption key |
 
-When LeoGateway accepts COPY operation, a client sends a request header which includes the following items. The destination object is encrypted by using those items.
+
+#### COPY Operation
+
+There are four patterns in COPY operation. In SSE-C implementation, LeoFS needs to implement the following cases 1, 2 and 3:
+
+| No  | Source      | Destination | Status |
+|:---:|-------------|-------------|--------|
+| 1   | Encrypted   | Encrypted   | Plans to implement with v2.0 |
+| 2   | Encrypted   | Unencrypted | Plans to implement with v2.0 |
+| 3   | Unencrypted | Encrypted   | Plans to implement with v2.0 |
+| 4   | Unencrypted | Unencrypted | Ready  |
+
+
+If the source object is encrypted using SSE-C *(case 1 and 2)*, LeoGateway receives encryption key information which includes the following headers so that LeoStorage can decrypt the object for copying.
 
 | Name  | Description  |
 |----|----|
@@ -64,14 +77,14 @@ When LeoGateway accepts COPY operation, a client sends a request header which in
 |`x-amz-copy-source​-server-side​-encryption​-customer-key` | 256-bit, base64-encoded encryption key |
 | `x-amz-copy-source-​server-side​-encryption​-customer-key-MD5` | Base64-encoded 128-bit MD5 digest of the encryption key |
 
+Furthermore, when encrypting the destination object *(case 1 and 3)*, LeoGateway receives encryption key information which is [Encryption key information in HTTP Header](#encryption-key-information-in-http-header).
 
-See more details on [AWS S3-API - Protecting Data Using SSE-C](https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html).
 
 ### Encryption and decryption of an object on LeoStorage
 
 LeoStorage receives an object and an encryption key information when LeoGateway requests **WRITE operation**, then it creates an initialization vector *(IV)* which is commonly called a nonce *(number used once)*, then it encrypts the object based on **the encryption algorithm** and **the encryption key** and **the initialization vector**, finally it replicates and stores the encrypted object and metadata which includes the following items:
 
-* 256-bit, base64-encoded encryption key
+* 256-bit, Key Encryption Key
 * Initialization Vector *(Nonce)*
 
 A needle *(LeoObjectStorage Data Format)* includes those items which are **stored into the metadata section** in order to be able to transform metadata to each other for durability. See [LeoFS Documentation / Architecture / LeoStorage - Data Structure](https://leo-project.net/leofs/docs/architecture/leo_storage/#data-structure).
@@ -99,6 +112,6 @@ Initially, we were considering **implementing object encryption and decryption o
 ## Unresolved questions
 
 
-[^1]: <a "https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html" target="_blank">Amazon S3 / Protecting Data Using Server-Side Encryption with Customer-Provided Encryption Keys (SSE-C)</a>
+[^1]: <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html" target="_blank">Amazon S3 / Protecting Data Using Server-Side Encryption with Customer-Provided Encryption Keys (SSE-C)</a>
 [^2]: <a href="https://www.erlang-solutions.com/blog/erlang-distribution-over-tls.html" target="_blank">Erlang distribution over TLS</a>
 [^3]: <a href="https://github.com/minio/sio" target="_blank">Secure IO / Go implementation of the Data At Rest Encryption (DARE) format</a>
