@@ -68,8 +68,11 @@ case $OS in
         NC_ARGS=""
         ;;
     Linux)
+        DIST_ID=`lsb_release -is`
+        RELEASE_NUM=`lsb_release -rs`
+
         ## For Ubuntu-18.04
-        if cat /etc/issue | grep -q 'Ubuntu Bionic'; then
+        if [ "$DIST_ID" = "Ubuntu" -a "$RELEASE_NUM" = "18.04" ]; then
             NC_ARGS="-N"
         else
             NC_ARGS="-C"
