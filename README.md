@@ -1,6 +1,6 @@
 # <a href="http://leo-project.net/leofs/" target="_blank">LeoFS</a> - A Storage System for a <a href="https://en.wikipedia.org/wiki/Data_lake" target="_blank">Data Lake</a> and the Web
 
-[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.4.0-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.4.0) [![Build Status](https://travis-ci.org/leo-project/leofs.svg?branch=master)](http://travis-ci.org/leo-project/leofs)
+[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.4.1-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.4.1) [![Build Status](https://travis-ci.org/leo-project/leofs.svg?branch=master)](http://travis-ci.org/leo-project/leofs)
 
 ![LeoFS Logo](https://leo-project.net/leofs/docs-old/_static/leofs-logo-small.png)
 
@@ -271,7 +271,7 @@ You can test LeoFS with <a target="_blank" href="https://github.com/leo-project/
     * Improve compatibility S3-APIs#6
         * [AWS Signature v4](http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html) support (v1.3.0)
         * Custom Metadata Support (v1.3.1)
-* *WIP* - v1.4
+* *DONE* - v1.4
     * Improvement of the core features
     * Integration with distributed computing frameworks#1
         * Hadoop integration
