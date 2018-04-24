@@ -17,6 +17,7 @@
 * [#891](https://github.com/leo-project/leofs/issues/891) [manager] Administrative port on managers shouldn't listen on all interfaces
 * [#995](https://github.com/leo-project/leofs/issues/995) [eleveldb] Make log files less fragmented
 * [#1018](https://github.com/leo-project/leofs/issues/1018) [libcutil] Fix subunit dependencies for the upcoming Ubuntu-18.04
+* [#1035](https://github.com/leo-project/leofs/pull/1035) [leofs-adm] To be able to correctly terminate leofs-adm's commads on Ubuntu-18.04
 
 
 ## Libraries
