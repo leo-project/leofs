@@ -926,6 +926,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-grafana" title="Using Grafana" class="md-nav__link">
+    Using Grafana
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-links" title="Related Links" class="md-nav__link">
     Related Links
   </a>
@@ -1097,6 +1104,66 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+    
+    <label class="md-nav__link" for="nav-9">
+      RFCS
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-9">
+        RFCS
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9-1" type="checkbox" id="nav-9-1">
+    
+    <label class="md-nav__link" for="nav-9-1">
+      Data Protection
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-9-1">
+        Data Protection
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../RFCS/data_protection/ssec/" title="Server Side Object Encryption with Customer-Provided Encryption Keys" class="md-nav__link">
+      Server Side Object Encryption with Customer-Provided Encryption Keys
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -1243,6 +1310,13 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-grafana" title="Using Grafana" class="md-nav__link">
+    Using Grafana
+  </a>
   
 </li>
       
@@ -1993,12 +2067,30 @@ SNMPv2-SMI::enterprises.35450.15.15.0 <span class="o">=</span> Gauge32: <span cl
 </pre></div>
 </td></tr></table>
 
+<h2 id="using-grafana">Using Grafana<a class="headerlink" href="#using-grafana" title="Permanent link">&para;</a></h2>
+<p>In order to easily monitor LeoFS, we provide LeoFS' input plugin of Telegraf<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>. See more details on <a href ="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/leofs/" target="_blank">its documentation</a>.</p>
+<p>If you decide to utilize Telegraf<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>, you need to install InfluxDB<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup> and Grafana<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup>.</p>
+<p><img alt="" src="../../../assets/leofs-monitoring-with-grafana.png" /></p>
 <h2 id="related-links">Related Links<a class="headerlink" href="#related-links" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../settings/leo_manager/">Administrators / Settings / LeoManager Settings</a></li>
 <li><a href="../../settings/leo_storage/">Administrators / Settings / LeoStorage Settings</a></li>
 <li><a href="../../settings/leo_gateway/">Administrators / Settings / LeoGateway Settings</a></li>
 </ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="https://github.com/influxdata/telegraf" target="_blank">InfluxData / Telegraf - The plugin-driven server agent for collecting &amp; reporting metrics</a>&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://github.com/influxdata/influxdb">InfluxDB - An Open-Source Time Series Database</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://grafana.com/" target="_blank">Grafana - The open platform for analytics and monitoring</a>&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
                 
                   
                 
