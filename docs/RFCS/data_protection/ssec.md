@@ -9,20 +9,20 @@
 
 ## Summary
 
-This RFC suggests implementing server-side object encryption with customer-provided encryption Keys, *SSE-C* which is one way of protecting data using encryption and conform to AWS S3-API - Protecting Data Using SSE-C [^1].
+This RFC suggests implementing server-side object encryption with customer-provided encryption Keys, *SSE-C* which is one way of protecting data using encryption and conform to AWS S3-API - Protecting Data Using SSE-C[^1].
 
 
 ## Motivation
 
-In order to improve the data protection feature and to provide LeoFS as an enterprise secure data storage, SSE-C must be implemented as one of the data protection functions. After we implement this function, we can provide LeoFS for [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation), [FHIR](https://en.wikipedia.org/wiki/Fast_Healthcare_Interoperability_Resources) and other data security needs.
+In order to improve the data protection feature and to provide LeoFS as an enterprise secure data storage, SSE-C must be implemented as one of the data protection functions. After we implement this function, we can provide LeoFS for GDPR[^2], FHIR[^3] and other data security needs.
 
 
 ## Detailed design
 ### Prerequisites
 
-The data path between LeoFS' clients and LeoGateway is securely protected by HTTPS and the internal communication between LeoGateway and LeoStorage is also protected by Erlang distribution over TLS [^2].
+The data path between LeoFS' clients and LeoGateway is securely protected by HTTPS and the internal communication between LeoGateway and LeoStorage is also protected by Erlang distribution over TLS[^4].
 
-LeoFS never store **keys of all customers** and the **original checksum** and **size** of an object on metadata. Since we suggest the requirement that *"Anyone who has access to the stored data can try to manipulate the data - even if the data is encrypted. (Quoted from 'Go implementation of the Data At Rest Encryption (DARE) format [^3])"*, storing the original checksum (MD5) and the size could probably allow attackers to derive the original content by brute force attack based on the size and checksum.
+LeoFS never store **keys of all customers** and the **original checksum** and **size** of an object on metadata. Since we suggest the requirement that *"Anyone who has access to the stored data can try to manipulate the data - even if the data is encrypted. (Quoted from 'Go implementation of the Data At Rest Encryption (DARE) format[^5])"*, storing the original checksum (MD5) and the size could probably allow attackers to derive the original content by brute force attack based on the size and checksum.
 
 
 ### Requirements
@@ -87,7 +87,7 @@ LeoStorage receives an object and an encryption key information when LeoGateway 
 * 256-bit, Key Encryption Key
 * Initialization Vector *(Nonce)*
 
-A needle *(LeoObjectStorage Data Format)* includes those items which are **stored into the metadata section** in order to be able to transform metadata to each other for durability. See [LeoFS Documentation / Architecture / LeoStorage - Data Structure](https://leo-project.net/leofs/docs/architecture/leo_storage/#data-structure).
+A needle *(LeoObjectStorage Data Format)* includes those items which are **stored in the custom-metadata section** in order to be able to transform metadata to each other for durability. See [LeoFS Documentation / Architecture / LeoStorage - Data Structure](https://leo-project.net/leofs/docs/architecture/leo_storage/#data-structure).
 
 LeoStorage receives an encryption key information when LeoGateway requests **READ operation**, then it looks up the metadata which includes the encryption information and the object, then the object is decrypted based on **the encryption algorithm**, **the encryption key**, and **the initialization vector**, finally, it returns the decrypted object to LeoGateway.
 
@@ -96,12 +96,12 @@ Even when Range GET operation is requested, LeoStorage handles the same as GET o
 
 ## Drawbacks
 
-* Compared with an unencrypted object, LeoFS certainly degrade the read performance when retrieving an encrypted object *(secure data)* because LeoGateway never caches the objects to securely protect.
+* Compared with an unencrypted object, LeoFS certainly degrades the read performance when retrieving an encrypted object *(secure data)* because LeoGateway never caches the objects to securely protect.
 
 
 ## Rationale and Alternatives
 
-Initially, we were considering **implementing object encryption and decryption on LeoGateway**. However, we realized that there are the following problems, we decided to implement that on LeoStorage.
+Initially, we were considering **implementing object encryption, and decryption on LeoGateway**. However, we realized that there are the following problems, we decided to implement that on LeoStorage.
 
 * LeoGateway's CPU usage tends to be high. We must not assign more processing, object encryption and decryption to LeoGateway.
 * In many cases, the number of LeoGateway is smaller than the number of LeoStorage. Load balancing cannot be expected.
@@ -112,6 +112,8 @@ Initially, we were considering **implementing object encryption and decryption o
 ## Unresolved questions
 
 
-[^1]: <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html" target="_blank">Amazon S3 / Protecting Data Using Server-Side Encryption with Customer-Provided Encryption Keys (SSE-C)</a>
-[^2]: <a href="https://www.erlang-solutions.com/blog/erlang-distribution-over-tls.html" target="_blank">Erlang distribution over TLS</a>
-[^3]: <a href="https://github.com/minio/sio" target="_blank">Secure IO / Go implementation of the Data At Rest Encryption (DARE) format</a>
+[^1]: <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html" target="_blank">Amazon S3 / Protecting Data Using Server-Side Encryption with Customer-Provided Encryption Keys *(SSE-C)*</a>
+[^2]: <a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation" target="_blank">GDPR *(General Data Protection Regulation)*</a>
+[^3]: <a href="https://en.wikipedia.org/wiki/Fast_Healthcare_Interoperability_Resources" target="_blank">FHIR *(Fast Healthcare Interoperability Resources)*</a>
+[^4]: <a href="https://www.erlang-solutions.com/blog/erlang-distribution-over-tls.html" target="_blank">Erlang distribution over TLS</a>
+[^5]: <a href="https://github.com/minio/sio" target="_blank">Secure IO / Go implementation of the Data At Rest Encryption *(DARE)* format</a>
