@@ -22,13 +22,17 @@ If its LeoStorage node finds inconsistency of an object, its node fixes the inco
 
 ## Data Structure
 
-LeoFS’ object consists of three layers which are **metadata**, **needle** and **object-container**.
+LeoFS' object consists of three layers which are as below:
 
-* **LeoObjectStorage** manages and stores both an object and metadata which stores as a needle.
-* LeoObjectStorage's metadata-storage handles and stores attributes of an object which includes filename, size, checksum, and others, and it depends on <a href="" target="_blank">Leveldb</a>.
-* LeoObjectStorage's object-container adopts a log structured file format, which is robust and high performance because an effect of the local file system is just a little part, and LeoStorage is necessary to remove unnecessary objects from the object containers, which is realized by the data compaction feature.
+* **Metadata** *(attributes of an object)* which is stored into **Metadata Store** and the header of a Needle
+* **Needle** which is a part of an AVS file
+* **AVS**[^1] which is an object-container of LeoStorage
 
-![](../assets/leofs-architecture.005.jpg)
+**LeoStorage** manages and stores both an object and metadata which are stored in AVS. Furthermore, metadata is redundantly stored in Metadata Store which utilizes Leveldb[^2] in order to be able to transform metadata to each other for durability.
+
+AVS is a log structured file format. It is robust and high performance because an effect of the local file system is just a little part whereas LeoStorage needs to remove unnecessary objects from AVS with the data compaction.
+
+![](../assets/leofs-avs-file-format.jpg)
 
 
 ## Large Object Support
@@ -55,3 +59,7 @@ A LeoGateway node retrieves a metadata of a requested object, then if it's a lar
 
 - [For Administrators / Settings / LeoStorage Settings](/admin/settings/leo_storage.md)
 - [For Administrators / System Operations / Cluster Operations](/admin/system_operations/cluster.md)
+
+
+[^1]: AVS - ARIA Vector Storage. ARIA is the old name of LeoFS.
+[^2]: <a href="http://leveldb.org/" target="_blank">LevelDB</a>
