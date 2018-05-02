@@ -28,9 +28,9 @@ LeoFS' object consists of three layers which are as below:
 * **Needle** which is a part of an AVS file
 * **AVS**[^1] which is an object-container of LeoStorage
 
-**LeoStorage** manages and stores both an object and metadata which are stored in AVS. Furthermore, metadata is redundantly stored in Metadata Store which utilizes Leveldb[^2] in order to be able to transform metadata to each other for durability.
+**LeoStorage** manages and stores both an object and metadata which are stored in AVS. Furthermore, metadata is redundantly stored in Metadata Store in order to be able to transform metadata to each other for durability. Metadata Store utilizes LevelDB[^2].
 
-AVS is a log structured file format. It is robust and high performance because an effect of the local file system is just a little part whereas LeoStorage needs to remove unnecessary objects from AVS with the data compaction.
+AVS is a log structured file format. It is robust and costly seeks are kept to a minimum whereas LeoStorage needs to remove unnecessary objects from AVS with the data compaction.
 
 ![](../assets/leofs-avs-file-format.jpg)
 
