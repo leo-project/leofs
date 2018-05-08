@@ -147,7 +147,23 @@ Logically it's same between decreasing the buffer size and increasing the timeou
 Given that the above answers, You would not need to be afraid of using hostnames instead of ip addresses.
 
 ## Why doesn't leofs-adm respond to a command like leofs-adm status?
-The netcat installed on your env is probably the one distributed through netcat-traditional package and unfortunately that doesn't work for leofs-adm which requires netcat-openbsd instead. if that is the case, installing netcat-openbsd should solve the problem as reported on github issue[^2].
+The netcat installed on your env is probably the one distributed through `netcat-traditional` package and unfortunately that doesn't work for leofs-adm which requires `netcat-openbsd` instead. if that is the case, installing `netcat-openbsd` should solve the problem as reported on github issue[^2].
+
+Before you execute leofs-adm's commands on Debian 8/9, You need to install and choose `netcat-openbsd` as follows:
+
+```bash
+$ sudo apt install netcat-openbsd
+
+$ sudo update-alternatives --config nc
+There are 2 choices for the alternative nc (providing /bin/nc).
+
+  Selection    Path                 Priority   Status
+------------------------------------------------------------
+* 0            /bin/nc.openbsd       50        auto mode
+  1            /bin/nc.openbsd       50        manual mode
+  2            /bin/nc.traditional   10        manual mode
+
+```
 
 [^1]: <a href="http://erlang.org/doc/reference_manual/distributed.html" target="_blank">Distributed Erlang</a>
 [^2]: <a href="https://github.com/leo-project/leofs/issues/519" target="_blank">LeoFS' Issue #519, Deb (a LeoFS' package for Ubuntu) should require netcat-openbsd instead of netcat</a>
