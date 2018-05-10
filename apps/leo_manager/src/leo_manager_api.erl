@@ -1473,20 +1473,44 @@ recover_remote([Node|Rest], AddrId, Key, Errors) ->
             recover_remote(Rest, AddrId, Key, [Cause|Errors])
     end.
 
+recover_remote(Key) ->
+    case leo_redundant_manager_api:get_redundancies_by_key(Key) of
+        {ok, #redundancies{nodes = Redundancies, id = AddrId}} ->
+            Nodes = [N || #redundant_node{node = N} <- Redundancies],
+            case rpc:multicall(Nodes, ?API_STORAGE, synchronize,
+                               [Key, 'error_msg_replicate_data'], ?DEF_TIMEOUT) of
+                {_ResL, []} ->
+                    recover_remote(Nodes, AddrId, Key, []);
+                {_, BadNodes} ->
+                    {error, BadNodes}
+            end;
+        _ ->
+            {error, ?ERROR_COULD_NOT_GET_RING}
+    end.
+
 %% @doc Recover key/node
 -spec(recover(string(), atom()|string(), boolean()) ->
              ok | {error, any()}).
 recover(?RECOVER_FILE, Key, true) ->
-    Key1 = list_to_binary(Key),
-    case leo_redundant_manager_api:get_redundancies_by_key(Key1) of
+    KeyBin = list_to_binary(Key),
+    case leo_redundant_manager_api:get_redundancies_by_key(Key) of
         {ok, #redundancies{nodes = Redundancies, id = AddrId}} ->
-            Nodes = [N || #redundant_node{node = N} <- Redundancies],
-            case rpc:multicall(Nodes, ?API_STORAGE, synchronize,
-                               [Key1, 'error_msg_replicate_data'], ?DEF_TIMEOUT) of
-                {_ResL, []} ->
-                    recover_remote(Nodes, AddrId, Key1, []);
-                {_, BadNodes} ->
-                    {error, BadNodes}
+            [Node|_] = [N || #redundant_node{node = N} <- Redundancies],
+            case rpc:call(Node, leo_storage_handler_object, get_chunked_object_key_list,
+                         [AddrId, KeyBin], ?DEF_TIMEOUT) of
+                {ok, KeyList} ->
+                    RetL = [recover_remote(K) || K <- KeyList],
+                    case lists:all(fun(ok) -> true;
+                                      (_) -> false end, RetL) of
+                        true ->
+                            ok;
+                        false ->
+                            {error, ?ERROR_COULD_NOT_RECOVER}
+                    end;
+                {error, _Cause} ->
+                    {error, ?ERROR_COULD_NOT_RECOVER};
+                {badrpc, _Cause} ->
+                    {error, ?ERROR_COULD_NOT_RECOVER}
             end;
         _ ->
             {error, ?ERROR_COULD_NOT_GET_RING}
