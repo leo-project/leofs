@@ -8,9 +8,11 @@
 * If you use <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html" target="_blank">S3's Multi Part Upload API</a>, the size of a part of an object must be less than the size of a chunked object in LeoFS.
 * When using the multi datacenter replication feature, we have supported up to 2 clusters with `LeoFS v1.2`, but we're going to support over 3 clusters replication with `LeoFS v2.0`.
 * When you run recover-node while another recover-node is already working in-progress, objects that are not transmitted to the target node yet in the former recover-node are canceled and the latter recover-node will take place. To ensure that every recover-node completes its job, we'd recommend you to run recover-node one-by-one.
+* When uploading large files through the single part upload (PUT/POST) from many clients at the same time, LeoGateway tries to use as much memory as possible so that OOM killer may kill LeoGateway. To avoid this problem, We'd recommend you use the multipart upload instead which is available only with LeoGateway's protocol set to s3 if you have to deal with such requests.
 
 * Related Links:
     * <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 REST API Introduction</a>
+    * <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html" target="_blank">Multipart Upload Overview (AWS)</a>
     * [LeoFS' Issue #177, Responds an incorrect MD5 of an large object](https://github.com/leo-project/leofs/issues/177)
     * [LeoFS' Issue #338, Implements communication with three and over clusters](https://github.com/leo-project/leofs/issues/338)
     * [LeoFS' Issue #880, Recover-node fails to recover all data on storage node](https://github.com/leo-project/leofs/issues/880)
