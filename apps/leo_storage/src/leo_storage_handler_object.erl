@@ -41,6 +41,7 @@
          delete_objects_under_dir/1,
          head/2, head/3,
          head_with_calc_md5/3,
+         get_chunked_object_key_list/2,
          replicate/1, replicate/3,
          prefix_search/3, prefix_search_and_remove_objects/3,
          find_uploaded_objects_by_key/1,
@@ -763,6 +764,48 @@ head_1([_|Rest], AddrId, Key) ->
 head_with_calc_md5(AddrId, Key, MD5Context) ->
     leo_object_storage_api:head_with_calc_md5({AddrId, Key}, MD5Context).
 
+%%--------------------------------------------------------------------
+%% API - Get chunked object key list
+%%--------------------------------------------------------------------
+%% @doc Get chunked object key list from the object-storage
+-spec(get_chunked_object_key_list(AddrId, Key) ->
+             {ok, list(binary())} | {error, Cause} when AddrId::integer(),
+                                                        Key::binary(),
+                                                        Cause::any()).
+get_chunked_object_key_list(AddrId, Key) ->
+    case leo_storage_handler_object:head(AddrId, Key) of
+        {ok, #?METADATA{cnumber = 0}} ->
+            {ok, [Key]};
+        {ok, #?METADATA{cnumber = CNumber}} ->
+            get_chunked_object_key_list(CNumber, Key, [Key]);
+        not_found = Cause ->
+            {error, Cause};
+        {error, Cause} ->
+            {error, Cause}
+    end.
+
+get_chunked_object_key_list(0, _, Acc) ->
+    {ok, Acc};
+get_chunked_object_key_list(CIndex, ParentKey, Acc) ->
+    IndexBin = list_to_binary(integer_to_list(CIndex)),
+    Key    = << ParentKey/binary, "\n", IndexBin/binary >>,
+    AddrId = leo_redundant_manager_chash:vnode_id(Key),
+
+    case leo_storage_handler_object:head(AddrId, Key) of
+        {ok, #?METADATA{cnumber = 0}} ->
+            get_chunked_object_key_list(CIndex - 1, ParentKey, [Key|Acc]);
+        {ok, #?METADATA{cnumber = CNumber}} ->
+            case get_chunked_object_key_list(CNumber, Key, Acc) of
+                {ok, Acc1} ->
+                    get_chunked_object_key_list(CIndex - 1, ParentKey, [Key|Acc1]);
+                {error, Cause} ->
+                    {error, Cause}
+            end;
+        not_found = Cause->
+            {error, Cause};
+        {error, Cause} ->
+            {error, Cause}
+    end.
 
 %%--------------------------------------------------------------------
 %% API - COPY/STACK-SEND/RECEIVE-STORE
