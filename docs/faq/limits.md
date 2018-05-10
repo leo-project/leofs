@@ -8,6 +8,7 @@
 * If you use <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html" target="_blank">S3's Multi Part Upload API</a>, the size of a part of an object must be less than the size of a chunked object in LeoFS.
 * When using the multi datacenter replication feature, we have supported up to 2 clusters with `LeoFS v1.2`, but we're going to support over 3 clusters replication with `LeoFS v2.0`.
 * When you run recover-node while another recover-node is already working in-progress, objects that are not transmitted to the target node yet in the former recover-node are canceled and the latter recover-node will take place. To ensure that every recover-node completes its job, we'd recommend you to run recover-node one-by-one.
+* When uploading large files through the single part upload (PUT/POST) from many clients at the same time, LeoGateway tries to use as much memory as possible so that OOM killer may kill LeoGateway. To avoid this problem, We'd recommend you use the multipart upload instead if you have to deal with such requests.
 
 * Related Links:
     * <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html" target="_blank">Amazon S3 REST API Introduction</a>
