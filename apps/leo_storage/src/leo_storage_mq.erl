@@ -415,6 +415,8 @@ handle_call({consume, ?QUEUE_ID_RECOVERY_NODE, MessageBin}) ->
         #recovery_node_message{node = NodeAndDisk} when is_tuple(NodeAndDisk) ->
             {Node, Disk} = NodeAndDisk,
             recover_disk(Node, Disk);
+        #recovery_node_message{node = none} ->
+            recover_consistency();
         #recovery_node_message{node = Node} ->
             recover_node(Node);
         _ ->
@@ -503,6 +505,25 @@ recover_disk(Node, Disk) ->
     Callback = recover_node_callback(Node),
     _ = leo_object_storage_api:fetch_by_addr_id_and_disk(0, Disk, Callback),
     ok.
+
+%% @private
+-spec(recover_consistency() ->
+             ok).
+recover_consistency() ->
+    Callback = recover_consistency_callback(),
+    _ = leo_object_storage_api:fetch_by_addr_id(0, Callback),
+    ok.
+
+%% @private
+-spec(recover_consistency_callback() ->
+             any()).
+recover_consistency_callback() ->
+    fun(K, V, _Acc) ->
+            Metadata_1 = binary_to_term(V),
+            Metadata_2 = leo_object_storage_transformer:transform_metadata(Metadata_1),
+            ?MODULE:publish(?QUEUE_ID_PER_OBJECT,
+                            Metadata_2, ?ERR_TYPE_RECOVER_DATA)
+    end.
 
 %% @private
 -spec(recover_node(Node) ->

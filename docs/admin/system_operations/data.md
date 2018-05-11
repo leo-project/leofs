@@ -229,7 +229,8 @@ This section provides information about the recovery commands that can be used i
 |`leofs-adm recover-file <file-path>`              |Recover the inconsistent object specified by the file-path.|
 |`leofs-adm recover-disk <storage-node> <disk-id>` |Recover all inconsistent objects on the specified disk in the specified storage-node. **Note that this command can be used ONLY in case all LeoStorage have the same obj_containers configuration.**|
 |`leofs-adm recover-ring <storage-node>`           |Recover **RING, a routing table** of the specified node of the local cluster  |
-|`leofs-adm recover-node <storage-node>`           |Recover all inconsistent objects in the specified storage-node.|
+|`leofs-adm recover-consistency <storage-node>`    |Sync all objects in the specified storage-node with other nodes. Since only the specified storage-node tries to sync objects stored in its local storage, the node could become high load while other nodes keep each load almost as-is. This can be used to recover the whole cluster so called `Scrub` step by step.|
+|`leofs-adm recover-node <storage-node>`           |Recover all inconsistent objects in the specified storage-node. Since any nodes except the specified one try to sync objects stored in each local storage with the specified one, almost all nodes could become high load. This can be used to recover a specific node as earlier as possible.|
 |`leofs-adm recover-cluster <remote-cluster-id>`   |Recover **all inconsistent objects in the specified remote cluster** *(NOT the local cluster)* in case of using **the multi datacenter replication**.|
 
 
@@ -260,6 +261,14 @@ $ leofs-adm recover-disk storage_0@127.0.0.1 2
 OK
 ```
 
+#### recover-consistency
+
+```bash
+## Example:
+$ leofs-adm recover-consistency storage_0@127.0.0.1
+OK
+```
+
 #### recover-node
 
 ```bash
@@ -287,8 +296,7 @@ When/How to use recover commands.
 - AVS/KVS Broken
     - Invoke `recover-node` with a node having broken AVS/KVS files or `recover-disk` with a disk having broken AVS/KVS files if you have multiple container directories.
 - Queue Broken
-    - Invoke `recover-node` with every node except which having broken Queue files.
-    - The procedure might be improved in future when [issue#618](https://github.com/leo-project/leofs/issues/618) solved.
+    - Invoke `recover-consistency` with a node having broken Queue files.
 - Disk Broken
     - Invoke `suspend` with a node having broken Disk arrays and subsequently run `leo_storage stop`.
     - Exchange broken Disk arrays.
@@ -306,11 +314,11 @@ When/How to use recover commands.
     - See also [issue#636](https://github.com/leo-project/leofs/issues/636) for more information.
 - Regular Scrub
     - In order to keep data consistent on the eventual consistent system, The regular scrub should be done.
-    - So we'd recommend users run `recover-node` regularly while keeping the below cautions in mind,
-        - Run `recover-node` one-by-one at the off-peak time of your system
+    - So we'd recommend users run `recover-consistency` regularly while keeping the below cautions in mind,
+        - Run `recover-consistency` one-by-one at the off-peak time of your system
         - When some LeoStorage go down during the recover process, just do it over again once the downed nodes come back
         - Generally speaking, it depends heavily on the size of your data and the consistency level(W and D) you chose.
-        - The lower consistency level you choose, The more frequently you should run `recover-node`.
+        - The lower consistency level you choose, The more frequently you should run `recover-consistency`.
 
 ## Related Links
 

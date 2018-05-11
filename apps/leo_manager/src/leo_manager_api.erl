@@ -1492,6 +1492,23 @@ recover(?RECOVER_FILE, Key, true) ->
             {error, ?ERROR_COULD_NOT_GET_RING}
     end;
 
+recover(?RECOVER_CONSISTENCY, Node, true) when is_list(Node) ->
+    recover(?RECOVER_CONSISTENCY, list_to_atom(Node), true);
+recover(?RECOVER_CONSISTENCY, Node, true) ->
+    %% Check the target node and system-state
+    case leo_misc:node_existence(Node) of
+        true ->
+            Ret = case leo_redundant_manager_api:get_member_by_node(Node) of
+                      {ok, #member{state = ?STATE_RUNNING}} ->
+                          true;
+                      _ ->
+                          false
+                  end,
+            recover_consistency_1(Ret, Node);
+        false ->
+            {error, ?ERROR_COULD_NOT_CONNECT}
+    end;
+
 recover(?RECOVER_NODE, Node, true) when is_list(Node) ->
     recover(?RECOVER_NODE, list_to_atom(Node), true);
 recover(?RECOVER_NODE, Node, true) ->
@@ -1664,6 +1681,21 @@ has_same_avs_conf(RetL) ->
     {lists:all(fun(Elem) ->
                        Elem == H
                end, Rest), length(H)}.
+
+%% @doc Recover consistency of the target node
+%% @private
+recover_consistency_1(true, Node) ->
+    case rpc:call(Node, ?API_STORAGE, synchronize,
+                  [], ?DEF_TIMEOUT) of
+        ok ->
+            ok;
+        {_, Cause} ->
+            ?warn("recover_consistency_1/2",
+                  [{cause, Cause}]),
+            {error, Cause}
+    end;
+recover_consistency_1(false,_) ->
+    {error, ?ERROR_NOT_SATISFY_CONDITION}.
 
 %% @doc Execute recovery of the target node
 %%      Check conditions
