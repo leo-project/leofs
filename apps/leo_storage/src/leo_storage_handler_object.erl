@@ -329,7 +329,7 @@ get_fun(AddrId, Key, StartPos, EndPos, IsForcedCheck) ->
                                       Cause::any()).
 put({Object, Ref}) ->
     AddrId = Object#?OBJECT.addr_id,
-    Key    = Object#?OBJECT.key,
+    Key = Object#?OBJECT.key,
 
     case Object#?OBJECT.del of
         ?DEL_TRUE->
@@ -487,7 +487,7 @@ delete_chunked_objects(0,_) ->
     ok;
 delete_chunked_objects(CIndex, ParentKey) ->
     IndexBin = list_to_binary(integer_to_list(CIndex)),
-    Key    = << ParentKey/binary, "\n", IndexBin/binary >>,
+    Key = << ParentKey/binary, "\n", IndexBin/binary >>,
     AddrId = leo_redundant_manager_chash:vnode_id(Key),
 
     case leo_storage_handler_object:head(AddrId, Key) of
@@ -539,7 +539,7 @@ delete_chunked_objects(CIndex, ParentKey) ->
                                       Cause::any()).
 delete({Object, Ref}) ->
     AddrId = Object#?OBJECT.addr_id,
-    Key    = Object#?OBJECT.key,
+    Key = Object#?OBJECT.key,
 
     case leo_object_storage_api:head({AddrId, Key}) of
         {ok, MetaBin} ->
@@ -788,7 +788,7 @@ get_chunked_object_key_list(0, _, Acc) ->
     {ok, Acc};
 get_chunked_object_key_list(CIndex, ParentKey, Acc) ->
     IndexBin = list_to_binary(integer_to_list(CIndex)),
-    Key    = << ParentKey/binary, "\n", IndexBin/binary >>,
+    Key = << ParentKey/binary, "\n", IndexBin/binary >>,
     AddrId = leo_redundant_manager_chash:vnode_id(Key),
 
     case leo_storage_handler_object:head(AddrId, Key) of
