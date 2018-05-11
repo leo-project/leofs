@@ -170,6 +170,7 @@
                                     ["recover file <path>", ?CRLF,
                                      "recover dir [<path>]", ?CRLF,
                                      "recover disk <storage-node> <disk-id>", ?CRLF,
+                                     "recover consistency <storage-node>", ?CRLF,
                                      "recover node <storage-node>", ?CRLF,
                                      "recover ring <storage-node>", ?CRLF,
                                      "recover cluster <cluster-id>"
@@ -250,6 +251,7 @@
 %% recover type
 -define(RECOVER_FILE, "file").
 -define(RECOVER_DISK, "disk").
+-define(RECOVER_CONSISTENCY, "consistency").
 -define(RECOVER_NODE, "node").
 -define(RECOVER_RING, "ring").
 -define(RECOVER_REMOTE_CLUSTER, "cluster").

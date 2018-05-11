@@ -35,7 +35,7 @@
          get_routing_table_chksum/0,
          update_manager_nodes/1, recover_remote/2,
          start/1, start/2, start/3, stop/0, attach/1,
-         synchronize/1, synchronize/2,
+         synchronize/0, synchronize/1, synchronize/2,
          compact/1, compact/3, diagnose_data/0,
          get_node_status/0,
          rebalance/1, rebalance/3,
@@ -245,6 +245,11 @@ attach(SystemConf) ->
 %%--------------------------------------------------------------------
 %% @doc synchronize a data.
 %%
+-spec(synchronize() ->
+             ok | {error, any()}).
+synchronize() ->
+    leo_storage_mq:publish(?QUEUE_ID_RECOVERY_NODE, none).
+
 -spec(synchronize(Node) ->
              ok | {error, any()} when Node::atom()|{atom(),pos_integer()}).
 synchronize(Node) ->

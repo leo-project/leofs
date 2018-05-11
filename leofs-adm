@@ -263,6 +263,20 @@ usage_recover_disk() {
     esac
 }
 
+usage_recover_consistency() {
+    USAGE="recover-consistency $STORAGE_NODE"
+    case "$1" in
+        min)
+            output "$WHITESPACE $USAGE "
+            ;;
+        *)
+            output "Usage:"
+            output "  $SCRIPT $USAGE"
+            output "Description:"
+            output "  - Sync all objects in the specified node with other nodes"
+    esac
+}
+
 usage_recover_node() {
     USAGE="recover-node $STORAGE_NODE"
     case "$1" in
@@ -960,6 +974,7 @@ usage() {
     output "      ${UNDERLINE}Recover Commands:${NONE}"
     usage_recover_file min
     usage_recover_disk min
+    usage_recover_consistency min
     usage_recover_node min
     usage_recover_ring min
     usage_recover_cluster min
@@ -1227,6 +1242,20 @@ case "$1" in
             send_command "recover disk $2 $3"
         else
             usage_recover_disk
+        fi
+        ;;
+    recover-consistency)
+        if [ $# -eq 2 ]; then
+            case "$2" in
+                --help)
+                    usage_recover_consistency
+                    exit 1
+                    ;;
+                *)
+                    send_command "recover consistency $2"
+            esac
+        else
+            usage_recover_consistency
         fi
         ;;
     recover-node)
