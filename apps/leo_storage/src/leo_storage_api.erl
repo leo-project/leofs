@@ -665,7 +665,7 @@ get_mq_consumer_state() ->
                                   DelBucketId_1 = atom_to_list(DelBucketId),
                                   Index = string:sub_string(
                                             DelBucketId_1, string:rchr(DelBucketId_1, $_) + 1),
-                                  {DelBucketId, "deletion bucket #" ++ Index}
+                                  {DelBucketId, "requests of removing buckets #" ++ Index}
                           end, ?del_dir_id_list()),
             StateList_1 =
                 lists:sort(

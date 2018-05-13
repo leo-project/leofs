@@ -2,7 +2,7 @@
 %%
 %% LeoStorage
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -518,7 +518,7 @@ recover_consistency() ->
 -spec(recover_consistency_callback() ->
              any()).
 recover_consistency_callback() ->
-    fun(K, V, _Acc) ->
+    fun(_K, V, _Acc) ->
             Metadata_1 = binary_to_term(V),
             Metadata_2 = leo_object_storage_transformer:transform_metadata(Metadata_1),
             ?MODULE:publish(?QUEUE_ID_PER_OBJECT,

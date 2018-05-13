@@ -2,7 +2,7 @@
 %%
 %% LeoStorage
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -454,15 +454,15 @@
 -endif.
 
 
--define(mq_id_and_alias, [{leo_delete_dir_queue,        "remove directories"},
-                          {leo_req_delete_dir_queue,    "request removing directories"},
-                          {leo_comp_meta_with_dc_queue, "compare metadata w/remote-node"},
-                          {leo_sync_obj_with_dc_queue,  "sync objs w/remote-node"},
-                          {leo_recovery_node_queue,     "recovery objs of node"},
-                          {leo_async_deletion_queue,    "async deletion of objs"},
-                          {leo_rebalance_queue,         "rebalance objs"},
-                          {leo_sync_by_vnode_id_queue,  "sync objs by vnode-id"},
-                          {leo_per_object_queue,        "recover inconsistent objs"}]).
+-define(mq_id_and_alias, [{leo_delete_dir_queue,        "requests of removing directories"},
+                          {leo_req_delete_dir_queue,    "requests of removing directories"},
+                          {leo_comp_meta_with_dc_queue, "requests of comparing metadata w/remote-node"},
+                          {leo_sync_obj_with_dc_queue,  "requests of synchronizing objects w/remote-node"},
+                          {leo_recovery_node_queue,     "requests of recovering objects of the node (incl. recover-consistency)"},
+                          {leo_async_deletion_queue,    "requests of removing objects asynchronously"},
+                          {leo_rebalance_queue,         "requests of relocating objects"},
+                          {leo_sync_by_vnode_id_queue,  "requests of synchronizing objects by vnode-id"},
+                          {leo_per_object_queue,        "requests of fixing inconsistency of objects"}]).
 
 
 %% @doc Storage watchdog related
