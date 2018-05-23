@@ -1037,30 +1037,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
     
     <label class="md-nav__link" for="nav-9">
-      RFCS
+      Issues
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-9">
-        RFCS
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9-1" type="checkbox" id="nav-9-1">
-    
-    <label class="md-nav__link" for="nav-9-1">
-      Data Protection
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-9-1">
-        Data Protection
+        Issues
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -1071,14 +1052,9 @@
 
 
   <li class="md-nav__item">
-    <a href="../../RFCS/data_protection/ssec/" title="Server Side Object Encryption with Customer-Provided Encryption Keys" class="md-nav__link">
-      Server Side Object Encryption with Customer-Provided Encryption Keys
+    <a href="../../issues/documentation-issues/" title="Documentation Issues" class="md-nav__link">
+      Documentation Issues
     </a>
-  </li>
-
-        
-      </ul>
-    </nav>
   </li>
 
         
@@ -1204,13 +1180,15 @@
 <p>If its LeoStorage node finds inconsistency of an object, its node fixes the inconsistent object with the backend process. Its object eventually keeps consistency with the functions.</p>
 <p><img alt="" src="../../assets/leofs-architecture.003.jpg" /></p>
 <h2 id="data-structure">Data Structure<a class="headerlink" href="#data-structure" title="Permanent link">&para;</a></h2>
-<p>LeoFS’ object consists of three layers which are <strong>metadata</strong>, <strong>needle</strong> and <strong>object-container</strong>.</p>
+<p>LeoFS' object consists of three layers which are as below:</p>
 <ul>
-<li><strong>LeoObjectStorage</strong> manages and stores both an object and metadata which stores as a needle.</li>
-<li>LeoObjectStorage's metadata-storage handles and stores attributes of an object which includes filename, size, checksum, and others, and it depends on <a href="" target="_blank">Leveldb</a>.</li>
-<li>LeoObjectStorage's object-container adopts a log structured file format, which is robust and high performance because an effect of the local file system is just a little part, and LeoStorage is necessary to remove unnecessary objects from the object containers, which is realized by the data compaction feature.</li>
+<li><strong>Metadata</strong> <em>(attributes of an object)</em> which is stored into <strong>Metadata Store</strong> and the header of a Needle</li>
+<li><strong>Needle</strong> which is a part of an AVS file</li>
+<li><strong>AVS</strong><sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> which is an object-container of LeoStorage</li>
 </ul>
-<p><img alt="" src="../../assets/leofs-architecture.005.jpg" /></p>
+<p><strong>LeoStorage</strong> manages and stores both an object and metadata which are stored in AVS. Furthermore, metadata is redundantly stored in Metadata Store in order to be able to transform metadata to each other for durability. Metadata Store utilizes LevelDB<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>.</p>
+<p>AVS is a log structured file format. It is robust and costly seeks are kept to a minimum whereas LeoStorage needs to remove unnecessary objects from AVS with the data compaction.</p>
+<p><img alt="" src="../../assets/leofs-avs-file-format.jpg" /></p>
 <h2 id="large-object-support">Large Object Support<a class="headerlink" href="#large-object-support" title="Permanent link">&para;</a></h2>
 <p>LeoFS supports handling a large size object since v0.12. The purpose of this feature is two things:</p>
 <ul>
@@ -1227,6 +1205,17 @@
 <li><a href="../../admin/settings/leo_storage/">For Administrators / Settings / LeoStorage Settings</a></li>
 <li><a href="../../admin/system_operations/cluster/">For Administrators / System Operations / Cluster Operations</a></li>
 </ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>AVS - ARIA Vector Storage. ARIA is the old name of LeoFS.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="http://leveldb.org/" target="_blank">LevelDB</a>&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
                 
                   
                 

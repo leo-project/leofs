@@ -1107,30 +1107,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
     
     <label class="md-nav__link" for="nav-9">
-      RFCS
+      Issues
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-9">
-        RFCS
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9-1" type="checkbox" id="nav-9-1">
-    
-    <label class="md-nav__link" for="nav-9-1">
-      Data Protection
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-9-1">
-        Data Protection
+        Issues
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -1141,14 +1122,9 @@
 
 
   <li class="md-nav__item">
-    <a href="../../RFCS/data_protection/ssec/" title="Server Side Object Encryption with Customer-Provided Encryption Keys" class="md-nav__link">
-      Server Side Object Encryption with Customer-Provided Encryption Keys
+    <a href="../../issues/documentation-issues/" title="Documentation Issues" class="md-nav__link">
+      Documentation Issues
     </a>
-  </li>
-
-        
-      </ul>
-    </nav>
   </li>
 
         
@@ -1447,7 +1423,30 @@ To decrease the bandwidth and odds timeout could happen, you have two options.</
 </ul>
 <p>Given that the above answers, You would not need to be afraid of using hostnames instead of ip addresses.</p>
 <h2 id="why-doesnt-leofs-adm-respond-to-a-command-like-leofs-adm-status">Why doesn't leofs-adm respond to a command like leofs-adm status?<a class="headerlink" href="#why-doesnt-leofs-adm-respond-to-a-command-like-leofs-adm-status" title="Permanent link">&para;</a></h2>
-<p>The netcat installed on your env is probably the one distributed through netcat-traditional package and unfortunately that doesn't work for leofs-adm which requires netcat-openbsd instead. if that is the case, installing netcat-openbsd should solve the problem as reported on github issue<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>.</p>
+<p>The netcat installed on your env is probably the one distributed through <code class="codehilite">netcat-traditional</code> package and unfortunately that doesn't work for leofs-adm which requires <code class="codehilite">netcat-openbsd</code> instead. if that is the case, installing <code class="codehilite">netcat-openbsd</code> should solve the problem as reported on github issue<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>.</p>
+<p>Before you execute leofs-adm's commands on Debian 8/9, You need to install and choose <code class="codehilite">netcat-openbsd</code> as follows:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>$ sudo apt install netcat-openbsd
+
+$ sudo update-alternatives --config nc
+There are <span class="m">2</span> choices <span class="k">for</span> the alternative nc <span class="o">(</span>providing /bin/nc<span class="o">)</span>.
+
+  Selection    Path                 Priority   Status
+------------------------------------------------------------
+* <span class="m">0</span>            /bin/nc.openbsd       <span class="m">50</span>        auto mode
+  <span class="m">1</span>            /bin/nc.openbsd       <span class="m">50</span>        manual mode
+  <span class="m">2</span>            /bin/nc.traditional   <span class="m">10</span>        manual mode
+</pre></div>
+</td></tr></table>
+
 <h2 id="why-doesnt-leofs-adm-import-user-work-even-the-user-doesnt-exist">Why doesn't leofs-adm import-user work even the user doesn't exist?<a class="headerlink" href="#why-doesnt-leofs-adm-import-user-work-even-the-user-doesnt-exist" title="Permanent link">&para;</a></h2>
 <p>If you are using LeoFS &lt;= v1.3.8 then you probably hit the issue<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup>. If that is the case, we'd recommend you upgrade to the v1.4.0 or higher one in which version you can use import-user with the force update option (-f) that enables you to import the user with the existing access-key-id.</p>
 <div class="footnote">

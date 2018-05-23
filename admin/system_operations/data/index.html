@@ -892,6 +892,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#recover-consistency" title="recover-consistency" class="md-nav__link">
+    recover-consistency
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#recover-node" title="recover-node" class="md-nav__link">
     recover-node
   </a>
@@ -1176,30 +1183,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
     
     <label class="md-nav__link" for="nav-9">
-      RFCS
+      Issues
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-9">
-        RFCS
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9-1" type="checkbox" id="nav-9-1">
-    
-    <label class="md-nav__link" for="nav-9-1">
-      Data Protection
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-9-1">
-        Data Protection
+        Issues
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -1210,14 +1198,9 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../RFCS/data_protection/ssec/" title="Server Side Object Encryption with Customer-Provided Encryption Keys" class="md-nav__link">
-      Server Side Object Encryption with Customer-Provided Encryption Keys
+    <a href="../../../issues/documentation-issues/" title="Documentation Issues" class="md-nav__link">
+      Documentation Issues
     </a>
-  </li>
-
-        
-      </ul>
-    </nav>
   </li>
 
         
@@ -1409,6 +1392,13 @@
           <li class="md-nav__item">
   <a href="#recover-disk" title="recover-disk" class="md-nav__link">
     recover-disk
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recover-consistency" title="recover-consistency" class="md-nav__link">
+    recover-consistency
   </a>
   
 </li>
@@ -1809,8 +1799,12 @@ Offset| RING&#39;s address-id                        | Filename                 
 <td>Recover <strong>RING, a routing table</strong> of the specified node of the local cluster</td>
 </tr>
 <tr>
+<td><code class="codehilite">leofs-adm recover-consistency &lt;storage-node&gt;</code></td>
+<td>Sync all objects in the specified storage-node with other nodes. Since only the specified storage-node tries to sync objects stored in its local storage, the node could become high load while other nodes keep each load almost as-is. This can be used to recover the whole cluster so called <code class="codehilite">Scrub</code> step by step.</td>
+</tr>
+<tr>
 <td><code class="codehilite">leofs-adm recover-node &lt;storage-node&gt;</code></td>
-<td>Recover all inconsistent objects in the specified storage-node.</td>
+<td>Recover all inconsistent objects in the specified storage-node. Since any nodes except the specified one try to sync objects stored in each local storage with the specified one, almost all nodes could become high load. This can be used to recover a specific node as earlier as possible.</td>
 </tr>
 <tr>
 <td><code class="codehilite">leofs-adm recover-cluster &lt;remote-cluster-id&gt;</code></td>
@@ -1858,6 +1852,15 @@ OK
 </pre></div>
 </td></tr></table>
 
+<h4 id="recover-consistency">recover-consistency<a class="headerlink" href="#recover-consistency" title="Permanent link">&para;</a></h4>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="c1">## Example:</span>
+$ leofs-adm recover-consistency storage_0@127.0.0.1
+OK
+</pre></div>
+</td></tr></table>
+
 <h4 id="recover-node">recover-node<a class="headerlink" href="#recover-node" title="Permanent link">&para;</a></h4>
 <table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -1890,8 +1893,7 @@ OK
 </ul>
 </li>
 <li>Queue Broken<ul>
-<li>Invoke <code class="codehilite">recover-node</code> with every node except which having broken Queue files.</li>
-<li>The procedure might be improved in future when <a href="https://github.com/leo-project/leofs/issues/618">issue#618</a> solved.</li>
+<li>Invoke <code class="codehilite">recover-consistency</code> with a node having broken Queue files.</li>
 </ul>
 </li>
 <li>Disk Broken<ul>
@@ -1919,11 +1921,11 @@ OK
 </li>
 <li>Regular Scrub<ul>
 <li>In order to keep data consistent on the eventual consistent system, The regular scrub should be done.</li>
-<li>So we'd recommend users run <code class="codehilite">recover-node</code> regularly while keeping the below cautions in mind,<ul>
-<li>Run <code class="codehilite">recover-node</code> one-by-one at the off-peak time of your system</li>
+<li>So we'd recommend users run <code class="codehilite">recover-consistency</code> regularly while keeping the below cautions in mind,<ul>
+<li>Run <code class="codehilite">recover-consistency</code> one-by-one at the off-peak time of your system</li>
 <li>When some LeoStorage go down during the recover process, just do it over again once the downed nodes come back</li>
 <li>Generally speaking, it depends heavily on the size of your data and the consistency level(W and D) you chose.</li>
-<li>The lower consistency level you choose, The more frequently you should run <code class="codehilite">recover-node</code>.</li>
+<li>The lower consistency level you choose, The more frequently you should run <code class="codehilite">recover-consistency</code>.</li>
 </ul>
 </li>
 </ul>
