@@ -88,3 +88,5 @@ pages:
     - LeoFS Administration: 'faq/administration.md'
     - LeoFS Clients: 'faq/client.md'
 - Production Checklist: 'production_checklist/README.md'
+- Issues:
+    - Documentation Issues: 'issues/documentation-issues.md'
