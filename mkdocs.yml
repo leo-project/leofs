@@ -91,3 +91,5 @@ pages:
 - RFCS:
     - Data Protection:
         - Server Side Object Encryption with Customer-Provided Encryption Keys: 'RFCS/data_protection/ssec.md'
+- Issues:
+    - Documentation Issues: 'issues/documentation-issues.md'
