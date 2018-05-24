@@ -8,13 +8,13 @@
 
 1. Regular operations
   - What is best practice for regular (e.g. once per month or every few months) "scrub" of data? To force each node verify that it contains all objects it's supposed to contain and that all of actual data passes checksum check? "diagnose-start" on each node? Or there is some better / recommended way.
-    - [ ] **Unfortunately there is no official tool to scrub (some product call it anti-entropy) all data efficiently. actually there was in the past at <a href="https://github.com/leo-project/leofs_utils" target="_blank">LeoFS Utils</a> but disappeared for some reason. anyway we will provide|publish an official tool to scrub safely and efficiently. One solution for scrub is to call leofs-adm recover-file on every files you have as fortunately you have the whole file list on another place.**
+    - [ ] **Unfortunately there is no official tool to scrub (some product call it anti-entropy) all data efficiently. actually there was in the past at <a href="https://github.com/leo-project/leofs_utils" target="_blank">LeoFS Utils</a> but disappeared for some reason. anyway we will provide|publish an official tool to scrub safely and efficiently. One solution for scrub is to call leofs-adm recover-consistency on every node you have.**
 
   - Also, by default option "object_storage.is_strict_check = false" is set. Does it mean that checksum check for data is not performed or it's about something else?
     - [ ] **Yes that means checksum is checked or not.**
 
   - LeoManager maintenance commands like backup-mnesia / restore-mnesia and dump-ring. Are they strictly for debug purposes or it's good practice to do these mnesia backups and ring dumps regularly and store result on backup server or something?
-    - **Yes it's good practice to backup mnesia regularly through those tools**
+    - [ ] **Yes it's good practice to backup mnesia regularly through those tools**
 
 ## Installation
 
@@ -34,11 +34,10 @@
 1. Configuration guide - fundamentals
   - "Erlang VM related properties". Are there any reasons to touch these settings for certain configurations? Maybe some hint - like, "for this kind of load you might want to tweak this parameter" - would be nice.
     - [ ] **Will document as the other Erlang products do**
-
   - "Configuration of eager check I/O scheduling for Erlang’s VM" - if this is recommended, how come official packages that come with erlang 17.5 have this option disabled?
-    - [ ] **Official packages should be fixed with having this option enabled**
+    - [x] **Official packages should be fixed with having this option enabled**
   - Are there plans to update it to 19 now, by the way, now that 19 is supported?
-    - [ ] **Yes we will. we at first will ship official packages with 18.x after finishing tests sufficiently**
+    - [x] **Yes we will. we at first will ship official packages with 18.x after finishing tests sufficiently**
 
 ## LeoManager
 
@@ -57,6 +56,7 @@
   - The consistency level is configured in this file. It should not be modified while the system is running." I believe this should be rephrased somewhat.
     - [ ] **Yes. should be rephrased by "consistency.num_of_replicas should not be modified while the system  is running.""**
   - What would happen if I'm to actually modify it while system is running? and Which parts of system I'm supposed to restart if I'm to change it in this file? Also it kind of gives impression that it's not possible to modify consistency level on running system, but there is "leofs-adm update-consistency-level" command for that!
+    - [ ] **Will document that what would happen when modifying consistency.num_of_replicas while system is running and which parts of system should be restarted to reflect changes**
     - [ ] **Will document that if you want changes to be temporal, just do update-consistency-level**
     - [ ] **Will document that if you want changes to be parmanent, edit the section of consistency.\* in leo_manager.conf and also do update-consistency-level that distributes the change to all of the members without forcing them to restart.**
   - "consistency.rack_aware_replicas     # of rack-aware replicas" - there is no information about what it does
@@ -78,13 +78,13 @@
   - Lots of topics where extra documentation would help are already listed in <a href="https://github.com/leo-project/leofs/issues/532" target="_blank">LeoFS Issue#532</a>
     - [ ] **Will do #532 ASAP**
   - I'd like to add that information about how and when storage nodes do fsync() for data files is missing. Is it done after writing every object? Or on timer? Is it configurable?
-    - [ ] **Now no explicit call file:fsync because even if we call fsync some blocks can be still on the volatile place (the disk controller can choose not to obey that which unfortunately many disks choose to) but we will consider to take it another look as at least it increase a possibility to be placed at a real permanent one**
+    - [x] **Now no explicit call file:fsync because even if we call fsync some blocks can be still on the volatile place (the disk controller can choose not to obey that which unfortunately many disks choose to) but we will consider to take it another look as at least it increase a possibility to be placed at a real permanent one**
 
 3. Best Practices
- - how vital is queue in work/queue directory? I mean, obviously data on storage node itself won't be lost if this queue is lost or damaged; but under load, there is information related to replication and such in these messages, right?
+  - how vital is queue in work/queue directory? I mean, obviously data on storage node itself won't be lost if this queue is lost or damaged; but under load, there is information related to replication and such in these messages, right?
     - [ ] **Yes a message in queue may have information related to replication**
   - If they are suddenly lost on some node, are any extra steps needed to recover anything that might've been lost?
-    - [ ] **Yes. you need some extra steps to recover any files that don't satisfy the redundancy requirement specified at consistency.num_of_replicas in leo_manager.conf. we'd like to answer what the extra step actually is at your another question "scrub of data"**
+    - [x] **Yes. you need some extra steps to recover any files that don't satisfy the redundancy requirement specified at consistency.num_of_replicas in leo_manager.conf. we'd like to answer what the extra step actually is at your another question "scrub of data"**
 
   - Regarding all kinds of metadata (mnesia on management nodes, leveldb queues on all nodes, leveldb metadata on storage nodes) it would be nice to have some information about their possible size and I/O required for that. I mean, it might be obvious how to estimate size of main storage and possible to make guesses about I/O load on AVS files, but exactly how much space various kinds of metadata can consume on loaded production systems? And whether it might require lots of extra I/O, e.g. HDD for main storage + SSD for metadata or something. If most users shouldn't worry about this - it's fine too, but a brief note like "metadata does not require lots of I/O and queues shouldn't consume more than 100 MB, metadata for AVS files - estimate is <x> bytes per stored record" would be great to have.
     - [ ] **Great point especially for loaded production sysmtes. we can't provide actual numbers right now but can say that metadata using leveldb can consume your I/O load more than expected due to its compaction activity. part of problems we encountered has been fixed at <a href="https://github.com/leo-project/leofs/issues/555" target="_blank">LeoFS Issue#555</a> and also we are now tackling at <a href="https://github.com/leo-project/leofs/issues/503" target="_blank">LeoFS Issue#503</a>. We will publish the actual number (extra space, # of size, I/O load etc) ASAP**
