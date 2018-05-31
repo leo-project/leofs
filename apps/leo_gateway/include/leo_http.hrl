@@ -171,6 +171,8 @@
 -define(XML_ERROR_CODE_SignatureDoesNotMatch, "SignatureDoesNotMatch").
 -define(XML_ERROR_CODE_RequestTimeTooSkewed, "RequestTimeTooSkewed").
 -define(XML_ERROR_CODE_MetadataTooLarge, "MetadataTooLarge").
+-define(XML_ERROR_CODE_InvalidPart, "InvalidPart").
+-define(XML_ERROR_CODE_NoSuchUpload, "NoSuchUpload").
 
 %% error messages used in a error response
 -define(XML_ERROR_MSG_EntityTooLarge, "Your proposed upload exceeds the maximum allowed object size.").
@@ -191,6 +193,8 @@
 -define(XML_ERROR_MSG_SignatureDoesNotMatch, "The request signature we calculated does not match the signature you provided. Check your AWS secret access key and signing method.").
 -define(XML_ERROR_MSG_RequestTimeTooSkewed, "The difference between the request time and the server's time is too large.").
 -define(XML_ERROR_MSG_MetadataTooLarge, "Your metadata headers exceed the maximum allowed metadata size.").
+-define(XML_ERROR_MSG_InvalidPart, "One or more of the specified parts could not be found. The part might not have been uploaded, or the specified entity tag might not have matched the part's entity tag.").
+-define(XML_ERROR_MSG_NoSuchUpload, "The specified multipart upload does not exist. The upload ID might be invalid, or the multipart upload might have been aborted or completed.").
 
 %% Macros
 %% - code:200
@@ -281,6 +285,11 @@
         cowboy_req:reply(?HTTP_ST_BAD_REQ, _H,
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_MetadataTooLarge,
                                                     ?XML_ERROR_MSG_MetadataTooLarge,
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+-define(reply_upload_not_found(_H, _Key, _ReqId, _R),
+        cowboy_req:reply(?HTTP_ST_NOT_FOUND, _H,
+                         io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_NoSuchUpload,
+                                                    ?XML_ERROR_MSG_NoSuchUpload,
                                                     xmerl_lib:export_text(_Key), _ReqId]), _R)).
 
 -define(http_header(_R, _K),
