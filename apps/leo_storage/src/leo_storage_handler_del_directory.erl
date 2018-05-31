@@ -334,6 +334,8 @@ insert_messages(From, MQId, Type, Directory, EnqueuedAt) ->
     DirTrailingSlash = case binary:last(Directory) of
         $/ ->
             Directory;
+        $\n ->
+            Directory;
         _ ->
             << Directory/binary, "/" >>
     end,
