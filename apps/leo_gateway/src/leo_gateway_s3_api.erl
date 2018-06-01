@@ -1248,7 +1248,7 @@ handle_multi_upload_1(true, Req, Path, UploadId,
             _ = leo_gateway_rpc_handler:delete(Path4Conf),
             {ok, Req2};
         _ ->
-            ?reply_service_unavailable_error([?SERVER_HEADER], Path, <<>>, Req)
+            ?reply_upload_not_found([?SERVER_HEADER], Path, <<>>, Req)
     end;
 handle_multi_upload_1(false, Req, Path,_UploadId,_ChunkedLen,_,_,_) ->
     ?reply_service_unavailable_error([?SERVER_HEADER], Path, <<>>, Req).
@@ -1312,6 +1312,9 @@ handle_multi_upload_2({ok, Bin, Req}, _Req, Path,_ChunkedLen, BucketInfo, CMetaB
                            [{key, binary_to_list(Path)}, {cause, Error}]),
                     ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req)
             end;
+        {error, not_found} ->
+            ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidPart,
+                                ?XML_ERROR_MSG_InvalidPart, Path, <<>>, Req);
         {error, unavailable} ->
             ?reply_service_unavailable_error([?SERVER_HEADER], Path, <<>>, Req);
         {error, Cause} ->
