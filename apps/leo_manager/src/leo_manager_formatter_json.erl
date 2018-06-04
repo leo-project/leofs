@@ -2,7 +2,7 @@
 %%
 %% LeoManager
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -123,29 +123,42 @@ bad_nodes(BadNodes) ->
              binary()).
 system_info_and_nodes_stat(Props) ->
     SystemConf = leo_misc:get_value('system_config', Props),
-    Version    = leo_misc:get_value('version',       Props),
-    [RH0, RH1] = leo_misc:get_value('ring_hash',     Props),
-    Nodes      = leo_misc:get_value('nodes',         Props),
+    Version    = leo_misc:get_value('version', Props),
+    [RH0, RH1] = leo_misc:get_value('ring_hash', Props),
+    Nodes      = leo_misc:get_value('nodes', Props),
 
     NodeInfo = case Nodes of
                    [] -> [];
                    _  ->
                        lists:map(
-                         fun({Type, NodeName, NodeState, RingHash0, RingHash1, When}) ->
-                                 NewRingHash0 = case is_integer(RingHash0) of
-                                                    true  -> integer_to_list(RingHash0);
-                                                    false -> RingHash0
-                                                end,
-                                 NewRingHash1 = case is_integer(RingHash1) of
-                                                    true  -> integer_to_list(RingHash1);
-                                                    false -> RingHash1
-                                                end,
-                                 {[{<<"type">>,      leo_misc:any_to_binary(Type)},
-                                   {<<"node">>,      leo_misc:any_to_binary(NodeName)},
-                                   {<<"state">>,     leo_misc:any_to_binary(NodeState)},
-                                   {<<"ring_cur">>,  leo_misc:any_to_binary(NewRingHash0)},
-                                   {<<"ring_prev">>, leo_misc:any_to_binary(NewRingHash1)},
-                                   {<<"when">>,      leo_misc:any_to_binary(leo_date:date_format(When))}
+                         fun(#node_state_for_output{
+                                node = Node,
+                                type = Type,
+                                state = State,
+                                group = Group,
+                                ring_hash_new = RingHashNew,
+                                ring_hash_old = RingHashOld,
+                                when_is = When}
+                            ) ->
+                                 RingHashNew_1 = case is_integer(RingHashNew) of
+                                                     true ->
+                                                         integer_to_list(RingHashNew);
+                                                     false ->
+                                                         RingHashNew
+                                                 end,
+                                 RingHashOld_1 = case is_integer(RingHashOld) of
+                                                     true ->
+                                                         integer_to_list(RingHashOld);
+                                                     false ->
+                                                         RingHashOld
+                                                 end,
+                                 {[{<<"type">>, leo_misc:any_to_binary(Type)},
+                                   {<<"node">>, leo_misc:any_to_binary(Node)},
+                                   {<<"state">>, leo_misc:any_to_binary(State)},
+                                   {<<"group">>, leo_misc:any_to_binary(Group)},
+                                   {<<"ring_cur">>, leo_misc:any_to_binary(RingHashNew_1)},
+                                   {<<"ring_prev">>, leo_misc:any_to_binary(RingHashOld_1)},
+                                   {<<"when">>, leo_misc:any_to_binary(leo_date:date_format(When))}
                                   ]}
                          end, Nodes)
                end,
@@ -156,9 +169,9 @@ system_info_and_nodes_stat(Props) ->
     DCId_2 = atom_to_list(DCId_1),
 
     gen_json({[{<<"system_info">>,
-                {[{<<"version">>,    leo_misc:any_to_binary(Version)},
+                {[{<<"version">>, leo_misc:any_to_binary(Version)},
                   {<<"cluster_id">>, leo_misc:any_to_binary(ClusterId_2)},
-                  {<<"dc_id">>,      leo_misc:any_to_binary(DCId_2)},
+                  {<<"dc_id">>, leo_misc:any_to_binary(DCId_2)},
                   {<<"n">>, SystemConf#?SYSTEM_CONF.n},
                   {<<"r">>, SystemConf#?SYSTEM_CONF.r},
                   {<<"w">>, SystemConf#?SYSTEM_CONF.w},
@@ -170,8 +183,8 @@ system_info_and_nodes_stat(Props) ->
                   {<<"mdcr_w">>, SystemConf#?SYSTEM_CONF.mdcr_w},
                   {<<"mdcr_d">>, SystemConf#?SYSTEM_CONF.mdcr_d},
                   {<<"rack_awareness_replicas">>, SystemConf#?SYSTEM_CONF.num_of_rack_replicas},
-                  {<<"ring_size">>,      SystemConf#?SYSTEM_CONF.bit_of_ring},
-                  {<<"ring_hash_cur">>,  RH0},
+                  {<<"ring_size">>,SystemConf#?SYSTEM_CONF.bit_of_ring},
+                  {<<"ring_hash_cur">>, RH0},
                   {<<"ring_hash_prev">>, RH1},
                   {<<"max_mdc_targets">>,SystemConf#?SYSTEM_CONF.max_mdc_targets}
                  ]}},
