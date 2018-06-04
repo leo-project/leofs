@@ -3,7 +3,7 @@
 #
 # LeoFS
 #
-# Copyright (c) 2012-2017 Rakuten, Inc.
+# Copyright (c) 2012-2018 Rakuten, Inc.
 #
 # This file is provided to you under the Apache License,
 # Version 2.0 (the "License"); you may not use this file
@@ -20,23 +20,33 @@
 # under the License.
 #
 #======================================================================
-echo "*** LeoFS - Start building test-environment ***"
+TEST_INTEGRATION="integration-test"
+TEST_WATCHDOG="watchdog-test"
+TEST_CACHE="cache-test"
+TEST_HTTP_CACHE="http-cache-test"
+TEST_RACK_AWARENESS="rack-awareness-test"
+USAGE="Usage: bootstrap build|start|stop $TEST_INTEGRATION|$TEST_WATCHDOG|$TEST_CACHE|$TEST_HTTP_CACHE|$TEST_RACK_AWARENESS"
+ERROR_MSG="No command to run specified!"
 
 if [ $# -ne 2 ]; then
-    echo "No command to run specified!"
-    echo "Usage: bootstrap build|start|stop integration-test|watchdog-test|cache-test|http-cache-test"
+    echo $ERROR_MSG
+    echo $USAGE
     exit 1
 fi
 
 if [ $1 != "build" -a $1 != "start" -a $1 != "stop" ]; then
-    echo "No command to run specified!"
-    echo "Usage: bootstrap build|start|stop integration-test|watchdog-test|cache-test|http-cache-test"
+    echo $ERROR_MSG
+    echo $USAGE
     exit 1
 fi
 
-if [ $2 != "integration-test" -a $2 != "watchdog-test" -a $2 != "cache-test" -a $2 != "http-cache-test" ]; then
-    echo "No command to run specified!"
-    echo "Usage: bootstrap build|start|stop integration-test|watchdog-test|cache-test|http-cache-test"
+if [ $2 != "$TEST_INTEGRATION" -a \
+     $2 != "$TEST_WATCHDOG" -a \
+     $2 != "$TEST_CACHE" -a \
+     $2 != "$TEST_HTTP_CACHE" -a \
+     $2 != "$TEST_RACK_AWARENESS" ]; then
+    echo $ERROR_MSG
+    echo $USAGE
     exit 1
 fi
 
@@ -66,7 +76,7 @@ cp -r package/leo_gateway package/leo_gateway_0
 rm -rf package/leo_storage
 rm -rf package/leo_gateway
 
-if [ $2 = "integration-test" ]; then
+if [ $2 = "$TEST_INTEGRATION" ]; then
     cp priv/test/integration-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
     cp priv/test/integration-test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
     cp priv/test/integration-test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
@@ -75,7 +85,7 @@ if [ $2 = "integration-test" ]; then
     cp priv/test/integration-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
     cp priv/test/integration-test/app-s4.conf package/leo_storage_4/etc/leo_storage.conf
     cp priv/test/integration-test/app-g0.conf package/leo_gateway_0/etc/leo_gateway.conf
-elif [ $2 = "watchdog-test" ]; then
+elif [ $2 = "$TEST_WATCHDOG" ]; then
     cp priv/test/watchdog-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
     cp priv/test/watchdog-test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
     cp priv/test/watchdog-test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
@@ -83,7 +93,7 @@ elif [ $2 = "watchdog-test" ]; then
     cp priv/test/watchdog-test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
     cp priv/test/watchdog-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
     cp priv/test/watchdog-test/app-s4.conf package/leo_storage_4/etc/leo_storage.conf
-elif [ $2 = "cache-test" ]; then
+elif [ $2 = "$TEST_CACHE" ]; then
     cp priv/test/cache-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
     cp priv/test/cache-test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
     cp priv/test/cache-test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
@@ -92,7 +102,7 @@ elif [ $2 = "cache-test" ]; then
     cp priv/test/cache-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
     cp priv/test/cache-test/app-s4.conf package/leo_storage_4/etc/leo_storage.conf
     cp priv/test/cache-test/app-g0.conf package/leo_gateway_0/etc/leo_gateway.conf
-else
+elif [ $2 = "$TEST_HTTP_CACHE" ]; then
     cp priv/test/http-cache-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
     cp priv/test/http-cache-test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
     cp priv/test/http-cache-test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
@@ -101,6 +111,17 @@ else
     cp priv/test/http-cache-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
     cp priv/test/http-cache-test/app-s4.conf package/leo_storage_4/etc/leo_storage.conf
     cp priv/test/http-cache-test/app-g0.conf package/leo_gateway_0/etc/leo_gateway.conf
+elif [ $2 = "$TEST_RACK_AWARENESS" ]; then
+    cp priv/test/rack-awareness-test/app-m0.conf package/leo_manager_0/etc/leo_manager.conf
+    cp priv/test/rack-awareness-test/app-m1.conf package/leo_manager_1/etc/leo_manager.conf
+    cp priv/test/rack-awareness-test/app-s0.conf package/leo_storage_0/etc/leo_storage.conf
+    cp priv/test/rack-awareness-test/app-s1.conf package/leo_storage_1/etc/leo_storage.conf
+    cp priv/test/rack-awareness-test/app-s2.conf package/leo_storage_2/etc/leo_storage.conf
+    cp priv/test/rack-awareness-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+    cp priv/test/rack-awareness-test/app-s3.conf package/leo_storage_3/etc/leo_storage.conf
+    cp priv/test/rack-awareness-test/app-g0.conf package/leo_gateway_0/etc/leo_gateway.conf
+else
+    exit 1
 fi
 
 ## Launch the applications
@@ -135,5 +156,3 @@ echo ":::"
 ./leofs-adm start
 sleep 1
 ./leofs-adm status
-
-echo "*** leofs - Finished :) ***"
