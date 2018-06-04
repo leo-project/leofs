@@ -123,9 +123,9 @@ bad_nodes(BadNodes) ->
              binary()).
 system_info_and_nodes_stat(Props) ->
     SystemConf = leo_misc:get_value('system_config', Props),
-    Version    = leo_misc:get_value('version', Props),
+    Version = leo_misc:get_value('version', Props),
     [RH0, RH1] = leo_misc:get_value('ring_hash', Props),
-    Nodes      = leo_misc:get_value('nodes', Props),
+    Nodes = leo_misc:get_value('nodes', Props),
 
     NodeInfo = case Nodes of
                    [] -> [];
@@ -135,7 +135,7 @@ system_info_and_nodes_stat(Props) ->
                                 node = Node,
                                 type = Type,
                                 state = State,
-                                group = Group,
+                                rack_id = RackId,
                                 ring_hash_new = RingHashNew,
                                 ring_hash_old = RingHashOld,
                                 when_is = When}
@@ -155,7 +155,7 @@ system_info_and_nodes_stat(Props) ->
                                  {[{<<"type">>, leo_misc:any_to_binary(Type)},
                                    {<<"node">>, leo_misc:any_to_binary(Node)},
                                    {<<"state">>, leo_misc:any_to_binary(State)},
-                                   {<<"group">>, leo_misc:any_to_binary(Group)},
+                                   {<<"rack_id">>, leo_misc:any_to_binary(RackId)},
                                    {<<"ring_cur">>, leo_misc:any_to_binary(RingHashNew_1)},
                                    {<<"ring_prev">>, leo_misc:any_to_binary(RingHashOld_1)},
                                    {<<"when">>, leo_misc:any_to_binary(leo_date:date_format(When))}
@@ -309,7 +309,9 @@ node_stat(?SERVER_TYPE_STORAGE, State) ->
     gen_json({[{<<"node_stat">>,
                 {[{<<"version">>,          leo_misc:any_to_binary(Version)},
                   {<<"num_of_vnodes">>,    NumOfVNodes},
+                  %% @deplicated
                   {<<"grp_level_2">>,      leo_misc:any_to_binary(GrpLevel2)},
+                  {<<"rack_id">>,          leo_misc:any_to_binary(GrpLevel2)},
                   {<<"log_dir">>,          leo_misc:any_to_binary(leo_misc:get_value('log', Directories, []))},
                   {<<"ring_cur">>,         leo_misc:any_to_binary(leo_hex:integer_to_hex(leo_misc:get_value('ring_cur',  RingHashes, 0), 8))},
                   {<<"ring_prev">>,        leo_misc:any_to_binary(leo_hex:integer_to_hex(leo_misc:get_value('ring_prev', RingHashes, 0), 8))},

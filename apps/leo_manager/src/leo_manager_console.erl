@@ -1591,11 +1591,11 @@ status(node_list) ->
                      {ok, R1} ->
                          lists:map(fun(N) ->
                                            Node = N#node_state.node,
-                                           {State, Grp} =
+                                           {State, RackId} =
                                                case leo_redundant_manager_api:get_member_by_node(Node) of
                                                    {ok, #member{state = State_1,
-                                                                grp_level_2 = Grp_1}} ->
-                                                       {State_1, Grp_1};
+                                                                grp_level_2 = RackId_1}} ->
+                                                       {State_1, RackId_1};
                                                    _ ->
                                                        error
                                                end,
@@ -1603,7 +1603,7 @@ status(node_list) ->
                                               node = atom_to_list(Node),
                                               type = ?SERVER_TYPE_STORAGE,
                                               state = atom_to_list(State),
-                                              group = Grp,
+                                              rack_id = RackId,
                                               ring_hash_new = N#node_state.ring_hash_new,
                                               ring_hash_old = N#node_state.ring_hash_old,
                                               when_is = N#node_state.when_is
