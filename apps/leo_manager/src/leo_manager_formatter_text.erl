@@ -290,20 +290,20 @@ system_conf_with_node_stat(FormattedSystemConf, Nodes) ->
                           end
                   end, 0, Nodes) + 5,
     Col_2_Len = lists:foldl(
-                  fun(#node_state_for_output{group = G}, Acc) ->
-                          Len = length(G),
+                  fun(#node_state_for_output{rack_id = R}, Acc) ->
+                          Len = length(R),
                           case (Len > Acc) of
                               true  ->
                                   Len;
                               false ->
                                   Acc
                           end
-                  end, 0, Nodes) + 5,
+                  end, 0, Nodes) + 7,
 
     CellColumns = [{"type", 6},
                    {"node", Col_1_Len},
                    {"state", 12},
-                   {"group", Col_2_Len},
+                   {"rack id", Col_2_Len},
                    {"current ring", 14},
                    {"prev ring", 14},
                    {"updated at", 28},
@@ -338,7 +338,7 @@ system_conf_with_node_stat(FormattedSystemConf, Nodes) ->
     Fun3 = fun(#node_state_for_output{node = Node,
                                       type = Type,
                                       state = State,
-                                      group = Group,
+                                      rack_id = RackId,
                                       ring_hash_new = RingHashNew,
                                       ring_hash_old = RingHashOld,
                                       when_is = When} = _N, List) ->
@@ -346,7 +346,7 @@ system_conf_with_node_stat(FormattedSystemConf, Nodes) ->
                    Ret = lists:append([string:centre(Type, lists:nth(1,LenPerCol)), ?SEPARATOR,
                                        string:left(Node, lists:nth(2,LenPerCol)), ?SEPARATOR,
                                        string:left(State, lists:nth(3,LenPerCol)), ?SEPARATOR,
-                                       string:left(Group, lists:nth(4,LenPerCol)), ?SEPARATOR,
+                                       string:left(RackId, lists:nth(4,LenPerCol)), ?SEPARATOR,
                                        string:left(RingHashNew, lists:nth(5,LenPerCol)), ?SEPARATOR,
                                        string:left(RingHashOld, lists:nth(6,LenPerCol)), ?SEPARATOR,
                                        FormattedDate,

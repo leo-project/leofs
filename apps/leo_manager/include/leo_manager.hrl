@@ -450,7 +450,7 @@
         {node = [] :: string(),
          type = [] :: string(),
          state :: atom(),
-         group = [] :: string(),
+         rack_id = [] :: string(),
          ring_hash_new = [] :: string(),
          ring_hash_old = [] :: string(),
          when_is = 0 :: non_neg_integer()
