@@ -2,7 +2,7 @@
 %%
 %% Leo Manager
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -408,41 +408,53 @@
                 ?AUTH_DONE).
 
 -ifdef(TEST).
--record(state, {formatter :: atom(),
-                auth = ?AUTH_DONE :: auth(),
-                user_id = <<>> :: binary(),
-                password = <<>> :: binary(),
-                plugin_mod :: atom()
-               }).
+-record(state,
+        {formatter :: atom(),
+         auth = ?AUTH_DONE :: auth(),
+         user_id = <<>> :: binary(),
+         password = <<>> :: binary(),
+         plugin_mod :: atom()
+        }).
 -else.
--record(state, {formatter :: atom(),
-                auth = ?AUTH_DONE :: auth(),
-                user_id = <<>> :: binary(),
-                password = <<>> :: binary(),
-                plugin_mod :: atom()
-               }).
+-record(state,
+        {formatter :: atom(),
+         auth = ?AUTH_DONE :: auth(),
+         user_id = <<>> :: binary(),
+         password = <<>> :: binary(),
+         plugin_mod :: atom()
+        }).
 -endif.
 
--record(rebalance_info, {
-          vnode_id = -1  :: integer(),
-          node :: atom(),
-          total_of_objects = 0 :: integer(),
-          num_of_remains = 0 :: integer(),
-          when_is = 0 :: integer() %% Posted at
-         }).
+-record(rebalance_info,
+        {vnode_id = -1  :: integer(),
+         node :: atom(),
+         total_of_objects = 0 :: integer(),
+         num_of_remains = 0 :: integer(),
+         when_is = 0 :: integer() %% Posted at
+        }).
 
--record(history, {
-          id = 1 :: pos_integer(),
-          command = [] :: string(), %% Command
-          created = -1 :: integer() %% Created At
-         }).
+-record(history,
+        {id = 1 :: pos_integer(),
+         command = [] :: string(), %% Command
+         created = -1 :: integer() %% Created At
+        }).
 
--record(recovery_rebalance_info, {
-          id = 1 :: pos_integer(),
-          node :: atom(),
-          rebalance_info = [] :: list(tuple()),
-          timestamp = 1 :: pos_integer()
-         }).
+-record(recovery_rebalance_info,
+        {id = 1 :: pos_integer(),
+         node :: atom(),
+         rebalance_info = [] :: list(tuple()),
+         timestamp = 1 :: pos_integer()
+        }).
+
+-record(node_state_for_output,
+        {node = [] :: string(),
+         type = [] :: string(),
+         state :: atom(),
+         group = [] :: string(),
+         ring_hash_new = [] :: string(),
+         ring_hash_old = [] :: string(),
+         when_is = 0 :: non_neg_integer()
+        }).
 
 
 -define(STATE_INVALID, 0).
@@ -454,32 +466,32 @@
                             ?STATE_ENQUEUING |
                             ?STATE_MONITORING |
                             ?STATE_FINISHED).
--record(del_bucket_queue, {
-          bucket_name = <<>> :: binary(),
-          access_key_bin = <<>> :: binary(),
-          state = ?STATE_PENDING :: del_bucket_state(),
-          timestamp = 1 :: pos_integer()
-         }).
+-record(del_bucket_queue,
+        {bucket_name = <<>> :: binary(),
+         access_key_bin = <<>> :: binary(),
+         state = ?STATE_PENDING :: del_bucket_state(),
+         timestamp = 1 :: pos_integer()
+        }).
 
--record(del_bucket_state, {
-          id = <<>> :: binary(),
-          bucket_name = <<>> :: binary(),
-          node :: atom(),
-          state = ?STATE_PENDING :: del_bucket_state(),
-          timestamp = 1 :: pos_integer()
-         }).
+-record(del_bucket_state,
+        {id = <<>> :: binary(),
+         bucket_name = <<>> :: binary(),
+         node :: atom(),
+         state = ?STATE_PENDING :: del_bucket_state(),
+         timestamp = 1 :: pos_integer()
+        }).
 
 -define(NODE_TYPE_GATEWAY, 0).
 -define(NODE_TYPE_STORAGE, 1).
 -type(dest_node_type() :: ?NODE_TYPE_GATEWAY |
                           ?NODE_TYPE_STORAGE).
--record(del_bucket_request, {
-          id = 1 :: pos_integer(),
-          node_type = ?NODE_TYPE_GATEWAY :: dest_node_type(),
-          bucket_name = <<>> :: binary(),
-          node :: node(),
-          timestamp = 1 :: pos_integer()
-         }).
+-record(del_bucket_request,
+        {id = 1 :: pos_integer(),
+         node_type = ?NODE_TYPE_GATEWAY :: dest_node_type(),
+         bucket_name = <<>> :: binary(),
+         node :: node(),
+         timestamp = 1 :: pos_integer()
+        }).
 
 
 -define(del_bucket_state(_State),
