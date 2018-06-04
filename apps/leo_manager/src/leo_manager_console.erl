@@ -2,7 +2,7 @@
 %%
 %% LeoManager
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -1591,18 +1591,23 @@ status(node_list) ->
                      {ok, R1} ->
                          lists:map(fun(N) ->
                                            Node = N#node_state.node,
-                                           State = case leo_redundant_manager_api:get_member_by_node(Node) of
-                                                       {ok, #member{state = State_1}} ->
-                                                           State_1;
-                                                       _ ->
-                                                           error
-                                                   end,
-                                           {?SERVER_TYPE_STORAGE,
-                                            atom_to_list(Node),
-                                            atom_to_list(State),
-                                            N#node_state.ring_hash_new,
-                                            N#node_state.ring_hash_old,
-                                            N#node_state.when_is}
+                                           {State, Grp} =
+                                               case leo_redundant_manager_api:get_member_by_node(Node) of
+                                                   {ok, #member{state = State_1,
+                                                                grp_level_2 = Grp_1}} ->
+                                                       {State_1, Grp_1};
+                                                   _ ->
+                                                       error
+                                               end,
+                                           #node_state_for_output{
+                                              node = atom_to_list(Node),
+                                              type = ?SERVER_TYPE_STORAGE,
+                                              state = atom_to_list(State),
+                                              group = Grp,
+                                              ring_hash_new = N#node_state.ring_hash_new,
+                                              ring_hash_old = N#node_state.ring_hash_old,
+                                              when_is = N#node_state.when_is
+                                             }
                                    end, R1);
                      _ ->
                          []
@@ -1610,12 +1615,14 @@ status(node_list) ->
             S2 = case leo_manager_mnesia:get_gateway_nodes_all() of
                      {ok, R2} ->
                          lists:map(fun(N) ->
-                                           {?SERVER_TYPE_GATEWAY,
-                                            atom_to_list(N#node_state.node),
-                                            atom_to_list(N#node_state.state),
-                                            N#node_state.ring_hash_new,
-                                            N#node_state.ring_hash_old,
-                                            N#node_state.when_is}
+                                           #node_state_for_output{
+                                              node = atom_to_list(N#node_state.node),
+                                              type = ?SERVER_TYPE_GATEWAY,
+                                              state = atom_to_list(N#node_state.state),
+                                              ring_hash_new = N#node_state.ring_hash_new,
+                                              ring_hash_old = N#node_state.ring_hash_old,
+                                              when_is = N#node_state.when_is
+                                             }
                                    end, R2);
                      _ ->
                          []
