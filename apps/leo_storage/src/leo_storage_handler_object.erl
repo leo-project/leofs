@@ -1587,6 +1587,37 @@ get_cmeta_test() ->
 -endif.
 
 %% @doc PUT an object having inconsistencies for test/debug
+%%      This API provides callers with the fine-grained controll on which replica is created.
+debug_put(Key, Body, ReplicaState) when is_list(ReplicaState) ->
+    case leo_redundant_manager_api:get_redundancies_by_key(put, Key) of
+        {ok, #redundancies{nodes = Redundancies,
+                              id = AddrId,
+                               n = NumOfReplicasOrg,
+                               ring_hash = RingHash}} ->
+            case length(ReplicaState) =/= NumOfReplicasOrg of
+                true ->
+                    {error, different_num_of_replicas};
+                false ->
+                    L = lists:zip(ReplicaState, Redundancies),
+                    Redundancies2 = [R || {ToCreate, R} <- L, ToCreate =:= true],
+                    Quorum = ?quorum(?CMD_PUT, length(Redundancies2), length(Redundancies2)),
+                    Object = #?OBJECT{method = ?CMD_PUT,
+                                      addr_id = AddrId,
+                                      key = Key,
+                                      data = Body,
+                                      dsize = size(Body),
+                                      timestamp = leo_date:now(),
+                                      clock = leo_date:clock(),
+                                      ring_hash = RingHash},
+                    leo_storage_replicator:replicate(
+                        ?CMD_PUT, Quorum, Redundancies2,
+                        Object,
+                        replicate_callback(Object))
+            end;
+        {error, Cause} ->
+            {error, Cause}
+    end;
+%% @doc PUT an object having inconsistencies for test/debug
 debug_put(Key, Body, NumOfReplicas) ->
     case leo_redundant_manager_api:get_redundancies_by_key(put, Key) of
         {ok, #redundancies{nodes = Redundancies,
@@ -1617,6 +1648,38 @@ debug_put(Key, Body, NumOfReplicas) ->
             {error, Cause}
     end.
 
+%% @doc DELETE an object having inconsistencies for test/debug
+%%      This API provides callers with the fine-grained controll on which replica is deleted.
+debug_delete(Key, ReplicaState) when is_list(ReplicaState) ->
+    case leo_redundant_manager_api:get_redundancies_by_key(delete, Key) of
+        {ok, #redundancies{nodes = Redundancies,
+                              id = AddrId,
+                               n = NumOfReplicasOrg,
+                               ring_hash = RingHash}} ->
+            case length(ReplicaState) =/= NumOfReplicasOrg of
+                true ->
+                    {error, different_num_of_replicas};
+                false ->
+                    L = lists:zip(ReplicaState, Redundancies),
+                    Redundancies2 = [R || {ToCreate, R} <- L, ToCreate =:= true],
+                    Quorum = ?quorum(?CMD_DELETE, length(Redundancies2), length(Redundancies2)),
+                    Object = #?OBJECT{method = ?CMD_DELETE,
+                                      addr_id = AddrId,
+                                      key = Key,
+                                      data = <<>>,
+                                      dsize = 0,
+                                      timestamp = leo_date:now(),
+                                      clock = leo_date:clock(),
+                                      ring_hash = RingHash,
+                                      del = ?DEL_TRUE},
+                    leo_storage_replicator:replicate(
+                        ?CMD_DELETE, Quorum, Redundancies2,
+                        Object,
+                        replicate_callback(Object))
+            end;
+        {error, Cause} ->
+            {error, Cause}
+    end;
 %% @doc DELETE an object having inconsistencies for test/debug
 debug_delete(Key, NumOfReplicas) ->
     case leo_redundant_manager_api:get_redundancies_by_key(delete, Key) of
