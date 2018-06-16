@@ -61,7 +61,6 @@
        %% LeoFS-related
        {app, leo_storage,           [{incl_cond, include}]},
        {app, bear,                  [{incl_cond, include}]},
-       {app, bitcask,               [{incl_cond, include}]},
        {app, elarm,                 [{incl_cond, include}]},
        {app, eleveldb,              [{incl_cond, include}]},
        {app, folsom,                [{incl_cond, include}]},

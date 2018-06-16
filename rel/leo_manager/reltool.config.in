@@ -60,7 +60,6 @@
        {app, leo_manager,           [{incl_cond, include}]},
        {app, bcrypt,                [{incl_cond, include}]},
        {app, bear,                  [{incl_cond, include}]},
-       {app, bitcask,               [{incl_cond, include}]},
        {app, eleveldb,              [{incl_cond, include}]},
        {app, erlpass,               [{incl_cond, include}]},
        {app, folsom,                [{incl_cond, include}]},
