@@ -853,8 +853,8 @@ du(_, _) ->
 mq_stats([]) ->
     [];
 mq_stats(Stats) ->
-    Header = "              id                |    state    | number of msgs | batch of msgs  |    interval    |                                 description                            \r\n"
-        ++   "--------------------------------+-------------+----------------|----------------|----------------|-------------------------------------------------------------------------\r\n",
+    Header = "              id                |       state       | number of msgs | batch of msgs  |    interval    |                                 description                            \r\n"
+        ++   "--------------------------------+-------------------+----------------|----------------|----------------|-------------------------------------------------------------------------\r\n",
     Output = lists:foldl(
                fun(#mq_state{id = Id,
                              state = ConsumerStats,
@@ -865,7 +865,7 @@ mq_stats(Stats) ->
                        Interval    = leo_misc:get_value(?MQ_CNS_PROP_INTERVAL, ConsumerStats, 0),
                        lists:append([Acc,
                                      string:left(" " ++ atom_to_list(Id), 31), ?SEPARATOR,
-                                     string:centre(atom_to_list(State), 11), ?SEPARATOR,
+                                     string:centre(atom_to_list(State), 17), ?SEPARATOR,
                                      string:left(integer_to_list(NumOfMsgs), 14), ?SEPARATOR,
                                      string:left(integer_to_list(BatchOfMsgs), 14), ?SEPARATOR,
                                      string:left(integer_to_list(Interval), 14), ?SEPARATOR,
