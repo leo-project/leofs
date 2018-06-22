@@ -208,6 +208,107 @@ $ leofs-adm status
 -------+--------------------------+--------------+----------------+----------------+----------------------------
 ```
 
+### Rollback a detached Node
+
+If you detached a node by mistake, you can rollback that node by following the operation below.
+
+- Check the current state of the cluster and specify which nodes are detached by mistake.
+- Then execute `leofs-adm rollback` command on each detached node.
+- Execute `leofs-adm status` to check whether the node state gets back to `running`
+
+```bash
+## Example:
+## 1. Check the current state of the cluster
+$ leofs-adm status
+ [System Confiuration]
+-----------------------------------+----------
+ Item                              | Value
+-----------------------------------+----------
+ Basic/Consistency level
+-----------------------------------+----------
+                    system version | 1.4.1
+                        cluster Id | leofs_1
+                             DC Id | dc_1
+                    Total replicas | 2
+          number of successes of R | 1
+          number of successes of W | 1
+          number of successes of D | 1
+ number of rack-awareness replicas | 0
+                         ring size | 2^128
+-----------------------------------+----------
+ Multi DC replication settings
+-----------------------------------+----------
+ [mdcr] max number of joinable DCs | 2
+ [mdcr] total replicas per a DC    | 1
+ [mdcr] number of successes of R   | 1
+ [mdcr] number of successes of W   | 1
+ [mdcr] number of successes of D   | 1
+-----------------------------------+----------
+ Manager RING hash
+-----------------------------------+----------
+                 current ring-hash | 889a8d21
+                previous ring-hash | fa2ce41b
+-----------------------------------+----------
+
+ [State of Node(s)]
+-------+--------------------------+--------------+---------+----------------+----------------+----------------------------
+ type  |           node           |    state     | rack id |  current ring  |   prev ring    |          updated at
+-------+--------------------------+--------------+---------+----------------+----------------+----------------------------
+  S    | storage_1@127.0.0.1      | detached     |         | -1             | -1             | 2018-06-22 15:52:38 +0900
+  S    | storage_2@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 15:05:41 +0900
+  S    | storage_3@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 15:00:14 +0900
+  S    | storage_4@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 14:55:54 +0900
+  G    | gateway_0@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 14:47:33 +0900
+-------+--------------------------+--------------+---------+----------------+----------------+----------------------------
+
+## 2. Rollback a detached LeoStorage node
+$ leofs-adm rollback storage_1@127.0.0.1
+OK
+
+## 3. Confirm whether the node state gets back to `running`
+$ leofs-adm status
+ [System Confiuration]
+-----------------------------------+----------
+ Item                              | Value
+-----------------------------------+----------
+ Basic/Consistency level
+-----------------------------------+----------
+                    system version | 1.4.1
+                        cluster Id | leofs_1
+                             DC Id | dc_1
+                    Total replicas | 2
+          number of successes of R | 1
+          number of successes of W | 1
+          number of successes of D | 1
+ number of rack-awareness replicas | 0
+                         ring size | 2^128
+-----------------------------------+----------
+ Multi DC replication settings
+-----------------------------------+----------
+ [mdcr] max number of joinable DCs | 2
+ [mdcr] total replicas per a DC    | 1
+ [mdcr] number of successes of R   | 1
+ [mdcr] number of successes of W   | 1
+ [mdcr] number of successes of D   | 1
+-----------------------------------+----------
+ Manager RING hash
+-----------------------------------+----------
+                 current ring-hash | 889a8d21
+                previous ring-hash | fa2ce41b
+-----------------------------------+----------
+
+ [State of Node(s)]
+-------+--------------------------+--------------+---------+----------------+----------------+----------------------------
+ type  |           node           |    state     | rack id |  current ring  |   prev ring    |          updated at
+-------+--------------------------+--------------+---------+----------------+----------------+----------------------------
+  S    | storage_1@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 15:52:38 +0900
+  S    | storage_2@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 15:05:41 +0900
+  S    | storage_3@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 15:00:14 +0900
+  S    | storage_4@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 14:55:54 +0900
+  G    | gateway_0@127.0.0.1      | running      |         | 889a8d21       | fa2ce41b       | 2018-06-22 14:47:33 +0900
+-------+--------------------------+--------------+---------+----------------+----------------+----------------------------
+```
+
 ### Take Over a Node
 
 If a new LeoStorage node takes over a detached node, you can realize that by following the operation flow.
