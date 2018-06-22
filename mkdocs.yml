@@ -73,7 +73,7 @@ pages:
     - System Administration:
         - Log Management: 'admin/system_admin/log_management.md'
         - Persistent Configuration: 'admin/system_admin/persistent_configuration.md'
-        ## - LeoManager's Maintenance: 'admin/system_admin/leo_manager.md'
+        - LeoManager's Maintenance: 'admin/system_admin/leo_manager.md'
         - System Monitoring: 'admin/system_admin/monitoring.md'
         - System Migration: 'admin/system_admin/migration.md'
         ## - Backup and Restore: 'admin/system_admin/backup_and_restore.md'
