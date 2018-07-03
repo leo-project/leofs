@@ -13,6 +13,12 @@
     * [A Comment on LeoFS' Issue #748, Connecting to bucket causes badarg error](https://github.com/leo-project/leofs/issues/748#issuecomment-306391378)
     * [For Administrators / System Operations / S3 / Endpoint](../admin/system_operations/s3.md#endpoint)
 
+## User Defined Metadata
+
+Although we support User Defined Metadata according to the original S3 spec, we have reserved every key which prefix is "x-amz-meta-leofs-" as system reserved ones. So please be careful not to use User Defined Metadata with the key prefixed "x-amz-meta-leofs-".
+
+* Related Links:
+    * [User Defined Metadata](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html#object-metadata)
 
 ## Uploading Objects
 
