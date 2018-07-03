@@ -216,6 +216,7 @@ version_all(Nodes) ->
 node_stat(?SERVER_TYPE_GATEWAY, State) ->
     Version      = leo_misc:get_value('version',       State, []),
     Directories  = leo_misc:get_value('dirs',          State, []),
+    LogLevel     = leo_misc:get_value('log_level',     State, []),
     HttpConf     = leo_misc:get_value('http_conf',     State, []),
     RingHashes   = leo_misc:get_value('ring_checksum', State, []),
     Statistics   = leo_misc:get_value('statistics',    State, []),
@@ -230,6 +231,7 @@ node_stat(?SERVER_TYPE_GATEWAY, State) ->
                   %% config-1
                   {<<"version">>, leo_misc:any_to_binary(Version)},
                   {<<"log_dir">>, leo_misc:any_to_binary(leo_misc:get_value('log', Directories, []))},
+                  {<<"log_level">>, leo_misc:any_to_binary(LogLevel)},
 
                   %% config-2
                   {<<"ring_cur">>,  leo_misc:any_to_binary(
@@ -301,6 +303,7 @@ node_stat(?SERVER_TYPE_STORAGE, State) ->
     NumOfVNodes = leo_misc:get_value('num_of_vnodes', State, -1),
     GrpLevel2   = leo_misc:get_value('grp_level_2',   State, []),
     Directories = leo_misc:get_value('dirs',          State, []),
+    LogLevel    = leo_misc:get_value('log_level',     State, []),
     RingHashes  = leo_misc:get_value('ring_checksum', State, []),
     Statistics  = leo_misc:get_value('statistics',    State, []),
     MsgQueue    = leo_misc:get_value('storage', Statistics, []),
@@ -313,6 +316,7 @@ node_stat(?SERVER_TYPE_STORAGE, State) ->
                   {<<"grp_level_2">>,      leo_misc:any_to_binary(GrpLevel2)},
                   {<<"rack_id">>,          leo_misc:any_to_binary(GrpLevel2)},
                   {<<"log_dir">>,          leo_misc:any_to_binary(leo_misc:get_value('log', Directories, []))},
+                  {<<"log_level">>,        leo_misc:any_to_binary(LogLevel)},
                   {<<"ring_cur">>,         leo_misc:any_to_binary(leo_hex:integer_to_hex(leo_misc:get_value('ring_cur',  RingHashes, 0), 8))},
                   {<<"ring_prev">>,        leo_misc:any_to_binary(leo_hex:integer_to_hex(leo_misc:get_value('ring_prev', RingHashes, 0), 8))},
                   {<<"vm_version">>,       leo_misc:any_to_binary(leo_misc:get_value('vm_version', Statistics, []))},
