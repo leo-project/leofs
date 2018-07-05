@@ -565,6 +565,8 @@ handle_call(_Socket, <<?CMD_GET_BUCKET_BY_ACCESS_KEY, ?SPACE, Option/binary>>,
                   case get_bucket_by_access_key(Option) of
                       {ok, Buckets} ->
                           Formatter:bucket_by_access_key(Buckets);
+                      not_found when Formatter =:= leo_manager_formatter_json ->
+                          Formatter:bucket_by_access_key([]);
                       not_found ->
                           Formatter:error("Bucket not found");
                       {error, Cause} ->
@@ -2262,6 +2264,8 @@ get_users(Formatter) ->
                   case get_users_1() of
                       {ok, List} ->
                           Formatter:users(List);
+                      {error, not_found} when Formatter =:= leo_manager_formatter_json ->
+                          Formatter:users([]);
                       {error, Cause} ->
                           Formatter:error(Cause)
                   end
@@ -2304,6 +2308,8 @@ get_endpoints(Formatter) ->
                   case get_endpoints_1() of
                       {ok, EndPoints} ->
                           Formatter:endpoints(EndPoints);
+                      {error, ?ERROR_ENDPOINT_NOT_FOUND} when Formatter =:= leo_manager_formatter_json ->
+                          Formatter:endpoints([]);
                       {error, Cause} ->
                           Formatter:error(Cause)
                   end
@@ -2432,6 +2438,8 @@ get_buckets(Formatter) ->
                   case get_buckets_1() of
                       {ok, Buckets} ->
                           Formatter:buckets(Buckets);
+                      {error, ?ERROR_BUCKET_NOT_FOUND} when Formatter =:= leo_manager_formatter_json ->
+                          Formatter:buckets([]);
                       {error, Cause} ->
                           Formatter:error(Cause)
                   end
