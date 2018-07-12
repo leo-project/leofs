@@ -102,7 +102,7 @@ jobs:
 
 workflows:
   version: 2
-  update_docker_images:
+  run_integration_tests:
     jobs:
       - leofs-all-in-one
       - leofs-nfs-test:
