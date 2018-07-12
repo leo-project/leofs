@@ -4,8 +4,7 @@ ARG REPO_BRANCH="develop"
 
 RUN set -xe \
     # install leofs
-    ## CAUTION: mocchira should be replaced with leo-project once the PR get merged.
-    && git clone https://github.com/mocchira/leofs.git \
+    && git clone https://github.com/leo-project/leofs.git \
     && cd leofs \
     && git checkout $REPO_BRANCH \
     ## add -q option for netcat(nc) to close the client socket and nc works as expected
