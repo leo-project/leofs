@@ -1,0 +1,10 @@
+tester:
+  image: leoproject/leofs-client-tests:0.1
+  links:
+    - leofs:s3.amazonaws.com
+    - leofs:testc.s3.amazonaws.com
+    - leofs:testg.s3.amazonaws.com
+    - leofs:testp.s3.amazonaws.com
+
+leofs:
+  image: leoproject/leofs-all-in-one:latest

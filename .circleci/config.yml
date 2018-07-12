@@ -1,0 +1,122 @@
+version: 2
+jobs:
+  leofs-all-in-one:
+    docker:
+      - image: golang:1.9.7-stretch
+    working_directory: ~/leofs
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/leofs
+      - setup_remote_docker:
+          docker_layer_caching: true
+      # use a primary image that already has Docker (recommended)
+      # or install it during a build like we do here
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            wget -O /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /bin
+      - run:
+          command: |
+              cd Dockerfiles/leofs-all-in-one
+              docker image build --build-arg REPO_BRANCH=$CIRCLE_BRANCH -t leoproject/leofs-all-in-one .
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: |
+           for i in 1 2 3; do
+             docker push leoproject/leofs-all-in-one
+             if [ $? -eq 0 ]; then
+               exit 0
+             fi
+             echo "Retrying...."
+           done
+           exit 1
+
+  leofs-nfs-test:
+    docker:
+      - image: golang:1.9.7-stretch
+    working_directory: ~/leofs
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - setup_remote_docker:
+          docker_layer_caching: true
+      # use a primary image that already has Docker (recommended)
+      # or install it during a build like we do here
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            wget -O /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /bin
+      - run:
+          command: |
+              cd Dockerfiles/leofs-nfs-test
+              docker image build -t leoproject/leofs-nfs-test .
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: |
+           for i in 1 2 3; do
+             docker push leoproject/leofs-nfs-test
+             if [ $? -eq 0 ]; then
+               exit 0
+             fi
+             echo "Retrying...."
+           done
+           exit 1
+
+  run-leofs-test2:
+    docker:
+      - image: leoproject/leofs-all-in-one:latest
+    working_directory: /leofs
+    steps:
+      - run: ./run_leofs_test2.sh
+
+  run-delete-bucket-test:
+    docker:
+      - image: leoproject/leofs-all-in-one:latest
+    working_directory: /leofs
+    steps:
+      - run: ./test/test_it_del_bucket.sh
+
+  run-leofs-nfs-test:
+    machine: true
+    working_directory: ~/leofs
+    steps:
+      - checkout
+      - run: ./Dockerfiles/leofs-nfs-test/run_container_for_nfs_test.sh
+
+  run-leofs-client-tests:
+    machine: true
+    working_directory: ~/leofs
+    steps:
+      - checkout
+      - run: cd Dockerfiles && docker-compose up --abort-on-container-exit
+
+workflows:
+  version: 2
+  update_docker_images:
+    jobs:
+      - leofs-all-in-one
+      - leofs-nfs-test:
+          requires:
+            - leofs-all-in-one
+      - run-leofs-test2:
+          requires:
+            - leofs-all-in-one
+      - run-delete-bucket-test:
+          requires:
+            - leofs-all-in-one
+      - run-leofs-client-tests:
+          requires:
+            - leofs-all-in-one
+      - run-leofs-nfs-test:
+          requires:
+            - leofs-nfs-test
