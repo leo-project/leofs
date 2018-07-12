@@ -77,4 +77,10 @@ s3cmd rb s3://test_11
 s3cmd rb s3://test_12
 
 # Monitor the state of the del-bucket
-watch ./leofs-adm delete-bucket-stats
+## watch ./leofs-adm delete-bucket-stats
+RET=""
+until echo "$RET" | grep -q "Delete-bucket's stats not found"
+do
+    sleep 3
+    RET=$(./leofs-adm -p 10020 delete-bucket-stats)
+done
