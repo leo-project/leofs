@@ -62,6 +62,46 @@ $ leofs-adm update-consistency-level 2 2 1
 
 ```
 
+## Rack Awareness
+
+LeoFS provides rack-awareness replication for more availability in case you can control which racks (or any type of availability domains like network switches) your cluster belongs to. With the rack-awareness replication enabled, it can ensure that your files will be stored across different racks or network switches to minimise the risk of losing data.
+
+### Configurations
+You would have to configure the below two items in order to enable rack-awareness replication.
+
+- `replication.rack_awareness.rack_id` in `leo_storage.conf`
+    - it enables you to specify which rack LeoStorage belongs
+- `consistency.rack_aware_replicas` in `leo_manager.conf`
+    - it enables you to specify how many racks each file will be replicated
+
+### Example
+Let's say that we try to create a cluster with
+
+- 6 storage nodes (node[1-6])
+- 2 physical racks (rack[1-2])
+- 2 replicas and each replica should belong to a different rack
+
+Then set the configurations as followings
+
+- `replication.rack_awareness.rack_id` on each `leo_storage.conf`
+    - node1: `replication.rack_awareness.rack_id = rack1`
+    - node2: `replication.rack_awareness.rack_id = rack1`
+    - node3: `replication.rack_awareness.rack_id = rack1`
+    - node4: `replication.rack_awareness.rack_id = rack2`
+    - node5: `replication.rack_awareness.rack_id = rack2`
+    - node6: `replication.rack_awareness.rack_id = rack2`
+- `consistency.rack_aware_replicas = 2` on `leo_manager.conf`
+
+### Limitations
+There are several limitations for rack-awareness replication on LeoFS with 1.4.x so be careful those limitations described below if you'd like to use rack-awareness replication on your production system.
+
+- Files will not evenly distributed across the cluster if each rack has diffrent number of servers.
+- Files may not evenly distributed across the cluster even if each rack has the same number of servers because the current distribution logic is so naive.
+- PUT/DELETE with rack-awareness has not been supported yet. (Ex. With n=3, w=2, d=2 consistency setting, PUT/DELETE with rack-awareness tries to replicate files at least two servers and each server belongs to a different rack.)
+
+The first/second limitations will be solved by dynamic vnode allocation which we plan to implement in 2.x release and regarding the last one, there is still no plan to implement it however we are willing to prioritize if there are lots of demands from our community.
+
 ## Related Links
 
 * [For Administrators / Settings / LeoManager Settings](leo_manager.md)
+* [For Administrators / Settings / LeoStorage Settings](leo_storage.md)
