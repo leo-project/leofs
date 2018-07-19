@@ -1,3 +1,65 @@
+# 1.4.2 (July 19, 2018)
+## Fixed Bugs
+
+
+* [#947](https://github.com/leo-project/leofs/issues/947) [leo_object_storage] MD5 check doesn't happen in case GET with Range header with `is_strict_check = true`
+* [#1030](https://github.com/leo-project/leofs/issues/1030) [leo_object_storage] Fix error handling/where to call of file:datasync in case of `SYNC_MODE_WRITETHROUGH`
+* [#1046](https://github.com/leo-project/leofs/issues/1046) [rack aware] Doesn't work as expected
+* [#1047](https://github.com/leo-project/leofs/issues/1047) [rack aware] rack-id isn't displayed on `leofs-adm status <NODE>`
+* [#1049](https://github.com/leo-project/leofs/issues/1049) [leo_storage][multipart] Abort multi-part upload leaves parts objects
+* [#1050](https://github.com/leo-project/leofs/issues/1050) [leo_gateway][multipart] Return wrong status code in some abnormal cases
+* [#1058](https://github.com/leo-project/leofs/issues/1058) [leo_mq] the state is not changed to suspend after issuing `mq-suspend`
+* [#1059](https://github.com/leo-project/leofs/issues/1059) [leo_mq] The state suspend can be changed to running/idle by `leo_watchdog`
+
+## Improvements
+
+* [#549](https://github.com/leo-project/leofs/issues/549) [leo_object_storage][compaction] Timeout for safe
+* [#618](https://github.com/leo-project/leofs/issues/618) [leo_manager][leo_storage] How to recover from a queue being lost
+* [#766](https://github.com/leo-project/leofs/issues/766) [leo_gateway] Revise the default for `large_object.reading_chunked_obj_len`
+* [#824](https://github.com/leo-project/leofs/issues/824) [libcutil] Suppress debug info to `STDOUT`
+* [#1016](https://github.com/leo-project/leofs/issues/1016) [leo_manager][leo_storage] `leofs-adm recover-file` doesn't work for a large object
+* [#1038](https://github.com/leo-project/leofs/issues/1038) [leofs-adm] leofs-adm issue when requesting msgs to LeoFS on Debian v9.x
+* [#1060](https://github.com/leo-project/leofs/issues/1060) [leo_mq] Improve the CPU utilization by changing consumers to event-driven way
+* [#1061](https://github.com/leo-project/leofs/issues/1061) [leo_mq] enables users to issue `mq-suspend` in case the state is idle
+* [#1068](https://github.com/leo-project/leofs/issues/1068) [leo_manager] `log_level` is not output on json I/F
+* [#1069](https://github.com/leo-project/leofs/issues/1069) [leo_manager] The response from `get-(users|endpoints|buckets)` are inconsistent when it's empty
+
+### Libraries
+#### Leo Project
+
+* [leo_backend_db v1.2.30](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.30)
+* [leo_cache v0.8.11](https://github.com/leo-project/leo_cache/releases/tag/0.8.11)
+* [leo_commons v1.2.0](https://github.com/leo-project/leo_commons/releases/tag/1.2.0)
+* [leo_dcerl v0.4.10](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.10)
+* [leo_logger v1.3.7](https://github.com/leo-project/leo_logger/releases/tag/1.3.7)
+* [leo_mcerl v0.6.8](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.8)
+* [leo_mq v1.5.18](https://github.com/leo-project/leo_mq/releases/tag/1.5.18)
+* [leo_object_storage v1.3.36](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.36)
+* [leo_ordning_reda v1.2.10](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.10)
+* [leo_pod v0.6.9](https://github.com/leo-project/leo_pod/releases/tag/0.6.9)
+* [leo_redundant_manager 1.9.62](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.62)
+* [leo_rpc v0.10.17](https://github.com/leo-project/leo_rpc/releases/tag/0.10.17)
+* [leo_s3_libs v1.2.19](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.19)
+* [leo_statistics v1.1.22](https://github.com/leo-project/leo_statistics/releases/tag/1.1.22)
+* [leo_tran v0.2.13](https://github.com/leo-project/leo_tran/releases/tag/0.2.13)
+* [leo_watchdog v1.0.6](https://github.com/leo-project/leo_watchdog/releases/tag/1.0.6)
+* [savanna_agent v0.4.25](https://github.com/leo-project/savanna_agent/releases/tag/0.4.25)
+* [savanna_commons v0.10.11](https://github.com/leo-project/savanna_commons/releases/tag/0.10.11)
+* [erpcgen v0.2.6](https://github.com/leo-project/erpcgen/releases/tag/0.2.6)
+* [nfs_rpc_server v0.2.6](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.6)
+
+#### Others
+
+* [bitcask v2.0.8](https://github.com/leo-project/bitcask/releases/tag/2.0.8.3-for-leofs)
+* [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
+* [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+* [elarm (ESL)](https://github.com/esl/elarm/commit/5885c906cb7c248f233b90b83f6b910b7b1d293b)
+* [eleveldb v2.0.37](https://github.com/basho/eleveldb/releases/tag/2.0.37)
+* [folsom v0.8.2-p1](https://github.com/leo-project/folsom/releases/tag/0.8.2-p1)
+* [jiffy v0.14.7](https://github.com/davisp/jiffy/releases/tag/0.14.7)
+* [recon v2.2.1](https://github.com/ferd/recon/releases/tag/2.2.1)
+
+
 # 1.4.1 (Apr 24, 2018)
 ## Fixed Bugs
 ### LeoGateway
