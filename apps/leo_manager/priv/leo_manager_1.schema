@@ -3,7 +3,7 @@
 %%
 %% LeoFS
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -95,7 +95,7 @@
  "leo_manager.system_version",
  [
   {datatype, string},
-  {default, "1.4.1"}
+  {default, "1.4.2"}
  ]}.
 
 %% @doc Mode of Manager: [master, slave]

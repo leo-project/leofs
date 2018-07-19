@@ -3,7 +3,7 @@
 %%
 %% LeoManager
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -23,7 +23,7 @@
 {application, leo_manager,
  [
   {description, "LeoFS Manager"},
-  {vsn, "1.4.0"},
+  {vsn, "1.4.2"},
   {id,  "leo_manager"},
   {registered,   []},
   {applications, [kernel, stdlib, crypto]},
