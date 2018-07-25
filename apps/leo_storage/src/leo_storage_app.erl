@@ -170,6 +170,21 @@ after_proc_1(true, Pid, Managers) ->
                      worker,
                      [leo_storage_handler_del_directory]}),
 
+        %% Launch del-bucket-state's db
+        case erlang:whereis(leo_backend_db_sup) of
+            undefined ->
+                error_logger:error_msg(
+                  "~p,~p,~p,~p~n",
+                  [{module, ?MODULE_STRING},
+                   {function, "after_proc_1/3"},
+                   {line, ?LINE},
+                   {body, "Could NOT start backend-db sup"}]),
+                exit("Not initialize leo_backend_db_sup");
+            _Pid ->
+                void
+        end,
+        leo_backend_db_sup:start_child(leo_backend_db_sup, ?DEL_DIR_STATE_DB_ID,
+                                       2, 'leveldb', ?env_del_dir_state_dir()),
         %% After processing
         ensure_started(rex, rpc, start_link, worker, 2000),
         ok = leo_storage_api:register_in_monitor(first),
@@ -220,21 +235,6 @@ after_proc_1(true, Pid, Managers) ->
         ok = start_mnesia(),
         ok = start_statistics(),
 
-        %% Launch del-bucket-state's db
-        case erlang:whereis(leo_backend_db_sup) of
-            undefined ->
-                error_logger:error_msg(
-                  "~p,~p,~p,~p~n",
-                  [{module, ?MODULE_STRING},
-                   {function, "after_proc_1/3"},
-                   {line, ?LINE},
-                   {body, "Could NOT start backend-db sup"}]),
-                exit("Not initialize leo_backend_db_sup");
-            _Pid ->
-                void
-        end,
-        leo_backend_db_sup:start_child(leo_backend_db_sup, ?DEL_DIR_STATE_DB_ID,
-                                       2, 'leveldb', ?env_del_dir_state_dir()),
         ok = leo_misc:startup_notification(),
         leo_logger_api:reset_hwm(),
         {ok, Pid}
