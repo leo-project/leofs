@@ -2108,22 +2108,10 @@ create_user(Option) ->
           end,
 
     case Ret of
-        {ok, {Arg0, Arg1}} ->
-            case leo_s3_user:put(Arg0, Arg1, true) of
+        {ok, {UserId_1, Password_1}} ->
+            case leo_s3_user:create(UserId_1, Password_1) of
                 {ok, Keys} ->
-                    AccessKeyId     = leo_misc:get_value(access_key_id,     Keys),
-                    SecretAccessKey = leo_misc:get_value(secret_access_key, Keys),
-
-                    case Arg1 of
-                        <<>> ->
-                            ok = leo_s3_user:update(#?S3_USER{id       = Arg0,
-                                                              role_id  = ?ROLE_GENERAL,
-                                                              password = SecretAccessKey});
-                        _ ->
-                            void
-                    end,
-                    {ok, [{access_key_id,     AccessKeyId},
-                          {secret_access_key, SecretAccessKey}]};
+                    {ok, Keys};
                 {error,_Cause} ->
                     {error, ?ERROR_COULD_NOT_ADD_USER}
             end;
@@ -2153,19 +2141,12 @@ import_user(Option) ->
               Error ->
                   Error
           end,
+
     case Ret of
         {ok, {false, UserId_1, AccessKey_1, SecretKey_1}} ->
             case leo_s3_user:import(UserId_1, AccessKey_1, SecretKey_1) of
                 {ok, Keys} ->
-                    AccessKeyId     = leo_misc:get_value(access_key_id,     Keys),
-                    SecretAccessKey = leo_misc:get_value(secret_access_key, Keys),
-
-                    ok = leo_s3_user:update(#?S3_USER{id = UserId_1,
-                                                      role_id = ?ROLE_GENERAL,
-                                                      password = SecretAccessKey}),
-
-                    {ok, [{access_key_id,     AccessKeyId},
-                          {secret_access_key, SecretAccessKey}]};
+                    {ok, Keys};
 
                 %% User ID or Access Key ID Already Exists
                 {error, already_exists} ->
@@ -2176,10 +2157,7 @@ import_user(Option) ->
         {ok, {true, UserId_1, AccessKey_1, SecretKey_1}} ->
             case leo_s3_user:force_import(UserId_1, AccessKey_1, SecretKey_1) of
                 {ok, Keys} ->
-                    AccessKeyId     = leo_misc:get_value(access_key_id,     Keys),
-                    SecretAccessKey = leo_misc:get_value(secret_access_key, Keys),
-                    {ok, [{access_key_id,     AccessKeyId},
-                          {secret_access_key, SecretAccessKey}]};
+                    {ok, Keys};
                 {error, already_exists} ->
                     {error, already_exists};
                 {error,_Cause} ->
