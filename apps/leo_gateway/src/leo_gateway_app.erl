@@ -106,7 +106,7 @@ start(_Type, _StartArgs) ->
     case application:get_env(leo_gateway, is_enable_access_log) of
         {ok, true} ->
             ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                            LogDir, ?LOG_FILENAME_ACCESS);
+                                    LogDir, ?LOG_FILENAME_ACCESS);
         _ ->
             void
     end,
@@ -166,7 +166,6 @@ consider_profiling() ->
 
 
 %% @doc Inspect the cluster-status
-%%
 -spec(inspect_cluster_status(any(), list()) ->
              pid()).
 inspect_cluster_status(Res, Managers) ->
@@ -182,23 +181,34 @@ inspect_cluster_status(Res, Managers) ->
         {{ok,_SystemConf}, {error,_Cause}} ->
             timer:apply_after(?CHECK_INTERVAL, ?MODULE,
                               inspect_cluster_status, [ok, Managers]);
-        _Error ->
-            timer:apply_after(?CHECK_INTERVAL, ?MODULE, inspect_cluster_status,
-                              [ok, Managers]),
-            io:format("~p:~s,~w - cause:~p~n", [?MODULE, "after_process/1", ?LINE,_Error])
+        Error ->
+            timer:apply_after(?CHECK_INTERVAL, ?MODULE,
+                              inspect_cluster_status, [ok, Managers]),
+            ?error("inspect_cluster_status/2", [{cause, Error}])
     end,
     Res.
 
 
 %% @private
-is_alive_managers([]) ->
-    false;
-is_alive_managers([Manager|Rest]) ->
-    case leo_misc:node_existence(Manager) of
-        true ->            true;
-        false ->
-            is_alive_managers(Rest)
-    end.
+is_alive_managers(Managers) ->
+    is_alive_managers(Managers, []).
+
+%% @private
+is_alive_managers([], Acc) ->
+    Ret = lists:foldl(fun({_Node, true}, SoFar) ->
+                              SoFar;
+                         ({Node, false}, SoFar) ->
+                              [Node | SoFar]
+                      end, [], Acc),
+    case Ret of
+        [] ->
+            true;
+        _ ->
+            {error, Ret}
+    end;
+is_alive_managers([Node|Rest], Acc) ->
+    Ret = leo_misc:node_existence(Node),
+    is_alive_managers(Rest, [{Node, Ret} | Acc]).
 
 
 %%--------------------------------------------------------------------
@@ -210,7 +220,7 @@ is_alive_managers([Manager|Rest]) ->
              {ok, pid()} | {error, any()}).
 after_process_0({ok, Pid}) ->
     ok = leo_misc:init_env(),
-    Managers_0  = ?env_manager_nodes(leo_gateway),
+    Managers_0 = ?env_manager_nodes(leo_gateway),
     Managers_1 = lists:map(fun(X) when is_list(X) ->
                                    list_to_atom(X);
                               (X) ->
@@ -226,10 +236,11 @@ after_process_0({ok, Pid}) ->
                     ?error("after_process_0/1", [{cause, Cause}]),
                     init:stop()
             end;
-        false ->
-            ?error("inspect_cluster_status/1",
-                   [{manager_nodes, Managers_1},
-                    {cause, "Not alive managers"}]),
+        {error, NodeL} ->
+            ?error("after_process_0/1",
+                   [{cause, 'connection_failure'},
+                    {error_nodes, NodeL}
+                   ]),
             init:stop()
     end;
 after_process_0(Error) ->
