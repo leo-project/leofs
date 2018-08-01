@@ -2,7 +2,7 @@
 %%
 %% LeoStorage
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -123,7 +123,8 @@ ensure_started(Id, Module, Method, Type, Timeout) ->
             ChildSpec = {Id, {Module, Method, []},
                          permanent, Timeout, Type, [Module]},
             {ok, _} = supervisor:start_child(kernel_sup, ChildSpec);
-        Pid -> Pid
+        Pid ->
+            Pid
     end.
 
 
@@ -137,128 +138,143 @@ after_proc({ok, Pid}) ->
 
     %% Check the managers whether they are alive or not
     Managers = ?env_manager_nodes(leo_storage),
-    IsAliveManagers = is_alive_managers(Managers),
 
-    %% Launch others
-    after_proc_1(IsAliveManagers, Pid, Managers);
+    case is_alive_managers(Managers) of
+        true ->
+            %% Launch others
+            case catch after_proc_1(Pid, Managers) of
+                {ok, Pid} ->
+                    {ok, Pid};
+                {_, Cause} ->
+                    ?error("after_proc/1", [{cause, Cause}]),
+                    init:stop()
+            end;
+        {error, NodeL} ->
+            ?error("after_proc/1",
+                   [{cause, 'connection_failure'},
+                    {error_nodes, NodeL}
+                   ]),
+            init:stop()
+    end;
 after_proc(Error) ->
     ?error("after_proc/1", [{cause, Error}]),
     init:stop().
 
 %% @private
-after_proc_1(true, Pid, Managers) ->
-    try
-        %% Launch servers
-        %% launch_object_storage after checking if managers are alive
-        %% to fix slow down startup problem. Details can be found on
-        %% https://github.com/leo-project/leofs/issues/840#issuecomment-352072021 - how to reproduce
-        %% https://github.com/leo-project/leofs/issues/840#issuecomment-352627443 - reason why it happened
-        ok = launch_object_storage(Pid),
-        ok = leo_ordning_reda_api:start(),
-        %% Launch MQ-servers
-        QueueDir = ?env_queue_dir(leo_storage),
-        ok = launch_redundant_manager(Pid, Managers, QueueDir),
-        ok = leo_storage_mq:start(Pid, QueueDir),
+after_proc_1(Pid, Managers) ->
+    %% Launch servers
+    %% launch_object_storage after checking if managers are alive
+    %% to fix slow down startup problem. Details can be found on
+    %% https://github.com/leo-project/leofs/issues/840#issuecomment-352072021 - how to reproduce
+    %% https://github.com/leo-project/leofs/issues/840#issuecomment-352627443 - reason why it happened
+    ok = launch_object_storage(Pid),
+    ok = leo_ordning_reda_api:start(),
+    %% Launch MQ-servers
+    QueueDir = ?env_queue_dir(leo_storage),
+    ok = launch_redundant_manager(Pid, Managers, QueueDir),
+    ok = leo_storage_mq:start(Pid, QueueDir),
 
-        %% Launch del_directory_handler:
-        {ok, _} = supervisor:start_child(
-                    leo_storage_sup,
-                    {leo_storage_handler_del_directory,
-                     {leo_storage_handler_del_directory, start_link, []},
-                     permanent,
-                     ?SHUTDOWN_WAITING_TIME,
-                     worker,
-                     [leo_storage_handler_del_directory]}),
+    %% Launch del_directory_handler:
+    {ok, _} = supervisor:start_child(
+                leo_storage_sup,
+                {leo_storage_handler_del_directory,
+                 {leo_storage_handler_del_directory, start_link, []},
+                 permanent,
+                 ?SHUTDOWN_WAITING_TIME,
+                 worker,
+                 [leo_storage_handler_del_directory]}),
 
-        %% Launch del-bucket-state's db
-        case erlang:whereis(leo_backend_db_sup) of
-            undefined ->
-                error_logger:error_msg(
-                  "~p,~p,~p,~p~n",
-                  [{module, ?MODULE_STRING},
-                   {function, "after_proc_1/3"},
-                   {line, ?LINE},
-                   {body, "Could NOT start backend-db sup"}]),
-                exit("Not initialize leo_backend_db_sup");
-            _Pid ->
-                void
-        end,
-        leo_backend_db_sup:start_child(leo_backend_db_sup, ?DEL_DIR_STATE_DB_ID,
-                                       2, 'leveldb', ?env_del_dir_state_dir()),
-        %% After processing
-        ensure_started(rex, rpc, start_link, worker, 2000),
-        ok = leo_storage_api:register_in_monitor(first),
+    %% Launch del-bucket-state's db
+    case erlang:whereis(leo_backend_db_sup) of
+        undefined ->
+            error_logger:error_msg(
+              "~p,~p,~p,~p~n",
+              [{module, ?MODULE_STRING},
+               {function, "after_proc_1/3"},
+               {line, ?LINE},
+               {body, "Could NOT start backend-db sup"}]),
+            exit("Not initialize leo_backend_db_sup");
+        _Pid ->
+            void
+    end,
+    leo_backend_db_sup:start_child(leo_backend_db_sup, ?DEL_DIR_STATE_DB_ID,
+                                   2, 'leveldb', ?env_del_dir_state_dir()),
+    %% After processing
+    ensure_started(rex, rpc, start_link, worker, 2000),
+    ok = leo_storage_api:register_in_monitor(first),
 
-        %% Launch leo-rpc
-        ok = leo_rpc:start(),
+    %% Launch leo-rpc
+    ok = leo_rpc:start(),
 
-        %% Watchdog for Storage in order to operate 'auto-compaction' automatically
-        WatchdogInterval = ?env_storage_watchdog_interval(),
-        case ?env_auto_compaction_enabled() of
-            true ->
-                {ok, _} = supervisor:start_child(
-                            leo_watchdog_sup, {leo_storage_watchdog_fragment,
-                                               {leo_storage_watchdog_fragment, start_link,
-                                                [?env_warn_active_size_ratio(),
-                                                 ?env_threshold_active_size_ratio(),
-                                                 WatchdogInterval
-                                                ]},
-                                               permanent,
-                                               2000,
-                                               worker,
-                                               [leo_storage_watchdog_fragment]});
-            false ->
-                void
-        end,
+    %% Watchdog for Storage in order to operate 'auto-compaction' automatically
+    WatchdogInterval = ?env_storage_watchdog_interval(),
+    case ?env_auto_compaction_enabled() of
+        true ->
+            {ok, _} = supervisor:start_child(
+                        leo_watchdog_sup, {leo_storage_watchdog_fragment,
+                                           {leo_storage_watchdog_fragment, start_link,
+                                            [?env_warn_active_size_ratio(),
+                                             ?env_threshold_active_size_ratio(),
+                                             WatchdogInterval
+                                            ]},
+                                           permanent,
+                                           2000,
+                                           worker,
+                                           [leo_storage_watchdog_fragment]});
+        false ->
+            void
+    end,
 
-        %% Watchdog for notified messages
-        case ?env_storage_watchdog_msgs_enabled() of
-            true ->
-                leo_object_storage_msg_collector:init(true),
-                {ok, _} = supervisor:start_child(
-                         leo_watchdog_sup, {leo_storage_watchdog_msgs,
-                                            {leo_storage_watchdog_msgs, start_link,
-                                             [?env_threshold_num_of_notified_msgs(),
-                                              WatchdogInterval
-                                             ]},
-                                            permanent,
-                                            2000,
-                                            worker,
-                                            [leo_storage_watchdog_msgs]});
-            false ->
-                void
-        end,
+    %% Watchdog for notified messages
+    case ?env_storage_watchdog_msgs_enabled() of
+        true ->
+            leo_object_storage_msg_collector:init(true),
+            {ok, _} = supervisor:start_child(
+                        leo_watchdog_sup, {leo_storage_watchdog_msgs,
+                                           {leo_storage_watchdog_msgs, start_link,
+                                            [?env_threshold_num_of_notified_msgs(),
+                                             WatchdogInterval
+                                            ]},
+                                           permanent,
+                                           2000,
+                                           worker,
+                                           [leo_storage_watchdog_msgs]});
+        false ->
+            void
+    end,
 
-        ok = leo_storage_watchdog_sub:start(),
+    ok = leo_storage_watchdog_sub:start(),
 
-        %% Launch statistics/mnesia-related processes
-        ok = start_mnesia(),
-        ok = start_statistics(),
+    %% Launch statistics/mnesia-related processes
+    ok = start_mnesia(),
+    ok = start_statistics(),
 
-        ok = leo_misc:startup_notification(),
-        leo_logger_api:reset_hwm(),
-        {ok, Pid}
-    catch
-        _:Cause ->
-            ?error("after_proc_1/3", [{cause, Cause}]),
-            init:stop()
-    end;
-after_proc_1(false,_,Managers) ->
-    ?error("after_proc_1/3", [{manager_nodes, Managers},
-                              {cause, "Not alive managers"}]),
-    init:stop().
+    ok = leo_misc:startup_notification(),
+    leo_logger_api:reset_hwm(),
+    {ok, Pid}.
 
 
 %% @private
-is_alive_managers([]) ->
-    false;
-is_alive_managers([Manager|Rest]) ->
-    case leo_misc:node_existence(Manager) of
-        true ->
+is_alive_managers(Managers) ->
+    is_alive_managers(Managers, []).
+
+%% @private
+is_alive_managers([], Acc) ->
+    Ret = lists:foldl(
+            fun({_Node, true}, SoFar) ->
+                    SoFar;
+               ({Node, false}, SoFar) ->
+                    [Node | SoFar]
+            end, [], Acc),
+    case Ret of
+        [] ->
             true;
-        false ->
-            is_alive_managers(Rest)
-    end.
+        _ ->
+            {error, Ret}
+    end;
+is_alive_managers([Node|Rest], Acc) ->
+    Ret = leo_misc:node_existence(Node),
+    is_alive_managers(Rest, [{Node, Ret} | Acc]).
 
 
 %% @doc Launch Logger
