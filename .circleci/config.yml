@@ -109,7 +109,7 @@ jobs:
     working_directory: ~/leofs
     steps:
       - checkout
-      - hub release create -d -m "TBD" $CIRCLE_TAG
+      - run: hub release create -d -m "TBD" $CIRCLE_TAG
 
   package-centos6:
     docker:
