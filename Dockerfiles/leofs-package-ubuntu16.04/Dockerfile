@@ -23,6 +23,11 @@ RUN set -xe \
     && cp leofs_package/deb/make_deb.sh ~/deb \
     && cp leofs_package/common/check_version.sh ~/deb
 
+RUN set -xe \
+    && wget https://github.com/github/hub/releases/download/v2.5.0/hub-linux-amd64-2.5.0.tgz \
+    && tar xzf hub-linux-amd64-2.5.0.tgz \
+    && ./hub-linux-amd64-2.5.0/install
+
 ADD run_packaging.sh /root/deb
 
 WORKDIR /root/deb
