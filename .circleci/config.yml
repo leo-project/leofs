@@ -106,7 +106,10 @@ jobs:
         environment:
           GITHUB_USER: $GITHUB_USER
           GITHUB_PASSWORD: $GITHUB_PASSWORD
-        command: git pull origin; hub release create -d -m "TBD" $CIRCLE_TAG
+    working_directory: ~/leofs
+    steps:
+      - checkout
+      - hub release create -d -m "TBD" $CIRCLE_TAG
 
   package-centos6:
     docker:
@@ -114,7 +117,9 @@ jobs:
         environment:
           GITHUB_USER: $GITHUB_USER
           GITHUB_PASSWORD: $GITHUB_PASSWORD
-        command: ./run_packaging.sh $CIRCLE_TAG
+    working_directory: /root/rpm/SPECS
+    steps:
+      - ./run_packaging.sh $CIRCLE_TAG
 
   package-centos7:
     machine: true
@@ -129,7 +134,9 @@ jobs:
         environment:
           GITHUB_USER: $GITHUB_USER
           GITHUB_PASSWORD: $GITHUB_PASSWORD
-        command: ./run_packaging.sh $CIRCLE_TAG
+    working_directory: /root/deb
+    steps:
+      - ./run_packaging.sh $CIRCLE_TAG
 
   package-ubuntu16.04:
     machine: true
