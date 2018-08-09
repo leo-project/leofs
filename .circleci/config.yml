@@ -119,7 +119,7 @@ jobs:
           GITHUB_PASSWORD: $GITHUB_PASSWORD
     working_directory: /root/rpm/SPECS
     steps:
-      - ./run_packaging.sh $CIRCLE_TAG
+      - run: ./run_packaging.sh $CIRCLE_TAG
 
   package-centos7:
     machine: true
@@ -136,7 +136,7 @@ jobs:
           GITHUB_PASSWORD: $GITHUB_PASSWORD
     working_directory: /root/deb
     steps:
-      - ./run_packaging.sh $CIRCLE_TAG
+      - run: ./run_packaging.sh $CIRCLE_TAG
 
   package-ubuntu16.04:
     machine: true
@@ -176,35 +176,47 @@ workflows:
     jobs:
       - release-base:
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*/
       - package-centos6:
           requires:
             - release-base
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*/
       - package-centos7:
           requires:
             - release-base
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*/
       - package-ubuntu14.04:
           requires:
             - release-base
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*/
       - package-ubuntu16.04:
           requires:
             - release-base
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*/
       - package-ubuntu18.04:
           requires:
             - release-base
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*/
