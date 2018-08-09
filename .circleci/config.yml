@@ -169,35 +169,35 @@ workflows:
     jobs:
       - release-base:
           filters:
-	        tags:
-	          only: /.*/
+            tags:
+              only: /.*/
       - package-centos6:
           requires:
             - release-base
           filters:
-	        tags:
-	          only: /.*/
+            tags:
+              only: /.*/
       - package-centos7:
           requires:
             - release-base
           filters:
-	        tags:
-	          only: /.*/
+            tags:
+              only: /.*/
       - package-ubuntu14.04:
           requires:
             - release-base
           filters:
-	        tags:
-	          only: /.*/
+            tags:
+              only: /.*/
       - package-ubuntu16.04:
           requires:
             - release-base
           filters:
-	        tags:
-	          only: /.*/
+            tags:
+              only: /.*/
       - package-ubuntu18.04:
           requires:
             - release-base
           filters:
-	        tags:
-	          only: /.*/
+            tags:
+              only: /.*/
