@@ -100,6 +100,51 @@ jobs:
       - checkout
       - run: cd Dockerfiles && docker-compose up --abort-on-container-exit
 
+  release-base:
+    docker:
+      - image: leoproject/leofs-release:latest
+        environment:
+          GITHUB_USER: $GITHUB_USER
+          GITHUB_PASSWORD: $GITHUB_PASSWORD
+        command: git pull origin; hub release create -d -m "TBD" $CIRCLE_TAG
+
+  package-centos6:
+    docker:
+      - image: leoproject/leofs-package-centos6:latest
+        environment:
+          GITHUB_USER: $GITHUB_USER
+          GITHUB_PASSWORD: $GITHUB_PASSWORD
+        command: ./run_packaging.sh $CIRCLE_TAG
+
+  package-centos7:
+    machine: true
+    working_directory: ~/leofs
+    steps:
+      - checkout
+      - run: ./Dockerfiles/leofs-package-centos7/run_container_for_packaging.sh $GITHUB_USER $GITHUB_PASSWORD $CIRCLE_TAG
+
+  package-ubuntu14.04:
+    docker:
+      - image: leoproject/leofs-package-ubuntu14.04:latest
+        environment:
+          GITHUB_USER: $GITHUB_USER
+          GITHUB_PASSWORD: $GITHUB_PASSWORD
+        command: ./run_packaging.sh $CIRCLE_TAG
+
+  package-ubuntu16.04:
+    machine: true
+    working_directory: ~/leofs
+    steps:
+      - checkout
+      - run: ./Dockerfiles/leofs-package-ubuntu16.04/run_container_for_packaging.sh $GITHUB_USER $GITHUB_PASSWORD $CIRCLE_TAG
+
+  package-ubuntu18.04:
+    machine: true
+    working_directory: ~/leofs
+    steps:
+      - checkout
+      - run: ./Dockerfiles/leofs-package-ubuntu18.04/run_container_for_packaging.sh $GITHUB_USER $GITHUB_PASSWORD $CIRCLE_TAG
+
 workflows:
   version: 2
   run_integration_tests:
@@ -120,3 +165,39 @@ workflows:
       - run-leofs-nfs-test:
           requires:
             - leofs-nfs-test
+  release_packages:
+    jobs:
+      - release-base:
+          filters:
+	        tags:
+	          only: /.*/
+      - package-centos6:
+          requires:
+            - release-base
+          filters:
+	        tags:
+	          only: /.*/
+      - package-centos7:
+          requires:
+            - release-base
+          filters:
+	        tags:
+	          only: /.*/
+      - package-ubuntu14.04:
+          requires:
+            - release-base
+          filters:
+	        tags:
+	          only: /.*/
+      - package-ubuntu16.04:
+          requires:
+            - release-base
+          filters:
+	        tags:
+	          only: /.*/
+      - package-ubuntu18.04:
+          requires:
+            - release-base
+          filters:
+	        tags:
+	          only: /.*/
