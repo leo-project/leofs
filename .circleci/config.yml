@@ -198,7 +198,8 @@ workflows:
               only: /.*/
       - package-ubuntu14.04:
           requires:
-            - release-base
+            - package-centos6
+            - package-centos7
           filters:
             branches:
               ignore: /.*/
@@ -206,7 +207,8 @@ workflows:
               only: /.*/
       - package-ubuntu16.04:
           requires:
-            - release-base
+            - package-centos6
+            - package-centos7
           filters:
             branches:
               ignore: /.*/
@@ -214,7 +216,8 @@ workflows:
               only: /.*/
       - package-ubuntu18.04:
           requires:
-            - release-base
+            - package-centos6
+            - package-centos7
           filters:
             branches:
               ignore: /.*/
