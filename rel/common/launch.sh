@@ -367,7 +367,7 @@ case "$1" in
         ## Wait until application is ready
         ES=1
         RETRY=0
-        until [ $ES -eq 0 -o $RETRY -ge 30 ]
+        until [ $ES -eq 0 -o $RETRY -ge 120 ]
         do
             $NODETOOL ready
             ES=$?
