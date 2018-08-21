@@ -164,10 +164,8 @@ head_object(Req, Key, Params) ->
 %% @doc RANGE-Query operation on Objects
 -spec(range_object(cowboy_req:req(), binary(), #req_params{}) ->
              {ok, cowboy_req:req()}).
-range_object(Req, Key,_Params) ->
-    ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidArgument,
-                       ?XML_ERROR_MSG_InvalidArgument, Key, <<>>, Req).
-
+range_object(Req, Key, Params) ->
+    leo_gateway_http_commons:range_object(Req, Key, Params).
 
 %%--------------------------------------------------------------------
 %% Internal Functions
@@ -191,6 +189,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, CustomHeaderSett
     BeginTime = leo_date:clock(),
     TokenLen = length(binary:split(Path, [?BIN_SLASH], [global, trim])),
     HTTPMethod = cowboy_req:get(method, Req),
+    Range = element(1, cowboy_req:header(?HTTP_HEAD_RANGE, Req)),
 
     case (TokenLen >= NumOfMinLayers) of
         true ->
@@ -211,6 +210,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, CustomHeaderSett
                                     sending_chunked_obj_len = Props#http_options.sending_chunked_obj_len,
                                     reading_chunked_obj_len = Props#http_options.reading_chunked_obj_len,
                                     threshold_of_chunk_len = Props#http_options.threshold_of_chunk_len,
+                                    range_header = Range,
                                     begin_time = BeginTime},
             handle_2(Req, HTTPMethod, Path, ReqParams, State);
         false when HTTPMethod == ?HTTP_GET ->
