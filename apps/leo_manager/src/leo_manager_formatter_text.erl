@@ -1363,7 +1363,7 @@ whereis(AssignedInfo) ->
 
     Fun3 = fun(N, List) ->
                    Ret = case N of
-                             {Node, not_found} ->
+                             {Node, {error, _}} ->
                                  lists:append([string:left([], lists:nth(1,LenPerCol)), ?SEPARATOR,
                                                string:left(Node, lists:nth(2,LenPerCol)), ?SEPARATOR,
                                                string:left([], lists:nth(3,LenPerCol)), ?SEPARATOR,
@@ -1437,8 +1437,26 @@ whereis(AssignedInfo) ->
                          end,
                    List ++ [Ret]
            end,
-    lists:foldl(Fun3, [Header_1, Header_2, Header_1], AssignedInfo) ++ ?CRLF.
-
+    Body = lists:foldl(Fun3, [Header_1, Header_2, Header_1], AssignedInfo) ++ ?CRLF,
+    %% Output error's detail
+    Fun4 = fun(N, List) ->
+                   case N of
+                       {_Node, {error, not_found}} ->
+                           List;
+                       {Node, {error, Cause}} ->
+                           List ++ [lists:append([Node, ":", atom_to_list(Cause), ?CRLF])];
+                       {_Node, _ItemL} ->
+                           List
+                   end
+           end,
+    ErrHeader = lists:append(["[Failure Nodes]", ?CRLF]),
+    ErrBody = lists:foldl(Fun4, [], AssignedInfo),
+    case ErrBody of
+        [] ->
+            Body;
+        _ ->
+            [Body, ErrHeader, ErrBody, ?CRLF]
+    end.
 
 %% @doc Format the result of a NFS mount key
 nfs_mnt_key(Key) ->

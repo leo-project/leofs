@@ -1446,12 +1446,16 @@ whereis_1(AddrId, Key, [RedundantNode|T], Acc) ->
                               {NodeStr,
                                lists:zip(record_info(fields, ?METADATA),
                                          tl(tuple_to_list(Metadata)))};
-                          _ ->
-                              {NodeStr, not_found}
+                          {value, not_found} ->
+                              {NodeStr, {error, not_found}};
+                          {value, {badrpc, Cause}} ->
+                              {NodeStr, {error, Cause}};
+                          timeout ->
+                              {NodeStr, {error, timeout}}
                       end,
             whereis_1(AddrId, Key, T, [Reply | Acc]);
         false ->
-            whereis_1(AddrId, Key, T, [{atom_to_list(Node), not_found} | Acc])
+            whereis_1(AddrId, Key, T, [{atom_to_list(Node), {error, unavailable}} | Acc])
     end.
 
 %% @private recover remote
