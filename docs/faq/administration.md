@@ -172,3 +172,18 @@ There are 2 choices for the alternative nc (providing /bin/nc).
 If you are using LeoFS <= v1.3.8 then you probably hit the issue[^3]. If that is the case, we'd recommend you upgrade to the v1.4.0 or higher one in which version you can use import-user with the force update option (-f) that enables you to import the user with the existing access-key-id.
 
 [^3]: <a href="https://github.com/leo-project/leofs/issues/964" target="_blank">LeoFS' Issue #964, import-user with the access-key-id belonging to a deleted user doesn't work</a>
+
+## What should I do when many errors have started to appear in log files on LeoStorage.
+
+Some users faced this problem[^4] with log files filled with following error lines.
+
+```
+[E]     node01@10.3.15.101      2018-07-26 23:36:50.863832 +0300        1532637410leo_storage_handler_object:get/4      190     [{from,gateway},{method,get},{key,<<"production/promotion/261/1.jpg">>},{req_id,31364649},{etag,18791873666153085349492137587707139197},{cause,unavailable}]
+```
+```
+[E] storage_0@chuckwalla.pleiad.uaprom  2018-08-07 17:42:12.196108 +0300    1533652932  leo_storage_handler_object:put/2    389 [{from,gateway},{method,put},{key,<<"uaprom-image/612807456_w200_h200_cid2413932_pid341885190-cb582430.jpg">>},{req_id,59131282},{cause,unavailable}]
+```
+
+It turns out that this problem can happen in case `obj_containers.num_of_containers` in leo_storage.conf is set to relatively high number so if you face this problem and `obj_containers.num_of_containers` is set to relatively high then please try to lower the value like 32, 64. One of our users has succeeded in fixing this problem by changing its value from 384 to 64.
+
+[^4]: <a href="https://github.com/leo-project/leofs/issues/1078#issuecomment-408240731" target="_blank">LeoFS' Issue #1078, Inconsistent RING can happen when rebalancing the cluster</a>
