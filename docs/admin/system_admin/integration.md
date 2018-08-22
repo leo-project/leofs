@@ -88,6 +88,9 @@ LeoFS Team tested the following CDN services with LeoFS. We recognize that other
 
 - <a href="https://aws.amazon.com/cloudfront/" target="_blank">Amazon CloudFront – Content Delivery Network (CDN)</a>
 
+## Playing video files stored in LeoFS
+
+Since version 1.3.8, LeoFS has supported the HTTP Range header in more precise way than ever so that almost all streaming media clients supporting the progressive download can play video files stored in LeoFS without any hassles. However since LeoFS has not been designed to be placed in DMZ, we'd strongly recommend you put some reverse proxy software in front of LeoFS if you plan to use LeoFS as such use cases in production environment.
 
 ## Related Links
 
