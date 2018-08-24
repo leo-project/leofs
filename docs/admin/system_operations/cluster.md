@@ -104,6 +104,9 @@ $ leofs-adm status
 -------+--------------------------+--------------+----------------+----------------+----------------------------
 ```
 
+!!! Warning "Warning: Avoid Rebalance with many nodes attached|detached"
+    While rebalance is on-going, The more nodes attached|detached there are, The more system resources like network bandwidth, Disk I/O, your LeoFS cluster can consume. Instead we'd recommend you divide the ong big rebalance into smaller multiple rebalances and issue rebalance one by one to avoid exhausting system resouces.
+
 ### Remove a Node
 
 If you need to shrink a target LeoFS' cluster size, you can realize that by following the operation flow.
