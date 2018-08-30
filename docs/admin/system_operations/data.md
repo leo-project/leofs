@@ -325,10 +325,10 @@ When/How to use recover commands.
 - Scale up (Add an additional disk volume on LeoStorage)
     - Suspend and Stop LeoStorage with `leofs-adm suspend` and `leo_storage stop`
     - Add an addtional disk volume on the node
-    - Modify leo_storage.conf to append the new disk volume into `obj_containers.num_of_containers`
+    - Modify leo_storage.conf to append the new disk volume into `obj_containers.path` and also add the number of the containers into `obj_containers.num_of_containers`. _(The number of items of `obj_containers.path` and `obj_containers.num_of_containers` should be same.)_
     - Wipe out all files/directories in all containers on the node
     - Start and Resume LeoStorage with `leo_storage start` and `leofs-adm resume`
-    - Invoke `recover-node` with the node to ingest assigned files from other LeoStorages into a new disk layout specified by `obj_containers.num_of_containers`
+    - Invoke `recover-node` with the node to ingest assigned files from other LeoStorages into a new disk layout specified by `obj_containers.path` and `obj_containers.num_of_containers`
 
 ## Related Links
 
