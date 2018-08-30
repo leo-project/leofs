@@ -12,7 +12,7 @@
 |----------------------------------------|----------------|------------------------------------------|
 | **LeoStorage Basic**                   |
 | `obj_containers.path`                  | Modifiable with condition | Able to change the directory of the container(s) but not able to add or remove the directory(s). You need to move the data files which are `<obj_containers.path>/avs/object` and `<obj_containers.path>/avs/metadata`, which adhere to this configuration. |
-| `obj_containers.num_of_containers`     | Yes            | Not able to change the configuration because LeoStorage cannot retrieve objects or metadatas. |
+| `obj_containers.num_of_containers`     | Yes            | Not able to change the configuration because LeoStorage cannot retrieve objects or metadatas. If you want to modify this setting in order to add additional disk volumes for LeoFS then follow the instruction here[^3].|
 | `obj_containers.metadata_storage`      | Yes            | As above |
 | `num_of_vnodes`                        | Yes            | As above |
 | **MQ**                                 |
@@ -227,3 +227,4 @@ When the each value reached the min value, the auto-compaction changes the statu
 
 [^1]: <a href="https://en.wikipedia.org/wiki/ZFS" target="_blank">ZFS</a>
 [^2]: <a href="https://github.com/leo-project/leofs/issues/987#issuecomment-371059490" target="_blank">LeoFS' Issue #987, Measure rebalance/recover-node performance according to mq.num_of_mq_procs</a>
+[^3]: <a href="https://leo-project.net/leofs/docs/admin/system_operations/data/#use-cases" target="_blank">Use Cases - Scale up (Add an additional disk volume on LeoStorage)</a>

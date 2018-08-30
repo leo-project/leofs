@@ -45,6 +45,9 @@ Multiple AVS/KVS pairs can be placed on one node to enable LeoFS handling as muc
     - N can be specified through leo_storage.conf.
     - Setting `N > 1` can be useful when there are multiple JBOD disks on the node. The one JBOD disk array can be map to the one container.
 
+!!! note "Note: How files are distributed across the containers and AVS/KVS pairs?"
+    It's determined by a simple math, in brief, `hash(${filename}) modulo ${number_of_avs_kvs_pairs}` so that being said, LeoFS can't handle PUT/DELETE operations on a container which disk space is full(In other words, LeoFS doesn't take the remained disk space into account when deciding the container for PUT/DELETE operations). If you want to scale up (add an additional disk volume) a specific LeoStorage then you need to follow the instruction here[^1].
+
 
 ### Data Compaction
 
@@ -319,7 +322,16 @@ When/How to use recover commands.
         - When some LeoStorage go down during the recover process, just do it over again once the downed nodes come back
         - Generally speaking, it depends heavily on the size of your data and the consistency level(W and D) you chose.
         - The lower consistency level you choose, The more frequently you should run `recover-consistency`.
+- Scale up (Add an additional disk volume on LeoStorage)
+    - Suspend and Stop LeoStorage with `leofs-adm suspend` and `leo_storage stop`
+    - Add an addtional disk volume on the node
+    - Modify leo_storage.conf to append the new disk volume into `obj_containers.path` and also add the number of the containers into `obj_containers.num_of_containers`. _(The number of items of `obj_containers.path` and `obj_containers.num_of_containers` should be same.)_
+    - Wipe out all files/directories in all containers on the node
+    - Start and Resume LeoStorage with `leo_storage start` and `leofs-adm resume`
+    - Invoke `recover-node` with the node to ingest assigned files from other LeoStorages into a new disk layout specified by `obj_containers.path` and `obj_containers.num_of_containers`
 
 ## Related Links
 
 - [Concept and Architecture / LeoStorage's Architecture](/architecture/leo_storage/)
+
+[^1]: <a href="https://leo-project.net/leofs/docs/admin/system_operations/data/#use-cases" target="_blank">Use Cases - Scale up (Add an additional disk volume on LeoStorage)</a>
