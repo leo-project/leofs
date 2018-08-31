@@ -275,7 +275,7 @@ We provide another way of LeoFS system monitoring which uses Prometheus [^4] and
 * <a href="https://github.com/leo-project/leofs/blob/v1/apps/leo_manager/priv/leo_manager_snmp.yml" target="_blank">LeoManager snmp.yml</a>
 * <a href="https://github.com/leo-project/leofs/blob/v1/apps/leo_storage/priv/leo_storage_snmp.yml" target="_blank">LeoStorage snmp.yml</a>
 
-If you get a LeoFS' package, it includes each `snmp.yml` under each `etc` directory as below:
+A LeoFS' package includes each `snmp.yml` under each `etc` directory as below:
 
 ```bash
 leo_gateway/etc/
