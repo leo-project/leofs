@@ -1,0 +1,213 @@
+##
+## LeoStorage Exporter (SNMP-Exporter) for Prometheus
+##
+## @since 2018-08-30
+## @author LeoProject
+##
+leo_storage:
+  get:
+  - 1.3.6.1.4.1.35450.56.1.0
+  - 1.3.6.1.4.1.35450.56.2.0
+  - 1.3.6.1.4.1.35450.56.3.0
+  - 1.3.6.1.4.1.35450.56.4.0
+  - 1.3.6.1.4.1.35450.56.5.0
+  - 1.3.6.1.4.1.35450.56.6.0
+  - 1.3.6.1.4.1.35450.56.7.0
+  - 1.3.6.1.4.1.35450.56.8.0
+  - 1.3.6.1.4.1.35450.56.9.0
+  - 1.3.6.1.4.1.35450.56.10.0
+  - 1.3.6.1.4.1.35450.56.11.0
+  - 1.3.6.1.4.1.35450.56.12.0
+  - 1.3.6.1.4.1.35450.56.13.0
+  - 1.3.6.1.4.1.35450.56.14.0
+  - 1.3.6.1.4.1.35450.56.15.0
+  - 1.3.6.1.4.1.35450.56.16.0
+  - 1.3.6.1.4.1.35450.56.17.0
+  - 1.3.6.1.4.1.35450.56.18.0
+  - 1.3.6.1.4.1.35450.56.19.0
+  - 1.3.6.1.4.1.35450.56.20.0
+  - 1.3.6.1.4.1.35450.56.21.0
+  - 1.3.6.1.4.1.35450.56.22.0
+  - 1.3.6.1.4.1.35450.56.23.0
+  - 1.3.6.1.4.1.35450.56.24.0
+  - 1.3.6.1.4.1.35450.56.31.0
+  - 1.3.6.1.4.1.35450.56.32.0
+  - 1.3.6.1.4.1.35450.56.33.0
+  - 1.3.6.1.4.1.35450.56.34.0
+  - 1.3.6.1.4.1.35450.56.41.0
+  - 1.3.6.1.4.1.35450.56.42.0
+  - 1.3.6.1.4.1.35450.56.43.0
+  - 1.3.6.1.4.1.35450.56.44.0
+  - 1.3.6.1.4.1.35450.56.45.0
+  - 1.3.6.1.4.1.35450.56.46.0
+  - 1.3.6.1.4.1.35450.56.51.0
+  - 1.3.6.1.4.1.35450.56.52.0
+  - 1.3.6.1.4.1.35450.56.53.0
+  - 1.3.6.1.4.1.35450.56.54.0
+  - 1.3.6.1.4.1.35450.56.55.0
+  - 1.3.6.1.4.1.35450.56.56.0
+  metrics:
+  - name: node_name
+    oid: 1.3.6.1.4.1.35450.56.1
+    type: DisplayString
+    help: Node name - 1.3.6.1.4.1.35450.56.1
+  - name: vm_proc_count_1m
+    oid: 1.3.6.1.4.1.35450.56.2
+    type: gauge
+    help: Num of Processes (1min mean) - 1.3.6.1.4.1.35450.56.2
+  - name: vm_total_mem_1m
+    oid: 1.3.6.1.4.1.35450.56.3
+    type: gauge
+    help: Total Memory (1min mean) - 1.3.6.1.4.1.35450.56.3
+  - name: vm_system_mem_1m
+    oid: 1.3.6.1.4.1.35450.56.4
+    type: gauge
+    help: System Memory (1min mean) - 1.3.6.1.4.1.35450.56.4
+  - name: vm_procs_mem_1m
+    oid: 1.3.6.1.4.1.35450.56.5
+    type: gauge
+    help: Procs Memory (1min mean) - 1.3.6.1.4.1.35450.56.5
+  - name: vm_ets_mem_1m
+    oid: 1.3.6.1.4.1.35450.56.6
+    type: gauge
+    help: ETS Memory (1min mean) - 1.3.6.1.4.1.35450.56.6
+  - name: vm_proc_count_5m
+    oid: 1.3.6.1.4.1.35450.56.7
+    type: gauge
+    help: Num of Processes (5min mean) - 1.3.6.1.4.1.35450.56.7
+  - name: vm_total_mem_5m
+    oid: 1.3.6.1.4.1.35450.56.8
+    type: gauge
+    help: Total Memory (5min mean) - 1.3.6.1.4.1.35450.56.8
+  - name: vm_system_mem_5m
+    oid: 1.3.6.1.4.1.35450.56.9
+    type: gauge
+    help: System Memory (5min mean) - 1.3.6.1.4.1.35450.56.9
+  - name: vm_procs_mem_5m
+    oid: 1.3.6.1.4.1.35450.56.10
+    type: gauge
+    help: Procs Memory (5min mean) - 1.3.6.1.4.1.35450.56.10
+  - name: vm_ets_mem_5m
+    oid: 1.3.6.1.4.1.35450.56.11
+    type: gauge
+    help: ETS Memory (5min mean) - 1.3.6.1.4.1.35450.56.11
+  - name: req_writes_1m
+    oid: 1.3.6.1.4.1.35450.56.12
+    type: gauge
+    help: Total of Writes during 1min - 1.3.6.1.4.1.35450.56.12
+  - name: req_reads_1m
+    oid: 1.3.6.1.4.1.35450.56.13
+    type: gauge
+    help: Total of Reads during 1min - 1.3.6.1.4.1.35450.56.13
+  - name: req_deletes_1m
+    oid: 1.3.6.1.4.1.35450.56.14
+    type: gauge
+    help: Total of Deletes during 1min - 1.3.6.1.4.1.35450.56.14
+  - name: req_writes_5m
+    oid: 1.3.6.1.4.1.35450.56.15
+    type: gauge
+    help: Total of Writes during 5min - 1.3.6.1.4.1.35450.56.15
+  - name: req_reads_5m
+    oid: 1.3.6.1.4.1.35450.56.16
+    type: gauge
+    help: Total of Reads during 5min - 1.3.6.1.4.1.35450.56.16
+  - name: req_deletes_5m
+    oid: 1.3.6.1.4.1.35450.56.17
+    type: gauge
+    help: Total of Deletes during 5min - 1.3.6.1.4.1.35450.56.17
+  - name: storage_active_objects
+    oid: 1.3.6.1.4.1.35450.56.18
+    type: gauge
+    help: Active Objects during - 1.3.6.1.4.1.35450.56.18
+  - name: storage_total_objects
+    oid: 1.3.6.1.4.1.35450.56.19
+    type: gauge
+    help: Total Objects during - 1.3.6.1.4.1.35450.56.19
+  - name: storage_active_objects_sizes
+    oid: 1.3.6.1.4.1.35450.56.20
+    type: gauge
+    help: Active Objects Sizes during - 1.3.6.1.4.1.35450.56.20
+  - name: storage_total_objects_sizes
+    oid: 1.3.6.1.4.1.35450.56.21
+    type: gauge
+    help: Total Objects Sizes during - 1.3.6.1.4.1.35450.56.21
+  - name: mq_num_of_msg_replication
+    oid: 1.3.6.1.4.1.35450.56.22
+    type: gauge
+    help: Total number of messages of replication - 1.3.6.1.4.1.35450.56.22
+  - name: mq_num_of_msg_sync_vnode
+    oid: 1.3.6.1.4.1.35450.56.23
+    type: gauge
+    help: Total number of messages of sync vnode - 1.3.6.1.4.1.35450.56.23
+  - name: mq_num_of_msg_rebalance
+    oid: 1.3.6.1.4.1.35450.56.24
+    type: gauge
+    help: Total number of messages of rebalance - 1.3.6.1.4.1.35450.56.24
+  - name: vm_used_per_allocated_mem_1m
+    oid: 1.3.6.1.4.1.35450.56.31
+    type: gauge
+    help: Used per allocated memory ratio (1min mean) - 1.3.6.1.4.1.35450.56.31
+  - name: vm_allocated_mem_1m
+    oid: 1.3.6.1.4.1.35450.56.32
+    type: gauge
+    help: Allocated memory (1min mean) - 1.3.6.1.4.1.35450.56.32
+  - name: vm_used_per_allocated_mem_5m
+    oid: 1.3.6.1.4.1.35450.56.33
+    type: gauge
+    help: Used per allocated memory ratio (5min mean) - 1.3.6.1.4.1.35450.56.33
+  - name: vm_allocated_mem_5m
+    oid: 1.3.6.1.4.1.35450.56.34
+    type: gauge
+    help: Allocated memory (5min mean) - 1.3.6.1.4.1.35450.56.34
+  - name: mq_num_of_msg_recovery_node
+    oid: 1.3.6.1.4.1.35450.56.41
+    type: gauge
+    help: Total number of messages of recovery node - 1.3.6.1.4.1.35450.56.41
+  - name: mq_num_of_msg_deletion_dir
+    oid: 1.3.6.1.4.1.35450.56.42
+    type: gauge
+    help: Total number of messages of deletion directories - 1.3.6.1.4.1.35450.56.42
+  - name: mq_num_of_msg_async_deletion_dir
+    oid: 1.3.6.1.4.1.35450.56.43
+    type: gauge
+    help: Total number of messages of async deletion directories - 1.3.6.1.4.1.35450.56.43
+  - name: mq_num_of_msg_req_deletion_dir
+    oid: 1.3.6.1.4.1.35450.56.44
+    type: gauge
+    help: Total number of messages of request of deletion directories - 1.3.6.1.4.1.35450.56.44
+  - name: mq_mdcr_num_of_msg_req_comp_metadata
+    oid: 1.3.6.1.4.1.35450.56.45
+    type: gauge
+    help: Total number of messages of comparison metadata between data centers - 1.3.6.1.4.1.35450.56.45
+  - name: mq_mdcr_num_of_msg_req_sync_obj
+    oid: 1.3.6.1.4.1.35450.56.46
+    type: gauge
+    help: Total number of messages of sync objects between data centers - 1.3.6.1.4.1.35450.56.46
+  - name: comp_state
+    oid: 1.3.6.1.4.1.35450.56.51
+    type: gauge
+    help: Current state of data-compaction - 1.3.6.1.4.1.35450.56.51
+  - name: comp_last_start_datetime
+    oid: 1.3.6.1.4.1.35450.56.52
+    type: gauge
+    help: Last start date time - 1.3.6.1.4.1.35450.56.52
+  - name: comp_last_end_datetime
+    oid: 1.3.6.1.4.1.35450.56.53
+    type: gauge
+    help: Last end date time - 1.3.6.1.4.1.35450.56.53
+  - name: comp_num_of_pending_targets
+    oid: 1.3.6.1.4.1.35450.56.54
+    type: gauge
+    help: Total number of pending targets of data compaction - 1.3.6.1.4.1.35450.56.54
+  - name: comp_num_of_ongoing_targets
+    oid: 1.3.6.1.4.1.35450.56.55
+    type: gauge
+    help: Total number of ongoing targets of data compaction - 1.3.6.1.4.1.35450.56.55
+  - name: comp_num_of_out_of_targets
+    oid: 1.3.6.1.4.1.35450.56.56
+    type: gauge
+    help: Total number of out of targets of data compaction - 1.3.6.1.4.1.35450.56.56
+  version: 2
+  auth:
+    community: public
+  max_repetitions: 10

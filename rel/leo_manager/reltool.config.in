@@ -3,7 +3,7 @@
 %%
 %% LeoFS Manager
 %%
-%% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2012-2018 Rakuten, Inc.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -130,5 +130,7 @@
            {copy, "../../apps/leo_manager/snmp/snmpa_manager_1/agent/conf/context.conf",   "snmp/snmpa_manager_1/agent/conf/context.conf"},
            {copy, "../../apps/leo_manager/snmp/snmpa_manager_1/agent/conf/standard.conf",  "snmp/snmpa_manager_1/agent/conf/standard.conf"},
            {copy, "../../apps/leo_manager/snmp/snmpa_manager_1/agent/conf/vacm.conf",      "snmp/snmpa_manager_1/agent/conf/vacm.conf"},
-           {copy, "../../apps/leo_manager/snmp/snmpa_manager_1/agent/conf/notify.conf",      "snmp/snmpa_manager_1/agent/conf/notify.conf"}
+           {copy, "../../apps/leo_manager/snmp/snmpa_manager_1/agent/conf/notify.conf",      "snmp/snmpa_manager_1/agent/conf/notify.conf"},
+           %% snmp-related
+           {copy, "../../apps/leo_manager/priv/leo_manager_snmp.yml", "etc/leo_manager_snmp.yml"}
           ]}.

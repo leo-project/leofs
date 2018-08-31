@@ -1,0 +1,138 @@
+##
+## LeoGateway Exporter (SNMP-Exporter) for Prometheus
+##
+## @since 2018-08-30
+## @author LeoProject
+##
+leo_gateway:
+  get:
+  - 1.3.6.1.4.1.35450.34.1.0
+  - 1.3.6.1.4.1.35450.34.2.0
+  - 1.3.6.1.4.1.35450.34.3.0
+  - 1.3.6.1.4.1.35450.34.4.0
+  - 1.3.6.1.4.1.35450.34.5.0
+  - 1.3.6.1.4.1.35450.34.6.0
+  - 1.3.6.1.4.1.35450.34.7.0
+  - 1.3.6.1.4.1.35450.34.8.0
+  - 1.3.6.1.4.1.35450.34.9.0
+  - 1.3.6.1.4.1.35450.34.10.0
+  - 1.3.6.1.4.1.35450.34.11.0
+  - 1.3.6.1.4.1.35450.34.12.0
+  - 1.3.6.1.4.1.35450.34.13.0
+  - 1.3.6.1.4.1.35450.34.14.0
+  - 1.3.6.1.4.1.35450.34.15.0
+  - 1.3.6.1.4.1.35450.34.16.0
+  - 1.3.6.1.4.1.35450.34.17.0
+  - 1.3.6.1.4.1.35450.34.18.0
+  - 1.3.6.1.4.1.35450.34.19.0
+  - 1.3.6.1.4.1.35450.34.20.0
+  - 1.3.6.1.4.1.35450.34.21.0
+  - 1.3.6.1.4.1.35450.34.31.0
+  - 1.3.6.1.4.1.35450.34.32.0
+  - 1.3.6.1.4.1.35450.34.33.0
+  - 1.3.6.1.4.1.35450.34.34.0
+  metrics:
+  - name: node_name
+    oid: 1.3.6.1.4.1.35450.34.1
+    type: DisplayString
+    help: Node name - 1.3.6.1.4.1.35450.34.1
+  - name: vm_proc_count_1m
+    oid: 1.3.6.1.4.1.35450.34.2
+    type: gauge
+    help: Num of Processes (1min mean) - 1.3.6.1.4.1.35450.34.2
+  - name: vm_total_mem_1m
+    oid: 1.3.6.1.4.1.35450.34.3
+    type: gauge
+    help: Total Memory (1min mean) - 1.3.6.1.4.1.35450.34.3
+  - name: vm_system_mem_1m
+    oid: 1.3.6.1.4.1.35450.34.4
+    type: gauge
+    help: System Memory (1min mean) - 1.3.6.1.4.1.35450.34.4
+  - name: vm_procs_mem_1m
+    oid: 1.3.6.1.4.1.35450.34.5
+    type: gauge
+    help: Procs Memory (1min mean) - 1.3.6.1.4.1.35450.34.5
+  - name: vm_ets_mem_1m
+    oid: 1.3.6.1.4.1.35450.34.6
+    type: gauge
+    help: ETS Memory (1min mean) - 1.3.6.1.4.1.35450.34.6
+  - name: vm_proc_count_5m
+    oid: 1.3.6.1.4.1.35450.34.7
+    type: gauge
+    help: Num of Processes (5min mean) - 1.3.6.1.4.1.35450.34.7
+  - name: vm_total_mem_5m
+    oid: 1.3.6.1.4.1.35450.34.8
+    type: gauge
+    help: Total Memory (5min mean) - 1.3.6.1.4.1.35450.34.8
+  - name: vm_system_mem_5m
+    oid: 1.3.6.1.4.1.35450.34.9
+    type: gauge
+    help: System Memory (5min mean) - 1.3.6.1.4.1.35450.34.9
+  - name: vm_procs_mem_5m
+    oid: 1.3.6.1.4.1.35450.34.10
+    type: gauge
+    help: Procs Memory (5min mean) - 1.3.6.1.4.1.35450.34.10
+  - name: vm_ets_mem_5m
+    oid: 1.3.6.1.4.1.35450.34.11
+    type: gauge
+    help: ETS Memory (5min mean) - 1.3.6.1.4.1.35450.34.11
+  - name: req_writes_1m
+    oid: 1.3.6.1.4.1.35450.34.12
+    type: gauge
+    help: Total of Writes during 1min - 1.3.6.1.4.1.35450.34.12
+  - name: req_reads_1m
+    oid: 1.3.6.1.4.1.35450.34.13
+    type: gauge
+    help: Total of Reads during 1min - 1.3.6.1.4.1.35450.34.13
+  - name: req_deletes_1m
+    oid: 1.3.6.1.4.1.35450.34.14
+    type: gauge
+    help: Total of Deletes during 1min - 1.3.6.1.4.1.35450.34.14
+  - name: req_writes_5m
+    oid: 1.3.6.1.4.1.35450.34.15
+    type: gauge
+    help: Total of Writes during 5min - 1.3.6.1.4.1.35450.34.15
+  - name: req_reads_5m
+    oid: 1.3.6.1.4.1.35450.34.16
+    type: gauge
+    help: Total of Reads during 5min - 1.3.6.1.4.1.35450.34.16
+  - name: req_deletes_5m
+    oid: 1.3.6.1.4.1.35450.34.17
+    type: gauge
+    help: Total of Deletes during 5min - 1.3.6.1.4.1.35450.34.17
+  - name: cache_hit_count
+    oid: 1.3.6.1.4.1.35450.34.18
+    type: gauge
+    help: Total of Hits - 1.3.6.1.4.1.35450.34.18
+  - name: cache_miss_count
+    oid: 1.3.6.1.4.1.35450.34.19
+    type: gauge
+    help: Total of Misses - 1.3.6.1.4.1.35450.34.19
+  - name: cache_object_count
+    oid: 1.3.6.1.4.1.35450.34.20
+    type: gauge
+    help: Total of objects - 1.3.6.1.4.1.35450.34.20
+  - name: cache_object_size
+    oid: 1.3.6.1.4.1.35450.34.21
+    type: gauge
+    help: Total of object-size - 1.3.6.1.4.1.35450.34.21
+  - name: vm_used_per_allocated_mem_1m
+    oid: 1.3.6.1.4.1.35450.34.31
+    type: gauge
+    help: Used per allocated memory ratio (1min mean) - 1.3.6.1.4.1.35450.34.31
+  - name: vm_allocated_mem_1m
+    oid: 1.3.6.1.4.1.35450.34.32
+    type: gauge
+    help: Allocated memory (1min mean) - 1.3.6.1.4.1.35450.34.32
+  - name: vm_used_per_allocated_mem_5m
+    oid: 1.3.6.1.4.1.35450.34.33
+    type: gauge
+    help: Used per allocated memory ratio (5min mean) - 1.3.6.1.4.1.35450.34.33
+  - name: vm_allocated_mem_5m
+    oid: 1.3.6.1.4.1.35450.34.34
+    type: gauge
+    help: Allocated memory (5min mean) - 1.3.6.1.4.1.35450.34.34
+  version: 2
+  auth:
+    community: public
+  max_repetitions: 10
