@@ -131,6 +131,6 @@
            {copy, "../../apps/leo_manager/snmp/snmpa_manager_1/agent/conf/standard.conf",  "snmp/snmpa_manager_1/agent/conf/standard.conf"},
            {copy, "../../apps/leo_manager/snmp/snmpa_manager_1/agent/conf/vacm.conf",      "snmp/snmpa_manager_1/agent/conf/vacm.conf"},
            {copy, "../../apps/leo_manager/snmp/snmpa_manager_1/agent/conf/notify.conf",      "snmp/snmpa_manager_1/agent/conf/notify.conf"},
-           %% snmp-related
+           %% prometheus-related
            {copy, "../../apps/leo_manager/priv/leo_manager_snmp.yml", "etc/leo_manager_snmp.yml"}
           ]}.
