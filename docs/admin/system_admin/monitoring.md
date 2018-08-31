@@ -258,14 +258,38 @@ SNMPv2-SMI::enterprises.35450.34.34.0 = Gauge32: 88735915
 ```
 
 
-## Using Grafana
+## Using InfluxDB + Grafana
 
 In order to easily monitor LeoFS, we provide LeoFS' input plugin of Telegraf[^1]. See more details on <a href ="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/leofs/" target="_blank">its documentation</a>.
-
-If you decide to utilize Telegraf[^1], you need to install InfluxDB[^2] and Grafana[^3].
+If you decide to use Telegraf[^1] as LeoFS' monitoring agent, you need to install InfluxDB[^2] and Grafana[^3].
 
 
 ![](/assets/leofs-monitoring-with-grafana.png)
+
+
+## Using Prometheus + Grafana
+
+We provide another way of LeoFS system monitoring which uses Prometheus [^4] and SNMP-Exporter [^5], and deliver `snmp.yml` of each component *(LeoGateway, LeoManager, and LeoStorage)* so that you can easily start.
+
+* <a href="https://github.com/leo-project/leofs/blob/v1/apps/leo_gateway/priv/leo_gateway_snmp.yml" target="_blank">LeoGateway snmp.yml</a>
+* <a href="https://github.com/leo-project/leofs/blob/v1/apps/leo_manager/priv/leo_manager_snmp.yml" target="_blank">LeoManager snmp.yml</a>
+* <a href="https://github.com/leo-project/leofs/blob/v1/apps/leo_storage/priv/leo_storage_snmp.yml" target="_blank">LeoStorage snmp.yml</a>
+
+If you get a LeoFS' package, it includes each `snmp.yml` under each `etc` directory as below:
+
+```bash
+leo_gateway/etc/
+└── leo_gateway_snmp.yml
+leo_manager_0/etc/
+└── leo_manager_snmp.yml
+leo_manager_1/etc/
+└── leo_manager_snmp.yml
+leo_storage/etc/
+└── leo_storage_snmp.yml
+```
+
+See more details on <a href ="https://github.com/prometheus/snmp_exporter" target="_blank"> SNMP-Exporter's documentation</a>.
+If you decide to use Prometheus [^4], you need to install Grafana [^3] and SNMP-Exporter [^5] to LeoGateway nodes, LeoManager nodes, and LeoStorage nodes respectively.
 
 
 ## Related Links
@@ -278,3 +302,5 @@ If you decide to utilize Telegraf[^1], you need to install InfluxDB[^2] and Graf
 [^1]: <a href="https://github.com/influxdata/telegraf" target="_blank">InfluxData / Telegraf - The plugin-driven server agent for collecting & reporting metrics</a>
 [^2]: <a href="https://github.com/influxdata/influxdb">InfluxDB - An Open-Source Time Series Database</a>
 [^3]: <a href="https://grafana.com/" target="_blank">Grafana - The open platform for analytics and monitoring</a>
+[^4]: <a href="https://prometheus.io/" target="_blank">Prometheus - Monitoring system and timeseries database</a>
+[^5]: <a href="https://github.com/prometheus/snmp_exporter" target="_blank">SNMP-Exporter - SNMP Exporter for Prometheus </a>

@@ -1,0 +1,88 @@
+##
+## LeoManager Exporter (SNMP-Exporter) for Prometheus
+##
+## @since 2018-08-30
+## @author LeoProject
+##
+leo_manager:
+  get:
+  - 1.3.6.1.4.1.35450.15.1.0
+  - 1.3.6.1.4.1.35450.15.2.0
+  - 1.3.6.1.4.1.35450.15.3.0
+  - 1.3.6.1.4.1.35450.15.4.0
+  - 1.3.6.1.4.1.35450.15.5.0
+  - 1.3.6.1.4.1.35450.15.6.0
+  - 1.3.6.1.4.1.35450.15.7.0
+  - 1.3.6.1.4.1.35450.15.8.0
+  - 1.3.6.1.4.1.35450.15.9.0
+  - 1.3.6.1.4.1.35450.15.10.0
+  - 1.3.6.1.4.1.35450.15.11.0
+  - 1.3.6.1.4.1.35450.15.12.0
+  - 1.3.6.1.4.1.35450.15.13.0
+  - 1.3.6.1.4.1.35450.15.14.0
+  - 1.3.6.1.4.1.35450.15.15.0
+  metrics:
+  - name: node_name
+    oid: 1.3.6.1.4.1.35450.15.1
+    type: DisplayString
+    help: Node name - 1.3.6.1.4.1.35450.15.1
+  - name: vm_proc_count_1m
+    oid: 1.3.6.1.4.1.35450.15.2
+    type: gauge
+    help: Num of Processes (1min mean) - 1.3.6.1.4.1.35450.15.2
+  - name: vm_total_mem_1m
+    oid: 1.3.6.1.4.1.35450.15.3
+    type: gauge
+    help: Total Memory (1min mean) - 1.3.6.1.4.1.35450.15.3
+  - name: vm_system_mem_1m
+    oid: 1.3.6.1.4.1.35450.15.4
+    type: gauge
+    help: System Memory (1min mean) - 1.3.6.1.4.1.35450.15.4
+  - name: vm_procs_mem_1m
+    oid: 1.3.6.1.4.1.35450.15.5
+    type: gauge
+    help: Procs Memory (1min mean) - 1.3.6.1.4.1.35450.15.5
+  - name: vm_ets_mem_1m
+    oid: 1.3.6.1.4.1.35450.15.6
+    type: gauge
+    help: ETS Memory (1min mean) - 1.3.6.1.4.1.35450.15.6
+  - name: vm_proc_count_5m
+    oid: 1.3.6.1.4.1.35450.15.7
+    type: gauge
+    help: Num of Processes (5min mean) - 1.3.6.1.4.1.35450.15.7
+  - name: vm_total_mem_5m
+    oid: 1.3.6.1.4.1.35450.15.8
+    type: gauge
+    help: Total Memory (5min mean) - 1.3.6.1.4.1.35450.15.8
+  - name: vm_system_mem_5m
+    oid: 1.3.6.1.4.1.35450.15.9
+    type: gauge
+    help: System Memory (5min mean) - 1.3.6.1.4.1.35450.15.9
+  - name: vm_procs_mem_5m
+    oid: 1.3.6.1.4.1.35450.15.10
+    type: gauge
+    help: Procs Memory (5min mean) - 1.3.6.1.4.1.35450.15.10
+  - name: vm_ets_mem_5m
+    oid: 1.3.6.1.4.1.35450.15.11
+    type: gauge
+    help: ETS Memory (5min mean) - 1.3.6.1.4.1.35450.15.11
+  - name: vm_used_per_allocated_mem_1m
+    oid: 1.3.6.1.4.1.35450.15.12
+    type: gauge
+    help: Used per allocated memory ratio (1min mean) - 1.3.6.1.4.1.35450.15.12
+  - name: vm_allocated_mem_1m
+    oid: 1.3.6.1.4.1.35450.15.13
+    type: gauge
+    help: Allocated memory (1min mean) - 1.3.6.1.4.1.35450.15.13
+  - name: vm_used_per_allocated_mem_5m
+    oid: 1.3.6.1.4.1.35450.15.14
+    type: gauge
+    help: Used per allocated memory ratio (5min mean) - 1.3.6.1.4.1.35450.15.14
+  - name: vm_allocated_mem_5m
+    oid: 1.3.6.1.4.1.35450.15.15
+    type: gauge
+    help: Allocated memory (5min mean) - 1.3.6.1.4.1.35450.15.15
+  version: 2
+  auth:
+    community: public
+  max_repetitions: 10
