@@ -3,7 +3,7 @@
 <!-- toc -->
 
 ## What version should we use?
-Use the latest stable one. With the version <= v1.4.0, LeoFS had some serious issues that may cause data-lost, so that use at least >= v1.4.1. Or in case you need to keep running LeoFS with older one for some reason, make sure that you avoid those issues with the below check list
+Use the latest stable one. With the version <= v1.4.0, LeoFS had some serious issues that may cause data-lost, so that use at least >= v1.4.1. Or in case you need to keep running LeoFS with older one for some reason, make sure that you avoid those issues with the below check list.
 
 ## Check list to avoid serious issues for those who have to keep running some older version of LeoFS
 
