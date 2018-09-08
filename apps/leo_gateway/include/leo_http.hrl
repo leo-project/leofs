@@ -101,6 +101,7 @@
 -define(HTTP_QS_BIN_MULTI_DELETE,<<"delete">>).
 -define(HTTP_QS_BIN_DELIMITER,   <<"delimiter">>).
 -define(HTTP_QS_BIN_VERSIONING,  <<"versioning">>).
+-define(HTTP_QS_BIN_VERSIONS,    <<"versions">>).
 -define(HTTP_QS_BIN_LOCATION,    <<"location">>).
 
 -define(HTTP_ST_OK,                  200).
@@ -349,6 +350,20 @@
                       "<NextMarker>~s</NextMarker>",
                       "</ListBucketResult>"])).
 
+-define(XML_OBJ_VERSIONS_LIST,
+        lists:append(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                      "<ListVersionsResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">",
+                      "<Name>leofs</Name>",
+                      "<Prefix>~s</Prefix>",
+                      "<KeyMarker/>",
+                      "<VersionIdMarker/>",
+                      "<MaxKeys>~s</MaxKeys>",
+                      "<Delimiter>/</Delimiter>",
+                      "~s",
+                      "<IsTruncated>~s</IsTruncated>",
+                      "<NextKeyMarker>~s</NextKeyMarker>",
+                      "</ListVersionsResult>"])).
+
 -define(XML_OBJ_LIST_HEAD,
         lists:append(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
                       "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">",
@@ -384,6 +399,21 @@
                       "<DisplayName>leofs</DisplayName>",
                       "</Owner>",
                       "</Contents>"])).
+
+-define(XML_OBJ_LIST_FILE_3,
+        lists:append(["<Version>",
+                      "<Key>~s~s</Key>",
+                      "<VersionId>1</VersionId>",
+                      "<IsLatest>true</IsLatest>",
+                      "<LastModified>~s</LastModified>",
+                      "<ETag>~s</ETag>",
+                      "<Size>~s</Size>",
+                      "<StorageClass>STANDARD</StorageClass>",
+                      "<Owner>",
+                      "<ID>leofs</ID>",
+                      "<DisplayName>leofs</DisplayName>",
+                      "</Owner>",
+                      "</Version>"])).
 
 -define(XML_OBJ_LIST_FOOT,
         lists:append(["<IsTruncated>~s</IsTruncated>",
