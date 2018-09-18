@@ -40,7 +40,7 @@
 %% callback
 -export([handle_notify/0]).
 
--define(SNMP_MQ_NUM_OF_REPLICATION, 'mq-num-of-msg-replicate').
+-define(SNMP_MQ_NUM_OF_REPLICATION, 'mq-num-of-msg-replication').
 -define(SNMP_MQ_NUM_OF_SYNC_VNODE, 'mq-num-of-msg-sync-vnode').
 -define(SNMP_MQ_NUM_OF_REBALANCE, 'mq-num-of-msg-rebalance').
 -define(SNMP_MQ_NUM_OF_RECOVERY_NODE, 'mq-num-of-msg-recovery-node').
