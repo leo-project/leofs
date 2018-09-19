@@ -102,6 +102,7 @@ start(#http_options{handler = Handler,
                  true ->
                      [{env, [{dispatch, Dispatch}]},
                       {max_keepalive, MaxKeepAlive},
+                      {compress, true},
                       {timeout, Timeout4Header}];
                  %% Using http-cache (like a varnish/squid)
                  false ->
@@ -112,6 +113,7 @@ start(#http_options{handler = Handler,
                                                        sending_chunked_obj_len = SendChunkLen},
                      [{env, [{dispatch, Dispatch}]},
                       {max_keepalive, MaxKeepAlive},
+                      {compress, true},
                       {onrequest, Handler:onrequest(CacheCondition)},
                       {onresponse, Handler:onresponse(CacheCondition)},
                       {timeout, Timeout4Header}]
@@ -335,6 +337,18 @@ do_health_check([#member{node = Node}|Rest]) ->
             do_health_check(Rest)
     end.
 
+-spec(can_gzip(cowboy_req:req()) ->
+             boolean()).
+can_gzip(Req) ->
+    try cowboy_req:parse_header(<<"accept-encoding">>, Req) of
+        {ok, Encodings, _Req} when is_list(Encodings) ->
+            false =/= lists:keyfind(<<"gzip">>, 1, Encodings);
+        _ ->
+            false
+    catch _:_ ->
+        false
+    end.
+
 %% @doc GET an object
 -spec(get_object(cowboy_req:req(), binary(), #req_params{}) ->
              {ok, cowboy_req:req()}).
@@ -387,13 +401,18 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
                                CMeta ++ Headers ++ CustomHeaders
                        end,
 
-            BodyFunc = fun(Socket, Transport) ->
-                               leo_net:chunked_send(
-                                 Transport, Socket, RespObject, SendChunkLen),
-                               ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime)
-                       end,
-
-            ?reply_ok(Headers2, {Meta#?METADATA.dsize, BodyFunc}, Req);
+            case can_gzip(Req) of
+                true ->
+                    ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime),
+                    ?reply_ok(Headers2, RespObject, Req);
+                false ->
+                    BodyFunc = fun(Socket, Transport) ->
+                                       leo_net:chunked_send(
+                                         Transport, Socket, RespObject, SendChunkLen),
+                                       ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime)
+                               end,
+                    ?reply_ok(Headers2, {Meta#?METADATA.dsize, BodyFunc}, Req)
+            end;
 
         %% For a chunked object.
         {ok, #?METADATA{cnumber = TotalChunkedObjs,
@@ -539,13 +558,18 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                CMeta ++ Headers ++ CustomHeaders
                        end,
 
-            BodyFunc = fun(Socket, Transport) ->
-                               leo_net:chunked_send(
-                                 Transport, Socket, CacheObj#cache.body, SendChunkLen),
-                               ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "hit:mem-cache")
-                       end,
-
-            ?reply_ok(Headers2, {CacheObj#cache.size, BodyFunc}, Req);
+            case can_gzip(Req) of
+                true ->
+                    ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "hit:mem-cache"),
+                    ?reply_ok(Headers2, CacheObj#cache.body, Req);
+                false ->
+                    BodyFunc = fun(Socket, Transport) ->
+                                       leo_net:chunked_send(
+                                         Transport, Socket, CacheObj#cache.body, SendChunkLen),
+                                       ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "hit:mem-cache")
+                               end,
+                    ?reply_ok(Headers2, {CacheObj#cache.size, BodyFunc}, Req)
+            end;
 
         %% MISS: For the case If-Modified-Since matches timestamp in metadata
         {ok, #?METADATA{timestamp = IMSSec}, _Resp} ->
@@ -576,13 +600,19 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                                CMeta = binary_to_term(CMetaBin),
                                CMeta ++ Headers ++ CustomHeaders
                        end,
-            BodyFunc = fun(Socket, Transport) ->
-                               leo_net:chunked_send(
-                                 Transport, Socket, RespObject, SendChunkLen)
-                       end,
 
-            ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime),
-            ?reply_ok(Headers2, {Meta#?METADATA.dsize, BodyFunc}, Req);
+            case can_gzip(Req) of
+                true ->
+                    ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime),
+                    ?reply_ok(Headers2, RespObject, Req);
+                false ->
+                    BodyFunc = fun(Socket, Transport) ->
+                                    leo_net:chunked_send(
+                                      Transport, Socket, RespObject, SendChunkLen),
+                                    ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime)
+                               end,
+                    ?reply_ok(Headers2, {Meta#?METADATA.dsize, BodyFunc}, Req)
+            end;
 
         %% MISS: get an object from storage (large-size)
         {ok, #?METADATA{cnumber = TotalChunkedObjs,
