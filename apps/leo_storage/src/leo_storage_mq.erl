@@ -1051,7 +1051,8 @@ fix_consistency_between_clusters(#inconsistent_data_with_dc{
     case leo_storage_handler_object:get(AddrId, Key, -1) of
         {ok, Metadata, Bin} ->
             Object = leo_object_storage_transformer:metadata_to_object(Metadata),
-            leo_sync_remote_cluster:defer_stack(Object#?OBJECT{data = Bin});
+            leo_sync_remote_cluster:defer_stack(Object#?OBJECT{data = Bin,
+                                                               meta = term_to_binary([{?PROP_CMETA_UDM, binary_to_term(Metadata#?METADATA.meta)}])});
         _ ->
             ok
     end;
