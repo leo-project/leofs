@@ -915,7 +915,6 @@ correct_redundancies_4({error, Why}, InconsistentNodes, [Node|Rest], Metadata) -
 %%          this function cannot operate 'copy'.
 %% @private
 rebalance_1(#rebalance_message{node = Node,
-                               vnode_id = VNodeId,
                                addr_id = AddrId,
                                key = Key} = Msg) ->
     case leo_redundant_manager_api:get_member_by_node(Node) of
