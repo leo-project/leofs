@@ -75,8 +75,6 @@ start(RefSup, RootPath) ->
             false -> RootPath ++ ?SLASH
         end,
 
-    ?TBL_REBALANCE_COUNTER = ets:new(?TBL_REBALANCE_COUNTER,
-                                     [named_table, public, {read_concurrency, true}]),
     DelBucketQueues = ?del_dir_queue_list(),
     start_1([{?QUEUE_ID_PER_OBJECT,        ?MSG_PATH_PER_OBJECT},
              {?QUEUE_ID_SYNC_BY_VNODE_ID,  ?MSG_PATH_SYNC_VNODE_ID},
@@ -250,14 +248,6 @@ publish(?QUEUE_ID_REBALANCE = Id, Node, VNodeId, AddrId, Key) ->
                                               key = Key,
                                               node = Node,
                                               timestamp = leo_date:now()}),
-            Table = ?TBL_REBALANCE_COUNTER,
-            case ets_lookup(Table, VNodeId) of
-                {ok, 0} ->
-                    ets:insert(Table, {VNodeId, 0});
-                _Other ->
-                    void
-            end,
-            ok = increment_counter(Table, VNodeId),
             leo_mq_api:publish(Id, KeyBin, MessageBin)
     end;
 
@@ -381,8 +371,7 @@ handle_call({consume, ?QUEUE_ID_SYNC_BY_VNODE_ID, MessageBin}) ->
             {ok, Res} = leo_redundant_manager_api:range_of_vnodes(ToVNodeId),
             {ok, {CurRingHash, _PrevRingHash}} =
                 leo_redundant_manager_api:checksum(?CHECKSUM_RING),
-            ok = sync_vnodes(Node, CurRingHash, Res),
-            notify_rebalance_message_to_manager(ToVNodeId);
+            ok = sync_vnodes(Node, CurRingHash, Res);
         _ ->
             ?warn("handle_call/1 - consume",
                   [{qid, ?QUEUE_ID_SYNC_BY_VNODE_ID},
@@ -931,7 +920,6 @@ rebalance_1(#rebalance_message{node = Node,
                                key = Key} = Msg) ->
     case leo_redundant_manager_api:get_member_by_node(Node) of
         {ok, #member{state = ?STATE_RUNNING}} ->
-            ok = decrement_counter(?TBL_REBALANCE_COUNTER, VNodeId),
 
             case leo_redundant_manager_api:get_redundancies_by_key(Key) of
                 {ok, #redundancies{nodes = Redundancies}} ->
@@ -998,44 +986,6 @@ get_redundancies_with_replicas(AddrId, Key, Redundancies) ->
             end;
         _ ->
             Redundancies
-    end.
-
-
-%% @doc Notify a rebalance-progress messages to manager.
-%%      - Retrieve # of published messages for rebalance,
-%%        after notify a message to manager.
-%%
--spec(notify_rebalance_message_to_manager(integer()) ->
-             ok | {error, any()}).
-notify_rebalance_message_to_manager(VNodeId) ->
-    case ets_lookup(?TBL_REBALANCE_COUNTER, VNodeId) of
-        {ok, NumOfMessages} ->
-            Fun = fun(_Manager, true) ->
-                          void;
-                     (Manager0, false = Res) ->
-                          Manager1 = case is_atom(Manager0) of
-                                         true  -> Manager0;
-                                         false -> list_to_atom(Manager0)
-                                     end,
-                          case catch rpc:call(Manager1, leo_manager_api, notify,
-                                              [rebalance, VNodeId,
-                                               erlang:node(), NumOfMessages],
-                                              ?DEF_REQ_TIMEOUT) of
-                              ok ->
-                                  true;
-                              {_, Cause} ->
-                                  ?error("notify_rebalance_message_to_manager/1",
-                                         [{manager, Manager1},
-                                          {vnode_id, VNodeId}, {cause, Cause}]),
-                                  Res;
-                              timeout ->
-                                  Res
-                          end
-                  end,
-            lists:foldl(Fun, false, ?env_manager_nodes(leo_storage)),
-            ok;
-        Error ->
-            Error
     end.
 
 
@@ -1146,42 +1096,3 @@ compare_between_metadatas(#?METADATA{addr_id = AddrId,
             {error, ?ERROR_COULD_NOT_GET_META}
     end.
 
-
-%%--------------------------------------------------------------------
-%% INNTERNAL FUNCTIONS-2 ETS related functions
-%%--------------------------------------------------------------------
-%% @doc Lookup rebalance counter
-%% @private
--spec(ets_lookup(Table, Key) ->
-             {ok, Value} | {error, Cause} when Table::atom(),
-                                               Key::binary(),
-                                               Value::integer(),
-                                               Cause::any()).
-ets_lookup(Table, Key) ->
-    case catch ets:lookup(Table, Key) of
-        [] ->
-            {ok, 0};
-        [{_Key, Value}] ->
-            {ok, Value};
-        {'EXIT', Cause} ->
-            {error, Cause}
-    end.
-
-
-%% @doc Increment rebalance counter
-%% @private
--spec(increment_counter(Table, Key) ->
-             ok when Table::atom(),
-                     Key::binary()).
-increment_counter(Table, Key) ->
-    catch ets:update_counter(Table, Key, 1),
-    ok.
-
-%% @doc Decrement rebalance counter
-%% @private
--spec(decrement_counter(Table, Key) ->
-             ok when Table::atom(),
-                     Key::binary()).
-decrement_counter(Table, Key) ->
-    catch ets:update_counter(Table, Key, -1),
-    ok.
