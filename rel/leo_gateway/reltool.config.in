@@ -67,7 +67,6 @@
        {app, leo_gateway,           [{incl_cond, include}]},
        {app, bcrypt,                [{incl_cond, include}]},
        {app, bear,                  [{incl_cond, include}]},
-       {app, bitcask,               [{incl_cond, include}]},
        {app, cowboy,                [{incl_cond, include}]},
        {app, cowlib,                [{incl_cond, include}]},
        {app, elarm,                 [{incl_cond, include}]},
