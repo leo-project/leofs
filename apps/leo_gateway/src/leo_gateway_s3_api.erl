@@ -547,6 +547,10 @@ put_object(Req, _Key, #req_params{is_acl = true} = _Params) ->
     %% However it's hard to maintain so we go for the former approach as other NOT_IMPLEMENTED API do.
     ?reply_ok([?SERVER_HEADER], Req);
 
+put_object(Req, _Key, #req_params{is_tagging = true} = _Params) ->
+    %% Not implemented yet.
+    ?reply_not_implemented_without_body([?SERVER_HEADER], Req);
+
 put_object(Req, Key, Params) ->
     put_object(get_x_amz_meta_directive(Req), Req, Key, Params).
 
@@ -809,6 +813,12 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                 _ ->
                     true
             end,
+    IsTagging = case cowboy_req:qs_val(?HTTP_QS_BIN_TAGGING, Req_2) of
+                    {undefined, _} ->
+                        false;
+                    _ ->
+                        true
+                end,
     ReqParams = request_params(Req_2,
                                #req_params{
                                   handler = ?MODULE,
@@ -823,6 +833,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                                   is_cached = true,
                                   is_dir = IsDir,
                                   is_acl = IsACL,
+                                  is_tagging = IsTagging,
                                   max_chunked_objs = Props#http_options.max_chunked_objs,
                                   max_len_of_obj = Props#http_options.max_len_of_obj,
                                   chunked_obj_len = Props#http_options.chunked_obj_len,
