@@ -24,6 +24,10 @@ Although we support User Defined Metadata according to the original S3 spec, we 
 
 See [Administrators / Settings / LeoGateway Settings - Uploading Objects](/admin/settings/leo_gateway.md)
 
+## Has LeoFS supported the gzip compression on GET?
+
+Yes since 1.4.3, you can request the gzip compression to LeoFS by adding `AcceptEncoding: gzip` into the HTTP request header. However it doesn't mean the gzip compression is always applied to any objects returned from LeoFS. it's applied only in case `object.size >= 300 && object.size < large_object.chunked_obj_len in leo_gateway.conf`.
+
 ## Can't read files stored in LeoFS using s3fs
 
 s3fs can make a part request in a different size on each part as described below.
