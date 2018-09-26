@@ -103,6 +103,7 @@
 -define(HTTP_QS_BIN_VERSIONING,  <<"versioning">>).
 -define(HTTP_QS_BIN_VERSIONS,    <<"versions">>).
 -define(HTTP_QS_BIN_LOCATION,    <<"location">>).
+-define(HTTP_QS_BIN_TAGGING,     <<"tagging">>).
 
 -define(HTTP_ST_OK,                  200).
 -define(HTTP_ST_NO_CONTENT,          204).
@@ -603,6 +604,7 @@
           is_upload = false            :: boolean(),            %% is upload operation? (for multipart upload)
           is_aws_chunked = false       :: boolean(),            %% is AWS Chunked? (Signature V4)
           is_acl = false               :: boolean(),            %% is acl operation?
+          is_tagging = false           :: boolean(),            %% is tagging operation?
           ia_location = false          :: boolean(),            %% is location operation?
           upload_id = <<>>             :: binary(),             %% upload id for multipart upload
           upload_part_num = 0          :: non_neg_integer(),    %% upload part number for multipart upload
