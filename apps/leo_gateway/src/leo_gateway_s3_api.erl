@@ -1477,7 +1477,9 @@ request_params(Req, Params) ->
                  end,
 
     {Headers, _} = cowboy_req:headers(Req),
-    {ok, CMetaBin} = parse_headers_to_cmeta(Headers),
+    ContentType = ?http_content_type(Headers),
+    Headers2 = Headers ++ [{?HTTP_HEAD_X_AMZ_LEOFS_CONTENT_TYPE, ContentType}],
+    {ok, CMetaBin} = parse_headers_to_cmeta(Headers2),
 
     case byte_size(CMetaBin) of
         MSize when MSize >= ?HTTP_METADATA_LIMIT ->

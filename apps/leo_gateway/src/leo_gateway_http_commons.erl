@@ -349,6 +349,20 @@ can_gzip(Req) ->
         false
     end.
 
+-spec(get_mime_and_udm_from_cmeta(binary()|list({binary(), binary()})) ->
+             {binary(), list({binary(), binary()})}).
+get_mime_and_udm_from_cmeta(<<>>) ->
+    %% This branch is needed to deal with the existing objects
+    {?HTTP_CTYPE_OCTET_STREAM, []};
+get_mime_and_udm_from_cmeta(CMetaBin) when is_binary(CMetaBin) ->
+    UDMHeaders = binary_to_term(CMetaBin),
+    get_mime_and_udm_from_cmeta(UDMHeaders);
+get_mime_and_udm_from_cmeta(UDMHeaders) ->
+    ContentType = ?http_x_amz_leofs_content_type(UDMHeaders),
+    %% Not return x-amz-leofs_content-length to the client as it's redundant.
+    UDMHeaders2 = lists:keydelete(?HTTP_HEAD_X_AMZ_LEOFS_CONTENT_TYPE, 1, UDMHeaders),
+    {ContentType, UDMHeaders2}.
+
 %% @doc GET an object
 -spec(get_object(cowboy_req:req(), binary(), #req_params{}) ->
              {ok, cowboy_req:req()}).
@@ -372,7 +386,7 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
         %% For regular case (NOT a chunked object)
         {ok, #?METADATA{cnumber = 0,
                         meta = CMetaBin} = Meta, RespObject} ->
-            Mime = leo_mime:guess_mime(Key),
+            {Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(CMetaBin),
 
             case HasInnerCache of
                 true ->
@@ -393,13 +407,7 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
                        {?HTTP_HEAD_RESP_ETAG, ?http_etag(Meta#?METADATA.checksum)},
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, ?http_date(Meta#?METADATA.timestamp)}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
-            Headers2 = case CMetaBin of
-                           <<>> ->
-                               Headers ++ CustomHeaders;
-                           _ ->
-                               CMeta = binary_to_term(CMetaBin),
-                               CMeta ++ Headers ++ CustomHeaders
-                       end,
+            Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
 
             case can_gzip(Req) of
                 true ->
@@ -418,19 +426,13 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
         {ok, #?METADATA{cnumber = TotalChunkedObjs,
                         dsize = ObjLen,
                         meta = CMetaBin} = Meta, _RespObject} ->
-            Mime = leo_mime:guess_mime(Key),
+            {Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(CMetaBin),
             Headers = [?SERVER_HEADER,
                        {?HTTP_HEAD_RESP_CONTENT_TYPE, Mime},
                        {?HTTP_HEAD_RESP_ETAG, ?http_etag(Meta#?METADATA.checksum)},
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, ?http_date(Meta#?METADATA.timestamp)}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
-            Headers2 = case CMetaBin of
-                           <<>> ->
-                               Headers ++ CustomHeaders;
-                           _ ->
-                               CMeta = binary_to_term(CMetaBin),
-                               CMeta ++ Headers ++ CustomHeaders
-                       end,
+            Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
             BodyFunc = fun(Socket, Transport) ->
                                {ok, Pid} = leo_large_object_get_handler:start_link(
                                              {Key, #transport_record{transport = Transport,
@@ -493,13 +495,8 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
 
             case leo_gateway_rpc_handler:head(Key) of
                 {ok, #?METADATA{meta = CMetaBin}} ->
-                    Headers2 = case CMetaBin of
-                                   <<>> ->
-                                       Headers ++ CustomHeaders;
-                                   _ ->
-                                       CMeta = binary_to_term(CMetaBin),
-                                       CMeta ++ Headers ++ CustomHeaders
-                               end,
+                    {_Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(CMetaBin),
+                    Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
 
                     case file:open(Path, [raw, read]) of
                         {ok, Fd} ->
@@ -550,13 +547,8 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                        {?HTTP_HEAD_X_AMZ_LEOFS_FROM_CACHE, <<"True/via memory">>},
                        {?HTTP_HEAD_X_FROM_CACHE, <<"True/via memory">>}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
-            Headers2 = case CacheObj#cache.cmeta of
-                           <<>> ->
-                               Headers ++ CustomHeaders;
-                           CMetaBin ->
-                               CMeta = binary_to_term(CMetaBin),
-                               CMeta ++ Headers ++ CustomHeaders
-                       end,
+            {_Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(CacheObj#cache.cmeta),
+            Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
 
             case can_gzip(Req) of
                 true ->
@@ -579,7 +571,7 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
         %% MISS: get an object from storage (small-size)
         {ok, #?METADATA{cnumber = 0,
                         meta = CMetaBin} = Meta, RespObject} ->
-            Mime = leo_mime:guess_mime(Key),
+            {Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(CMetaBin),
             Val = term_to_binary(#cache{etag = Meta#?METADATA.checksum,
                                         mtime = Meta#?METADATA.timestamp,
                                         content_type = Mime,
@@ -593,13 +585,7 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                        {?HTTP_HEAD_RESP_ETAG, ?http_etag(Meta#?METADATA.checksum)},
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, ?http_date(Meta#?METADATA.timestamp)}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
-            Headers2 = case CMetaBin of
-                           <<>> ->
-                               Headers ++ CustomHeaders;
-                           _ ->
-                               CMeta = binary_to_term(CMetaBin),
-                               CMeta ++ Headers ++ CustomHeaders
-                       end,
+            Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
 
             case can_gzip(Req) of
                 true ->
@@ -618,19 +604,13 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
         {ok, #?METADATA{cnumber = TotalChunkedObjs,
                         dsize = ObjLen,
                         meta = CMetaBin} = Meta, _RespObject} ->
-            Mime = leo_mime:guess_mime(Key),
+            {Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(CMetaBin),
             Headers = [?SERVER_HEADER,
                        {?HTTP_HEAD_RESP_CONTENT_TYPE,  Mime},
                        {?HTTP_HEAD_RESP_ETAG, ?http_etag(Meta#?METADATA.checksum)},
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, ?http_date(Meta#?METADATA.timestamp)}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
-            Headers2 = case CMetaBin of
-                           <<>> ->
-                               Headers ++ CustomHeaders;
-                           _ ->
-                               CMeta = binary_to_term(CMetaBin),
-                               CMeta ++ Headers ++ CustomHeaders
-                       end,
+            Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
             BodyFunc = fun(Socket, Transport) ->
                                {ok, Pid} = leo_large_object_get_handler:start_link(
                                              {Key, #transport_record{transport = Transport,
@@ -837,7 +817,6 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
                   andalso binary_is_contained(Key, 10) == false) of
                 true  ->
                     %% Stores an object into the cache
-                    Mime = leo_mime:guess_mime(Key),
                     RetCMeta =
                         case CMeta of
                             <<>> ->
@@ -852,8 +831,9 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
                                                 {cause, Reason}]),
                                         {error, Reason};
                                     undefined ->
-                                        {ok, <<>>};
+                                        {ok, <<>>, ?HTTP_CTYPE_OCTET_STREAM};
                                     UDM ->
+                                        {Mime, _UDMHeaders} = get_mime_and_udm_from_cmeta(UDM),
                                         case catch term_to_binary(UDM) of
                                             {'EXIT', Why} ->
                                                 ?error("put_small_object/3",
@@ -862,16 +842,16 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
                                                         {cause, Why}]),
                                                 {error, Why};
                                             CMeta_1 ->
-                                                {ok, CMeta_1}
+                                                {ok, CMeta_1, Mime}
                                         end
                                 end
                         end,
 
                     case RetCMeta of
-                        {ok, CMeta_2} ->
+                        {ok, CMeta_2, Mime2} ->
                             Val = term_to_binary(#cache{etag = ETag,
                                                         mtime = leo_date:now(),
-                                                        content_type = Mime,
+                                                        content_type = Mime2,
                                                         body = Bin,
                                                         cmeta = CMeta_2,
                                                         msize = byte_size(CMeta_2),
@@ -1074,9 +1054,10 @@ head_object(Req, Key, #req_params{bucket_name = BucketName}) ->
     case leo_gateway_rpc_handler:head(Key) of
         {ok, #?METADATA{del = 0,
                         meta = CMetaBin} = Meta} ->
+            {Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(CMetaBin),
             Timestamp = leo_http:rfc1123_date(Meta#?METADATA.timestamp),
             Headers = [?SERVER_HEADER,
-                       {?HTTP_HEAD_RESP_CONTENT_TYPE, leo_mime:guess_mime(Key)},
+                       {?HTTP_HEAD_RESP_CONTENT_TYPE, Mime},
                        {?HTTP_HEAD_RESP_ETAG, ?http_etag(Meta#?METADATA.checksum)},
                        %% https://github.com/leo-project/leofs/issues/489
                        %% We used Camel Case for response headers
@@ -1088,13 +1069,7 @@ head_object(Req, Key, #req_params{bucket_name = BucketName}) ->
                        %% lower case ones.
                        {?HTTP_HEAD_CONTENT_LENGTH, erlang:integer_to_list(Meta#?METADATA.dsize)},
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, Timestamp}],
-            Headers2 = case CMetaBin of
-                           <<>> ->
-                               Headers;
-                           _ ->
-                               CMeta = binary_to_term(CMetaBin),
-                               CMeta ++ Headers
-                       end,
+            Headers2 = UDMHeaders ++ Headers,
             ?access_log_head(BucketName, Key, ?HTTP_ST_OK, BeginTime),
             cowboy_req:reply(?HTTP_ST_OK, Headers2, <<>>, Req);
         {ok, #?METADATA{del = 1}} ->
@@ -1131,16 +1106,11 @@ get_range_object(Req, BucketName, Key, {_Unit, Range}, SendChunkLen, BeginTime) 
             case get_body_length(ObjectSize, Range_2) of
                 {ok, Length} ->
                     Timestamp = leo_http:rfc1123_date(Meta#?METADATA.timestamp),
+                    {Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(CMetaBin),
                     Headers = [?SERVER_HEADER,
-                               {?HTTP_HEAD_RESP_CONTENT_TYPE, leo_mime:guess_mime(Key)},
+                               {?HTTP_HEAD_RESP_CONTENT_TYPE, Mime},
                                {?HTTP_HEAD_RESP_LAST_MODIFIED, Timestamp}],
-                    Headers2 = case CMetaBin of
-                                   <<>> ->
-                                       Headers;
-                                   _ ->
-                                       CMeta = binary_to_term(CMetaBin),
-                                       CMeta ++ Headers
-                               end,
+                    Headers2 = UDMHeaders ++ Headers,
                     %% Reply with Content Range
                     %% RFC: 7233, https://tools.ietf.org/html/rfc7233#section-4.2
                     Headers3 = case length(Range) of

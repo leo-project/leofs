@@ -76,6 +76,7 @@
 -define(HTTP_HEAD_X_AMZ_META_DIRECTIVE_COPY,    <<"COPY">>).
 -define(HTTP_HEAD_X_AMZ_META_DIRECTIVE_REPLACE, <<"REPLACE">>).
 -define(HTTP_HEAD_X_AMZ_LEOFS_FROM_CACHE,       <<"x-amz-meta-leofs-from-cache">>).
+-define(HTTP_HEAD_X_AMZ_LEOFS_CONTENT_TYPE,     <<"x-amz-meta-leofs-content-type">>).
 -define(HTTP_HEAD_X_FROM_CACHE,                 <<"x-from-cache">>).
 
 
@@ -315,7 +316,13 @@
             {_, Val} ->
                 Val
         end).
-
+-define(http_x_amz_leofs_content_type(_H),
+        case lists:keyfind(?HTTP_HEAD_X_AMZ_LEOFS_CONTENT_TYPE,1,_H) of
+            false     ->
+                ?HTTP_CTYPE_OCTET_STREAM;
+            {_, Val} ->
+                Val
+        end).
 %% Special URLs
 -define(HTTP_SPECIAL_URL_HEALTH_CHECK, <<"_leofs_adm/ping">>).
 
