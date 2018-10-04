@@ -841,6 +841,7 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                                   timeout_for_header = Props#http_options.timeout_for_header,
                                   timeout_for_body = Props#http_options.timeout_for_body,
                                   sending_chunked_obj_len = Props#http_options.sending_chunked_obj_len,
+                                  is_compatible_with_s3_content_type = Props#http_options.is_compatible_with_s3_content_type,
                                   reading_chunked_obj_len = Props#http_options.reading_chunked_obj_len,
                                   threshold_of_chunk_len = Props#http_options.threshold_of_chunk_len,
                                   dont_abort_cleanup = Props#http_options.dont_abort_cleanup,
@@ -1436,7 +1437,7 @@ resp_copy_obj_xml(Req, Meta) ->
 -spec(request_params(Req, ReqParams) ->
              ReqParams when Req::cowboy_req:req(),
                             ReqParams::#req_params{}).
-request_params(Req, Params) ->
+request_params(Req, #req_params{is_compatible_with_s3_content_type = IsCompatibleWithS3} = Params) ->
     IsMultiDelete = case cowboy_req:qs_val(?HTTP_QS_BIN_MULTI_DELETE, Req) of
                         {undefined,_} ->
                             false;
@@ -1477,8 +1478,13 @@ request_params(Req, Params) ->
                  end,
 
     {Headers, _} = cowboy_req:headers(Req),
-    ContentType = ?http_content_type(Headers),
-    Headers2 = Headers ++ [{?HTTP_HEAD_X_AMZ_LEOFS_CONTENT_TYPE, ContentType}],
+    Headers2 = case IsCompatibleWithS3 of
+                   true ->
+                       ContentType = ?http_content_type(Headers),
+                       Headers ++ [{?HTTP_HEAD_X_AMZ_LEOFS_CONTENT_TYPE, ContentType}];
+                   false ->
+                       Headers
+               end,
     {ok, CMetaBin} = parse_headers_to_cmeta(Headers2),
 
     case byte_size(CMetaBin) of

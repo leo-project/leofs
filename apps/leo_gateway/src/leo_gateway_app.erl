@@ -589,6 +589,7 @@ get_options() ->
     Timeout4Header = leo_misc:get_value('timeout_for_header', HttpProp, ?DEF_HTTP_TIMEOUT_FOR_HEADER),
     Timeout4Body = leo_misc:get_value('timeout_for_body', HttpProp, ?DEF_HTTP_TIMEOUT_FOR_BODY),
     SendChunkLen = leo_misc:get_value('sending_chunked_obj_len', HttpProp, ?DEF_HTTP_SEND_CHUNK_LEN),
+    IsCompatibleWithS3 = leo_misc:get_value('is_compatible_with_s3_content_type', HttpProp, ?DEF_HTTP_IS_COMPATIBLE_WITH_AWS_S3_CONTENT_TYPE),
 
     %% Retrieve cache-related properties:
     CacheProp = ?env_cache_properties(),
@@ -676,6 +677,7 @@ get_options() ->
                                 timeout_for_header = Timeout4Header,
                                 timeout_for_body = Timeout4Body,
                                 sending_chunked_obj_len = SendChunkLen,
+                                is_compatible_with_s3_content_type = IsCompatibleWithS3,
                                 cache_method = CacheMethod,
                                 cache_workers = CacheWorkers,
                                 cache_ram_capacity = CacheRAMCapacity,

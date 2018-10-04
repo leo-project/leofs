@@ -137,6 +137,7 @@
 -define(DEF_HTTP_TIMEOUT_FOR_HEADER,  5000).
 -define(DEF_HTTP_TIMEOUT_FOR_BODY,    15000).
 -define(DEF_HTTP_SEND_CHUNK_LEN,      5242880).
+-define(DEF_HTTP_IS_COMPATIBLE_WITH_AWS_S3_CONTENT_TYPE, false).
 -define(DEF_HTTP_CACHE,               false).
 -define(DEF_HTTP_MAX_KEEPALIVE,       1024).
 -define(DEF_CACHE_WORKERS,            64).
@@ -556,6 +557,7 @@
           timeout_for_header           :: pos_integer(),  %% Timeout for reading header
           timeout_for_body             :: pos_integer(),  %% Timeout for reading body
           sending_chunked_obj_len = 0  :: pos_integer(),  %% sending chunk length
+          is_compatible_with_s3_content_type = false :: boolean(), %% Whether or not the way to handle Content-Type header is compatible with aws-s3
           %% for cache
           cache_method                 :: cache_method(), %% cahce method: [http | inner]
           cache_workers = 0            :: pos_integer(),  %% number of chache-fun's workers
@@ -596,6 +598,7 @@
           timeout_for_header         :: pos_integer(),          %% Timeout for reading header
           timeout_for_body           :: pos_integer(),          %% Timeout for reading body
           sending_chunked_obj_len    :: pos_integer(),          %% sending chunk length
+          is_compatible_with_s3_content_type = false :: boolean(), %% Whether or not the way to handle Content-Type header is compatible with aws-s3
           qs_prefix = <<>>           :: binary() | none,        %% query string
           range_header               :: string(),               %% range header
           custom_metadata = <<>>     :: binary(),
