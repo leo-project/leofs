@@ -30,6 +30,7 @@ If you want to customize settings like where to place `leo_gateway.conf`, what u
 | `http.headers_config_file`                | HTTP custom header configuration file <p>*( Default: ./etc/http\_custom\_header.conf )*</p> |
 | `http.timeout_for_header`                 | HTTP timeout for reading header<p>*( Default: 5000, Unit: `msec`)*</p> |
 | `http.timeout_for_body`                   | HTTP timeout for reading body<p>*( Default: 15000, Unit: `msec`)*</p> |
+| `http.is_compatible_with_s3_content_type` | Whether or not the way to handle Content-Type header is compatible with aws-s3<p>*( Default: false )*</p> |
 | **Bucket Related**                        |
 | `bucket_prop_sync_interval`               | Synchronization Interval of Bucket Properties<p>*( Default: 300, Unit: `sec` )*</p> |
 | **NFS-related configurations**            |
