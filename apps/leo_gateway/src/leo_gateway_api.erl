@@ -75,6 +75,7 @@ get_node_status() ->
          {port, leo_misc:get_value('port', HttpProps, ?DEF_HTTP_PORT)},
          {ssl_port, leo_misc:get_value('ssl_port', HttpProps, ?DEF_HTTP_SSL_PORT)},
          {num_of_acceptors, leo_misc:get_value('num_of_acceptors', HttpProps, ?DEF_HTTP_NUM_OF_ACCEPTORS)},
+         {is_compatible_with_s3_content_type, leo_misc:get_value('is_compatible_with_s3_content_type', HttpProps, ?DEF_HTTP_IS_COMPATIBLE_WITH_AWS_S3_CONTENT_TYPE)},
          %% Cache-related
          {http_cache, leo_misc:get_value('http_cache', CacheProps, ?DEF_HTTP_CACHE)},
          {cache_workers, leo_misc:get_value('cache_workers', CacheProps, ?DEF_CACHE_WORKERS)},

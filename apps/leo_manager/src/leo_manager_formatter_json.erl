@@ -255,6 +255,7 @@ node_stat(?SERVER_TYPE_GATEWAY, State) ->
                   {<<"port">>,                     leo_misc:get_value('port',             HttpConf, 0)},
                   {<<"ssl_port">>,                 leo_misc:get_value('ssl_port',         HttpConf, 0)},
                   {<<"num_of_acceptors">>,         leo_misc:get_value('num_of_acceptors', HttpConf, 0)},
+                  {<<"is_compatible_with_s3_content_type">>, leo_misc:get_value('is_compatible_with_s3_content_type', HttpConf, false)},
                   {<<"http_cache">>,               leo_misc:any_to_binary(leo_misc:get_value('http_cache', HttpConf, ''))},
                   {<<"cache_workers">>,            leo_misc:get_value('cache_workers',            HttpConf, 0)},
                   {<<"cache_expire">>,             leo_misc:get_value('cache_expire',             HttpConf, 0)},

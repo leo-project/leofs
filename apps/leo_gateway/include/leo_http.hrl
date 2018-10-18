@@ -76,6 +76,7 @@
 -define(HTTP_HEAD_X_AMZ_META_DIRECTIVE_COPY,    <<"COPY">>).
 -define(HTTP_HEAD_X_AMZ_META_DIRECTIVE_REPLACE, <<"REPLACE">>).
 -define(HTTP_HEAD_X_AMZ_LEOFS_FROM_CACHE,       <<"x-amz-meta-leofs-from-cache">>).
+-define(HTTP_HEAD_X_AMZ_LEOFS_CONTENT_TYPE,     <<"x-amz-meta-leofs-content-type">>).
 -define(HTTP_HEAD_X_FROM_CACHE,                 <<"x-from-cache">>).
 
 
@@ -136,6 +137,7 @@
 -define(DEF_HTTP_TIMEOUT_FOR_HEADER,  5000).
 -define(DEF_HTTP_TIMEOUT_FOR_BODY,    15000).
 -define(DEF_HTTP_SEND_CHUNK_LEN,      5242880).
+-define(DEF_HTTP_IS_COMPATIBLE_WITH_AWS_S3_CONTENT_TYPE, false).
 -define(DEF_HTTP_CACHE,               false).
 -define(DEF_HTTP_MAX_KEEPALIVE,       1024).
 -define(DEF_CACHE_WORKERS,            64).
@@ -315,7 +317,13 @@
             {_, Val} ->
                 Val
         end).
-
+-define(http_x_amz_leofs_content_type(_H),
+        case lists:keyfind(?HTTP_HEAD_X_AMZ_LEOFS_CONTENT_TYPE,1,_H) of
+            false     ->
+                ?HTTP_CTYPE_OCTET_STREAM;
+            {_, Val} ->
+                Val
+        end).
 %% Special URLs
 -define(HTTP_SPECIAL_URL_HEALTH_CHECK, <<"_leofs_adm/ping">>).
 
@@ -549,6 +557,7 @@
           timeout_for_header           :: pos_integer(),  %% Timeout for reading header
           timeout_for_body             :: pos_integer(),  %% Timeout for reading body
           sending_chunked_obj_len = 0  :: pos_integer(),  %% sending chunk length
+          is_compatible_with_s3_content_type = false :: boolean(), %% Whether or not the way to handle Content-Type header is compatible with aws-s3
           %% for cache
           cache_method                 :: cache_method(), %% cahce method: [http | inner]
           cache_workers = 0            :: pos_integer(),  %% number of chache-fun's workers
@@ -589,6 +598,7 @@
           timeout_for_header         :: pos_integer(),          %% Timeout for reading header
           timeout_for_body           :: pos_integer(),          %% Timeout for reading body
           sending_chunked_obj_len    :: pos_integer(),          %% sending chunk length
+          is_compatible_with_s3_content_type = false :: boolean(), %% Whether or not the way to handle Content-Type header is compatible with aws-s3
           qs_prefix = <<>>           :: binary() | none,        %% query string
           range_header               :: string(),               %% range header
           custom_metadata = <<>>     :: binary(),

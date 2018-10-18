@@ -221,7 +221,8 @@ setup_s3_api() ->
 
     {ok, Options} = leo_gateway_app:get_options(),
     InitFun = fun() -> leo_gateway_http_commons:start(
-                         Options#http_options{port = 12345}) end,
+                         Options#http_options{port = 12345,
+                                              is_compatible_with_s3_content_type = true}) end,
     TermFun = fun() -> leo_gateway_s3_api:stop() end,
     setup(InitFun, TermFun).
 
@@ -233,7 +234,8 @@ setup_rest_api() ->
     {ok, Options} = leo_gateway_app:get_options(),
     InitFun = fun() -> leo_gateway_http_commons:start(
                          Options#http_options{handler = leo_gateway_rest_api,
-                                              port = 12345}) end,
+                                              port = 12345,
+                                              is_compatible_with_s3_content_type = true}) end,
     TermFun = fun() -> leo_gateway_rest_api:stop() end,
     setup(InitFun, TermFun).
 
@@ -618,6 +620,8 @@ get_object_normal1_([_TermFun, _Node0, Node1]) ->
                                                       ":12345/a/b.png"]), [{"Date", Date}, {"connection", "close"}]}, [], []),
                 ?assertEqual(200, SC),
                 ?assertEqual("body", Body),
+                ContentType = proplists:get_value("content-type", Headers),
+                ?assertEqual(true, ContentType =:= "application/octet-stream" orelse ContentType =:= "image/png"),
                 ?assertEqual(undefined, proplists:get_value("X-From-Cache", Headers))
             catch
                 throw:Reason ->
@@ -633,7 +637,7 @@ get_object_cmeta_normal1_([_TermFun, _Node0, Node1]) ->
             ok = rpc:call(Node1, meck, new,
                           [leo_storage_handler_object, [no_link, non_strict]]),
 
-            CMetaBin = term_to_binary([{<<"x-amz-meta-test">>, <<"custom metadata">>}]),
+            CMetaBin = term_to_binary([{<<"x-amz-meta-test">>, <<"custom metadata">>},{<<"x-amz-meta-leofs-content-type">>,<<"image/svg">>}]),
             ok = rpc:call(Node1, meck, expect,
                           [leo_storage_handler_object, get, 3,
                            {ok, #?METADATA{
@@ -665,6 +669,7 @@ get_object_cmeta_normal1_([_TermFun, _Node0, Node1]) ->
                                                       ":12345/a/b.png"]), [{"Date", Date}, {"connection", "close"}]}, [], []),
                 ?assertEqual(200, SC),
                 ?assertEqual("body", Body),
+                ?assertEqual("image/svg", proplists:get_value("content-type", Headers)),
                 ?assertEqual(undefined, proplists:get_value("X-From-Cache", Headers)),
                 ?assertEqual("custom metadata", proplists:get_value("x-amz-meta-test", Headers))
             catch

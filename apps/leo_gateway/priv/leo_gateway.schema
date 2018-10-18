@@ -243,6 +243,15 @@
   {default, 5242880}
  ]}.
 
+%% @doc The way to handle Contet-Type header
+{mapping,
+ "http.is_compatible_with_s3_content_type",
+ "leo_gateway.http.is_compatible_with_s3_content_type",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
 %% @doc Synchronized time of a bucket property (second)
 {mapping,
  "bucket_prop_sync_interval",
