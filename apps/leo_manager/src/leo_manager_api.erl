@@ -980,17 +980,22 @@ rebalance_1(_,[]) ->
 rebalance_1(true, Nodes) ->
     case assign_nodes_to_ring(Nodes) of
         ok ->
-            case is_allow_to_distribute_command() of
-                {true, _} ->
-                    case leo_redundant_manager_api:rebalance() of
-                        {ok, List} ->
-                            rebalance_2(dict:new(), List);
-                        {error, Cause} ->
-                            ?error("rebalance_1/2", [{cause, Cause}]),
-                            {error, ?ERROR_FAIL_REBALANCE}
-                    end;
-                {false, _} ->
-                    {error, ?ERROR_NOT_SATISFY_CONDITION}
+            case is_any_inconsistency_happening_in_cluster() of
+                true ->
+                    {error, ?ERROR_NOT_SATISFY_CONDITION};
+                false ->
+                    case is_allow_to_distribute_command() of
+                        {true, _} ->
+                            case leo_redundant_manager_api:rebalance() of
+                                {ok, List} ->
+                                    rebalance_2(dict:new(), List);
+                                {error, Cause} ->
+                                    ?error("rebalance_1/2", [{cause, Cause}]),
+                                    {error, ?ERROR_FAIL_REBALANCE}
+                            end;
+                        {false, _} ->
+                            {error, ?ERROR_NOT_SATISFY_CONDITION}
+                    end
             end;
         {error, Cause} ->
             ?error("rebalance_1/2", [{cause, Cause}]),
@@ -2577,12 +2582,18 @@ call_gateway_api(Method, Args) ->
              {ok, #?SYSTEM_CONF{}} | {error, any()}).
 %% @doc Convert System Conf from ~1.3.2 cluster
 join_cluster(RemoteManagerNodes, #system_conf_2{} = SystemConf) ->
-    case join_cluster(RemoteManagerNodes, leo_cluster_tbl_conf:transform(SystemConf)) of
-        {ok, #?SYSTEM_CONF{} = Conf} ->
-            {ok, leo_cluster_tbl_conf:transform_to_confv2(Conf)};
-        Others ->
-            Others
+    case is_any_inconsistency_happening_in_cluster() of
+        true ->
+            {error, ?ERROR_NOT_SATISFY_CONDITION};
+        false ->
+            case join_cluster(RemoteManagerNodes, leo_cluster_tbl_conf:transform(SystemConf)) of
+                {ok, #?SYSTEM_CONF{} = Conf} ->
+                    {ok, leo_cluster_tbl_conf:transform_to_confv2(Conf)};
+                Others ->
+                    Others
+            end
     end;
+
 join_cluster(RemoteManagerNodes,
              #?SYSTEM_CONF{cluster_id = ClusterId,
                            dc_id = DCId,
@@ -2664,11 +2675,16 @@ update_cluster_manager([Node|Rest], ClusterId) ->
 -spec(remove_cluster(ClusterId) ->
              ok | {error, any()} when ClusterId::atom()).
 remove_cluster(ClusterId) ->
-    %% Remove the local data of the specified cluster
-    remove_cluster_1([leo_mdcr_tbl_cluster_member,
-                      leo_mdcr_tbl_cluster_mgr,
-                      leo_mdcr_tbl_cluster_stat,
-                      leo_mdcr_tbl_cluster_info], ClusterId).
+    case is_any_inconsistency_happening_in_cluster() of
+        true ->
+            {error, ?ERROR_NOT_SATISFY_CONDITION};
+        false ->
+            %% Remove the local data of the specified cluster
+            remove_cluster_1([leo_mdcr_tbl_cluster_member,
+                              leo_mdcr_tbl_cluster_mgr,
+                              leo_mdcr_tbl_cluster_stat,
+                              leo_mdcr_tbl_cluster_info], ClusterId)
+    end.
 
 %% @private
 remove_cluster_1([],_ClusterId) ->
@@ -2731,6 +2747,25 @@ is_allow_to_distribute_command(Node) ->
             {false, []}
     end.
 
+-spec(is_any_inconsistency_happening_in_cluster() ->
+             boolean()).
+is_any_inconsistency_happening_in_cluster() ->
+    case active_storage_nodes() of
+        {ok, Members} ->
+            {ok, Chksums} = get_routing_table_chksum(),
+            Fun = fun(Node) ->
+                          case rpc:call(Node, ?API_STORAGE, get_routing_table_chksum, [], ?DEF_TIMEOUT) of
+                              {ok, Chksums} ->
+                                  false;
+                              _ ->
+                                  %% Having a different RING hash or being downed
+                                  true
+                          end
+                  end,
+            lists:any(Fun, Members);
+        _ ->
+            true
+    end.
 
 %% @doc Execute a function of a remote node (Gateway/Storage)
 %% @private
