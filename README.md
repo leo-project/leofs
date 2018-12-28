@@ -314,4 +314,5 @@ LeoFS is licensed under the Apache License, Version 2.0. See LICENSE for the ful
 
 ## Sponsors
 
-LeoProject/LeoFS is sponsored by [Rakuten, Inc.](http://global.rakuten.com/corp/) and supported by [Rakuten Institute of Technology](http://rit.rakuten.co.jp/).
+* [Lions Data, Inc.](https://lions-data.com)
+* [Rakuten, Inc.](http://global.rakuten.com/corp/)
