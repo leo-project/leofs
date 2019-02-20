@@ -1,6 +1,6 @@
 # <a href="http://leo-project.net/leofs/" target="_blank">LeoFS</a> - A Storage System for a <a href="https://en.wikipedia.org/wiki/Data_lake" target="_blank">Data Lake</a> and the Web
 
-[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.4.2-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.4.2) [![Build Status](https://travis-ci.org/leo-project/leofs.svg?branch=master)](http://travis-ci.org/leo-project/leofs)
+[![Join the chat at https://gitter.im/leo-project/leofs](https://badges.gitter.im/leo-project/leofs.svg)](https://gitter.im/leo-project/leofs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Release](https://img.shields.io/badge/release-v1.4.3-green.svg?style=flat)](https://github.com/leo-project/leofs/releases/tag/1.4.3) [![Build Status](https://travis-ci.org/leo-project/leofs.svg?branch=master)](http://travis-ci.org/leo-project/leofs)
 
 ![LeoFS Logo](https://leo-project.net/leofs/docs-old/_static/leofs-logo-small.png)
 
@@ -314,5 +314,5 @@ LeoFS is licensed under the Apache License, Version 2.0. See LICENSE for the ful
 
 ## Sponsors
 
-* [Lions Data, Inc.](https://lions-data.com)
-* [Rakuten, Inc.](http://global.rakuten.com/corp/)
+* January, 2019 - : [Lions Data, Ltd.](https://lions-data.com)
+* Februay, 2010 - December, 2018: [Rakuten, Inc.](http://global.rakuten.com/corp/)

@@ -1,4 +1,67 @@
 # CHANGELOG
+## 1.4.3 (February 20, 2019)
+### New Features
+
+* [#420](https://github.com/leo-project/leofs/issues/420) `S3-API` `leo_gateway` Support Compression during network transfers
+
+### Fixed Bugs
+
+* [#1082](https://github.com/leo-project/leofs/issues/1082) `leo_storage` Fail to start in case it receives `delete-(bucket|dir)` messages during its startup
+* [#1089](https://github.com/leo-project/leofs/issues/1089) `leo_gateway` No error log when setting an invalid IP of one of LeoManager nodes
+* [#1091](https://github.com/leo-project/leofs/issues/1091) `leo_storage` Rebalance get slow down when ingesting messages into `leo_rebalance_queue`
+* [#1093](https://github.com/leo-project/leofs/issues/1093) `leo_storage` No error log when setting an invalid IP of one of LeoManager nodes
+* [#1116](https://github.com/leo-project/leofs/issues/1116) `s3-api` `leo_gateway` Cyberduck not listen files - Fix LeoFS' S3-API
+* [#1133](https://github.com/leo-project/leofs/issues/1133) `s3-api` `leo_gateway` PUT Object tagging MUST be ignored
+
+
+### Improvements
+
+* [#965](https://github.com/leo-project/leofs/issues/965) `leo_manager` create|import-user can fail with records partially updated
+* [#1079](https://github.com/leo-project/leofs/issues/1079) `f_ring` Dump RING before changing it
+* [#1086](https://github.com/leo-project/leofs/issues/1086) `leo_storage` Setting a large `num_of_containers` causes leo_storage not to work properly
+* [#1090](https://github.com/leo-project/leofs/issues/1090) `leo_manager` `whereis` output can be wrong when the storage node is slow - Revise the format of `whereis` command's output
+* [#1094](https://github.com/leo-project/leofs/issues/1094) `leo_gateway` Reading a file through s3fs can fail
+* [#1103](https://github.com/leo-project/leofs/issues/1103) `leo_gateway` `rest-api` GET with the Range header doesn't work
+* [#1123](https://github.com/leo-project/leofs/issues/1123) `snmp` `leo_storage` SNMP don't return `leo_per_object_queue`
+* [#1130](https://github.com/leo-project/leofs/issues/1130) `leofs` Make it work with OTP 21
+* [#1152](https://github.com/leo-project/leofs/issues/1152) `leo_manager` Prohibit any operations which change the cluster status while the RING inconsistency happens
+
+
+### Libraries
+#### Leo Project
+
+* [leo_backend_db v1.2.30](https://github.com/leo-project/leo_backend_db/releases/tag/1.2.30)
+* [leo_cache v0.8.12](https://github.com/leo-project/leo_cache/releases/tag/0.8.12)
+* [leo_commons v1.2.1](https://github.com/leo-project/leo_commons/releases/tag/1.2.1)
+* [leo_dcerl v0.4.10](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.10)
+* [leo_logger v1.3.8](https://github.com/leo-project/leo_logger/releases/tag/1.3.8)
+* [leo_mcerl v0.6.8](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.8)
+* [leo_mq v1.5.19](https://github.com/leo-project/leo_mq/releases/tag/1.5.19)
+* [leo_object_storage v1.3.38](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.38)
+* [leo_ordning_reda v1.2.11](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.11)
+* [leo_pod v0.6.10](https://github.com/leo-project/leo_pod/releases/tag/0.6.10)
+* [leo_redundant_manager 1.9.64](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.64)
+* [leo_rpc v0.10.17](https://github.com/leo-project/leo_rpc/releases/tag/0.10.17)
+* [leo_s3_libs v1.2.21](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.21)
+* [leo_statistics v1.1.23](https://github.com/leo-project/leo_statistics/releases/tag/1.1.23)
+* [leo_tran v0.2.13](https://github.com/leo-project/leo_tran/releases/tag/0.2.13)
+* [leo_watchdog v1.0.7](https://github.com/leo-project/leo_watchdog/releases/tag/1.0.7)
+* [savanna_agent v0.4.26](https://github.com/leo-project/savanna_agent/releases/tag/0.4.26)
+* [savanna_commons v0.10.12](https://github.com/leo-project/savanna_commons/releases/tag/0.10.12)
+* [erpcgen v0.2.7](https://github.com/leo-project/erpcgen/releases/tag/0.2.7)
+* [nfs_rpc_server v0.2.7](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.7)
+
+#### Others
+
+* [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
+* [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+* [elarm (ESL)](https://github.com/esl/elarm/commit/5885c906cb7c248f233b90b83f6b910b7b1d293b)
+* [eleveldb v2.0.37](https://github.com/basho/eleveldb/releases/tag/2.0.37)
+* [folsom v0.8.2.3](https://github.com/leo-project/folsom/releases/tag/0.8.2.3)
+* [jiffy v0.15.2](https://github.com/davisp/jiffy/releases/tag/0.15.2)
+* [recon v2.3.1](https://github.com/ferd/recon/releases/tag/2.3.1)
+
+
 ## 1.4.2 (July 19, 2018)
 ### Fixed Bugs
 
