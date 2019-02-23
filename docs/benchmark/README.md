@@ -1,19 +1,15 @@
 # Benchmark
-## Setting up basho_bench
+## Setting up LeoFS Bench
 ### Installation
 
-* [Basho basho_bench’s repository](https://github.com/basho/basho_bench)
-* [Basho basho_bench’s documentation](https://docs.basho.com/riak/kv/2.2.0/using/performance/benchmarking/)
-* Use the following commands to set up basho_bench.
+* [LeoFS Bench's repository](https://github.com/leo-project/leofs_bench)
+* Use the following commands to set up leofs_bench.
 
 
 ```bash
-$ git clone git://github.com/basho/basho_bench.git
-$ git clone https://github.com/leo-project/leofs.git
-$ cd basho_bench
-$ cp -i ../leofs/test/src/*.erl src/
-$ cp -i ../leofs/test/include/*.hrl include/
-$ make all
+$ git clone git://github.com/leo-project/leofs_bench.git
+$ cd leofs_bench
+$ make
 ```
 
 ### Preparations before testing
@@ -37,17 +33,17 @@ $ leofs-adm update-acl test 05236 public-read
 OK
 ```
 
-## Configuration file for basho_bench
+## Configuration file for leofs_bench
 ### An Example
 
-Some examples are included in LeoFS' repository at [leo-project / leofs / test / conf](https://github.com/leo-project/leofs/tree/master/test/conf). If you would like to learn basho_bench's configuration, you can see [BashoBench's Configuration](https://docs.basho.com/riak/kv/2.2.0/using/performance/benchmarking/#configuration).
+Some examples are included in LeoFS' repository at [leo-project / leofs / test / conf](https://github.com/leo-project/leofs/tree/master/test/conf). If you would like to learn leofs_bench's configuration.
 
 ```erlang
 {mode,      max}.
 {duration,   10}.
 {concurrent, 50}.
 
-{driver, basho_bench_driver_leofs}.
+{driver, leofs_bench_driver_leofs}.
 {code_paths, ["deps/ibrowse"]}.
 
 {http_raw_ips, ["${HOST_NAME_OF_LEOFS_GATEWAY}"]}.
@@ -73,24 +69,24 @@ Some examples are included in LeoFS' repository at [leo-project / leofs / test /
 | check_integrity (default:false)  | Check integrity of registered object - compare an original MD5 with a retrieved object’s MD5 (Only for developers)|
 
 
-## Running basho_bench (1)
+## Running leofs_bench (1)
 
-In this example, LeoFS and `basho_bench` are installed locally. The following commands can be used to run `basho_bench`.
+In this example, LeoFS and `leofs_bench` are installed locally. The following commands can be used to run `leofs_bench`.
 
 ```bash
 ### Loading 1M records of size 16KB
-cd basho_bench
-./basho_bench ../leofs/test/conf/leofs_16K_LOAD1M.config
+cd leofs_bench
+./leofs_bench ../leofs/test/conf/leofs_16K_LOAD1M.config
 ```
 
 
-## Running basho_bench (2)
+## Running leofs_bench (2)
 
-In this example, LeoFS and `basho_bench` are installed on different hosts.
+In this example, LeoFS and `leofs_bench` are installed on different hosts.
 
 ### Configure the endpoint on LeoManager's console
 
-Allows basho_bench’s requests to reach `${HOST_NAME_OF_LEOFS_GATEWAY}`.
+Allows leofs_bench’s requests to reach `${HOST_NAME_OF_LEOFS_GATEWAY}`.
 
 ```bash
 $ leofs-adm add-endpoint <host-name-of-leofs-gateway>
@@ -114,7 +110,7 @@ You need to modify the values for `http_raw_ips` and `http_raw_port`.
 {duration,   10}.
 {concurrent, 50}.
 
-{driver, basho_bench_driver_leofs}.
+{driver, leofs_bench_driver_leofs}.
 {code_paths, ["deps/ibrowse"]}.
 
 {http_raw_ips, ["${HOST_NAME_OF_LEOFS_GATEWAY}"]}. %% able to set plural nodes
@@ -130,12 +126,12 @@ You need to modify the values for `http_raw_ips` and `http_raw_port`.
 {check_integrity, false}.
 ```
 
-### Running basho_bench
+### Running leofs_bench
 
 ```bash
 ### Loading 1M records each size is 16KB
-cd basho_bench
-./basho_bench ../leofs/test/conf/leofs_16K_LOAD1M.config
+cd leofs_bench
+./leofs_bench ../leofs/test/conf/leofs_16K_LOAD1M.config
 ```
 
 ## Related Links
