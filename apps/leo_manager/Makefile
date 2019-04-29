@@ -13,7 +13,6 @@ all: deps compile xref eunit
 deps:
 	@$(REBAR) get-deps
 compile:
-	$(SHELL) -c ./replace_otp_vsn.sh
 	@$(REBAR) compile
 xref:
 	@$(REBAR) xref skip_deps=true
