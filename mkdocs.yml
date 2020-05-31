@@ -21,17 +21,17 @@ docs_dir: 'docs'
 theme: 'material'
 markdown_extensions:
     - admonition
-    - codehilite(linenums=true)
+    - codehilite
     - footnotes
     - meta
-    - toc(permalink=true)
-    - pymdownx.betterem(smart_enable=all)
+    - toc
+    - pymdownx.betterem
     - pymdownx.caret
     - pymdownx.critic
     - pymdownx.inlinehilite
     - pymdownx.magiclink
     - pymdownx.mark
-    - pymdownx.tasklist(custom_checkbox=true)
+    - pymdownx.tasklist
     - pymdownx.tilde
 
 pages:
