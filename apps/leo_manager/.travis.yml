@@ -5,4 +5,5 @@ notifications:
 otp_release:
   - 19.3
   - 20.3
-  - 21.0
+  - 21.3
+  - 22.2
