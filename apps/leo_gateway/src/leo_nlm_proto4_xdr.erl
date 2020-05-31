@@ -30,9 +30,9 @@ enc_netobj(_1) ->
         _2 = io_list_len(_1),
         if
             _2 =< 1024 ->
-                [<<_2:32/unsigned>>,_1,enc_align(_2)];
+                [<<_2:32/unsigned>>, _1, enc_align(_2)];
             true ->
-                exit({xdr,limit})
+                exit({xdr, limit})
         end
     end.
 
@@ -41,11 +41,11 @@ dec_netobj(_1, _2) ->
         <<_:_2/binary,_3:32/unsigned,_/binary>> = _1,
         if
             _3 > 1024 ->
-                exit({xdr,limit});
+                exit({xdr, limit});
             true ->
                 _4 = _2 + 4,
                 <<_:_4/binary,_5:_3/binary,_/binary>> = _1,
-                {_5,_4 + align(_3)}
+                {_5, _4 + align(_3)}
         end
     end.
 
@@ -55,7 +55,7 @@ enc_uint64(_1) ->
 dec_uint64(_1, _2) ->
     begin
         <<_:_2/binary,_3:64/unsigned,_/binary>> = _1,
-        {_3,_2 + 8}
+        {_3, _2 + 8}
     end.
 
 enc_int64(_1) ->
@@ -64,7 +64,7 @@ enc_int64(_1) ->
 dec_int64(_1, _2) ->
     begin
         <<_:_2/binary,_3:64/signed,_/binary>> = _1,
-        {_3,_2 + 8}
+        {_3, _2 + 8}
     end.
 
 enc_uint33(_1) ->
@@ -73,7 +73,7 @@ enc_uint33(_1) ->
 dec_uint33(_1, _2) ->
     begin
         <<_:_2/binary,_3:32/unsigned,_/binary>> = _1,
-        {_3,_2 + 4}
+        {_3, _2 + 4}
     end.
 
 enc_int32(_1) ->
@@ -82,7 +82,7 @@ enc_int32(_1) ->
 dec_int32(_1, _2) ->
     begin
         <<_:_2/binary,_3:32/signed,_/binary>> = _1,
-        {_3,_2 + 4}
+        {_3, _2 + 4}
     end.
 
 enc_nlm4_stats(_1) ->
@@ -114,25 +114,25 @@ dec_nlm4_stats(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             0 ->
-                {'NLM4_GRANTED',_2 + 4};
+                {'NLM4_GRANTED', _2 + 4};
             1 ->
-                {'NLM4_DENIED',_2 + 4};
+                {'NLM4_DENIED', _2 + 4};
             2 ->
-                {'NLM4_DENIED_NOLOCKS',_2 + 4};
+                {'NLM4_DENIED_NOLOCKS', _2 + 4};
             3 ->
-                {'NLM4_BLOCKED',_2 + 4};
+                {'NLM4_BLOCKED', _2 + 4};
             4 ->
-                {'NLM4_DENIED_GRACE_PERIOD',_2 + 4};
+                {'NLM4_DENIED_GRACE_PERIOD', _2 + 4};
             5 ->
-                {'NLM4_DEADLCK',_2 + 4};
+                {'NLM4_DEADLCK', _2 + 4};
             6 ->
-                {'NLM4_ROFS',_2 + 4};
+                {'NLM4_ROFS', _2 + 4};
             7 ->
-                {'NLM4_STALE_FH',_2 + 4};
+                {'NLM4_STALE_FH', _2 + 4};
             8 ->
-                {'NLM4_FBIG',_2 + 4};
+                {'NLM4_FBIG', _2 + 4};
             9 ->
-                {'NLM4_FAILED',_2 + 4}
+                {'NLM4_FAILED', _2 + 4}
         end
     end.
 
@@ -162,7 +162,7 @@ dec_nlm4_stats_i2a(_4) ->
 
 enc_nlm4_holder(_1) ->
     case _1 of
-        {_6,_5,_4,_3,_2} ->
+        {_6, _5, _4, _3, _2} ->
             [if
                  _6 == true ->
                      <<1:32>>;
@@ -190,16 +190,16 @@ dec_nlm4_holder(_1, _2) ->
             end,
             _4 = _2 + 4
         end,
-        {_6,_7} = dec_int32(_1, _4),
-        {_8,_9} = dec_netobj(_1, _7),
-        {_10,_11} = dec_uint64(_1, _9),
-        {_12,_13} = dec_uint64(_1, _11),
-        {{_3,_6,_8,_10,_12},_13}
+        {_6, _7} = dec_int32(_1, _4),
+        {_8, _9} = dec_netobj(_1, _7),
+        {_10, _11} = dec_uint64(_1, _9),
+        {_12, _13} = dec_uint64(_1, _11),
+        {{_3, _6, _8, _10, _12}, _13}
     end.
 
 enc_nlm4_testrply(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nlm4_stats(_2),
              case _2 of
                  'NLM4_DENIED' ->
@@ -215,12 +215,12 @@ dec_nlm4_testrply(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_nlm4_holder(_1, _6),
-                {{'NLM4_DENIED',_4},_5};
+                {_4, _5} = dec_nlm4_holder(_1, _6),
+                {{'NLM4_DENIED', _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
+                {_4, _5} = {void, _6},
                 _7 = dec_nlm4_stats_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -232,46 +232,46 @@ enc_nlm4_stat(_1) ->
 
 dec_nlm4_stat(_1, _2) ->
     begin
-        {_3,_4} = dec_nlm4_stats(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_nlm4_stats(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_nlm4_res(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_netobj(_3),enc_nlm4_stat(_2)]
+        {_3, _2} ->
+            [enc_netobj(_3), enc_nlm4_stat(_2)]
     end.
 
 dec_nlm4_res(_1, _2) ->
     begin
-        {_3,_4} = dec_netobj(_1, _2),
-        {_5,_6} = dec_nlm4_stat(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_netobj(_1, _2),
+        {_5, _6} = dec_nlm4_stat(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_nlm4_testres(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_netobj(_3),enc_nlm4_testrply(_2)]
+        {_3, _2} ->
+            [enc_netobj(_3), enc_nlm4_testrply(_2)]
     end.
 
 dec_nlm4_testres(_1, _2) ->
     begin
-        {_3,_4} = dec_netobj(_1, _2),
-        {_5,_6} = dec_nlm4_testrply(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_netobj(_1, _2),
+        {_5, _6} = dec_nlm4_testrply(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_nlm4_lock(_1) ->
     case _1 of
-        {_7,_6,_5,_4,_3,_2} ->
+        {_7, _6, _5, _4, _3, _2} ->
             [begin
                  _8 = io_list_len(_7),
                  if
                      _8 =< 1024 ->
-                         [<<_8:32/unsigned>>,_7,enc_align(_8)];
+                         [<<_8:32/unsigned>>, _7, enc_align(_8)];
                      true ->
-                         exit({xdr,limit})
+                         exit({xdr, limit})
                  end
              end,
              enc_netobj(_6),
@@ -283,29 +283,29 @@ enc_nlm4_lock(_1) ->
 
 dec_nlm4_lock(_1, _2) ->
     begin
-        {_3,_4} =
+        {_3, _4} =
             begin
                 <<_:_2/binary,_5:32/unsigned,_/binary>> = _1,
                 if
                     _5 > 1024 ->
-                        exit({xdr,limit});
+                        exit({xdr, limit});
                     true ->
                         _6 = _2 + 4,
                         <<_:_6/binary,_7:_5/binary,_/binary>> = _1,
-                        {_7,_6 + align(_5)}
+                        {_7, _6 + align(_5)}
                 end
             end,
-        {_8,_9} = dec_netobj(_1, _4),
-        {_10,_11} = dec_netobj(_1, _9),
-        {_12,_13} = dec_int32(_1, _11),
-        {_14,_15} = dec_uint64(_1, _13),
-        {_16,_17} = dec_uint64(_1, _15),
-        {{_3,_8,_10,_12,_14,_16},_17}
+        {_8, _9} = dec_netobj(_1, _4),
+        {_10, _11} = dec_netobj(_1, _9),
+        {_12, _13} = dec_int32(_1, _11),
+        {_14, _15} = dec_uint64(_1, _13),
+        {_16, _17} = dec_uint64(_1, _15),
+        {{_3, _8, _10, _12, _14, _16}, _17}
     end.
 
 enc_nlm4_lockargs(_1) ->
     case _1 of
-        {_7,_6,_5,_4,_3,_2} ->
+        {_7, _6, _5, _4, _3, _2} ->
             [enc_netobj(_7),
              if
                  _6 == true ->
@@ -331,7 +331,7 @@ enc_nlm4_lockargs(_1) ->
 
 dec_nlm4_lockargs(_1, _2) ->
     begin
-        {_3,_4} = dec_netobj(_1, _2),
+        {_3, _4} = dec_netobj(_1, _2),
         begin
             begin
                 <<_:_4/binary,_7:32/unsigned,_/binary>> = _1,
@@ -358,7 +358,7 @@ dec_nlm4_lockargs(_1, _2) ->
             end,
             _9 = _6 + 4
         end,
-        {_11,_12} = dec_nlm4_lock(_1, _9),
+        {_11, _12} = dec_nlm4_lock(_1, _9),
         begin
             begin
                 <<_:_12/binary,_15:32/unsigned,_/binary>> = _1,
@@ -376,12 +376,12 @@ dec_nlm4_lockargs(_1, _2) ->
             <<_:_14/binary,_16:32/signed,_/binary>> = _1,
             _17 = _14 + 4
         end,
-        {{_3,_5,_8,_11,_13,_16},_17}
+        {{_3, _5, _8, _11, _13, _16}, _17}
     end.
 
 enc_nlm4_cancargs(_1) ->
     case _1 of
-        {_5,_4,_3,_2} ->
+        {_5, _4, _3, _2} ->
             [enc_netobj(_5),
              if
                  _4 == true ->
@@ -400,7 +400,7 @@ enc_nlm4_cancargs(_1) ->
 
 dec_nlm4_cancargs(_1, _2) ->
     begin
-        {_3,_4} = dec_netobj(_1, _2),
+        {_3, _4} = dec_netobj(_1, _2),
         begin
             begin
                 <<_:_4/binary,_7:32/unsigned,_/binary>> = _1,
@@ -427,13 +427,13 @@ dec_nlm4_cancargs(_1, _2) ->
             end,
             _9 = _6 + 4
         end,
-        {_11,_12} = dec_nlm4_lock(_1, _9),
-        {{_3,_5,_8,_11},_12}
+        {_11, _12} = dec_nlm4_lock(_1, _9),
+        {{_3, _5, _8, _11}, _12}
     end.
 
 enc_nlm4_testargs(_1) ->
     case _1 of
-        {_4,_3,_2} ->
+        {_4, _3, _2} ->
             [enc_netobj(_4),
              if
                  _3 == true ->
@@ -446,7 +446,7 @@ enc_nlm4_testargs(_1) ->
 
 dec_nlm4_testargs(_1, _2) ->
     begin
-        {_3,_4} = dec_netobj(_1, _2),
+        {_3, _4} = dec_netobj(_1, _2),
         begin
             begin
                 <<_:_4/binary,_7:32/unsigned,_/binary>> = _1,
@@ -460,21 +460,21 @@ dec_nlm4_testargs(_1, _2) ->
             end,
             _6 = _4 + 4
         end,
-        {_8,_9} = dec_nlm4_lock(_1, _6),
-        {{_3,_5,_8},_9}
+        {_8, _9} = dec_nlm4_lock(_1, _6),
+        {{_3, _5, _8}, _9}
     end.
 
 enc_nlm4_unlockargs(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_netobj(_3),enc_nlm4_lock(_2)]
+        {_3, _2} ->
+            [enc_netobj(_3), enc_nlm4_lock(_2)]
     end.
 
 dec_nlm4_unlockargs(_1, _2) ->
     begin
-        {_3,_4} = dec_netobj(_1, _2),
-        {_5,_6} = dec_nlm4_lock(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_netobj(_1, _2),
+        {_5, _6} = dec_nlm4_lock(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_fsh4_mode(_1) ->
@@ -494,13 +494,13 @@ dec_fsh4_mode(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             0 ->
-                {fsm_DN,_2 + 4};
+                {fsm_DN, _2 + 4};
             1 ->
-                {fsm_DR,_2 + 4};
+                {fsm_DR, _2 + 4};
             2 ->
-                {fsm_DW,_2 + 4};
+                {fsm_DW, _2 + 4};
             3 ->
-                {fsm_DRW,_2 + 4}
+                {fsm_DRW, _2 + 4}
         end
     end.
 
@@ -533,13 +533,13 @@ dec_fsh4_access(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             0 ->
-                {fsa_NONE,_2 + 4};
+                {fsa_NONE, _2 + 4};
             1 ->
-                {fsa_R,_2 + 4};
+                {fsa_R, _2 + 4};
             2 ->
-                {fsa_W,_2 + 4};
+                {fsa_W, _2 + 4};
             3 ->
-                {fsa_RW,_2 + 4}
+                {fsa_RW, _2 + 4}
         end
     end.
 
@@ -557,14 +557,14 @@ dec_fsh4_access_i2a(_4) ->
 
 enc_nlm4_share(_1) ->
     case _1 of
-        {_6,_5,_4,_3,_2} ->
+        {_6, _5, _4, _3, _2} ->
             [begin
                  _7 = io_list_len(_6),
                  if
                      _7 =< 1024 ->
-                         [<<_7:32/unsigned>>,_6,enc_align(_7)];
+                         [<<_7:32/unsigned>>, _6, enc_align(_7)];
                      true ->
-                         exit({xdr,limit})
+                         exit({xdr, limit})
                  end
              end,
              enc_netobj(_5),
@@ -575,28 +575,28 @@ enc_nlm4_share(_1) ->
 
 dec_nlm4_share(_1, _2) ->
     begin
-        {_3,_4} =
+        {_3, _4} =
             begin
                 <<_:_2/binary,_5:32/unsigned,_/binary>> = _1,
                 if
                     _5 > 1024 ->
-                        exit({xdr,limit});
+                        exit({xdr, limit});
                     true ->
                         _6 = _2 + 4,
                         <<_:_6/binary,_7:_5/binary,_/binary>> = _1,
-                        {_7,_6 + align(_5)}
+                        {_7, _6 + align(_5)}
                 end
             end,
-        {_8,_9} = dec_netobj(_1, _4),
-        {_10,_11} = dec_netobj(_1, _9),
-        {_12,_13} = dec_fsh4_mode(_1, _11),
-        {_14,_15} = dec_fsh4_access(_1, _13),
-        {{_3,_8,_10,_12,_14},_15}
+        {_8, _9} = dec_netobj(_1, _4),
+        {_10, _11} = dec_netobj(_1, _9),
+        {_12, _13} = dec_fsh4_mode(_1, _11),
+        {_14, _15} = dec_fsh4_access(_1, _13),
+        {{_3, _8, _10, _12, _14}, _15}
     end.
 
 enc_nlm4_shareargs(_1) ->
     case _1 of
-        {_4,_3,_2} ->
+        {_4, _3, _2} ->
             [enc_netobj(_4),
              enc_nlm4_share(_3),
              if
@@ -609,8 +609,8 @@ enc_nlm4_shareargs(_1) ->
 
 dec_nlm4_shareargs(_1, _2) ->
     begin
-        {_3,_4} = dec_netobj(_1, _2),
-        {_5,_6} = dec_nlm4_share(_1, _4),
+        {_3, _4} = dec_netobj(_1, _2),
+        {_5, _6} = dec_nlm4_share(_1, _4),
         begin
             begin
                 <<_:_6/binary,_9:32/unsigned,_/binary>> = _1,
@@ -624,36 +624,36 @@ dec_nlm4_shareargs(_1, _2) ->
             end,
             _8 = _6 + 4
         end,
-        {{_3,_5,_7},_8}
+        {{_3, _5, _7}, _8}
     end.
 
 enc_nlm4_shareres(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_netobj(_4),enc_nlm4_stats(_3),<<_2:32>>]
+        {_4, _3, _2} ->
+            [enc_netobj(_4), enc_nlm4_stats(_3), <<_2:32>>]
     end.
 
 dec_nlm4_shareres(_1, _2) ->
     begin
-        {_3,_4} = dec_netobj(_1, _2),
-        {_5,_6} = dec_nlm4_stats(_1, _4),
+        {_3, _4} = dec_netobj(_1, _2),
+        {_5, _6} = dec_nlm4_stats(_1, _4),
         begin
             <<_:_6/binary,_7:32/signed,_/binary>> = _1,
             _8 = _6 + 4
         end,
-        {{_3,_5,_7},_8}
+        {{_3, _5, _7}, _8}
     end.
 
 enc_nlm4_notify(_1) ->
     case _1 of
-        {_3,_2} ->
+        {_3, _2} ->
             [begin
                  _4 = io_list_len(_3),
                  if
                      _4 =< 1025 ->
-                         [<<_4:32/unsigned>>,_3,enc_align(_4)];
+                         [<<_4:32/unsigned>>, _3, enc_align(_4)];
                      true ->
-                         exit({xdr,limit})
+                         exit({xdr, limit})
                  end
              end,
              <<_2:32>>]
@@ -661,23 +661,23 @@ enc_nlm4_notify(_1) ->
 
 dec_nlm4_notify(_1, _2) ->
     begin
-        {_3,_4} =
+        {_3, _4} =
             begin
                 <<_:_2/binary,_5:32/unsigned,_/binary>> = _1,
                 if
                     _5 > 1025 ->
-                        exit({xdr,limit});
+                        exit({xdr, limit});
                     true ->
                         _6 = _2 + 4,
                         <<_:_6/binary,_7:_5/binary,_/binary>> = _1,
-                        {_7,_6 + align(_5)}
+                        {_7, _6 + align(_5)}
                 end
             end,
         begin
             <<_:_4/binary,_8:32/signed,_/binary>> = _1,
             _9 = _4 + 4
         end,
-        {{_3,_8},_9}
+        {{_3, _8}, _9}
     end.
 
 io_list_len(L) -> io_list_len(L, 0).

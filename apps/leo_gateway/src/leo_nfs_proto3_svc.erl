@@ -28,20 +28,19 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
             case
                 catch leo_nfs_proto3_server:nfsproc3_null_3(Clnt, State)
             of
-                {reply,_Res,NState} ->
-                    {success,[],NState};
+                {reply, _Res, NState} ->
+                    {success, [], NState};
                 Else ->
                     Else
             end;
         1 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_getattr3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_getattr3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_getattr_3(_1,
-                                                             Clnt,
+                    leo_nfs_proto3_server:nfsproc3_getattr_3(_1, Clnt,
                                                              State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_getattr3res(_Res),
                      NState};
@@ -49,14 +48,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         2 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_setattr3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_setattr3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_setattr_3(_1,
-                                                             Clnt,
+                    leo_nfs_proto3_server:nfsproc3_setattr_3(_1, Clnt,
                                                              State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_setattr3res(_Res),
                      NState};
@@ -64,14 +62,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         3 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_lookup3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_lookup3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_lookup_3(_1,
-                                                            Clnt,
+                    leo_nfs_proto3_server:nfsproc3_lookup_3(_1, Clnt,
                                                             State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_lookup3res(_Res),
                      NState};
@@ -79,14 +76,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         4 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_access3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_access3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_access_3(_1,
-                                                            Clnt,
+                    leo_nfs_proto3_server:nfsproc3_access_3(_1, Clnt,
                                                             State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_access3res(_Res),
                      NState};
@@ -94,14 +90,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         5 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_readlink3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_readlink3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_readlink_3(_1,
-                                                              Clnt,
+                    leo_nfs_proto3_server:nfsproc3_readlink_3(_1, Clnt,
                                                               State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_readlink3res(_Res),
                      NState};
@@ -109,14 +104,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         6 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_read3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_read3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_read_3(_1,
-                                                          Clnt,
+                    leo_nfs_proto3_server:nfsproc3_read_3(_1, Clnt,
                                                           State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_read3res(_Res),
                      NState};
@@ -124,14 +118,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         7 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_write3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_write3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_write_3(_1,
-                                                           Clnt,
+                    leo_nfs_proto3_server:nfsproc3_write_3(_1, Clnt,
                                                            State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_write3res(_Res),
                      NState};
@@ -139,14 +132,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         8 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_create3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_create3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_create_3(_1,
-                                                            Clnt,
+                    leo_nfs_proto3_server:nfsproc3_create_3(_1, Clnt,
                                                             State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_create3res(_Res),
                      NState};
@@ -154,14 +146,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         9 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_mkdir3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_mkdir3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_mkdir_3(_1,
-                                                           Clnt,
+                    leo_nfs_proto3_server:nfsproc3_mkdir_3(_1, Clnt,
                                                            State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_mkdir3res(_Res),
                      NState};
@@ -169,14 +160,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         10 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_symlink3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_symlink3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_symlink_3(_1,
-                                                             Clnt,
+                    leo_nfs_proto3_server:nfsproc3_symlink_3(_1, Clnt,
                                                              State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_symlink3res(_Res),
                      NState};
@@ -184,14 +174,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         11 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_mknod3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_mknod3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_mknod_3(_1,
-                                                           Clnt,
+                    leo_nfs_proto3_server:nfsproc3_mknod_3(_1, Clnt,
                                                            State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_mknod3res(_Res),
                      NState};
@@ -199,14 +188,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         12 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_remove3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_remove3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_remove_3(_1,
-                                                            Clnt,
+                    leo_nfs_proto3_server:nfsproc3_remove_3(_1, Clnt,
                                                             State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_remove3res(_Res),
                      NState};
@@ -214,14 +202,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         13 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_rmdir3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_rmdir3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_rmdir_3(_1,
-                                                           Clnt,
+                    leo_nfs_proto3_server:nfsproc3_rmdir_3(_1, Clnt,
                                                            State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_rmdir3res(_Res),
                      NState};
@@ -229,14 +216,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         14 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_rename3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_rename3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_rename_3(_1,
-                                                            Clnt,
+                    leo_nfs_proto3_server:nfsproc3_rename_3(_1, Clnt,
                                                             State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_rename3res(_Res),
                      NState};
@@ -244,14 +230,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         15 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_link3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_link3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_link_3(_1,
-                                                          Clnt,
+                    leo_nfs_proto3_server:nfsproc3_link_3(_1, Clnt,
                                                           State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_link3res(_Res),
                      NState};
@@ -259,14 +244,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         16 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_readdir3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_readdir3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_readdir_3(_1,
-                                                             Clnt,
+                    leo_nfs_proto3_server:nfsproc3_readdir_3(_1, Clnt,
                                                              State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_readdir3res(_Res),
                      NState};
@@ -274,7 +258,7 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         17 ->
-            {_1,_2} =
+            {_1, _2} =
                 leo_nfs_proto3_xdr:dec_readdirplus3args(Bin, Offset),
             case
                 catch
@@ -282,7 +266,7 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                                                                  Clnt,
                                                                  State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_readdirplus3res(_Res),
                      NState};
@@ -290,14 +274,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         18 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_fsstat3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_fsstat3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_fsstat_3(_1,
-                                                            Clnt,
+                    leo_nfs_proto3_server:nfsproc3_fsstat_3(_1, Clnt,
                                                             State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_fsstat3res(_Res),
                      NState};
@@ -305,14 +288,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         19 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_fsinfo3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_fsinfo3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_fsinfo_3(_1,
-                                                            Clnt,
+                    leo_nfs_proto3_server:nfsproc3_fsinfo_3(_1, Clnt,
                                                             State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_fsinfo3res(_Res),
                      NState};
@@ -320,14 +302,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         20 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_pathconf3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_pathconf3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_pathconf_3(_1,
-                                                              Clnt,
+                    leo_nfs_proto3_server:nfsproc3_pathconf_3(_1, Clnt,
                                                               State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_pathconf3res(_Res),
                      NState};
@@ -335,14 +316,13 @@ nfs3_program_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         21 ->
-            {_1,_2} = leo_nfs_proto3_xdr:dec_commit3args(Bin, Offset),
+            {_1, _2} = leo_nfs_proto3_xdr:dec_commit3args(Bin, Offset),
             case
                 catch
-                    leo_nfs_proto3_server:nfsproc3_commit_3(_1,
-                                                            Clnt,
+                    leo_nfs_proto3_server:nfsproc3_commit_3(_1, Clnt,
                                                             State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_proto3_xdr:enc_commit3res(_Res),
                      NState};

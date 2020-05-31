@@ -29,20 +29,19 @@ mountprog_3(Proc, Bin, Offset, Clnt, State) ->
                 catch
                     leo_nfs_mount3_server:mountproc_null_3(Clnt, State)
             of
-                {reply,_Res,NState} ->
-                    {success,[],NState};
+                {reply, _Res, NState} ->
+                    {success, [], NState};
                 Else ->
                     Else
             end;
         1 ->
-            {_1,_2} = leo_nfs_mount3_xdr:dec_dirpath(Bin, Offset),
+            {_1, _2} = leo_nfs_mount3_xdr:dec_dirpath(Bin, Offset),
             case
                 catch
-                    leo_nfs_mount3_server:mountproc_mnt_3(_1,
-                                                          Clnt,
+                    leo_nfs_mount3_server:mountproc_mnt_3(_1, Clnt,
                                                           State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_mount3_xdr:enc_mountres3(_Res),
                      NState};
@@ -54,7 +53,7 @@ mountprog_3(Proc, Bin, Offset, Clnt, State) ->
                 catch
                     leo_nfs_mount3_server:mountproc_dump_3(Clnt, State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_mount3_xdr:enc_mountbody(_Res),
                      NState};
@@ -62,15 +61,14 @@ mountprog_3(Proc, Bin, Offset, Clnt, State) ->
                     Else
             end;
         3 ->
-            {_1,_2} = leo_nfs_mount3_xdr:dec_dirpath(Bin, Offset),
+            {_1, _2} = leo_nfs_mount3_xdr:dec_dirpath(Bin, Offset),
             case
                 catch
-                    leo_nfs_mount3_server:mountproc_umnt_3(_1,
-                                                           Clnt,
+                    leo_nfs_mount3_server:mountproc_umnt_3(_1, Clnt,
                                                            State)
             of
-                {reply,_Res,NState} ->
-                    {success,[],NState};
+                {reply, _Res, NState} ->
+                    {success, [], NState};
                 Else ->
                     Else
             end;
@@ -80,8 +78,8 @@ mountprog_3(Proc, Bin, Offset, Clnt, State) ->
                     leo_nfs_mount3_server:mountproc_umntall_3(Clnt,
                                                               State)
             of
-                {reply,_Res,NState} ->
-                    {success,[],NState};
+                {reply, _Res, NState} ->
+                    {success, [], NState};
                 Else ->
                     Else
             end;
@@ -91,7 +89,7 @@ mountprog_3(Proc, Bin, Offset, Clnt, State) ->
                     leo_nfs_mount3_server:mountproc_export_3(Clnt,
                                                              State)
             of
-                {reply,_Res,NState} ->
+                {reply, _Res, NState} ->
                     {success,
                      leo_nfs_mount3_xdr:enc_exportnode(_Res),
                      NState};

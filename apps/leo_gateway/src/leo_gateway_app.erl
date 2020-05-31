@@ -406,22 +406,6 @@ after_process_1(Pid, Managers) ->
                     supervisor, [leo_pod_sup]},
     {ok,_} = supervisor:start_child(leo_gateway_sup, ChildSpec_1),
 
-    %% Launch SavannaAgent(QoS)
-    SVManagers = ?env_qos_managers(),
-    QoS_StatEnabled = ?env_qos_stat_enabled(),
-    case QoS_StatEnabled of
-        true ->
-            %% launch savanna-agent and sync schema table
-            ok = savanna_agent:start(ram_copies),
-            ok = savanna_agent:sync_schemas(SVManagers);
-        false ->
-            void
-    end,
-    ChildSpec_2 = {leo_gateway_qos_stat,
-                   {leo_gateway_qos_stat, start_link,
-                    [SVManagers, QoS_StatEnabled]},
-                   permanent, 2000, worker, [leo_gateway_qos_stat]},
-    {ok,_} = supervisor:start_child(leo_gateway_sup, ChildSpec_2),
     ok = leo_misc:startup_notification(),
     leo_logger_api:reset_hwm(),
 

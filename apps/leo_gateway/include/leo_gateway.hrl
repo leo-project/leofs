@@ -252,23 +252,6 @@
             _ -> ?DEF_REQ_TIMEOUT
         end).
 
-%% QoS related
--define(env_qos_stat_enabled(),
-        case leo_misc:get_env(leo_gateway, is_enable_qos_stat) of
-            {ok, _IsEnableQoSStat} -> _IsEnableQoSStat;
-            _ -> false
-        end).
--define(env_qos_notify_enabled(),
-        case leo_misc:get_env(leo_gateway, is_enable_qos_notify) of
-            {ok, _IsEnableQoSNotify} -> _IsEnableQoSNotify;
-            _ -> false
-        end).
--define(env_qos_managers(),
-        case leo_misc:get_env(savanna_agent, managers) of
-            {ok, _SVManagers} -> _SVManagers;
-            _ -> []
-        end).
-
 %% NFS related
 -define(DEF_MOUNTD_PORT, 22050).
 -define(DEF_MOUNTD_ACCEPTORS, 128).

@@ -140,7 +140,7 @@ enc_uint64(_1) ->
 dec_uint64(_1, _2) ->
     begin
         <<_:_2/binary,_3:64/unsigned,_/binary>> = _1,
-        {_3,_2 + 8}
+        {_3, _2 + 8}
     end.
 
 enc_int64(_1) ->
@@ -149,7 +149,7 @@ enc_int64(_1) ->
 dec_int64(_1, _2) ->
     begin
         <<_:_2/binary,_3:64/signed,_/binary>> = _1,
-        {_3,_2 + 8}
+        {_3, _2 + 8}
     end.
 
 enc_uint32(_1) ->
@@ -158,7 +158,7 @@ enc_uint32(_1) ->
 dec_uint32(_1, _2) ->
     begin
         <<_:_2/binary,_3:32/unsigned,_/binary>> = _1,
-        {_3,_2 + 4}
+        {_3, _2 + 4}
     end.
 
 enc_int32(_1) ->
@@ -167,13 +167,13 @@ enc_int32(_1) ->
 dec_int32(_1, _2) ->
     begin
         <<_:_2/binary,_3:32/signed,_/binary>> = _1,
-        {_3,_2 + 4}
+        {_3, _2 + 4}
     end.
 
 enc_filename3(_1) ->
     begin
         _2 = io_list_len(_1),
-        [<<_2:32/unsigned>>,_1,enc_align(_2)]
+        [<<_2:32/unsigned>>, _1, enc_align(_2)]
     end.
 
 dec_filename3(_1, _2) ->
@@ -181,13 +181,13 @@ dec_filename3(_1, _2) ->
         <<_:_2/binary,_3:32/unsigned,_/binary>> = _1,
         _4 = _2 + 4,
         <<_:_4/binary,_5:_3/binary,_/binary>> = _1,
-        {_5,_4 + align(_3)}
+        {_5, _4 + align(_3)}
     end.
 
 enc_nfspath3(_1) ->
     begin
         _2 = io_list_len(_1),
-        [<<_2:32/unsigned>>,_1,enc_align(_2)]
+        [<<_2:32/unsigned>>, _1, enc_align(_2)]
     end.
 
 dec_nfspath3(_1, _2) ->
@@ -195,7 +195,7 @@ dec_nfspath3(_1, _2) ->
         <<_:_2/binary,_3:32/unsigned,_/binary>> = _1,
         _4 = _2 + 4,
         <<_:_4/binary,_5:_3/binary,_/binary>> = _1,
-        {_5,_4 + align(_3)}
+        {_5, _4 + align(_3)}
     end.
 
 enc_fileid3(_1) ->
@@ -215,13 +215,13 @@ enc_cookieverf3(_1) ->
         8 ->
             _1;
         _ ->
-            exit({xdr,limit})
+            exit({xdr, limit})
     end.
 
 dec_cookieverf3(_1, _2) ->
     begin
         <<_:_2/binary,_3:8/binary,_/binary>> = _1,
-        {_3,_2 + 8}
+        {_3, _2 + 8}
     end.
 
 enc_createverf3(_1) ->
@@ -229,13 +229,13 @@ enc_createverf3(_1) ->
         8 ->
             _1;
         _ ->
-            exit({xdr,limit})
+            exit({xdr, limit})
     end.
 
 dec_createverf3(_1, _2) ->
     begin
         <<_:_2/binary,_3:8/binary,_/binary>> = _1,
-        {_3,_2 + 8}
+        {_3, _2 + 8}
     end.
 
 enc_writeverf3(_1) ->
@@ -243,13 +243,13 @@ enc_writeverf3(_1) ->
         8 ->
             _1;
         _ ->
-            exit({xdr,limit})
+            exit({xdr, limit})
     end.
 
 dec_writeverf3(_1, _2) ->
     begin
         <<_:_2/binary,_3:8/binary,_/binary>> = _1,
-        {_3,_2 + 8}
+        {_3, _2 + 8}
     end.
 
 enc_uid3(_1) ->
@@ -355,63 +355,63 @@ dec_nfsstat3(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             0 ->
-                {'NFS3_OK',_2 + 4};
+                {'NFS3_OK', _2 + 4};
             1 ->
-                {'NFS3ERR_PERM',_2 + 4};
+                {'NFS3ERR_PERM', _2 + 4};
             2 ->
-                {'NFS3ERR_NOENT',_2 + 4};
+                {'NFS3ERR_NOENT', _2 + 4};
             5 ->
-                {'NFS3ERR_IO',_2 + 4};
+                {'NFS3ERR_IO', _2 + 4};
             6 ->
-                {'NFS3ERR_NXIO',_2 + 4};
+                {'NFS3ERR_NXIO', _2 + 4};
             13 ->
-                {'NFS3ERR_ACCES',_2 + 4};
+                {'NFS3ERR_ACCES', _2 + 4};
             17 ->
-                {'NFS3ERR_EXIST',_2 + 4};
+                {'NFS3ERR_EXIST', _2 + 4};
             18 ->
-                {'NFS3ERR_XDEV',_2 + 4};
+                {'NFS3ERR_XDEV', _2 + 4};
             19 ->
-                {'NFS3ERR_NODEV',_2 + 4};
+                {'NFS3ERR_NODEV', _2 + 4};
             20 ->
-                {'NFS3ERR_NOTDIR',_2 + 4};
+                {'NFS3ERR_NOTDIR', _2 + 4};
             21 ->
-                {'NFS3ERR_ISDIR',_2 + 4};
+                {'NFS3ERR_ISDIR', _2 + 4};
             22 ->
-                {'NFS3ERR_INVAL',_2 + 4};
+                {'NFS3ERR_INVAL', _2 + 4};
             27 ->
-                {'NFS3ERR_FBIG',_2 + 4};
+                {'NFS3ERR_FBIG', _2 + 4};
             28 ->
-                {'NFS3ERR_NOSPC',_2 + 4};
+                {'NFS3ERR_NOSPC', _2 + 4};
             30 ->
-                {'NFS3ERR_ROFS',_2 + 4};
+                {'NFS3ERR_ROFS', _2 + 4};
             31 ->
-                {'NFS3ERR_MLINK',_2 + 4};
+                {'NFS3ERR_MLINK', _2 + 4};
             63 ->
-                {'NFS3ERR_NAMETOOLONG',_2 + 4};
+                {'NFS3ERR_NAMETOOLONG', _2 + 4};
             66 ->
-                {'NFS3ERR_NOTEMPTY',_2 + 4};
+                {'NFS3ERR_NOTEMPTY', _2 + 4};
             69 ->
-                {'NFS3ERR_DQUOT',_2 + 4};
+                {'NFS3ERR_DQUOT', _2 + 4};
             70 ->
-                {'NFS3ERR_STALE',_2 + 4};
+                {'NFS3ERR_STALE', _2 + 4};
             71 ->
-                {'NFS3ERR_REMOTE',_2 + 4};
+                {'NFS3ERR_REMOTE', _2 + 4};
             10001 ->
-                {'NFS3ERR_BADHANDLE',_2 + 4};
+                {'NFS3ERR_BADHANDLE', _2 + 4};
             10002 ->
-                {'NFS3ERR_NOT_SYNC',_2 + 4};
+                {'NFS3ERR_NOT_SYNC', _2 + 4};
             10003 ->
-                {'NFS3ERR_BAD_COOKIE',_2 + 4};
+                {'NFS3ERR_BAD_COOKIE', _2 + 4};
             10004 ->
-                {'NFS3ERR_NOTSUPP',_2 + 4};
+                {'NFS3ERR_NOTSUPP', _2 + 4};
             10005 ->
-                {'NFS3ERR_TOOSMALL',_2 + 4};
+                {'NFS3ERR_TOOSMALL', _2 + 4};
             10006 ->
-                {'NFS3ERR_SERVERFAULT',_2 + 4};
+                {'NFS3ERR_SERVERFAULT', _2 + 4};
             10007 ->
-                {'NFS3ERR_BADTYPE',_2 + 4};
+                {'NFS3ERR_BADTYPE', _2 + 4};
             10008 ->
-                {'NFS3ERR_JUKEBOX',_2 + 4}
+                {'NFS3ERR_JUKEBOX', _2 + 4}
         end
     end.
 
@@ -500,19 +500,19 @@ dec_ftype3(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             1 ->
-                {'NF3REG',_2 + 4};
+                {'NF3REG', _2 + 4};
             2 ->
-                {'NF3DIR',_2 + 4};
+                {'NF3DIR', _2 + 4};
             3 ->
-                {'NF3BLK',_2 + 4};
+                {'NF3BLK', _2 + 4};
             4 ->
-                {'NF3CHR',_2 + 4};
+                {'NF3CHR', _2 + 4};
             5 ->
-                {'NF3LNK',_2 + 4};
+                {'NF3LNK', _2 + 4};
             6 ->
-                {'NF3SOCK',_2 + 4};
+                {'NF3SOCK', _2 + 4};
             7 ->
-                {'NF3FIFO',_2 + 4}
+                {'NF3FIFO', _2 + 4}
         end
     end.
 
@@ -536,15 +536,15 @@ dec_ftype3_i2a(_4) ->
 
 enc_specdata3(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_uint32(_3),enc_uint32(_2)]
+        {_3, _2} ->
+            [enc_uint32(_3), enc_uint32(_2)]
     end.
 
 dec_specdata3(_1, _2) ->
     begin
-        {_3,_4} = dec_uint32(_1, _2),
-        {_5,_6} = dec_uint32(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_uint32(_1, _2),
+        {_5, _6} = dec_uint32(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_nfs_fh3(_1) ->
@@ -554,46 +554,46 @@ enc_nfs_fh3(_1) ->
                  _3 = io_list_len(_2),
                  if
                      _3 =< 64 ->
-                         [<<_3:32/unsigned>>,_2,enc_align(_3)];
+                         [<<_3:32/unsigned>>, _2, enc_align(_3)];
                      true ->
-                         exit({xdr,limit})
+                         exit({xdr, limit})
                  end
              end]
     end.
 
 dec_nfs_fh3(_1, _2) ->
     begin
-        {_3,_4} =
+        {_3, _4} =
             begin
                 <<_:_2/binary,_5:32/unsigned,_/binary>> = _1,
                 if
                     _5 > 64 ->
-                        exit({xdr,limit});
+                        exit({xdr, limit});
                     true ->
                         _6 = _2 + 4,
                         <<_:_6/binary,_7:_5/binary,_/binary>> = _1,
-                        {_7,_6 + align(_5)}
+                        {_7, _6 + align(_5)}
                 end
             end,
-        {{_3},_4}
+        {{_3}, _4}
     end.
 
 enc_nfstime3(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_uint32(_3),enc_uint32(_2)]
+        {_3, _2} ->
+            [enc_uint32(_3), enc_uint32(_2)]
     end.
 
 dec_nfstime3(_1, _2) ->
     begin
-        {_3,_4} = dec_uint32(_1, _2),
-        {_5,_6} = dec_uint32(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_uint32(_1, _2),
+        {_5, _6} = dec_uint32(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_fattr3(_1) ->
     case _1 of
-        {_14,_13,_12,_11,_10,_9,_8,_7,_6,_5,_4,_3,_2} ->
+        {_14, _13, _12, _11, _10, _9, _8, _7, _6, _5, _4, _3, _2} ->
             [enc_ftype3(_14),
              enc_mode3(_13),
              enc_uint32(_12),
@@ -611,25 +611,26 @@ enc_fattr3(_1) ->
 
 dec_fattr3(_1, _2) ->
     begin
-        {_3,_4} = dec_ftype3(_1, _2),
-        {_5,_6} = dec_mode3(_1, _4),
-        {_7,_8} = dec_uint32(_1, _6),
-        {_9,_10} = dec_uid3(_1, _8),
-        {_11,_12} = dec_gid3(_1, _10),
-        {_13,_14} = dec_size3(_1, _12),
-        {_15,_16} = dec_size3(_1, _14),
-        {_17,_18} = dec_specdata3(_1, _16),
-        {_19,_20} = dec_uint64(_1, _18),
-        {_21,_22} = dec_fileid3(_1, _20),
-        {_23,_24} = dec_nfstime3(_1, _22),
-        {_25,_26} = dec_nfstime3(_1, _24),
-        {_27,_28} = dec_nfstime3(_1, _26),
-        {{_3,_5,_7,_9,_11,_13,_15,_17,_19,_21,_23,_25,_27},_28}
+        {_3, _4} = dec_ftype3(_1, _2),
+        {_5, _6} = dec_mode3(_1, _4),
+        {_7, _8} = dec_uint32(_1, _6),
+        {_9, _10} = dec_uid3(_1, _8),
+        {_11, _12} = dec_gid3(_1, _10),
+        {_13, _14} = dec_size3(_1, _12),
+        {_15, _16} = dec_size3(_1, _14),
+        {_17, _18} = dec_specdata3(_1, _16),
+        {_19, _20} = dec_uint64(_1, _18),
+        {_21, _22} = dec_fileid3(_1, _20),
+        {_23, _24} = dec_nfstime3(_1, _22),
+        {_25, _26} = dec_nfstime3(_1, _24),
+        {_27, _28} = dec_nfstime3(_1, _26),
+        {{_3, _5, _7, _9, _11, _13, _15, _17, _19, _21, _23, _25, _27},
+         _28}
     end.
 
 enc_post_op_attr(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [if
                  _2 == true ->
                      <<1:32>>;
@@ -650,31 +651,31 @@ dec_post_op_attr(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_fattr3(_1, _6),
-                {{true,_4},_5};
+                {_4, _5} = dec_fattr3(_1, _6),
+                {{true, _4}, _5};
             0 ->
-                {_4,_5} = {void,_6},
-                {{false,_4},_5}
+                {_4, _5} = {void, _6},
+                {{false, _4}, _5}
         end
     end.
 
 enc_wcc_attr(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_size3(_4),enc_nfstime3(_3),enc_nfstime3(_2)]
+        {_4, _3, _2} ->
+            [enc_size3(_4), enc_nfstime3(_3), enc_nfstime3(_2)]
     end.
 
 dec_wcc_attr(_1, _2) ->
     begin
-        {_3,_4} = dec_size3(_1, _2),
-        {_5,_6} = dec_nfstime3(_1, _4),
-        {_7,_8} = dec_nfstime3(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_size3(_1, _2),
+        {_5, _6} = dec_nfstime3(_1, _4),
+        {_7, _8} = dec_nfstime3(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_pre_op_attr(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [if
                  _2 == true ->
                      <<1:32>>;
@@ -695,30 +696,30 @@ dec_pre_op_attr(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_wcc_attr(_1, _6),
-                {{true,_4},_5};
+                {_4, _5} = dec_wcc_attr(_1, _6),
+                {{true, _4}, _5};
             0 ->
-                {_4,_5} = {void,_6},
-                {{false,_4},_5}
+                {_4, _5} = {void, _6},
+                {{false, _4}, _5}
         end
     end.
 
 enc_wcc_data(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_pre_op_attr(_3),enc_post_op_attr(_2)]
+        {_3, _2} ->
+            [enc_pre_op_attr(_3), enc_post_op_attr(_2)]
     end.
 
 dec_wcc_data(_1, _2) ->
     begin
-        {_3,_4} = dec_pre_op_attr(_1, _2),
-        {_5,_6} = dec_post_op_attr(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_pre_op_attr(_1, _2),
+        {_5, _6} = dec_post_op_attr(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_post_op_fh3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [if
                  _2 == true ->
                      <<1:32>>;
@@ -739,11 +740,11 @@ dec_post_op_fh3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_nfs_fh3(_1, _6),
-                {{true,_4},_5};
+                {_4, _5} = dec_nfs_fh3(_1, _6),
+                {{true, _4}, _5};
             0 ->
-                {_4,_5} = {void,_6},
-                {{false,_4},_5}
+                {_4, _5} = {void, _6},
+                {{false, _4}, _5}
         end
     end.
 
@@ -762,11 +763,11 @@ dec_time_how(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             0 ->
-                {'DONT_CHANGE',_2 + 4};
+                {'DONT_CHANGE', _2 + 4};
             1 ->
-                {'SET_TO_SERVER_TIME',_2 + 4};
+                {'SET_TO_SERVER_TIME', _2 + 4};
             2 ->
-                {'SET_TO_CLIENT_TIME',_2 + 4}
+                {'SET_TO_CLIENT_TIME', _2 + 4}
         end
     end.
 
@@ -782,7 +783,7 @@ dec_time_how_i2a(_4) ->
 
 enc_set_mode3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [if
                  _2 == true ->
                      <<1:32>>;
@@ -803,17 +804,17 @@ dec_set_mode3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_mode3(_1, _6),
-                {{true,_4},_5};
+                {_4, _5} = dec_mode3(_1, _6),
+                {{true, _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
-                {{_3,_4},_5}
+                {_4, _5} = {void, _6},
+                {{_3, _4}, _5}
         end
     end.
 
 enc_set_uid3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [if
                  _2 == true ->
                      <<1:32>>;
@@ -834,17 +835,17 @@ dec_set_uid3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_uid3(_1, _6),
-                {{true,_4},_5};
+                {_4, _5} = dec_uid3(_1, _6),
+                {{true, _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
-                {{_3,_4},_5}
+                {_4, _5} = {void, _6},
+                {{_3, _4}, _5}
         end
     end.
 
 enc_set_gid3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [if
                  _2 == true ->
                      <<1:32>>;
@@ -865,17 +866,17 @@ dec_set_gid3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_gid3(_1, _6),
-                {{true,_4},_5};
+                {_4, _5} = dec_gid3(_1, _6),
+                {{true, _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
-                {{_3,_4},_5}
+                {_4, _5} = {void, _6},
+                {{_3, _4}, _5}
         end
     end.
 
 enc_set_size3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [if
                  _2 == true ->
                      <<1:32>>;
@@ -896,17 +897,17 @@ dec_set_size3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_size3(_1, _6),
-                {{true,_4},_5};
+                {_4, _5} = dec_size3(_1, _6),
+                {{true, _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
-                {{_3,_4},_5}
+                {_4, _5} = {void, _6},
+                {{_3, _4}, _5}
         end
     end.
 
 enc_set_atime(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_time_how(_2),
              case _2 of
                  'SET_TO_CLIENT_TIME' ->
@@ -922,18 +923,18 @@ dec_set_atime(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             2 ->
-                {_4,_5} = dec_nfstime3(_1, _6),
-                {{'SET_TO_CLIENT_TIME',_4},_5};
+                {_4, _5} = dec_nfstime3(_1, _6),
+                {{'SET_TO_CLIENT_TIME', _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
+                {_4, _5} = {void, _6},
                 _7 = dec_time_how_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_set_mtime(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_time_how(_2),
              case _2 of
                  'SET_TO_CLIENT_TIME' ->
@@ -949,18 +950,18 @@ dec_set_mtime(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             2 ->
-                {_4,_5} = dec_nfstime3(_1, _6),
-                {{'SET_TO_CLIENT_TIME',_4},_5};
+                {_4, _5} = dec_nfstime3(_1, _6),
+                {{'SET_TO_CLIENT_TIME', _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
+                {_4, _5} = {void, _6},
                 _7 = dec_time_how_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_sattr3(_1) ->
     case _1 of
-        {_7,_6,_5,_4,_3,_2} ->
+        {_7, _6, _5, _4, _3, _2} ->
             [enc_set_mode3(_7),
              enc_set_uid3(_6),
              enc_set_gid3(_5),
@@ -971,26 +972,26 @@ enc_sattr3(_1) ->
 
 dec_sattr3(_1, _2) ->
     begin
-        {_3,_4} = dec_set_mode3(_1, _2),
-        {_5,_6} = dec_set_uid3(_1, _4),
-        {_7,_8} = dec_set_gid3(_1, _6),
-        {_9,_10} = dec_set_size3(_1, _8),
-        {_11,_12} = dec_set_atime(_1, _10),
-        {_13,_14} = dec_set_mtime(_1, _12),
-        {{_3,_5,_7,_9,_11,_13},_14}
+        {_3, _4} = dec_set_mode3(_1, _2),
+        {_5, _6} = dec_set_uid3(_1, _4),
+        {_7, _8} = dec_set_gid3(_1, _6),
+        {_9, _10} = dec_set_size3(_1, _8),
+        {_11, _12} = dec_set_atime(_1, _10),
+        {_13, _14} = dec_set_mtime(_1, _12),
+        {{_3, _5, _7, _9, _11, _13}, _14}
     end.
 
 enc_diropargs3(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_nfs_fh3(_3),enc_filename3(_2)]
+        {_3, _2} ->
+            [enc_nfs_fh3(_3), enc_filename3(_2)]
     end.
 
 dec_diropargs3(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_filename3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_filename3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_getattr3args(_1) ->
@@ -1001,8 +1002,8 @@ enc_getattr3args(_1) ->
 
 dec_getattr3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_getattr3resok(_1) ->
@@ -1013,13 +1014,13 @@ enc_getattr3resok(_1) ->
 
 dec_getattr3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_fattr3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_fattr3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_getattr3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1035,18 +1036,18 @@ dec_getattr3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_getattr3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_getattr3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
+                {_4, _5} = {void, _6},
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_sattrguard3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [if
                  _2 == true ->
                      <<1:32>>;
@@ -1067,26 +1068,26 @@ dec_sattrguard3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             1 ->
-                {_4,_5} = dec_nfstime3(_1, _6),
-                {{true,_4},_5};
+                {_4, _5} = dec_nfstime3(_1, _6),
+                {{true, _4}, _5};
             0 ->
-                {_4,_5} = {void,_6},
-                {{false,_4},_5}
+                {_4, _5} = {void, _6},
+                {{false, _4}, _5}
         end
     end.
 
 enc_setattr3args(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_nfs_fh3(_4),enc_sattr3(_3),enc_sattrguard3(_2)]
+        {_4, _3, _2} ->
+            [enc_nfs_fh3(_4), enc_sattr3(_3), enc_sattrguard3(_2)]
     end.
 
 dec_setattr3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_sattr3(_1, _4),
-        {_7,_8} = dec_sattrguard3(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_sattr3(_1, _4),
+        {_7, _8} = dec_sattrguard3(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_setattr3resok(_1) ->
@@ -1097,8 +1098,8 @@ enc_setattr3resok(_1) ->
 
 dec_setattr3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_setattr3resfail(_1) ->
@@ -1109,13 +1110,13 @@ enc_setattr3resfail(_1) ->
 
 dec_setattr3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_setattr3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1131,12 +1132,12 @@ dec_setattr3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_setattr3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_setattr3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_setattr3resfail(_1, _6),
+                {_4, _5} = dec_setattr3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -1148,22 +1149,24 @@ enc_lookup3args(_1) ->
 
 dec_lookup3args(_1, _2) ->
     begin
-        {_3,_4} = dec_diropargs3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_diropargs3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_lookup3resok(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_nfs_fh3(_4),enc_post_op_attr(_3),enc_post_op_attr(_2)]
+        {_4, _3, _2} ->
+            [enc_nfs_fh3(_4),
+             enc_post_op_attr(_3),
+             enc_post_op_attr(_2)]
     end.
 
 dec_lookup3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_post_op_attr(_1, _4),
-        {_7,_8} = dec_post_op_attr(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_post_op_attr(_1, _4),
+        {_7, _8} = dec_post_op_attr(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_lookup3resfail(_1) ->
@@ -1174,13 +1177,13 @@ enc_lookup3resfail(_1) ->
 
 dec_lookup3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_lookup3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1196,39 +1199,39 @@ dec_lookup3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_lookup3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_lookup3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_lookup3resfail(_1, _6),
+                {_4, _5} = dec_lookup3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_access3args(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_nfs_fh3(_3),enc_uint32(_2)]
+        {_3, _2} ->
+            [enc_nfs_fh3(_3), enc_uint32(_2)]
     end.
 
 dec_access3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_uint32(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_uint32(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_access3resok(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_post_op_attr(_3),enc_uint32(_2)]
+        {_3, _2} ->
+            [enc_post_op_attr(_3), enc_uint32(_2)]
     end.
 
 dec_access3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_uint32(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_uint32(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_access3resfail(_1) ->
@@ -1239,13 +1242,13 @@ enc_access3resfail(_1) ->
 
 dec_access3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_access3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1261,12 +1264,12 @@ dec_access3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_access3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_access3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_access3resfail(_1, _6),
+                {_4, _5} = dec_access3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -1278,21 +1281,21 @@ enc_readlink3args(_1) ->
 
 dec_readlink3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_readlink3resok(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_post_op_attr(_3),enc_nfspath3(_2)]
+        {_3, _2} ->
+            [enc_post_op_attr(_3), enc_nfspath3(_2)]
     end.
 
 dec_readlink3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_nfspath3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_nfspath3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_readlink3resfail(_1) ->
@@ -1303,13 +1306,13 @@ enc_readlink3resfail(_1) ->
 
 dec_readlink3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_readlink3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1325,32 +1328,32 @@ dec_readlink3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_readlink3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_readlink3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_readlink3resfail(_1, _6),
+                {_4, _5} = dec_readlink3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_read3args(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_nfs_fh3(_4),enc_offset3(_3),enc_count3(_2)]
+        {_4, _3, _2} ->
+            [enc_nfs_fh3(_4), enc_offset3(_3), enc_count3(_2)]
     end.
 
 dec_read3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_offset3(_1, _4),
-        {_7,_8} = dec_count3(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_offset3(_1, _4),
+        {_7, _8} = dec_count3(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_read3resok(_1) ->
     case _1 of
-        {_6,_5,_4,_2} ->
+        {_6, _5, _4, _2} ->
             [enc_post_op_attr(_6),
              enc_count3(_5),
              if
@@ -1361,14 +1364,14 @@ enc_read3resok(_1) ->
              end,
              begin
                  _3 = io_list_len(_2),
-                 [<<_3:32/unsigned>>,_2,enc_align(_3)]
+                 [<<_3:32/unsigned>>, _2, enc_align(_3)]
              end]
     end.
 
 dec_read3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_count3(_1, _4),
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_count3(_1, _4),
         begin
             begin
                 <<_:_6/binary,_9:32/unsigned,_/binary>> = _1,
@@ -1382,14 +1385,14 @@ dec_read3resok(_1, _2) ->
             end,
             _8 = _6 + 4
         end,
-        {_10,_11} =
+        {_10, _11} =
             begin
                 <<_:_8/binary,_12:32/unsigned,_/binary>> = _1,
                 _13 = _8 + 4,
                 <<_:_13/binary,_14:_12/binary,_/binary>> = _1,
-                {_14,_13 + align(_12)}
+                {_14, _13 + align(_12)}
             end,
-        {{_3,_5,_7,_10},_11}
+        {{_3, _5, _7, _10}, _11}
     end.
 
 enc_read3resfail(_1) ->
@@ -1400,13 +1403,13 @@ enc_read3resfail(_1) ->
 
 dec_read3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_read3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1422,12 +1425,12 @@ dec_read3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_read3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_read3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_read3resfail(_1, _6),
+                {_4, _5} = dec_read3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -1446,11 +1449,11 @@ dec_stable_how(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             0 ->
-                {'UNSTABLE',_2 + 4};
+                {'UNSTABLE', _2 + 4};
             1 ->
-                {'DATA_SYNC',_2 + 4};
+                {'DATA_SYNC', _2 + 4};
             2 ->
-                {'FILE_SYNC',_2 + 4}
+                {'FILE_SYNC', _2 + 4}
         end
     end.
 
@@ -1466,36 +1469,36 @@ dec_stable_how_i2a(_4) ->
 
 enc_write3args(_1) ->
     case _1 of
-        {_7,_6,_5,_4,_2} ->
+        {_7, _6, _5, _4, _2} ->
             [enc_nfs_fh3(_7),
              enc_offset3(_6),
              enc_count3(_5),
              enc_stable_how(_4),
              begin
                  _3 = io_list_len(_2),
-                 [<<_3:32/unsigned>>,_2,enc_align(_3)]
+                 [<<_3:32/unsigned>>, _2, enc_align(_3)]
              end]
     end.
 
 dec_write3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_offset3(_1, _4),
-        {_7,_8} = dec_count3(_1, _6),
-        {_9,_10} = dec_stable_how(_1, _8),
-        {_11,_12} =
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_offset3(_1, _4),
+        {_7, _8} = dec_count3(_1, _6),
+        {_9, _10} = dec_stable_how(_1, _8),
+        {_11, _12} =
             begin
                 <<_:_10/binary,_13:32/unsigned,_/binary>> = _1,
                 _14 = _10 + 4,
                 <<_:_14/binary,_15:_13/binary,_/binary>> = _1,
-                {_15,_14 + align(_13)}
+                {_15, _14 + align(_13)}
             end,
-        {{_3,_5,_7,_9,_11},_12}
+        {{_3, _5, _7, _9, _11}, _12}
     end.
 
 enc_write3resok(_1) ->
     case _1 of
-        {_5,_4,_3,_2} ->
+        {_5, _4, _3, _2} ->
             [enc_wcc_data(_5),
              enc_count3(_4),
              enc_stable_how(_3),
@@ -1504,11 +1507,11 @@ enc_write3resok(_1) ->
 
 dec_write3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {_5,_6} = dec_count3(_1, _4),
-        {_7,_8} = dec_stable_how(_1, _6),
-        {_9,_10} = dec_writeverf3(_1, _8),
-        {{_3,_5,_7,_9},_10}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {_5, _6} = dec_count3(_1, _4),
+        {_7, _8} = dec_stable_how(_1, _6),
+        {_9, _10} = dec_writeverf3(_1, _8),
+        {{_3, _5, _7, _9}, _10}
     end.
 
 enc_write3resfail(_1) ->
@@ -1519,13 +1522,13 @@ enc_write3resfail(_1) ->
 
 dec_write3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_write3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1541,12 +1544,12 @@ dec_write3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_write3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_write3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_write3resfail(_1, _6),
+                {_4, _5} = dec_write3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -1565,11 +1568,11 @@ dec_createmode3(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             0 ->
-                {'UNCHECKED',_2 + 4};
+                {'UNCHECKED', _2 + 4};
             1 ->
-                {'GUARDED',_2 + 4};
+                {'GUARDED', _2 + 4};
             2 ->
-                {'EXCLUSIVE',_2 + 4}
+                {'EXCLUSIVE', _2 + 4}
         end
     end.
 
@@ -1585,7 +1588,7 @@ dec_createmode3_i2a(_4) ->
 
 enc_createhow3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_createmode3(_2),
              case _2 of
                  'UNCHECKED' ->
@@ -1603,42 +1606,44 @@ dec_createhow3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_sattr3(_1, _6),
-                {{'UNCHECKED',_4},_5};
+                {_4, _5} = dec_sattr3(_1, _6),
+                {{'UNCHECKED', _4}, _5};
             1 ->
-                {_4,_5} = dec_sattr3(_1, _6),
-                {{'GUARDED',_4},_5};
+                {_4, _5} = dec_sattr3(_1, _6),
+                {{'GUARDED', _4}, _5};
             2 ->
-                {_4,_5} = dec_createverf3(_1, _6),
-                {{'EXCLUSIVE',_4},_5}
+                {_4, _5} = dec_createverf3(_1, _6),
+                {{'EXCLUSIVE', _4}, _5}
         end
     end.
 
 enc_create3args(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_diropargs3(_3),enc_createhow3(_2)]
+        {_3, _2} ->
+            [enc_diropargs3(_3), enc_createhow3(_2)]
     end.
 
 dec_create3args(_1, _2) ->
     begin
-        {_3,_4} = dec_diropargs3(_1, _2),
-        {_5,_6} = dec_createhow3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_diropargs3(_1, _2),
+        {_5, _6} = dec_createhow3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_create3resok(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_post_op_fh3(_4),enc_post_op_attr(_3),enc_wcc_data(_2)]
+        {_4, _3, _2} ->
+            [enc_post_op_fh3(_4),
+             enc_post_op_attr(_3),
+             enc_wcc_data(_2)]
     end.
 
 dec_create3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_fh3(_1, _2),
-        {_5,_6} = dec_post_op_attr(_1, _4),
-        {_7,_8} = dec_wcc_data(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_post_op_fh3(_1, _2),
+        {_5, _6} = dec_post_op_attr(_1, _4),
+        {_7, _8} = dec_wcc_data(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_create3resfail(_1) ->
@@ -1649,13 +1654,13 @@ enc_create3resfail(_1) ->
 
 dec_create3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_create3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1671,40 +1676,42 @@ dec_create3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_create3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_create3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_create3resfail(_1, _6),
+                {_4, _5} = dec_create3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_mkdir3args(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_diropargs3(_3),enc_sattr3(_2)]
+        {_3, _2} ->
+            [enc_diropargs3(_3), enc_sattr3(_2)]
     end.
 
 dec_mkdir3args(_1, _2) ->
     begin
-        {_3,_4} = dec_diropargs3(_1, _2),
-        {_5,_6} = dec_sattr3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_diropargs3(_1, _2),
+        {_5, _6} = dec_sattr3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_mkdir3resok(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_post_op_fh3(_4),enc_post_op_attr(_3),enc_wcc_data(_2)]
+        {_4, _3, _2} ->
+            [enc_post_op_fh3(_4),
+             enc_post_op_attr(_3),
+             enc_wcc_data(_2)]
     end.
 
 dec_mkdir3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_fh3(_1, _2),
-        {_5,_6} = dec_post_op_attr(_1, _4),
-        {_7,_8} = dec_wcc_data(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_post_op_fh3(_1, _2),
+        {_5, _6} = dec_post_op_attr(_1, _4),
+        {_7, _8} = dec_wcc_data(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_mkdir3resfail(_1) ->
@@ -1715,13 +1722,13 @@ enc_mkdir3resfail(_1) ->
 
 dec_mkdir3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_mkdir3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1737,53 +1744,55 @@ dec_mkdir3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_mkdir3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_mkdir3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_mkdir3resfail(_1, _6),
+                {_4, _5} = dec_mkdir3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_symlinkdata3(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_sattr3(_3),enc_nfspath3(_2)]
+        {_3, _2} ->
+            [enc_sattr3(_3), enc_nfspath3(_2)]
     end.
 
 dec_symlinkdata3(_1, _2) ->
     begin
-        {_3,_4} = dec_sattr3(_1, _2),
-        {_5,_6} = dec_nfspath3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_sattr3(_1, _2),
+        {_5, _6} = dec_nfspath3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_symlink3args(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_diropargs3(_3),enc_symlinkdata3(_2)]
+        {_3, _2} ->
+            [enc_diropargs3(_3), enc_symlinkdata3(_2)]
     end.
 
 dec_symlink3args(_1, _2) ->
     begin
-        {_3,_4} = dec_diropargs3(_1, _2),
-        {_5,_6} = dec_symlinkdata3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_diropargs3(_1, _2),
+        {_5, _6} = dec_symlinkdata3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_symlink3resok(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_post_op_fh3(_4),enc_post_op_attr(_3),enc_wcc_data(_2)]
+        {_4, _3, _2} ->
+            [enc_post_op_fh3(_4),
+             enc_post_op_attr(_3),
+             enc_wcc_data(_2)]
     end.
 
 dec_symlink3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_fh3(_1, _2),
-        {_5,_6} = dec_post_op_attr(_1, _4),
-        {_7,_8} = dec_wcc_data(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_post_op_fh3(_1, _2),
+        {_5, _6} = dec_post_op_attr(_1, _4),
+        {_7, _8} = dec_wcc_data(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_symlink3resfail(_1) ->
@@ -1794,13 +1803,13 @@ enc_symlink3resfail(_1) ->
 
 dec_symlink3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_symlink3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1816,31 +1825,31 @@ dec_symlink3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_symlink3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_symlink3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_symlink3resfail(_1, _6),
+                {_4, _5} = dec_symlink3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_devicedata3(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_sattr3(_3),enc_specdata3(_2)]
+        {_3, _2} ->
+            [enc_sattr3(_3), enc_specdata3(_2)]
     end.
 
 dec_devicedata3(_1, _2) ->
     begin
-        {_3,_4} = dec_sattr3(_1, _2),
-        {_5,_6} = dec_specdata3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_sattr3(_1, _2),
+        {_5, _6} = dec_specdata3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_mknoddata3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_ftype3(_2),
              case _2 of
                  'NF3CHR' ->
@@ -1862,49 +1871,51 @@ dec_mknoddata3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             4 ->
-                {_4,_5} = dec_devicedata3(_1, _6),
-                {{'NF3CHR',_4},_5};
+                {_4, _5} = dec_devicedata3(_1, _6),
+                {{'NF3CHR', _4}, _5};
             3 ->
-                {_4,_5} = dec_devicedata3(_1, _6),
-                {{'NF3BLK',_4},_5};
+                {_4, _5} = dec_devicedata3(_1, _6),
+                {{'NF3BLK', _4}, _5};
             6 ->
-                {_4,_5} = dec_sattr3(_1, _6),
-                {{'NF3SOCK',_4},_5};
+                {_4, _5} = dec_sattr3(_1, _6),
+                {{'NF3SOCK', _4}, _5};
             7 ->
-                {_4,_5} = dec_sattr3(_1, _6),
-                {{'NF3FIFO',_4},_5};
+                {_4, _5} = dec_sattr3(_1, _6),
+                {{'NF3FIFO', _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
+                {_4, _5} = {void, _6},
                 _7 = dec_ftype3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_mknod3args(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_diropargs3(_3),enc_mknoddata3(_2)]
+        {_3, _2} ->
+            [enc_diropargs3(_3), enc_mknoddata3(_2)]
     end.
 
 dec_mknod3args(_1, _2) ->
     begin
-        {_3,_4} = dec_diropargs3(_1, _2),
-        {_5,_6} = dec_mknoddata3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_diropargs3(_1, _2),
+        {_5, _6} = dec_mknoddata3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_mknod3resok(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_post_op_fh3(_4),enc_post_op_attr(_3),enc_wcc_data(_2)]
+        {_4, _3, _2} ->
+            [enc_post_op_fh3(_4),
+             enc_post_op_attr(_3),
+             enc_wcc_data(_2)]
     end.
 
 dec_mknod3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_fh3(_1, _2),
-        {_5,_6} = dec_post_op_attr(_1, _4),
-        {_7,_8} = dec_wcc_data(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_post_op_fh3(_1, _2),
+        {_5, _6} = dec_post_op_attr(_1, _4),
+        {_7, _8} = dec_wcc_data(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_mknod3resfail(_1) ->
@@ -1915,13 +1926,13 @@ enc_mknod3resfail(_1) ->
 
 dec_mknod3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_mknod3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -1937,12 +1948,12 @@ dec_mknod3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_mknod3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_mknod3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_mknod3resfail(_1, _6),
+                {_4, _5} = dec_mknod3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -1954,8 +1965,8 @@ enc_remove3args(_1) ->
 
 dec_remove3args(_1, _2) ->
     begin
-        {_3,_4} = dec_diropargs3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_diropargs3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_remove3resok(_1) ->
@@ -1966,8 +1977,8 @@ enc_remove3resok(_1) ->
 
 dec_remove3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_remove3resfail(_1) ->
@@ -1978,13 +1989,13 @@ enc_remove3resfail(_1) ->
 
 dec_remove3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_remove3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2000,12 +2011,12 @@ dec_remove3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_remove3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_remove3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_remove3resfail(_1, _6),
+                {_4, _5} = dec_remove3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -2017,8 +2028,8 @@ enc_rmdir3args(_1) ->
 
 dec_rmdir3args(_1, _2) ->
     begin
-        {_3,_4} = dec_diropargs3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_diropargs3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_rmdir3resok(_1) ->
@@ -2029,8 +2040,8 @@ enc_rmdir3resok(_1) ->
 
 dec_rmdir3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_rmdir3resfail(_1) ->
@@ -2041,13 +2052,13 @@ enc_rmdir3resfail(_1) ->
 
 dec_rmdir3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_rmdir3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2063,57 +2074,57 @@ dec_rmdir3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_rmdir3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_rmdir3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_rmdir3resfail(_1, _6),
+                {_4, _5} = dec_rmdir3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_rename3args(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_diropargs3(_3),enc_diropargs3(_2)]
+        {_3, _2} ->
+            [enc_diropargs3(_3), enc_diropargs3(_2)]
     end.
 
 dec_rename3args(_1, _2) ->
     begin
-        {_3,_4} = dec_diropargs3(_1, _2),
-        {_5,_6} = dec_diropargs3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_diropargs3(_1, _2),
+        {_5, _6} = dec_diropargs3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_rename3resok(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_wcc_data(_3),enc_wcc_data(_2)]
+        {_3, _2} ->
+            [enc_wcc_data(_3), enc_wcc_data(_2)]
     end.
 
 dec_rename3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {_5,_6} = dec_wcc_data(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {_5, _6} = dec_wcc_data(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_rename3resfail(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_wcc_data(_3),enc_wcc_data(_2)]
+        {_3, _2} ->
+            [enc_wcc_data(_3), enc_wcc_data(_2)]
     end.
 
 dec_rename3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {_5,_6} = dec_wcc_data(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {_5, _6} = dec_wcc_data(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_rename3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2129,57 +2140,57 @@ dec_rename3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_rename3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_rename3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_rename3resfail(_1, _6),
+                {_4, _5} = dec_rename3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_link3args(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_nfs_fh3(_3),enc_diropargs3(_2)]
+        {_3, _2} ->
+            [enc_nfs_fh3(_3), enc_diropargs3(_2)]
     end.
 
 dec_link3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_diropargs3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_diropargs3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_link3resok(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_post_op_attr(_3),enc_wcc_data(_2)]
+        {_3, _2} ->
+            [enc_post_op_attr(_3), enc_wcc_data(_2)]
     end.
 
 dec_link3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_wcc_data(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_wcc_data(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_link3resfail(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_post_op_attr(_3),enc_wcc_data(_2)]
+        {_3, _2} ->
+            [enc_post_op_attr(_3), enc_wcc_data(_2)]
     end.
 
 dec_link3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_wcc_data(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_wcc_data(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_link3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2195,18 +2206,18 @@ dec_link3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_link3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_link3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_link3resfail(_1, _6),
+                {_4, _5} = dec_link3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_readdir3args(_1) ->
     case _1 of
-        {_5,_4,_3,_2} ->
+        {_5, _4, _3, _2} ->
             [enc_nfs_fh3(_5),
              enc_cookie3(_4),
              enc_cookieverf3(_3),
@@ -2215,16 +2226,16 @@ enc_readdir3args(_1) ->
 
 dec_readdir3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_cookie3(_1, _4),
-        {_7,_8} = dec_cookieverf3(_1, _6),
-        {_9,_10} = dec_count3(_1, _8),
-        {{_3,_5,_7,_9},_10}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_cookie3(_1, _4),
+        {_7, _8} = dec_cookieverf3(_1, _6),
+        {_9, _10} = dec_count3(_1, _8),
+        {{_3, _5, _7, _9}, _10}
     end.
 
 enc_entry3(_1) ->
     case _1 of
-        {_5,_4,_3,_2} ->
+        {_5, _4, _3, _2} ->
             [enc_fileid3(_5),
              enc_filename3(_4),
              enc_cookie3(_3),
@@ -2232,37 +2243,37 @@ enc_entry3(_1) ->
                  void ->
                      <<0:32>>;
                  _ ->
-                     [<<1:32>>,enc_entry3(_2)]
+                     [<<1:32>>, enc_entry3(_2)]
              end]
     end.
 
 dec_entry3(_1, _2) ->
     begin
-        {_3,_4} = dec_fileid3(_1, _2),
-        {_5,_6} = dec_filename3(_1, _4),
-        {_7,_8} = dec_cookie3(_1, _6),
-        {_9,_10} =
+        {_3, _4} = dec_fileid3(_1, _2),
+        {_5, _6} = dec_filename3(_1, _4),
+        {_7, _8} = dec_cookie3(_1, _6),
+        {_9, _10} =
             begin
                 <<_:_8/binary,_11:32/unsigned,_/binary>> = _1,
                 _12 = _8 + 4,
                 if
                     _11 == 0 ->
-                        {void,_12};
+                        {void, _12};
                     _11 == 1 ->
                         dec_entry3(_1, _12)
                 end
             end,
-        {{_3,_5,_7,_9},_10}
+        {{_3, _5, _7, _9}, _10}
     end.
 
 enc_dirlist3(_1) ->
     case _1 of
-        {_3,_2} ->
+        {_3, _2} ->
             [case _3 of
                  void ->
                      <<0:32>>;
                  _ ->
-                     [<<1:32>>,enc_entry3(_3)]
+                     [<<1:32>>, enc_entry3(_3)]
              end,
              if
                  _2 == true ->
@@ -2274,13 +2285,13 @@ enc_dirlist3(_1) ->
 
 dec_dirlist3(_1, _2) ->
     begin
-        {_3,_4} =
+        {_3, _4} =
             begin
                 <<_:_2/binary,_5:32/unsigned,_/binary>> = _1,
                 _6 = _2 + 4,
                 if
                     _5 == 0 ->
-                        {void,_6};
+                        {void, _6};
                     _5 == 1 ->
                         dec_entry3(_1, _6)
                 end
@@ -2298,21 +2309,23 @@ dec_dirlist3(_1, _2) ->
             end,
             _8 = _4 + 4
         end,
-        {{_3,_7},_8}
+        {{_3, _7}, _8}
     end.
 
 enc_readdir3resok(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_post_op_attr(_4),enc_cookieverf3(_3),enc_dirlist3(_2)]
+        {_4, _3, _2} ->
+            [enc_post_op_attr(_4),
+             enc_cookieverf3(_3),
+             enc_dirlist3(_2)]
     end.
 
 dec_readdir3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_cookieverf3(_1, _4),
-        {_7,_8} = dec_dirlist3(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_cookieverf3(_1, _4),
+        {_7, _8} = dec_dirlist3(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_readdir3resfail(_1) ->
@@ -2323,13 +2336,13 @@ enc_readdir3resfail(_1) ->
 
 dec_readdir3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_readdir3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2345,18 +2358,18 @@ dec_readdir3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_readdir3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_readdir3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_readdir3resfail(_1, _6),
+                {_4, _5} = dec_readdir3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_readdirplus3args(_1) ->
     case _1 of
-        {_6,_5,_4,_3,_2} ->
+        {_6, _5, _4, _3, _2} ->
             [enc_nfs_fh3(_6),
              enc_cookie3(_5),
              enc_cookieverf3(_4),
@@ -2366,17 +2379,17 @@ enc_readdirplus3args(_1) ->
 
 dec_readdirplus3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_cookie3(_1, _4),
-        {_7,_8} = dec_cookieverf3(_1, _6),
-        {_9,_10} = dec_count3(_1, _8),
-        {_11,_12} = dec_count3(_1, _10),
-        {{_3,_5,_7,_9,_11},_12}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_cookie3(_1, _4),
+        {_7, _8} = dec_cookieverf3(_1, _6),
+        {_9, _10} = dec_count3(_1, _8),
+        {_11, _12} = dec_count3(_1, _10),
+        {{_3, _5, _7, _9, _11}, _12}
     end.
 
 enc_entryplus3(_1) ->
     case _1 of
-        {_7,_6,_5,_4,_3,_2} ->
+        {_7, _6, _5, _4, _3, _2} ->
             [enc_fileid3(_7),
              enc_filename3(_6),
              enc_cookie3(_5),
@@ -2386,39 +2399,39 @@ enc_entryplus3(_1) ->
                  void ->
                      <<0:32>>;
                  _ ->
-                     [<<1:32>>,enc_entryplus3(_2)]
+                     [<<1:32>>, enc_entryplus3(_2)]
              end]
     end.
 
 dec_entryplus3(_1, _2) ->
     begin
-        {_3,_4} = dec_fileid3(_1, _2),
-        {_5,_6} = dec_filename3(_1, _4),
-        {_7,_8} = dec_cookie3(_1, _6),
-        {_9,_10} = dec_post_op_attr(_1, _8),
-        {_11,_12} = dec_post_op_fh3(_1, _10),
-        {_13,_14} =
+        {_3, _4} = dec_fileid3(_1, _2),
+        {_5, _6} = dec_filename3(_1, _4),
+        {_7, _8} = dec_cookie3(_1, _6),
+        {_9, _10} = dec_post_op_attr(_1, _8),
+        {_11, _12} = dec_post_op_fh3(_1, _10),
+        {_13, _14} =
             begin
                 <<_:_12/binary,_15:32/unsigned,_/binary>> = _1,
                 _16 = _12 + 4,
                 if
                     _15 == 0 ->
-                        {void,_16};
+                        {void, _16};
                     _15 == 1 ->
                         dec_entryplus3(_1, _16)
                 end
             end,
-        {{_3,_5,_7,_9,_11,_13},_14}
+        {{_3, _5, _7, _9, _11, _13}, _14}
     end.
 
 enc_dirlistplus3(_1) ->
     case _1 of
-        {_3,_2} ->
+        {_3, _2} ->
             [case _3 of
                  void ->
                      <<0:32>>;
                  _ ->
-                     [<<1:32>>,enc_entryplus3(_3)]
+                     [<<1:32>>, enc_entryplus3(_3)]
              end,
              if
                  _2 == true ->
@@ -2430,13 +2443,13 @@ enc_dirlistplus3(_1) ->
 
 dec_dirlistplus3(_1, _2) ->
     begin
-        {_3,_4} =
+        {_3, _4} =
             begin
                 <<_:_2/binary,_5:32/unsigned,_/binary>> = _1,
                 _6 = _2 + 4,
                 if
                     _5 == 0 ->
-                        {void,_6};
+                        {void, _6};
                     _5 == 1 ->
                         dec_entryplus3(_1, _6)
                 end
@@ -2454,12 +2467,12 @@ dec_dirlistplus3(_1, _2) ->
             end,
             _8 = _4 + 4
         end,
-        {{_3,_7},_8}
+        {{_3, _7}, _8}
     end.
 
 enc_readdirplus3resok(_1) ->
     case _1 of
-        {_4,_3,_2} ->
+        {_4, _3, _2} ->
             [enc_post_op_attr(_4),
              enc_cookieverf3(_3),
              enc_dirlistplus3(_2)]
@@ -2467,10 +2480,10 @@ enc_readdirplus3resok(_1) ->
 
 dec_readdirplus3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_cookieverf3(_1, _4),
-        {_7,_8} = dec_dirlistplus3(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_cookieverf3(_1, _4),
+        {_7, _8} = dec_dirlistplus3(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_readdirplus3resfail(_1) ->
@@ -2481,13 +2494,13 @@ enc_readdirplus3resfail(_1) ->
 
 dec_readdirplus3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_readdirplus3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2503,12 +2516,12 @@ dec_readdirplus3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_readdirplus3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_readdirplus3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_readdirplus3resfail(_1, _6),
+                {_4, _5} = dec_readdirplus3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -2520,13 +2533,13 @@ enc_fsstat3args(_1) ->
 
 dec_fsstat3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_fsstat3resok(_1) ->
     case _1 of
-        {_9,_8,_7,_6,_5,_4,_3,_2} ->
+        {_9, _8, _7, _6, _5, _4, _3, _2} ->
             [enc_post_op_attr(_9),
              enc_size3(_8),
              enc_size3(_7),
@@ -2539,15 +2552,15 @@ enc_fsstat3resok(_1) ->
 
 dec_fsstat3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_size3(_1, _4),
-        {_7,_8} = dec_size3(_1, _6),
-        {_9,_10} = dec_size3(_1, _8),
-        {_11,_12} = dec_size3(_1, _10),
-        {_13,_14} = dec_size3(_1, _12),
-        {_15,_16} = dec_size3(_1, _14),
-        {_17,_18} = dec_uint32(_1, _16),
-        {{_3,_5,_7,_9,_11,_13,_15,_17},_18}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_size3(_1, _4),
+        {_7, _8} = dec_size3(_1, _6),
+        {_9, _10} = dec_size3(_1, _8),
+        {_11, _12} = dec_size3(_1, _10),
+        {_13, _14} = dec_size3(_1, _12),
+        {_15, _16} = dec_size3(_1, _14),
+        {_17, _18} = dec_uint32(_1, _16),
+        {{_3, _5, _7, _9, _11, _13, _15, _17}, _18}
     end.
 
 enc_fsstat3resfail(_1) ->
@@ -2558,13 +2571,13 @@ enc_fsstat3resfail(_1) ->
 
 dec_fsstat3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_fsstat3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2580,12 +2593,12 @@ dec_fsstat3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_fsstat3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_fsstat3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_fsstat3resfail(_1, _6),
+                {_4, _5} = dec_fsstat3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -2597,13 +2610,13 @@ enc_fsinfo3args(_1) ->
 
 dec_fsinfo3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_fsinfo3resok(_1) ->
     case _1 of
-        {_12,_11,_10,_9,_8,_7,_6,_5,_4,_3,_2} ->
+        {_12, _11, _10, _9, _8, _7, _6, _5, _4, _3, _2} ->
             [enc_post_op_attr(_12),
              enc_uint32(_11),
              enc_uint32(_10),
@@ -2619,18 +2632,18 @@ enc_fsinfo3resok(_1) ->
 
 dec_fsinfo3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_uint32(_1, _4),
-        {_7,_8} = dec_uint32(_1, _6),
-        {_9,_10} = dec_uint32(_1, _8),
-        {_11,_12} = dec_uint32(_1, _10),
-        {_13,_14} = dec_uint32(_1, _12),
-        {_15,_16} = dec_uint32(_1, _14),
-        {_17,_18} = dec_uint32(_1, _16),
-        {_19,_20} = dec_size3(_1, _18),
-        {_21,_22} = dec_nfstime3(_1, _20),
-        {_23,_24} = dec_uint32(_1, _22),
-        {{_3,_5,_7,_9,_11,_13,_15,_17,_19,_21,_23},_24}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_uint32(_1, _4),
+        {_7, _8} = dec_uint32(_1, _6),
+        {_9, _10} = dec_uint32(_1, _8),
+        {_11, _12} = dec_uint32(_1, _10),
+        {_13, _14} = dec_uint32(_1, _12),
+        {_15, _16} = dec_uint32(_1, _14),
+        {_17, _18} = dec_uint32(_1, _16),
+        {_19, _20} = dec_size3(_1, _18),
+        {_21, _22} = dec_nfstime3(_1, _20),
+        {_23, _24} = dec_uint32(_1, _22),
+        {{_3, _5, _7, _9, _11, _13, _15, _17, _19, _21, _23}, _24}
     end.
 
 enc_fsinfo3resfail(_1) ->
@@ -2641,13 +2654,13 @@ enc_fsinfo3resfail(_1) ->
 
 dec_fsinfo3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_fsinfo3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2663,12 +2676,12 @@ dec_fsinfo3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_fsinfo3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_fsinfo3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_fsinfo3resfail(_1, _6),
+                {_4, _5} = dec_fsinfo3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -2680,13 +2693,13 @@ enc_pathconf3args(_1) ->
 
 dec_pathconf3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_pathconf3resok(_1) ->
     case _1 of
-        {_8,_7,_6,_5,_4,_3,_2} ->
+        {_8, _7, _6, _5, _4, _3, _2} ->
             [enc_post_op_attr(_8),
              enc_uint32(_7),
              enc_uint32(_6),
@@ -2718,9 +2731,9 @@ enc_pathconf3resok(_1) ->
 
 dec_pathconf3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {_5,_6} = dec_uint32(_1, _4),
-        {_7,_8} = dec_uint32(_1, _6),
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {_5, _6} = dec_uint32(_1, _4),
+        {_7, _8} = dec_uint32(_1, _6),
         begin
             begin
                 <<_:_8/binary,_11:32/unsigned,_/binary>> = _1,
@@ -2773,7 +2786,7 @@ dec_pathconf3resok(_1, _2) ->
             end,
             _19 = _16 + 4
         end,
-        {{_3,_5,_7,_9,_12,_15,_18},_19}
+        {{_3, _5, _7, _9, _12, _15, _18}, _19}
     end.
 
 enc_pathconf3resfail(_1) ->
@@ -2784,13 +2797,13 @@ enc_pathconf3resfail(_1) ->
 
 dec_pathconf3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_post_op_attr(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_post_op_attr(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_pathconf3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2806,40 +2819,40 @@ dec_pathconf3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_pathconf3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_pathconf3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_pathconf3resfail(_1, _6),
+                {_4, _5} = dec_pathconf3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
 enc_commit3args(_1) ->
     case _1 of
-        {_4,_3,_2} ->
-            [enc_nfs_fh3(_4),enc_offset3(_3),enc_count3(_2)]
+        {_4, _3, _2} ->
+            [enc_nfs_fh3(_4), enc_offset3(_3), enc_count3(_2)]
     end.
 
 dec_commit3args(_1, _2) ->
     begin
-        {_3,_4} = dec_nfs_fh3(_1, _2),
-        {_5,_6} = dec_offset3(_1, _4),
-        {_7,_8} = dec_count3(_1, _6),
-        {{_3,_5,_7},_8}
+        {_3, _4} = dec_nfs_fh3(_1, _2),
+        {_5, _6} = dec_offset3(_1, _4),
+        {_7, _8} = dec_count3(_1, _6),
+        {{_3, _5, _7}, _8}
     end.
 
 enc_commit3resok(_1) ->
     case _1 of
-        {_3,_2} ->
-            [enc_wcc_data(_3),enc_writeverf3(_2)]
+        {_3, _2} ->
+            [enc_wcc_data(_3), enc_writeverf3(_2)]
     end.
 
 dec_commit3resok(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {_5,_6} = dec_writeverf3(_1, _4),
-        {{_3,_5},_6}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {_5, _6} = dec_writeverf3(_1, _4),
+        {{_3, _5}, _6}
     end.
 
 enc_commit3resfail(_1) ->
@@ -2850,13 +2863,13 @@ enc_commit3resfail(_1) ->
 
 dec_commit3resfail(_1, _2) ->
     begin
-        {_3,_4} = dec_wcc_data(_1, _2),
-        {{_3},_4}
+        {_3, _4} = dec_wcc_data(_1, _2),
+        {{_3}, _4}
     end.
 
 enc_commit3res(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_nfsstat3(_2),
              case _2 of
                  'NFS3_OK' ->
@@ -2872,12 +2885,12 @@ dec_commit3res(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_commit3resok(_1, _6),
-                {{'NFS3_OK',_4},_5};
+                {_4, _5} = dec_commit3resok(_1, _6),
+                {{'NFS3_OK', _4}, _5};
             _ ->
-                {_4,_5} = dec_commit3resfail(_1, _6),
+                {_4, _5} = dec_commit3resfail(_1, _6),
                 _7 = dec_nfsstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 

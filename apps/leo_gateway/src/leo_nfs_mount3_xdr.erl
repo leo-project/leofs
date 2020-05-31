@@ -19,13 +19,13 @@ enc_fhandle(_1) ->
         32 ->
             _1;
         _ ->
-            exit({xdr,limit})
+            exit({xdr, limit})
     end.
 
 dec_fhandle(_1, _2) ->
     begin
         <<_:_2/binary,_3:32/binary,_/binary>> = _1,
-        {_3,_2 + 32}
+        {_3, _2 + 32}
     end.
 
 enc_fhandle3(_1) ->
@@ -33,9 +33,9 @@ enc_fhandle3(_1) ->
         _2 = io_list_len(_1),
         if
             _2 =< 64 ->
-                [<<_2:32/unsigned>>,_1,enc_align(_2)];
+                [<<_2:32/unsigned>>, _1, enc_align(_2)];
             true ->
-                exit({xdr,limit})
+                exit({xdr, limit})
         end
     end.
 
@@ -44,17 +44,17 @@ dec_fhandle3(_1, _2) ->
         <<_:_2/binary,_3:32/unsigned,_/binary>> = _1,
         if
             _3 > 64 ->
-                exit({xdr,limit});
+                exit({xdr, limit});
             true ->
                 _4 = _2 + 4,
                 <<_:_4/binary,_5:_3/binary,_/binary>> = _1,
-                {_5,_4 + align(_3)}
+                {_5, _4 + align(_3)}
         end
     end.
 
 enc_fhstatus(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [<<_2:32>>,
              case _2 of
                  0 ->
@@ -70,11 +70,11 @@ dec_fhstatus(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_fhandle(_1, _6),
-                {{0,_4},_5};
+                {_4, _5} = dec_fhandle(_1, _6),
+                {{0, _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
-                {{_3,_4},_5}
+                {_4, _5} = {void, _6},
+                {{_3, _4}, _5}
         end
     end.
 
@@ -107,25 +107,25 @@ dec_mountstat3(_1, _2) ->
         <<_:_2/binary,_3:32,_/binary>> = _1,
         case _3 of
             0 ->
-                {'MNT3_OK',_2 + 4};
+                {'MNT3_OK', _2 + 4};
             1 ->
-                {'MNT3ERR_PERM',_2 + 4};
+                {'MNT3ERR_PERM', _2 + 4};
             2 ->
-                {'MNT3ERR_NOENT',_2 + 4};
+                {'MNT3ERR_NOENT', _2 + 4};
             5 ->
-                {'MNT3ERR_IO',_2 + 4};
+                {'MNT3ERR_IO', _2 + 4};
             13 ->
-                {'MNT3ERR_ACCES',_2 + 4};
+                {'MNT3ERR_ACCES', _2 + 4};
             20 ->
-                {'MNT3ERR_NOTDIR',_2 + 4};
+                {'MNT3ERR_NOTDIR', _2 + 4};
             22 ->
-                {'MNT3ERR_INVAL',_2 + 4};
+                {'MNT3ERR_INVAL', _2 + 4};
             63 ->
-                {'MNT3ERR_NAMETOOLONG',_2 + 4};
+                {'MNT3ERR_NAMETOOLONG', _2 + 4};
             10004 ->
-                {'MNT3ERR_NOTSUPP',_2 + 4};
+                {'MNT3ERR_NOTSUPP', _2 + 4};
             10006 ->
-                {'MNT3ERR_SERVERFAULT',_2 + 4}
+                {'MNT3ERR_SERVERFAULT', _2 + 4}
         end
     end.
 
@@ -155,7 +155,7 @@ dec_mountstat3_i2a(_4) ->
 
 enc_mountres3_ok(_1) ->
     case _1 of
-        {_5,_2} ->
+        {_5, _2} ->
             [enc_fhandle3(_5),
              begin
                  _4 = length(_2),
@@ -169,28 +169,27 @@ enc_mountres3_ok(_1) ->
 
 dec_mountres3_ok(_1, _2) ->
     begin
-        {_3,_4} = dec_fhandle3(_1, _2),
-        {_5,_6} =
+        {_3, _4} = dec_fhandle3(_1, _2),
+        {_5, _6} =
             begin
                 <<_:_4/binary,_7:32/unsigned,_/binary>> = _1,
                 map_elem(fun(_8, _9) ->
                                 begin
                                     <<_:_9/binary,_10:32/signed,_/binary>> =
                                         _8,
-                                    {_10,_9 + 4}
+                                    {_10, _9 + 4}
                                 end
                          end,
                          _1,
                          _4 + 4,
-                         infinity,
-                         _7)
+                         infinity, _7)
             end,
-        {{_3,_5},_6}
+        {{_3, _5}, _6}
     end.
 
 enc_mountres3(_1) ->
     case _1 of
-        {_2,_3} ->
+        {_2, _3} ->
             [enc_mountstat3(_2),
              case _2 of
                  'MNT3_OK' ->
@@ -206,12 +205,12 @@ dec_mountres3(_1, _2) ->
         _6 = _2 + 4,
         case _3 of
             0 ->
-                {_4,_5} = dec_mountres3_ok(_1, _6),
-                {{'MNT3_OK',_4},_5};
+                {_4, _5} = dec_mountres3_ok(_1, _6),
+                {{'MNT3_OK', _4}, _5};
             _ ->
-                {_4,_5} = {void,_6},
+                {_4, _5} = {void, _6},
                 _7 = dec_mountstat3_i2a(_3),
-                {{_7,_4},_5}
+                {{_7, _4}, _5}
         end
     end.
 
@@ -220,9 +219,9 @@ enc_dirpath(_1) ->
         _2 = io_list_len(_1),
         if
             _2 =< 1024 ->
-                [<<_2:32/unsigned>>,_1,enc_align(_2)];
+                [<<_2:32/unsigned>>, _1, enc_align(_2)];
             true ->
-                exit({xdr,limit})
+                exit({xdr, limit})
         end
     end.
 
@@ -231,11 +230,11 @@ dec_dirpath(_1, _2) ->
         <<_:_2/binary,_3:32/unsigned,_/binary>> = _1,
         if
             _3 > 1024 ->
-                exit({xdr,limit});
+                exit({xdr, limit});
             true ->
                 _4 = _2 + 4,
                 <<_:_4/binary,_5:_3/binary,_/binary>> = _1,
-                {_5,_4 + align(_3)}
+                {_5, _4 + align(_3)}
         end
     end.
 
@@ -244,9 +243,9 @@ enc_name(_1) ->
         _2 = io_list_len(_1),
         if
             _2 =< 255 ->
-                [<<_2:32/unsigned>>,_1,enc_align(_2)];
+                [<<_2:32/unsigned>>, _1, enc_align(_2)];
             true ->
-                exit({xdr,limit})
+                exit({xdr, limit})
         end
     end.
 
@@ -255,11 +254,11 @@ dec_name(_1, _2) ->
         <<_:_2/binary,_3:32/unsigned,_/binary>> = _1,
         if
             _3 > 255 ->
-                exit({xdr,limit});
+                exit({xdr, limit});
             true ->
                 _4 = _2 + 4,
                 <<_:_4/binary,_5:_3/binary,_/binary>> = _1,
-                {_5,_4 + align(_3)}
+                {_5, _4 + align(_3)}
         end
     end.
 
@@ -270,8 +269,8 @@ enc_mountbody(_1) ->
         _ ->
             [<<1:32>>,
              case _1 of
-                 {_4,_3,_2} ->
-                     [enc_name(_4),enc_dirpath(_3),enc_mountbody(_2)]
+                 {_4, _3, _2} ->
+                     [enc_name(_4), enc_dirpath(_3), enc_mountbody(_2)]
              end]
     end.
 
@@ -281,13 +280,13 @@ dec_mountbody(_1, _2) ->
         _4 = _2 + 4,
         if
             _3 == 0 ->
-                {void,_4};
+                {void, _4};
             _3 == 1 ->
                 begin
-                    {_5,_6} = dec_name(_1, _4),
-                    {_7,_8} = dec_dirpath(_1, _6),
-                    {_9,_10} = dec_mountbody(_1, _8),
-                    {{_5,_7,_9},_10}
+                    {_5, _6} = dec_name(_1, _4),
+                    {_7, _8} = dec_dirpath(_1, _6),
+                    {_9, _10} = dec_mountbody(_1, _8),
+                    {{_5, _7, _9}, _10}
                 end
         end
     end.
@@ -299,8 +298,8 @@ enc_groupnode(_1) ->
         _ ->
             [<<1:32>>,
              case _1 of
-                 {_3,_2} ->
-                     [enc_name(_3),enc_groupnode(_2)]
+                 {_3, _2} ->
+                     [enc_name(_3), enc_groupnode(_2)]
              end]
     end.
 
@@ -310,12 +309,12 @@ dec_groupnode(_1, _2) ->
         _4 = _2 + 4,
         if
             _3 == 0 ->
-                {void,_4};
+                {void, _4};
             _3 == 1 ->
                 begin
-                    {_5,_6} = dec_name(_1, _4),
-                    {_7,_8} = dec_groupnode(_1, _6),
-                    {{_5,_7},_8}
+                    {_5, _6} = dec_name(_1, _4),
+                    {_7, _8} = dec_groupnode(_1, _6),
+                    {{_5, _7}, _8}
                 end
         end
     end.
@@ -327,7 +326,7 @@ enc_exportnode(_1) ->
         _ ->
             [<<1:32>>,
              case _1 of
-                 {_4,_3,_2} ->
+                 {_4, _3, _2} ->
                      [enc_dirpath(_4),
                       enc_groupnode(_3),
                       enc_exportnode(_2)]
@@ -340,13 +339,13 @@ dec_exportnode(_1, _2) ->
         _4 = _2 + 4,
         if
             _3 == 0 ->
-                {void,_4};
+                {void, _4};
             _3 == 1 ->
                 begin
-                    {_5,_6} = dec_dirpath(_1, _4),
-                    {_7,_8} = dec_groupnode(_1, _6),
-                    {_9,_10} = dec_exportnode(_1, _8),
-                    {{_5,_7,_9},_10}
+                    {_5, _6} = dec_dirpath(_1, _4),
+                    {_7, _8} = dec_groupnode(_1, _6),
+                    {_9, _10} = dec_exportnode(_1, _8),
+                    {{_5, _7, _9}, _10}
                 end
         end
     end.
