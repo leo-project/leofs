@@ -1,4 +1,44 @@
 # CHANGELOG
+## 1.4.4 (June 3, 2020)
+### Maintenance
+
+* `leo_gateway` Remove an unnecessary library, `savanna_agent`
+* `ALL` Added OTP 22.3 support
+
+### Libraries
+#### Leo Project
+
+* [leo_backend_db v2.0.2](https://github.com/leo-project/leo_backend_db/releases/tag/2.0.2)
+* [leo_cache v0.8.13](https://github.com/leo-project/leo_cache/releases/tag/0.8.13)
+* [leo_commons v1.2.2](https://github.com/leo-project/leo_commons/releases/tag/1.2.2)
+* [leo_dcerl v0.4.12](https://github.com/leo-project/leo_dcerl/releases/tag/0.4.12)
+* [leo_logger v1.3.9](https://github.com/leo-project/leo_logger/releases/tag/1.3.9)
+* [leo_mcerl v0.6.10](https://github.com/leo-project/leo_mcerl/releases/tag/0.6.10)
+* [leo_mq v2.0.3](https://github.com/leo-project/leo_mq/releases/tag/2.0.3)
+* [leo_object_storage v1.3.41](https://github.com/leo-project/leo_object_storage/releases/tag/1.3.41)
+* [leo_ordning_reda v1.2.12](https://github.com/leo-project/leo_ordning_reda/releases/tag/1.2.12)
+* [leo_pod v0.6.11](https://github.com/leo-project/leo_pod/releases/tag/0.6.11)
+* [leo_redundant_manager 1.9.67](https://github.com/leo-project/leo_redundant_manager/releases/tag/1.9.67)
+* [leo_rpc v0.10.20](https://github.com/leo-project/leo_rpc/releases/tag/0.10.20)
+* [leo_s3_libs v1.2.23](https://github.com/leo-project/leo_s3_libs/releases/tag/1.2.23)
+* [leo_statistics v1.1.25](https://github.com/leo-project/leo_statistics/releases/tag/1.1.25)
+* [leo_tran v0.2.15](https://github.com/leo-project/leo_tran/releases/tag/0.2.15)
+* [leo_watchdog v1.0.8](https://github.com/leo-project/leo_watchdog/releases/tag/1.0.8)
+* [savanna_commons v0.10.14](https://github.com/leo-project/savanna_commons/releases/tag/0.10.14)
+* [erpcgen v0.2.8](https://github.com/leo-project/erpcgen/releases/tag/0.2.8)
+* [nfs_rpc_server v0.2.8](https://github.com/leo-project/nfs_rpc_server/releases/tag/0.2.8)
+
+#### Others
+
+* [cowboy v1.0.0](https://github.com/leo-project/cowboy/tree/for-leofs-1.4)
+* [cowlib v1.0.0](https://github.com/extend/cowboy/releases/tag/1.0.0)
+* [elarm (ESL)](https://github.com/esl/elarm/commit/5885c906cb7c248f233b90b83f6b910b7b1d293b)
+* [eleveldb v2.0.37](https://github.com/basho/eleveldb/releases/tag/2.0.37)
+* [folsom v0.8.2.3](https://github.com/leo-project/folsom/releases/tag/0.8.2.3)
+* [jiffy v0.15.2](https://github.com/davisp/jiffy/releases/tag/0.15.2)
+* [recon v2.3.1](https://github.com/ferd/recon/releases/tag/2.3.1)
+
+
 ## 1.4.3 (February 20, 2019)
 ### New Features
 
