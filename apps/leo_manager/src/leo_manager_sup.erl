@@ -24,9 +24,9 @@
 -behaviour(supervisor).
 
 -include("leo_manager.hrl").
+-include("leo_manager_logger.hrl").
 -include("tcp_server.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_auth.hrl").
@@ -115,7 +115,6 @@ start_link() ->
                 _ ->
                     create_mnesia_tables_2(Mode, ReplicaNodes_2)
             end,
-            leo_logger_api:reset_hwm(),
             {ok, Pid};
         Error ->
             Error
@@ -220,15 +219,37 @@ init([]) ->
 %% ---------------------------------------------------------------------
 %% Inner Function(s)
 %% ---------------------------------------------------------------------
-%% @doc Launch LeoLogger
+%% @doc Launch OTP Logger
 %% @private
 start_logger() ->
-    LogDir = ?env_log_dir(),
-    LogLevel = ?env_log_level(leo_manager),
-    ok = leo_logger_api:new(
-           LogDir, LogLevel, log_file_appender()),
-    ok = leo_logger_api:new(?LOG_GROUP_ID_HISTORY, ?LOG_ID_HISTORY,
-                                    LogDir, ?LOG_FILENAME_HISTORY),
+    DefLogDir = "./log/",
+    LogDir = case application:get_env(leo_manager, log_appender) of
+                 {ok, [{file, Options}|_]} ->
+                     leo_misc:get_value(path, Options, DefLogDir);
+                 _ ->
+                     DefLogDir
+             end,
+    LogLevel = case ?env_log_level(leo_manager) of
+                   ?LOG_LEVEL_DEBUG -> debug;
+                   ?LOG_LEVEL_INFO  -> info;
+                   ?LOG_LEVEL_WARN  -> warning;
+                   ?LOG_LEVEL_ERROR -> error;
+                   ?LOG_LEVEL_FATAL -> critical;
+                   _ -> info
+               end,
+    %% Configure OTP logger
+    ok = filelib:ensure_dir(LogDir ++ "/"),
+    LogFile = filename:join(LogDir, "leo_manager.log"),
+    HandlerConfig = #{config => #{file => LogFile,
+                                   max_no_bytes => 10485760,
+                                   max_no_files => 10},
+                      level => LogLevel,
+                      formatter => {logger_formatter,
+                                    #{template => [time, " ", level, " ",
+                                                   {mfa, ["[", mfa, "]"], []}, " ",
+                                                   msg, "\n"]}}},
+    logger:add_handler(leo_manager_file_handler, logger_disk_log_h, HandlerConfig),
+    logger:set_primary_config(level, LogLevel),
     ok.
 
 
@@ -550,25 +571,3 @@ create_s3api_related_tables(true, Nodes) ->
     leo_s3_endpoint:set_endpoint(?DEF_ENDPOINT_1),
     leo_s3_endpoint:set_endpoint(?DEF_ENDPOINT_2),
     ok.
-
-
-%% @doc Get log-file appender from env
-%% @private
--spec(log_file_appender() ->
-             list()).
-log_file_appender() ->
-    case application:get_env(leo_manager, log_appender) of
-        undefined   -> log_file_appender([], []);
-        {ok, Value} -> log_file_appender(Value, [])
-    end.
-
--spec(log_file_appender(list(), list()) ->
-             list()).
-log_file_appender([], []) ->
-    [{?LOG_ID_FILE_INFO,  ?LOG_APPENDER_FILE},
-     {?LOG_ID_FILE_ERROR, ?LOG_APPENDER_FILE}];
-log_file_appender([], Acc) ->
-    lists:reverse(Acc);
-log_file_appender([{Type, _}|T], Acc) when Type == file ->
-    log_file_appender(T, [{?LOG_ID_FILE_ERROR, ?LOG_APPENDER_FILE}|
-                          [{?LOG_ID_FILE_INFO, ?LOG_APPENDER_FILE}|Acc]]).

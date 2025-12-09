@@ -21,11 +21,7 @@
 %% -------------------------------------------------------------------
 -include_lib("eunit/include/eunit.hrl").
 
--ifdef(namespaced_types).
 -type mgr_dict() :: dict:dict().
--else.
--type mgr_dict() :: dict().
--endif.
 
 
 %% constants
@@ -356,19 +352,13 @@
 -define(DEF_LOG_DIR, "./log/").
 
 %% Command history related
--define(LOG_GROUP_ID_HISTORY, 'log_grp_history_log').
--define(LOG_ID_HISTORY, 'log_id_history_log').
 -define(LOG_FILENAME_HISTORY, "cmd_history").
 -define(put_cmd_history(_CmdBody),
         begin
-            leo_logger_api:append(
-              {?LOG_ID_HISTORY,
-               #message_log{format  = "~s\t~w\t~s",
-                            message = [leo_date:date_format(),
-                                       leo_date:clock(),
-                                       binary_to_list(_CmdBody)
-                                      ]}
-              })
+            logger:info("~s\t~w\t~s",
+                       [leo_date:date_format(),
+                        leo_date:clock(),
+                        binary_to_list(_CmdBody)])
         end).
 
 

@@ -28,8 +28,8 @@
 -export([init/5, accept/4]).
 
 -include("leo_manager.hrl").
+-include("leo_manager_logger.hrl").
 -include("tcp_server.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 
