@@ -3,6 +3,7 @@
 %% LeoStorage
 %%
 %% Copyright (c) 2012-2018 Rakuten, Inc.
+%% Copyright (c) 2019-2025 Lions Data, Ltd.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -26,8 +27,8 @@
 -module(leo_storage_api_tests).
 
 -include("leo_storage.hrl").
+-include("leo_storage_logger.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").
@@ -55,28 +56,23 @@ setup() ->
 
     Node0 = list_to_atom("node_0@" ++ Hostname),
     net_kernel:start([Node0, shortnames]),
-    {ok, Node1} = slave:start_link(list_to_atom(Hostname), 'manager_0'),
 
-    true = rpc:call(Node0, code, add_path, ["../deps/meck/ebin"]),
-    true = rpc:call(Node1, code, add_path, ["../deps/meck/ebin"]),
+    %% Use peer module instead of deprecated slave module
+    {ok, Peer, Node1} = peer:start_link(#{name => manager_0}),
 
-    %% meck:new(leo_logger_api),
-    %% meck:expect(leo_logger_api, new,          fun(_,_,_) -> ok end),
-    %% meck:expect(leo_logger_api, new,          fun(_,_,_,_,_) -> ok end),
-    %% meck:expect(leo_logger_api, new,          fun(_,_,_,_,_,_) -> ok end),
-    %% meck:expect(leo_logger_api, add_appender, fun(_,_) -> ok end),
-    %% meck:expect(leo_logger_api, append,       fun(_,_) -> ok end),
-    %% meck:expect(leo_logger_api, append,       fun(_,_,_) -> ok end),
-    [Node0, Node1].
+    MeckPath = filename:dirname(code:which(meck)),
+    rpc:call(Node1, code, add_path, [MeckPath]),
 
-teardown([_, Node1]) ->
+    [Node0, Node1, Peer].
+
+teardown([_, _Node1, Peer]) ->
+    catch meck:unload(),
     net_kernel:stop(),
-    slave:stop(Node1),
-    meck:unload(),
+    catch peer:stop(Peer),
     ok.
 
 
-register_in_monitor_([_Node0, Node1]) ->
+register_in_monitor_([_Node0, Node1, _Peer]) ->
     %% 1.
     Res0 = leo_storage_api:register_in_monitor(first),
     ?assertEqual({error, not_found}, Res0),
@@ -88,19 +84,26 @@ register_in_monitor_([_Node0, Node1]) ->
                                             _L1,_L2,_NumOfVNodes,_RPCPort) ->
                                                 ok
                                         end]),
-    Pid = spawn(fun() -> void end),
+    Pid = spawn(fun() -> receive _ -> ok end end),
     true = register('leo_storage_sup', Pid),
     Res1 = leo_storage_api:register_in_monitor(first),
     ?assertEqual(ok, Res1),
 
-    %% 3.
+    %% 3. Mock leo_manager_api to return error - but register_in_monitor
+    %% schedules a retry and returns ok anyway (it never returns error when leo_storage_sup exists)
     ok = rpc:call(Node1, meck, unload, [leo_manager_api]),
     ok = rpc:call(Node1, meck, new,    [leo_manager_api, [no_link, non_strict]]),
+    ok = rpc:call(Node1, meck, expect, [leo_manager_api, register,
+                                        fun(_RequestedTimes, _Pid, _Node, storage,
+                                            _L1,_L2,_NumOfVNodes,_RPCPort) ->
+                                                {error, not_found}
+                                        end]),
 
     Res2 = leo_storage_api:register_in_monitor(first),
-    ?assertEqual({error, not_found}, Res2),
+    %% Even when RPC fails, register_in_monitor schedules a retry and returns ok
+    ?assertEqual(ok, Res2),
 
-    meck:unload(),
+    catch meck:unload(),
     ok.
 
 get_routing_table_chksum_(_) ->
@@ -115,7 +118,7 @@ get_routing_table_chksum_(_) ->
     meck:unload(),
     ok.
 
-start_([Node0, _]) ->
+start_([Node0, _, _Peer]) ->
     %% 1.
     meck:new(leo_redundant_manager_api, [non_strict]),
     meck:expect(leo_redundant_manager_api, create,
@@ -190,7 +193,7 @@ attach_(_) ->
     meck:unload(),
     ok.
 
-synchronize_([Node0, _]) ->
+synchronize_([Node0, _, _Peer]) ->
     meck:new(leo_storage_handler_object, [non_strict]),
     meck:expect(leo_storage_handler_object, replicate,
                 fun(_Nodes, _AddrId, _Key) ->

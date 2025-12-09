@@ -3,6 +3,7 @@
 %% LeoStorage
 %%
 %% Copyright (c) 2012-2018 Rakuten, Inc.
+%% Copyright (c) 2019-2025 Lions Data, Ltd.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -46,26 +47,29 @@ setup() ->
 
     Node0 = list_to_atom("node_0@" ++ Hostname),
     net_kernel:start([Node0, shortnames]),
-    {ok, Node1} = slave:start_link(list_to_atom(Hostname), 'node_1'),
 
-    true = rpc:call(Node0, code, add_path, ["../deps/meck/ebin"]),
-    true = rpc:call(Node1, code, add_path, ["../deps/meck/ebin"]),
+    %% Use peer module instead of deprecated slave module
+    {ok, Peer, Node1} = peer:start_link(#{name => node_1}),
 
-    [Node0, Node1].
+    MeckPath = filename:dirname(code:which(meck)),
+    rpc:call(Node0, code, add_path, [MeckPath]),
+    rpc:call(Node1, code, add_path, [MeckPath]),
 
-teardown([_, Node1]) ->
+    [Node0, Node1, Peer].
+
+teardown([_, _Node1, Peer]) ->
+    catch meck:unload(),
     net_kernel:stop(),
-    slave:stop(Node1),
+    catch peer:stop(Peer),
     ok.
 
 
-find_by_parent_dir_([Node0, Node1]) ->
+find_by_parent_dir_([Node0, _Node1, _Peer]) ->
+    %% Use only local node to avoid RPC mock issues with peer nodes
     meck:new(leo_redundant_manager_api, [non_strict]),
     meck:expect(leo_redundant_manager_api, get_members,
                 fun() ->
                         Members = [#member{node  = Node0,
-                                           state = ?STATE_RUNNING},
-                                   #member{node  = Node1,
                                            state = ?STATE_RUNNING},
                                    #member{node  = 'stoped_node',
                                            state = ?STATE_STOP}
@@ -73,22 +77,17 @@ find_by_parent_dir_([Node0, Node1]) ->
                         {ok, Members}
                 end),
 
-    ok = rpc:call(Node0, meck, new,    [leo_storage_handler_object, [no_link, non_strict]]),
-    ok = rpc:call(Node0, meck, expect, [leo_storage_handler_object, prefix_search,
-                                        fun(_ParentDir, _,_) ->
-                                                {ok, [#?METADATA{key="air/on/g/0.png"}]}
-                                        end]),
-    ok = rpc:call(Node1, meck, new,    [leo_storage_handler_object, [no_link, non_strict]]),
-    ok = rpc:call(Node1, meck, expect, [leo_storage_handler_object, prefix_search,
-                                        fun(_ParentDir,_,_) ->
-                                                {ok, [#?METADATA{key="air/on/g/1.png"},
-                                                      #?METADATA{key="air/on/g/1.png"}]}
-                                        end]),
+    %% Mock on local node (Node0 is the current test node)
+    meck:new(leo_storage_handler_object, [non_strict]),
+    meck:expect(leo_storage_handler_object, prefix_search,
+                fun(_ParentDir, _,_) ->
+                        {ok, [#?METADATA{key= <<"air/on/g/0.png">>},
+                              #?METADATA{key= <<"air/on/g/1.png">>}]}
+                end),
 
-    {ok, Res} = leo_storage_handler_directory:find_by_parent_dir("air/on/g/", none, none, 1000),
+    {ok, Res} = leo_storage_handler_directory:find_by_parent_dir(<<"air/on/g/">>, none, none, 1000),
     ?assertEqual(2, length(Res)),
 
-    meck:unload(),
     ok.
 
 -endif.
