@@ -28,7 +28,7 @@
 -behaviour(leo_gateway_http_behaviour).
 
 -export([start/2, stop/0,
-         init/3, handle/2, terminate/3]).
+         init/2, handle/2, terminate/3]).
 -export([onrequest/1, onresponse/1]).
 -export([get_bucket/3, put_bucket/3, delete_bucket/3, head_bucket/3,
          get_object/3, put_object/3, delete_object/3, head_object/3,
@@ -36,7 +36,7 @@
 
 -include("leo_gateway.hrl").
 -include("leo_http.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 -compile({inline, [handle/2, handle_1/3]}).
@@ -54,13 +54,13 @@ stop() ->
     ok.
 
 
-%% @doc Initializer
-init({_Any, http}, Req, Opts) ->
-    {ok, Req, Opts}.
+%% @doc Initializer (Cowboy 2.x)
+init(Req, Opts) ->
+    handle(Req, Opts).
 
 
 %% @doc Handle a request
-%% @callback
+%% @private
 handle(Req, State) ->
     {_Bucket, Key}= gen_key(Req),
     case Key of
@@ -173,7 +173,7 @@ range_object(Req, Key, Params) ->
 %% @doc Create a key
 %% @private
 gen_key(Req) ->
-    {Path1, _} = cowboy_req:path(Req),
+    Path1 = cowboy_req:path(Req),
     Path3 = case Path1 of
                 << "/", Path2/binary >> ->
                     Path2;
@@ -188,8 +188,8 @@ gen_key(Req) ->
 handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers}, HasInnerCache, CustomHeaderSettings, Props] = State, Path) ->
     BeginTime = leo_date:clock(),
     TokenLen = length(binary:split(Path, [?BIN_SLASH], [global, trim])),
-    HTTPMethod = cowboy_req:get(method, Req),
-    Range = element(1, cowboy_req:header(?HTTP_HEAD_RANGE, Req)),
+    HTTPMethod = cowboy_req:method(Req),
+    Range = cowboy_req:header(?HTTP_HEAD_RANGE, Req),
 
     case (TokenLen >= NumOfMinLayers) of
         true ->
@@ -228,8 +228,8 @@ handle_2(Req, ?HTTP_POST, Path, Params, State) ->
 handle_2(Req1, HTTPMethod, Path, Params, State) ->
     case catch leo_gateway_http_req_handler:handle(HTTPMethod, Req1, Path, Params) of
         {ok, Req2} ->
-            Req3 = cowboy_req:compact(Req2),
-            {ok, Req3, State};
+            %% cowboy_req:compact not needed in Cowboy 2.x
+            {ok, Req2, State};
         {error, not_found} ->
             {ok, Req2} = ?reply_not_found([?SERVER_HEADER], Path, <<>>, Req1),
             {ok, Req2, State};

@@ -22,7 +22,7 @@
 -module(leo_nlm_lock_handler_common).
 
 -include("leo_gateway.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 -export([check_lock_ranges/2,

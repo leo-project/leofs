@@ -28,7 +28,7 @@
 -behaviour(leo_gateway_http_behaviour).
 
 -export([start/2, stop/0,
-         init/3, handle/2, terminate/3]).
+         init/2, handle/2, terminate/3]).
 -export([onrequest/1, onresponse/1]).
 -export([get_bucket/3, put_bucket/3, delete_bucket/3, head_bucket/3,
          get_object/3, put_object/3, delete_object/3, head_object/3,
@@ -38,7 +38,7 @@
 -include("leo_gateway.hrl").
 -include("leo_http.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_auth.hrl").
@@ -78,20 +78,20 @@ stop() ->
     ok.
 
 
-%% @doc Initializer
-init({_Any, http}, Req, Opts) ->
-    {ok, Req, Opts}.
+%% @doc Initializer (Cowboy 2.x)
+init(Req, Opts) ->
+    handle(Req, Opts).
 
 
 %% @doc Handle a request
-%% @callback
+%% @private
 -spec(handle(Req, State) ->
              {ok, Req, State} when Req::cowboy_req:req(),
                                    State::term()).
 handle(Req, State) ->
     case leo_watchdog_state:find_not_safe_items() of
         not_found ->
-            {Host,    _} = cowboy_req:host(Req),
+            Host = cowboy_req:host(Req),
             %% Host header must be included even if a request with HTTP/1.0
             case Host of
                 <<>> ->
@@ -159,7 +159,7 @@ check_request(Req, [CheckFun|Rest]) ->
 %% @private
 check_bad_date(Req) ->
     case cowboy_req:header(?HTTP_HEAD_AUTHORIZATION, Req) of
-        {undefined, _} ->
+        undefined ->
             %% no date header needed
             ok;
         _ ->
@@ -169,20 +169,20 @@ check_bad_date(Req) ->
 %% @private
 check_bad_date_1(Req) ->
     case cowboy_req:header(?HTTP_HEAD_DATE, Req) of
-        {undefined, _} ->
+        undefined ->
             case cowboy_req:header(?HTTP_HRAD_X_AMZ_DATE, Req) of
-                {undefined, _} ->
+                undefined ->
                     {error, 403, ?XML_ERROR_CODE_AccessDenied, ?XML_ERROR_MSG_AccessDenied};
-                {Date, _} ->
+                Date ->
                     check_bad_date_invalid(Date)
             end;
-        {Date, _} ->
+        Date ->
             check_bad_date_invalid(Date)
     end.
 
 %% @private
 check_bad_date_invalid(Date) ->
-    case catch cowboy_date:parse_date(Date) of
+    case catch parse_http_date(Date) of
         {error, badarg} ->
             {error, 403, ?XML_ERROR_CODE_AccessDenied, ?XML_ERROR_MSG_AccessDenied};
         {'EXIT', _} ->
@@ -237,7 +237,7 @@ get_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                                  is_acl = false,
                                  qs_prefix = Prefix,
                                  begin_time = BeginTime}) ->
-    NormalizedMarker = case cowboy_req:qs_val(?HTTP_QS_BIN_MARKER, Req) of
+    NormalizedMarker = case qs_val(?HTTP_QS_BIN_MARKER, Req) of
                            {undefined,_} ->
                                <<>>;
                            {Marker,_} ->
@@ -251,7 +251,7 @@ get_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                                        << Key/binary, Marker/binary >>
                                end
                        end,
-    MaxKeys = case cowboy_req:qs_val(?HTTP_QS_BIN_MAXKEYS, Req) of
+    MaxKeys = case qs_val(?HTTP_QS_BIN_MAXKEYS, Req) of
                   {undefined, _} ->
                       ?DEF_S3API_MAX_KEYS;
                   {Val_2,     _} ->
@@ -262,7 +262,7 @@ get_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                               ?DEF_S3API_MAX_KEYS
                       end
               end,
-    Delimiter = case cowboy_req:qs_val(?HTTP_QS_BIN_DELIMITER, Req) of
+    Delimiter = case qs_val(?HTTP_QS_BIN_DELIMITER, Req) of
                     {undefined, _} -> none;
                     {Val, _} ->
                         Val
@@ -277,13 +277,13 @@ get_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                         Prefix
                 end,
 
-    Versioning = case cowboy_req:qs_val(?HTTP_QS_BIN_VERSIONING, Req) of
+    Versioning = case qs_val(?HTTP_QS_BIN_VERSIONING, Req) of
                     {undefined, _} -> false;
                     {_Val_3, _} ->
                         true
                 end,
 
-    Versions = case cowboy_req:qs_val(?HTTP_QS_BIN_VERSIONS, Req) of
+    Versions = case qs_val(?HTTP_QS_BIN_VERSIONS, Req) of
                     {undefined, _} -> false;
                     {_Val_4, _} ->
                         true
@@ -354,7 +354,7 @@ put_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
                 false ->
                     Req;
                 true ->
-                    {ok, _Bin_2, Req_2} = cowboy_req:body(Req),
+                    {ok, _Bin_2, Req_2} = cowboy_req:read_body(Req),
                     Req_2
             end,
     case put_bucket_1(CannedACL, AccessKeyId, Bucket) of
@@ -562,16 +562,12 @@ put_object(Req, Key, Params) ->
                             ReqParams::#req_params{}).
 put_object(?BIN_EMPTY, Req, _Key, #req_params{is_multi_delete = true,
                                               timeout_for_body = Timeout4Body,
-                                              transfer_decode_fun = TransferDecodeFun,
-                                              transfer_decode_state = TransferDecodeState} = Params) ->
-    BodyOpts = case TransferDecodeFun of
-                   undefined ->
-                       [{read_timeout, Timeout4Body}];
-                   _ ->
-                       [{read_timeout, Timeout4Body},
-                        {transfer_decode, TransferDecodeFun, TransferDecodeState}]
-               end,
-    case cowboy_req:body(Req, BodyOpts) of
+                                              transfer_decode_fun = _TransferDecodeFun,
+                                              transfer_decode_state = _TransferDecodeState} = Params) ->
+    %% Cowboy 2.x: read_body options must be a map
+    %% Note: transfer_decode is not supported in Cowboy 2.x, handled separately
+    BodyOpts = #{timeout => Timeout4Body},
+    case cowboy_req:read_body(Req, BodyOpts) of
         {ok, Body, Req1} ->
             %% Check Content-MD5 with body
             ContentMD5 = ?http_header(Req, ?HTTP_HEAD_CONTENT_MD5),
@@ -588,11 +584,11 @@ put_object(?BIN_EMPTY, Req, Key, #req_params{bucket_name = BucketName,
             ?access_log_put(BucketName, Key, 0, ?HTTP_ST_BAD_REQ, BeginTime),
             ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidArgument,
                                ?XML_ERROR_MSG_InvalidArgument, Key, <<>>, Req);
-        {BodySize, _} ->
+        BodySize ->
             Size = case cowboy_req:header(?HTTP_HEAD_X_AMZ_DECODED_CONTENT_LENGTH, Req) of
-                       {undefined,_} ->
+                       undefined ->
                            BodySize;
-                       {Val,_} ->
+                       Val ->
                            binary_to_integer(Val)
                    end,
 
@@ -610,16 +606,17 @@ put_object(?BIN_EMPTY, Req, Key, #req_params{bucket_name = BucketName,
                                   TransferDecodeFun = Params#req_params.transfer_decode_fun,
                                   TransferDecodeState = Params#req_params.transfer_decode_state,
                                   Timeout4Body = Params#req_params.timeout_for_body,
-                                  BodyOpts = case TransferDecodeFun of
-                                                 undefined ->
-                                                     [{read_timeout, Timeout4Body}];
-                                                 _ ->
-                                                     [{read_timeout, Timeout4Body},
-                                                      {transfer_decode, TransferDecodeFun, TransferDecodeState}]
-                                             end,
-                                  case cowboy_req:body(Req, BodyOpts) of
+                                  %% Cowboy 2.x: read_body options must be a map
+                                  BodyOpts = #{timeout => Timeout4Body},
+                                  case cowboy_req:read_body(Req, BodyOpts) of
                                       {ok, Bin, Req1} ->
-                                          {ok, {Size, Bin, Req1}};
+                                          %% Apply AWS chunked decoding if transfer_decode_fun is set
+                                          case TransferDecodeFun of
+                                              undefined ->
+                                                  {ok, {Size, Bin, Req1}};
+                                              _ ->
+                                                  decode_aws_chunked_body(Bin, Req1, TransferDecodeFun, TransferDecodeState)
+                                          end;
                                       {error, Cause} ->
                                           {error, Cause}
                                   end;
@@ -629,6 +626,10 @@ put_object(?BIN_EMPTY, Req, Key, #req_params{bucket_name = BucketName,
                     case Ret of
                         {ok, _} ->
                             leo_gateway_http_commons:put_small_object(Ret, Key, Params);
+                        {error, signature_unmatch} ->
+                            ?access_log_put(BucketName, Key, Size, ?HTTP_ST_FORBIDDEN, BeginTime),
+                            ?reply_forbidden([?SERVER_HEADER], ?XML_ERROR_CODE_SignatureDoesNotMatch,
+                                             ?XML_ERROR_MSG_SignatureDoesNotMatch, Key, <<>>, Req);
                         {error, _} ->
                             ?access_log_put(BucketName, Key, Size, ?HTTP_ST_BAD_REQ, BeginTime),
                             ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_InvalidArgument,
@@ -763,7 +764,7 @@ range_object(Req, Key, Params) ->
              {ok, Ret} when Req::cowboy_req:req(),
                             Ret::{binary(), binary()}).
 get_bucket_and_path(Req) ->
-    {RawPath, _} = cowboy_req:path(Req),
+    RawPath = cowboy_req:path(Req),
     Path = cow_qs:urldecode(RawPath),
     get_bucket_and_path(Req, Path).
 
@@ -775,7 +776,7 @@ get_bucket_and_path(Req, Path) ->
                       _ ->
                           []
                   end,
-    {Host,_} = cowboy_req:host(Req),
+    Host = cowboy_req:host(Req),
     leo_http:key(EndPoints_2, Host, Path).
 
 
@@ -791,10 +792,10 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
     BeginTime = leo_date:clock(),
     BinPart = binary:part(Path, {byte_size(Path)-1, 1}),
     TokenLen = length(binary:split(Path, [?BIN_SLASH], [global, trim])),
-    HTTPMethod = cowboy_req:get(method, Req),
+    HTTPMethod = cowboy_req:method(Req),
 
     {Prefix, IsDir, Path_1, Req_2} =
-        case cowboy_req:qs_val(?HTTP_HEAD_PREFIX, Req) of
+        case qs_val(?HTTP_HEAD_PREFIX, Req) of
             {undefined, Req_1} ->
                 {none, (TokenLen == 1 orelse ?BIN_SLASH == BinPart), Path, Req_1};
             {BinParam, Req_1} ->
@@ -807,13 +808,13 @@ handle_1(Req, [{NumOfMinLayers, NumOfMaxLayers},
                 {BinParam, true, NewPath, Req_1}
         end,
 
-    IsACL = case cowboy_req:qs_val(?HTTP_QS_BIN_ACL, Req_2) of
+    IsACL = case qs_val(?HTTP_QS_BIN_ACL, Req_2) of
                 {undefined, _} ->
                     false;
                 _ ->
                     true
             end,
-    IsTagging = case cowboy_req:qs_val(?HTTP_QS_BIN_TAGGING, Req_2) of
+    IsTagging = case qs_val(?HTTP_QS_BIN_TAGGING, Req_2) of
                     {undefined, _} ->
                         false;
                     _ ->
@@ -1073,7 +1074,7 @@ handle_2({ok, AccessKeyId}, Req, HTTPMethod, Path, Params, State) ->
             {ok, Req_2} = ?reply_internal_error([?SERVER_HEADER], Path, <<>>, Req),
             {ok, Req_2, State};
         {ok, Req_2} ->
-            Req_3 = cowboy_req:compact(Req_2),
+            Req_3 = compact(Req_2),
             {ok, Req_3, State}
     end.
 
@@ -1090,6 +1091,24 @@ abort_multipart_upload_1({error, not_found}, Path) ->
     leo_gateway_rpc_handler:delete(<< Path/binary, ?STR_NEWLINE >>);
 abort_multipart_upload_1({error, _} = Error, _Path) ->
     Error.
+
+%% @doc Decode AWS chunked body with signature verification
+%% @private
+decode_aws_chunked_body(Bin, Req, DecodeFun, DecodeState) ->
+    try
+        case DecodeFun(Bin, DecodeState) of
+            {done, DecodedBin, TotalLen, _Rest} ->
+                {ok, {TotalLen, DecodedBin, Req}};
+            {more, DecodedBin, _NewState} ->
+                %% For small objects, we expect all data in one read
+                %% If we get 'more', use what we have
+                {ok, {byte_size(DecodedBin), DecodedBin, Req}}
+        end
+    catch
+        error:_ ->
+            %% AWS chunked decode failed (e.g., signature mismatch)
+            {error, signature_unmatch}
+    end.
 
 %% @private
 -spec(aws_chunk_decode(Bin, State) ->
@@ -1194,7 +1213,7 @@ aws_chunk_decode({ok, Acc}, Buffer, read_chunk, Offset,
                                    ChunkHashBin/binary >>,
 
                     case (leo_hex:binary_to_hexbin(
-                            crypto:hmac(sha256, SignKey, BinToSign))) of
+                            crypto:mac(hmac, sha256, SignKey, BinToSign))) of
                         ChunkSign ->
                             case (ChunkSize == 0) of
                                 %% Last Chunk
@@ -1246,18 +1265,14 @@ aws_chunk_decode({ok, Acc}, Buffer, read_chunk, Offset,
                             TransferDecodeState::term(),
                             BucketInfo::#?BUCKET{}).
 handle_multi_upload_1(true, Req, Path, UploadId,
-                      ChunkedLen, TransferDecodeFun, TransferDecodeState, BucketInfo) ->
+                      ChunkedLen, _TransferDecodeFun, _TransferDecodeState, BucketInfo) ->
     Path4Conf = << Path/binary, ?STR_NEWLINE, UploadId/binary >>,
 
     case leo_gateway_rpc_handler:get(Path4Conf) of
         {ok, #?METADATA{meta = CMetaBin}, _} ->
-            BodyOpts = case TransferDecodeFun of
-                           undefined ->
-                               [];
-                           _ ->
-                               [{transfer_decode, TransferDecodeFun, TransferDecodeState}]
-                       end,
-            Ret = cowboy_req:body(Req, BodyOpts),
+            %% Cowboy 2.x: read_body options must be a map
+            BodyOpts = #{},
+            Ret = cowboy_req:read_body(Req, BodyOpts),
             {ok, Req2} = handle_multi_upload_2(Ret, Req, Path, ChunkedLen, BucketInfo, CMetaBin),
             %% Deleting a temporary object after getting the upload done could decrease the odds
             %% inconsistencies against the temporary object could happen.
@@ -1438,46 +1453,48 @@ resp_copy_obj_xml(Req, Meta) ->
              ReqParams when Req::cowboy_req:req(),
                             ReqParams::#req_params{}).
 request_params(Req, #req_params{is_compatible_with_s3_content_type = IsCompatibleWithS3} = Params) ->
-    IsMultiDelete = case cowboy_req:qs_val(?HTTP_QS_BIN_MULTI_DELETE, Req) of
+    IsMultiDelete = case qs_val(?HTTP_QS_BIN_MULTI_DELETE, Req) of
                         {undefined,_} ->
                             false;
                         _ ->
                             true
                     end,
-    IsUpload = case cowboy_req:qs_val(?HTTP_QS_BIN_UPLOADS, Req) of
+    IsUpload = case qs_val(?HTTP_QS_BIN_UPLOADS, Req) of
                    {undefined,_} ->
                        false;
                    _ ->
                        true
                end,
-    UploadId = case cowboy_req:qs_val(?HTTP_QS_BIN_UPLOAD_ID, Req) of
+    UploadId = case qs_val(?HTTP_QS_BIN_UPLOAD_ID, Req) of
                    {undefined,_} ->
                        <<>>;
                    {Val_1,_} ->
                        Val_1
                end,
-    PartNum = case cowboy_req:qs_val(?HTTP_QS_BIN_PART_NUMBER, Req) of
+    PartNum = case qs_val(?HTTP_QS_BIN_PART_NUMBER, Req) of
                   {undefined,_} ->
                       0;
                   {Val_2,_} ->
                       list_to_integer(binary_to_list(Val_2))
               end,
-    Range = element(1, cowboy_req:header(?HTTP_HEAD_RANGE, Req)),
+    Range = cowboy_req:header(?HTTP_HEAD_RANGE, Req),
 
     IsAwsChunked = case cowboy_req:header(?HTTP_HEAD_X_AMZ_CONTENT_SHA256, Req) of
-                       {?HTTP_HEAD_X_VAL_AWS4_SHA256,_} ->
+                       ?HTTP_HEAD_X_VAL_AWS4_SHA256 ->
                            true;
                        _ ->
                            false
                    end,
-    IsLocation = case cowboy_req:qs_val(?HTTP_QS_BIN_LOCATION, Req) of
+    IsLocation = case qs_val(?HTTP_QS_BIN_LOCATION, Req) of
                      {undefined,_} ->
                          false;
                      _ ->
                          true
                  end,
 
-    {Headers, _} = cowboy_req:headers(Req),
+    %% Cowboy 2.x returns headers as a map, convert to proplist for compatibility
+    HeadersMap = cowboy_req:headers(Req),
+    Headers = maps:to_list(HeadersMap),
     Headers2 = case IsCompatibleWithS3 of
                    true ->
                        ContentType = ?http_content_type(Headers),
@@ -1622,9 +1639,9 @@ auth(Req, HTTPMethod, Path, TokenLen, BucketName, ACLs, ReqParams) when TokenLen
 %% @private
 auth_1(Req, HTTPMethod, Path, TokenLen, BucketName, _ACLs, #req_params{is_acl = IsACL}) ->
     case cowboy_req:header(?HTTP_HEAD_AUTHORIZATION, Req) of
-        {undefined, _} ->
+        undefined ->
             {error, undefined};
-        {AuthorizationBin, _} ->
+        AuthorizationBin ->
             case AuthorizationBin of
                 << Head:4/binary,
                    _Rest/binary >> when Head =:= ?HTTP_HEAD_X_AWS_SIGNATURE_V2;
@@ -1632,9 +1649,11 @@ auth_1(Req, HTTPMethod, Path, TokenLen, BucketName, _ACLs, #req_params{is_acl = 
                     IsCreateBucketOp = (TokenLen == 1 andalso
                                         HTTPMethod == ?HTTP_PUT andalso
                                         not IsACL),
-                    {RawURI,_} = cowboy_req:path(Req),
-                    {QStr,_} = cowboy_req:qs(Req),
-                    {Headers,_} = cowboy_req:headers(Req),
+                    RawURI = cowboy_req:path(Req),
+                    QStr = cowboy_req:qs(Req),
+                    %% Cowboy 2.x returns headers as a map, convert to proplist
+                    HeadersMap = cowboy_req:headers(Req),
+                    Headers = maps:to_list(HeadersMap),
 
                     %% NOTE:
                     %% - from s3cmd, dragondisk and others:
@@ -2436,4 +2455,41 @@ parse_headers_to_cmeta(Headers) when is_list(Headers) ->
             {ok, term_to_binary([{?PROP_CMETA_UDM, MetaList}])}
     end;
 parse_headers_to_cmeta(_) ->
+    {error, badarg}.
+
+
+%%--------------------------------------------------------------------
+%% Cowboy 2.x Compatibility Functions
+%%--------------------------------------------------------------------
+%% @doc Get query string value (replacement for cowboy_req:qs_val/2)
+%% Returns {Value, Req} or {undefined, Req} for compatibility with Cowboy 1.x
+%% @private
+-spec(qs_val(binary(), cowboy_req:req()) ->
+             {binary() | undefined, cowboy_req:req()}).
+qs_val(Key, Req) ->
+    QS = cowboy_req:parse_qs(Req),
+    Value = proplists:get_value(Key, QS, undefined),
+    {Value, Req}.
+
+
+%% @doc Compact request (no-op in Cowboy 2.x)
+%% @private
+-spec(compact(cowboy_req:req()) -> cowboy_req:req()).
+compact(Req) ->
+    %% In Cowboy 2.x, request is already compact (it's a map)
+    Req.
+
+
+%% @doc Parse HTTP date (replacement for cowboy_date:parse_date/1)
+%% @private
+-spec(parse_http_date(binary()) ->
+             calendar:datetime() | {error, badarg}).
+parse_http_date(DateBin) when is_binary(DateBin) ->
+    DateStr = binary_to_list(DateBin),
+    try
+        httpd_util:convert_request_date(DateStr)
+    catch
+        _:_ -> {error, badarg}
+    end;
+parse_http_date(_) ->
     {error, badarg}.

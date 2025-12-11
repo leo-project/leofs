@@ -201,107 +201,107 @@
 -define(XML_ERROR_MSG_InvalidPart, "One or more of the specified parts could not be found. The part might not have been uploaded, or the specified entity tag might not have matched the part's entity tag.").
 -define(XML_ERROR_MSG_NoSuchUpload, "The specified multipart upload does not exist. The upload ID might be invalid, or the multipart upload might have been aborted or completed.").
 
-%% Macros
+%% Macros (Cowboy 2.x requires headers as maps, reply returns Req directly)
 %% - code:200
 -define(reply_ok(_H,_R),
-        cowboy_req:reply(?HTTP_ST_OK,_H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_OK,maps:from_list(_H),_R)}).
 %% - code:200 with body
 -define(reply_ok(_H,_B,_R),
-        cowboy_req:reply(?HTTP_ST_OK,_H,_B,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_OK,maps:from_list(_H),_B,_R)}).
 %% - code:204
 -define(reply_no_content(_H,_R),
-        cowboy_req:reply(?HTTP_ST_NO_CONTENT,_H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_NO_CONTENT,maps:from_list(_H),_R)}).
 %% - code:206
 -define(reply_partial_content(_H,_R),
-        cowboy_req:reply(?HTTP_ST_PARTIAL_CONTENT,_H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_PARTIAL_CONTENT,maps:from_list(_H),_R)}).
 %% - code:206 with body
 -define(reply_partial_content(_H,_B,_R),
-        cowboy_req:reply(?HTTP_ST_PARTIAL_CONTENT,_H,_B,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_PARTIAL_CONTENT,maps:from_list(_H),_B,_R)}).
 %% - code:304
 -define(reply_not_modified(_H,_R),
-        cowboy_req:reply(?HTTP_ST_NOT_MODIFIED,_H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_NOT_MODIFIED,maps:from_list(_H),_R)}).
 
 %% for HEAD(without body)
 %% - code:403
 -define(reply_bad_request_without_body(_H,_R),
-        cowboy_req:reply(?HTTP_ST_BAD_REQ,_H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_BAD_REQ,maps:from_list(_H),_R)}).
 %% - code:404
 -define(reply_not_found_without_body(_H,_R),
-        cowboy_req:reply(?HTTP_ST_NOT_FOUND, _H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_NOT_FOUND, maps:from_list(_H),_R)}).
 %% - code:500
 -define(reply_internal_error_without_body(_H,_R),
-        cowboy_req:reply(?HTTP_ST_INTERNAL_ERROR, _H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_INTERNAL_ERROR, maps:from_list(_H),_R)}).
 %% - code:501
 -define(reply_not_implemented_without_body(_H,_R),
-        cowboy_req:reply(?HTTP_ST_NOT_IMPLEMENTED, _H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_NOT_IMPLEMENTED, maps:from_list(_H),_R)}).
 %% - code:503
 -define(reply_timeout_without_body(_H,_R),
-        cowboy_req:reply(?HTTP_ST_SERVICE_UNAVAILABLE,_H,_R)).
+        {ok, cowboy_req:reply(?HTTP_ST_SERVICE_UNAVAILABLE,maps:from_list(_H),_R)}).
 
 %% for GET/PUT/DELETE(with body)
 -define(reply_bad_request(_H, _Code, _Msg, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_BAD_REQ, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_BAD_REQ, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [_Code, _Msg,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_forbidden(_H, _Code, _Msg, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_FORBIDDEN, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_FORBIDDEN, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [_Code, _Msg,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_not_found(_H, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_NOT_FOUND, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_NOT_FOUND, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_NoSuchKey,
                                                     ?XML_ERROR_MSG_NoSuchKey,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_conflict(_H, _Code, _Msg, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_CONFLICT, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_CONFLICT, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [_Code, _Msg,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_bad_range(_H, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_BAD_RANGE, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_BAD_RANGE, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_InvalidRange,
                                                     ?XML_ERROR_MSG_InvalidRange,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_service_unavailable_error(_H, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_SERVICE_UNAVAILABLE, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_SERVICE_UNAVAILABLE, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_ServiceUnavailable,
                                                     ?XML_ERROR_MSG_ServiceUnavailable,
-                                                    _Key, _ReqId]), _R)).
+                                                    _Key, _ReqId]), _R)}).
 -define(reply_internal_error(_H, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_INTERNAL_ERROR, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_INTERNAL_ERROR, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_InternalError,
                                                     ?XML_ERROR_MSG_InternalError,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_timeout(_H, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_SERVICE_UNAVAILABLE, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_SERVICE_UNAVAILABLE, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_SlowDown,
                                                     ?XML_ERROR_MSG_SlowDown,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_malformed_xml(_H, _R),
-        cowboy_req:reply(?HTTP_ST_OK, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_OK, maps:from_list(_H),
                          io_lib:format(?XML_ERROR_2, [?XML_ERROR_CODE_MalformedXML,
                                                       ?XML_ERROR_MSG_MalformedXML,
-                                                      "", ""]), _R)).
+                                                      "", ""]), _R)}).
 -define(reply_bad_digest(_H, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_BAD_REQ, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_BAD_REQ, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_BadDigest,
                                                     ?XML_ERROR_MSG_BadDigest,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_metadata_too_large(_H, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_BAD_REQ, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_BAD_REQ, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_MetadataTooLarge,
                                                     ?XML_ERROR_MSG_MetadataTooLarge,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 -define(reply_upload_not_found(_H, _Key, _ReqId, _R),
-        cowboy_req:reply(?HTTP_ST_NOT_FOUND, _H,
+        {ok, cowboy_req:reply(?HTTP_ST_NOT_FOUND, maps:from_list(_H),
                          io_lib:format(?XML_ERROR, [?XML_ERROR_CODE_NoSuchUpload,
                                                     ?XML_ERROR_MSG_NoSuchUpload,
-                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)).
+                                                    xmerl_lib:export_text(_Key), _ReqId]), _R)}).
 
 -define(http_header(_R, _K),
         case cowboy_req:header(_K, _R) of
-            {undefined, _} ->
+            undefined ->
                 ?BIN_EMPTY;
-            {Bin, _} ->
+            Bin ->
                 Bin
         end).
 -define(http_etag(_E),
