@@ -11,4 +11,4 @@
 # RUNNER_LOG_DIR=
 
 # Defaults to "leofs"
-RUNNER_USER=yosukehara
+RUNNER_USER=
