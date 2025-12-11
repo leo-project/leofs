@@ -1,5 +1,5 @@
 ## Name of the node
--name manager_1@127.0.0.1
+-name manager_0@127.0.0.1
 
 ## Cookie for distributed erlang
 -setcookie leofs

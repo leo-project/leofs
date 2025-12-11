@@ -28,7 +28,8 @@
 -include("tcp_server.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
--include_lib("leo_statistics/include/leo_statistics.hrl").
+%% Temporarily disabled due to compatibility issues
+%% -include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_auth.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_user.hrl").
 -include_lib("eunit/include/eunit.hrl").
@@ -95,7 +96,7 @@ start_link() ->
             ok = leo_manager_mq_client:start(?MODULE, [], ?env_queue_dir()),
             ok = start_redundant_manager(Pid, Mode, ReplicaNodes_1),
             ok = start_s3libs(),
-            ok = application:start(leo_rpc),
+            _ = application:ensure_all_started(leo_rpc),
 
             %% Launch Mnesia and create that tables
             MnesiaDir = case application:get_env(mnesia, dir) of
@@ -352,6 +353,8 @@ start_s3libs() ->
              ok | {error, any()}).
 create_mnesia_tables_1(?MANAGER_TYPE_MASTER = Mode, Nodes) ->
     Nodes_1 = lists:flatten(lists:map(fun({_, N}) -> N end, Nodes)),
+    %% Stop mnesia before creating schema (it may be running with RAM schema)
+    _ = rpc:multicall(Nodes_1, application, stop, [mnesia], ?DEF_TIMEOUT),
     case mnesia:create_schema(Nodes_1) of
         ok ->
             try
@@ -437,9 +440,10 @@ create_mnesia_tables_2(Mode) ->
                               end,
 
                               %% Launch Statistics
-                              ok = leo_statistics_api:start_link(leo_manager),
-                              ok = leo_metrics_vm:start_link(
-                                     ?SNMP_SYNC_INTERVAL_10S, (Mode == slave)),
+                              %% Temporarily disabled due to compatibility issues
+                              %% ok = leo_statistics_api:start_link(leo_manager),
+                              %% ok = leo_metrics_vm:start_link(
+                              %%        ?SNMP_SYNC_INTERVAL_10S, (Mode == slave)),
                               ok
                           catch
                               _:Cause ->

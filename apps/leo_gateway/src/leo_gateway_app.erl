@@ -37,7 +37,6 @@
 -include_lib("leo_commons/include/leo_commons.hrl").
 -include("leo_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
--include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("nfs_rpc_server/src/nfs_rpc_app.hrl").
 -include_lib("leo_watchdog/include/leo_watchdog.hrl").
 -include_lib("eunit/include/eunit.hrl").
@@ -255,11 +254,6 @@ after_process_1(Pid, Managers) ->
     %% Launch SNMPA
     application:ensure_started(mnesia),
     application:ensure_started(snmp),
-    ok = leo_statistics_api:start_link(leo_gateway),
-    ok = leo_statistics_api:create_tables(ram_copies, [node()]),
-    ok = leo_metrics_vm:start_link(?SNMP_SYNC_INTERVAL_10S),
-    ok = leo_metrics_req:start_link(?SNMP_SYNC_INTERVAL_60S),
-    ok = leo_gateway_cache_statistics:start_link(?SNMP_SYNC_INTERVAL_60S),
 
     %% Retrieve http-options
     {ok, HttpOptions} = get_options(),

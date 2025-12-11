@@ -1251,16 +1251,6 @@
   {default, false}
  ]}.
 
-%% @doc leo-statistics.profile
-{mapping,
- "leo_statistics.profile",
- "leo_statistics.profile",
- [
-  {datatype, {enum, [true, false]}},
-  {default, false}
- ]}.
-
-
 %%======================================================================
 %% For vm.args
 %%======================================================================

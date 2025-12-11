@@ -422,16 +422,6 @@
          [leo_manager_api, synchronize]
  end}.
 
-%% @doc
-{mapping,
- "leo_statistics.profile",
- "leo_statistics.profile",
- [
-  {datatype, {enum, [true, false]}},
-  {default, false}
- ]}.
-
-
 %%======================================================================
 %% For vm.args
 %%======================================================================
@@ -441,7 +431,7 @@
  "nodename",
  "vm_args.-name",
  [
-  {default, "manager_0@127.0.0.1"}
+  {default, "manager_1@127.0.0.1"}
  ]}.
 
 %% @doc Cookie for distributed node communication.  All nodes in the same cluster

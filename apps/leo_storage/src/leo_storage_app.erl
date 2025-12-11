@@ -27,7 +27,6 @@
 -include("leo_storage_logger.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
--include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("leo_watchdog/include/leo_watchdog.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
@@ -86,30 +85,12 @@ start_mnesia(RetryTimes) ->
     end.
 
 
-%% @doc Start statistics
+%% @doc Start SNMP
 %% @private
-start_statistics() ->
-    start_statistics(0).
-
-%% @private
-start_statistics(?RETRY_TIMES) ->
-    {error, "Launch failure of statistics"};
-start_statistics(RetryTimes) ->
-    try
-        %% Launch metric-servers
-        application:ensure_started(mnesia),
-        application:ensure_started(snmp),
-
-        leo_statistics_api:start_link(leo_storage),
-        leo_statistics_api:create_tables(ram_copies, [node()]),
-        leo_metrics_vm:start_link(?SNMP_SYNC_INTERVAL_10S),
-        leo_metrics_req:start_link(?SNMP_SYNC_INTERVAL_60S),
-        leo_storage_statistics:start_link(?SNMP_SYNC_INTERVAL_60S),
-        ok
-    catch
-        _:_Cause ->
-            start_statistics(RetryTimes + 1)
-    end.
+start_snmp() ->
+    application:ensure_started(mnesia),
+    application:ensure_started(snmp),
+    ok.
 
 
 %%----------------------------------------------------------------------
@@ -244,9 +225,9 @@ after_proc_1(Pid, Managers) ->
 
     ok = leo_storage_watchdog_sub:start(),
 
-    %% Launch statistics/mnesia-related processes
+    %% Launch mnesia and SNMP
     ok = start_mnesia(),
-    ok = start_statistics(),
+    ok = start_snmp(),
 
     ok = leo_misc:startup_notification(),
     {ok, Pid}.

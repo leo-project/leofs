@@ -1,4 +1,4 @@
-.PHONY: all compile xref eunit release check_plt build_plt dialyzer doc clean distclean
+.PHONY: all compile xref eunit release check_plt build_plt dialyzer doc clean distclean patch-deps
 
 REBAR := rebar3
 APPS = erts kernel stdlib sasl crypto compiler inets mnesia public_key runtime_tools snmp syntax_tools tools xmerl ssl
@@ -8,7 +8,13 @@ CALL_GRAPH_FILE = leo_storage.png
 
 all: compile xref eunit
 
-compile:
+get-deps:
+	@$(REBAR) get-deps
+
+patch-deps:
+	@./scripts/patch_deps.sh
+
+compile: get-deps patch-deps
 	@$(REBAR) compile
 
 xref:

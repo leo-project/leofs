@@ -65,13 +65,13 @@ accept(ListenSocket, State, Module, Option) ->
                      Socket, State, Module, Option)
             catch
                 Type:Reason ->
-                    io:format("[error] ~p:~p - ~p,~p,~p~n",
+                    error_logger:error_msg("[error] ~p:~p - ~p,~p,~p~n",
                               [?MODULE, "accept/4", Module, Type, Reason])
             after
                 gen_tcp:close(Socket)
             end;
         {error, Reason} ->
-            io:format("[error] ~p:~p - ~p,~p~n",
+            error_logger:error_msg("[error] ~p:~p - ~p,~p~n",
                       [?MODULE, "accept/4", Module, Reason]),
             timer:sleep(Option#tcp_server_params.accept_error_sleep_time)
     end,

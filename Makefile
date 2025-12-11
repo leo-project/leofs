@@ -59,11 +59,23 @@ xref:
 release:
 	rm -rf package/leo_*
 	#
+	# Fetch dependencies and patch for CMake compatibility
+	# (Makefile is created during compile, so we try compile first then patch)
+	#
+	-(cd apps/leo_manager && rebar3 compile 2>/dev/null || true) && \
+		(cd apps/leo_manager && ./scripts/patch_deps.sh 2>/dev/null || true)
+	-(cd apps/leo_storage && rebar3 compile 2>/dev/null || true) && \
+		(cd apps/leo_storage && ./scripts/patch_deps.sh 2>/dev/null || true)
+	-(cd apps/leo_gateway && rebar3 compile 2>/dev/null || true) && \
+		(cd apps/leo_gateway && ./scripts/patch_deps.sh 2>/dev/null || true)
+	#
 	# manager-master
 	#
 	(cd apps/leo_manager && \
 		cp priv/leo_manager_0.conf priv/leo_manager.conf && \
 		cp priv/leo_manager_0.schema priv/leo_manager.schema && \
+		cp config/vm.args.0 config/vm.args && \
+		cp config/sys.config.0 config/sys.config && \
 		rebar3 release -n leo_manager)
 	mkdir -p package/leo_manager_0
 	cp -r apps/leo_manager/_build/default/rel/leo_manager/* package/leo_manager_0/
@@ -74,6 +86,8 @@ release:
 		rm -rf _build/default/rel/leo_manager && \
 		cp priv/leo_manager_1.conf priv/leo_manager.conf && \
 		cp priv/leo_manager_1.schema priv/leo_manager.schema && \
+		cp config/vm.args.1 config/vm.args && \
+		cp config/sys.config.1 config/sys.config && \
 		rebar3 release -n leo_manager)
 	mkdir -p package/leo_manager_1
 	cp -r apps/leo_manager/_build/default/rel/leo_manager/* package/leo_manager_1/
