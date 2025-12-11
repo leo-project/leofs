@@ -4,6 +4,7 @@
 %% LeoFS
 %%
 %% Copyright (c) 2012-2017 Rakuten, Inc.
+%% Copyright (c) 2019-2025 Lions Data, Ltd.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -20,13 +21,19 @@
 %% under the License.
 %%
 %%======================================================================
-{require_otp_vsn, "R16B*|17|18|19"}.
 
-{sub_dirs, ["apps/leo_gateway","apps/leo_manager","apps/leo_storage"]}.
+%% NOTE: This configuration file is for project-fifo integration.
+%% It may need additional updates for compatibility with latest OTP.
+
+{minimum_otp_vsn, "28"}.
+
+{erl_opts, [
+    debug_info,
+    warnings_as_errors,
+    warn_export_all,
+    warn_unused_import
+]}.
 
 {deps, [
-        {fifo_utils, "0.1.*", {git, "https://github.com/leo-project/fifo_utils.git", "6911b96d5bd813d3688108afb57746020c61daf2"}}
-       ]}.
-
-{erl_opts, [debug_info, warn_untyped_record,
-            {platform_define, "^[0-9]+", namespaced_types}]}.
+    {fifo_utils, {git, "https://github.com/leo-project/fifo_utils.git", {ref, "6911b96d5bd813d3688108afb57746020c61daf2"}}}
+]}.

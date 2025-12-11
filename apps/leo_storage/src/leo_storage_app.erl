@@ -24,8 +24,8 @@
 -behaviour(application).
 
 -include("leo_storage.hrl").
+-include("leo_storage_logger.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("leo_watchdog/include/leo_watchdog.hrl").
@@ -52,7 +52,6 @@ prep_stop(_State) ->
     catch leo_watchdog_sup:stop(),
     catch leo_mq_sup:stop(),
     catch leo_backend_db_sup:stop(),
-    catch leo_logger_api:stop(),
     catch leo_storage_sup:stop(),
     ok.
 
@@ -250,7 +249,6 @@ after_proc_1(Pid, Managers) ->
     ok = start_statistics(),
 
     ok = leo_misc:startup_notification(),
-    leo_logger_api:reset_hwm(),
     {ok, Pid}.
 
 
@@ -277,7 +275,7 @@ is_alive_managers([Node|Rest], Acc) ->
     is_alive_managers(Rest, [{Node, Ret} | Acc]).
 
 
-%% @doc Launch Logger
+%% @doc Launch Logger using OTP standard logger
 %% @private
 launch_logger() ->
     DefLogDir = "./log/",
@@ -287,17 +285,27 @@ launch_logger() ->
                  _ ->
                      DefLogDir
              end,
-    LogLevel = ?env_log_level(leo_storage),
-    ok = leo_logger_api:new(LogDir, LogLevel, log_file_appender()),
-
-    %% access-logger (file-appender)
-    case application:get_env(leo_storage, is_enable_access_log) of
-        {ok, true} ->
-            ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                            LogDir, ?LOG_FILENAME_ACCESS);
-        _ ->
-            void
-    end,
+    LogLevel = case ?env_log_level(leo_storage) of
+                   ?LOG_LEVEL_DEBUG -> debug;
+                   ?LOG_LEVEL_INFO  -> info;
+                   ?LOG_LEVEL_WARN  -> warning;
+                   ?LOG_LEVEL_ERROR -> error;
+                   ?LOG_LEVEL_FATAL -> critical;
+                   _ -> info
+               end,
+    %% Configure OTP logger
+    ok = filelib:ensure_dir(LogDir ++ "/"),
+    LogFile = filename:join(LogDir, "leo_storage.log"),
+    HandlerConfig = #{config => #{file => LogFile,
+                                   max_no_bytes => 10485760,
+                                   max_no_files => 10},
+                      level => LogLevel,
+                      formatter => {logger_formatter,
+                                    #{template => [time, " ", level, " ",
+                                                   {mfa, ["[", mfa, "]"], []}, " ",
+                                                   msg, "\n"]}}},
+    logger:add_handler(leo_storage_file_handler, logger_disk_log_h, HandlerConfig),
+    logger:set_primary_config(level, LogLevel),
     ok.
 
 
@@ -333,22 +341,3 @@ launch_redundant_manager(RefSup, Managers, QueueDir) ->
                  permanent, 2000, supervisor, [leo_redundant_manager_sup]},
     {ok, _} = supervisor:start_child(RefSup, ChildSpec),
     ok.
-
-
-%% @doc Retrieve log-appneder(s)
-%% @private
--spec(log_file_appender() ->
-             list()).
-log_file_appender() ->
-    case application:get_env(leo_storage, log_appender) of
-        undefined   -> log_file_appender([], []);
-        {ok, Value} -> log_file_appender(Value, [])
-    end.
-
-log_file_appender([], []) ->
-    [{?LOG_ID_FILE_INFO,  ?LOG_APPENDER_FILE},
-     {?LOG_ID_FILE_ERROR, ?LOG_APPENDER_FILE}];
-log_file_appender([], Acc) ->
-    lists:reverse(Acc);
-log_file_appender([{Type, _}|T], Acc) when Type == file ->
-    log_file_appender(T, [{?LOG_ID_FILE_ERROR, ?LOG_APPENDER_FILE}|[{?LOG_ID_FILE_INFO, ?LOG_APPENDER_FILE}|Acc]]).

@@ -26,10 +26,10 @@
 -module(leo_nginx_conf_parser_tests).
 
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
--define(TEST_CONF_DIR, "../priv/test/").
+-define(TEST_CONF_DIR, "priv/test/").
 %%--------------------------------------------------------------------
 %% TEST
 %%--------------------------------------------------------------------

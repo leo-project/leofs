@@ -35,7 +35,7 @@
 -undef(warn).
 -undef(PROP_OPTIONS).
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("nfs_rpc_server/src/nfs_rpc_app.hrl").
@@ -92,7 +92,7 @@ start(_Type, _StartArgs) ->
     application:start(leo_watchdog),
     App = leo_gateway,
 
-    %% Launch Logger(s)
+    %% Configure Logger using Erlang standard logger
     DefLogDir = "./log/",
     LogDir    = case application:get_env(App, log_appender) of
                     {ok, [{file, Options}|_]} ->
@@ -100,13 +100,12 @@ start(_Type, _StartArgs) ->
                     _ ->
                         DefLogDir
                 end,
-    ok = leo_logger_api:new(LogDir, ?env_log_level(App), log_file_appender()),
+    ok = configure_logger(LogDir, ?env_log_level(App)),
 
     %% access-logger (file-appender)
     case application:get_env(leo_gateway, is_enable_access_log) of
         {ok, true} ->
-            ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                    LogDir, ?LOG_FILENAME_ACCESS);
+            ok = configure_access_logger(LogDir);
         _ ->
             void
     end,
@@ -122,7 +121,7 @@ prep_stop(_State) ->
     catch leo_redundant_manager_sup:stop(),
     catch leo_mq_sup:stop(),
     catch leo_backend_db_sup:stop(),
-    catch leo_logger_api:stop(),
+    catch remove_logger_handlers(),
 
     case catch get_options() of
         {ok, HttpOptions} ->
@@ -407,7 +406,7 @@ after_process_1(Pid, Managers) ->
     {ok,_} = supervisor:start_child(leo_gateway_sup, ChildSpec_1),
 
     ok = leo_misc:startup_notification(),
-    leo_logger_api:reset_hwm(),
+    %% Logger HWM reset not needed with standard logger
 
     %% Check status of the storage-cluster
     inspect_cluster_status({ok, Pid}, Managers).
@@ -524,26 +523,6 @@ get_cluster_state([#member{state = ?STATE_RUNNING}|_]) ->
     ?STATE_RUNNING;
 get_cluster_state([_|T]) ->
     get_cluster_state(T).
-
-
-%% @doc Retrieve log-appneder(s)
-%% @private
--spec(log_file_appender() ->
-             list()).
-log_file_appender() ->
-    case application:get_env(leo_gateway, log_appender) of
-        undefined   -> log_file_appender([], []);
-        {ok, Value} -> log_file_appender(Value, [])
-    end.
-
-log_file_appender([], []) ->
-    [{?LOG_ID_FILE_INFO,  ?LOG_APPENDER_FILE},
-     {?LOG_ID_FILE_ERROR, ?LOG_APPENDER_FILE}];
-log_file_appender([], Acc) ->
-    lists:reverse(Acc);
-log_file_appender([{Type, _}|T], Acc) when Type == file ->
-    log_file_appender(T, [{?LOG_ID_FILE_ERROR, ?LOG_APPENDER_FILE}|
-                          [{?LOG_ID_FILE_INFO, ?LOG_APPENDER_FILE}|Acc]]).
 
 
 %% @doc Retrieve properties
@@ -722,3 +701,89 @@ cast_type_list_to_binary(List) ->
                           Bin         -> Bin
                       end
               end, List).
+
+
+%%--------------------------------------------------------------------
+%% Logger Configuration (Erlang Standard Logger)
+%%--------------------------------------------------------------------
+%% @doc Configure the main application logger
+%% @private
+-spec(configure_logger(LogDir, LogLevel) ->
+             ok when LogDir::string(),
+                     LogLevel::integer()).
+configure_logger(LogDir, LogLevel) ->
+    %% Ensure log directory exists
+    ok = filelib:ensure_dir(LogDir ++ "/"),
+
+    %% Convert leo_logger log level to OTP logger level
+    Level = log_level_to_otp(LogLevel),
+
+    %% Set primary log level
+    logger:set_primary_config(level, Level),
+
+    %% Add file handler for application logs
+    HandlerConfig = #{
+        config => #{
+            file => LogDir ++ "/app.log",
+            max_no_bytes => 10485760,  %% 10MB
+            max_no_files => 10
+        },
+        formatter => {logger_formatter, #{
+            template => [time, " ", level, " ", pid, " ", mfa, ":", line, " ", msg, "\n"],
+            single_line => true
+        }}
+    },
+    case logger:add_handler(leo_gateway_file_handler, logger_disk_log_h, HandlerConfig) of
+        ok -> ok;
+        {error, {already_exist, _}} -> ok;
+        {error, _Reason} -> ok  %% Log handler setup failure is non-fatal
+    end.
+
+
+%% @doc Configure access logger
+%% @private
+-spec(configure_access_logger(LogDir) ->
+             ok when LogDir::string()).
+configure_access_logger(LogDir) ->
+    %% Ensure log directory exists
+    ok = filelib:ensure_dir(LogDir ++ "/"),
+
+    %% Add file handler for access logs with domain filter
+    HandlerConfig = #{
+        config => #{
+            file => LogDir ++ "/access.log",
+            max_no_bytes => 104857600,  %% 100MB
+            max_no_files => 10
+        },
+        formatter => {logger_formatter, #{
+            template => [time, " ", msg, "\n"],
+            single_line => true
+        }},
+        filter_default => stop,
+        filters => [{access_log_filter, {fun logger_filters:domain/2, {log, sub, [leo_gateway, access_log]}}}]
+    },
+    case logger:add_handler(leo_gateway_access_handler, logger_disk_log_h, HandlerConfig) of
+        ok -> ok;
+        {error, {already_exist, _}} -> ok;
+        {error, _Reason} -> ok  %% Log handler setup failure is non-fatal
+    end.
+
+
+%% @doc Remove logger handlers on application stop
+%% @private
+-spec(remove_logger_handlers() -> ok).
+remove_logger_handlers() ->
+    catch logger:remove_handler(leo_gateway_file_handler),
+    catch logger:remove_handler(leo_gateway_access_handler),
+    ok.
+
+
+%% @doc Convert leo_logger log level to OTP logger level
+%% @private
+-spec(log_level_to_otp(Level) ->
+             logger:level() when Level::integer()).
+log_level_to_otp(Level) when Level =< ?LOG_LEVEL_DEBUG -> debug;
+log_level_to_otp(?LOG_LEVEL_INFO)  -> info;
+log_level_to_otp(?LOG_LEVEL_WARN)  -> warning;
+log_level_to_otp(?LOG_LEVEL_ERROR) -> error;
+log_level_to_otp(_) -> error.

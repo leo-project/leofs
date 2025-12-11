@@ -1,55 +1,54 @@
-.PHONY: all get_deps compile xref eunit release check_plt build_plt dialyzer doc callgraph graphviz clean distclean gen_rpc gen_nfs
+.PHONY: all compile xref eunit dialyzer clean distclean doc gen_rpc gen_nfs get-deps patch-deps
 
-REBAR := ./rebar
-APPS = erts kernel stdlib sasl crypto compiler inets mnesia public_key runtime_tools snmp syntax_tools tools xmerl webtool
-LIBS = deps/leo_commons/ebin deps/leo_logger/ebin deps/leo_object_storage/ebin \
-       deps/leo_redundant_manager/ebin deps/leo_mq/ebin deps/leo_statistics/ebin deps/leo_rpc/ebin \
-       deps/leo_s3_libs/ebin deps/leo_cache/ebin deps/leo_dcerl/ebin deps/leo_mcerl/ebin \
-       deps/savanna_commons/ebin deps/savanna_agent/ebin deps/erpcgen/ebin
-PLT_FILE = .leo_gateway_dialyzer_plt
-COMMON_PLT_FILE = .common_dialyzer_plt
-DOT_FILE = leo_gateway.dot
-CALL_GRAPH_FILE = leo_gateway.png
+REBAR := rebar3
 
-all: get_deps gen_nfs compile xref eunit
-get_deps:
+all: compile xref eunit
+
+get-deps:
 	@$(REBAR) get-deps
-compile:
+
+patch-deps:
+	@./scripts/patch_deps.sh
+
+compile: get-deps patch-deps
 	@$(REBAR) compile
+
 xref:
-	@$(REBAR) xref skip_deps=true
+	@$(REBAR) xref
+
 eunit:
-	@$(REBAR) eunit skip_deps=true
-release:
-	rm -rf rel/leo_gateway
-	@$(REBAR) compile
-	(cd rel/ && ../rebar generate)
-check_plt:
-	@$(REBAR) compile
-	dialyzer --check_plt --plts $(PLT_FILE) $(COMMON_PLT_FILE) --apps $(APPS)
-build_plt:
-	@$(REBAR) compile
-	dialyzer --build_plt --output_plt $(PLT_FILE) --apps $(LIBS)
-build_plt_common:
-	@$(REBAR) compile
-	dialyzer --build_plt --output_plt $(COMMON_PLT_FILE) --apps $(APPS)
+	@$(REBAR) eunit
+
 dialyzer:
-	@$(REBAR) compile
-	dialyzer --plts $(PLT_FILE) $(COMMON_PLT_FILE) -r ebin/ --dump_callgraph $(DOT_FILE) -Wrace_conditions | fgrep -v -f ./dialyzer.ignore-warnings
-doc: compile
-	@$(REBAR) doc
-callgraph: graphviz
-	dot -Tpng -o$(CALL_GRAPH_FILE) $(DOT_FILE)
-graphviz:
-	$(if $(shell which dot),,$(error "To make the depgraph, you need graphviz installed"))
+	@$(REBAR) dialyzer
+
+doc:
+	@$(REBAR) ex_doc
+
 clean:
 	@$(REBAR) clean
+
 distclean:
-	@$(REBAR) delete-deps
-	@$(REBAR) clean
-gen_rpc: deps
-	(cd deps/erpcgen/;make)
+	@$(REBAR) clean -a
+	@rm -rf _build
+
+gen_rpc:
+	@$(REBAR) compile
+	@cd _build/default/lib/erpcgen && $(MAKE)
+
 gen_nfs: gen_rpc
-	./deps/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] src/leo_nfs_proto3.x
-	./deps/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] src/leo_nfs_mount3.x
-	./deps/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] src/leo_nlm_proto4.x
+	./_build/default/lib/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] src/leo_nfs_proto3.x
+	./_build/default/lib/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] src/leo_nfs_mount3.x
+	./_build/default/lib/erpcgen/priv/erpcgen -a [svc_callback,xdr,hrl] src/leo_nlm_proto4.x
+
+shell:
+	@$(REBAR) shell
+
+test:
+	@$(REBAR) ct
+
+fmt:
+	@$(REBAR) fmt
+
+check-fmt:
+	@$(REBAR) fmt --check

@@ -14,3 +14,5 @@ erl_crash.dump
 leo_gateway.dot
 .rebar/
 rel/leo_gateway/
+rebar3.crashdump
+build/

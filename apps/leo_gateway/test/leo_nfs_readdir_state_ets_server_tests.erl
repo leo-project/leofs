@@ -27,7 +27,7 @@
 
 -include("leo_gateway.hrl").
 -include_lib("eunit/include/eunit.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 
 -define(TEST_COOKIE,    <<1,2,3,4,5,6,7,8>>).
@@ -56,18 +56,16 @@ get_count() ->
     proplists:get_value('size', Info).
 
 setup() ->
-    ok = leo_logger_api:new("./", ?LOG_LEVEL_INFO),
-    ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                    "./", ?LOG_FILENAME_ACCESS),
+    %% Logger setup - using standard logger instead of leo_logger_api
+    logger:set_primary_config(level, info),
     leo_nfs_readdir_state_ets_server:start_link(
       [{nfsd_readdir_scan_int, 3},
        {nfsd_readdir_entry_ttl, 10}]),
     ok.
 
 setup_mem_thres() ->
-    ok = leo_logger_api:new("./", ?LOG_LEVEL_INFO),
-    ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                    "./", ?LOG_FILENAME_ACCESS),
+    %% Logger setup - using standard logger instead of leo_logger_api
+    logger:set_primary_config(level, info),
     leo_nfs_readdir_state_ets_server:start_link(
       [{nfsd_readdir_scan_int, 180},
        {nfsd_readdir_entry_ttl, 0},
@@ -75,9 +73,8 @@ setup_mem_thres() ->
     ok.
 
 setup_zero_thres() ->
-    ok = leo_logger_api:new("./", ?LOG_LEVEL_INFO),
-    ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                    "./", ?LOG_FILENAME_ACCESS),
+    %% Logger setup - using standard logger instead of leo_logger_api
+    logger:set_primary_config(level, info),
     leo_nfs_readdir_state_ets_server:start_link(
       [{nfsd_readdir_scan_int, 180},
        {nfsd_readdir_entry_ttl, 0},
@@ -85,7 +82,6 @@ setup_zero_thres() ->
     ok.
 
 teardown(_) ->
-    leo_logger_api:stop(),
     leo_nfs_readdir_state_ets_server:stop().
 
 readdir_entry_and_delete() ->

@@ -28,7 +28,7 @@
 -include("leo_gateway.hrl").
 -include("leo_http.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_bucket.hrl").
 -include_lib("leo_watchdog/include/leo_watchdog.hrl").
@@ -254,7 +254,9 @@ update_conf(log_level, Val) when Val == ?LOG_LEVEL_DEBUG;
                                  Val == ?LOG_LEVEL_FATAL ->
     case application:set_env(leo_gateway, log_level, Val) of
         ok ->
-            leo_logger_api:update_log_level(Val);
+            %% Update logger level using standard logger
+            Level = log_level_to_otp(Val),
+            logger:set_primary_config(level, Level);
         _ ->
             {error, ?ERROR_COULD_NOT_UPDATE_LOG_LEVEL}
     end;
@@ -342,3 +344,17 @@ delete_bucket(AccessKey, Bucket, _Atom) ->
              ok | {error, any()} when Bucket::#?BUCKET{}).
 update_bucket(Bucket) ->
     leo_s3_bucket:put(Bucket).
+
+
+%%--------------------------------------------------------------------
+%% Internal Functions
+%%--------------------------------------------------------------------
+%% @doc Convert leo_logger log level to OTP logger level
+%% @private
+-spec(log_level_to_otp(Level) ->
+             logger:level() when Level::integer()).
+log_level_to_otp(Level) when Level =< ?LOG_LEVEL_DEBUG -> debug;
+log_level_to_otp(?LOG_LEVEL_INFO)  -> info;
+log_level_to_otp(?LOG_LEVEL_WARN)  -> warning;
+log_level_to_otp(?LOG_LEVEL_ERROR) -> error;
+log_level_to_otp(_) -> error.

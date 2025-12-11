@@ -26,7 +26,7 @@
 -module(leo_storage_replicator).
 
 -include("leo_storage.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_storage_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").

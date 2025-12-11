@@ -11,3 +11,5 @@ leo_manager.dot
 leo_manager.png
 .rebar/
 rel/leo_manager/
+mnesia.bak
+rebar3.crashdump

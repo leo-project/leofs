@@ -22,8 +22,8 @@
 -module(leo_manager_console).
 
 -include("leo_manager.hrl").
+-include("leo_manager_logger.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_auth.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_user.hrl").
