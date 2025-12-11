@@ -192,7 +192,7 @@
 -define(XML_ERROR_MSG_BucketAlreadyExists, "Please select a different name and try again.").
 -define(XML_ERROR_MSG_BucketAlreadyOwnedByYou, "Your previous request to create the named bucket succeeded and you already own it.").
 -define(XML_ERROR_MSG_OperationAborted, "A conflicting conditional operation is currently in progress against this resource. Try again.").
--define(XML_ERROR_MSG_MalformedXML, "The XML you provided was not well-formed or did not alidate against our published schema").
+-define(XML_ERROR_MSG_MalformedXML, "The XML you provided was not well-formed or did not validate against our published schema").
 -define(XML_ERROR_MSG_BadDigest, "The Content-MD5 you specified did not match what we received.").
 -define(XML_ERROR_MSG_InvalidBucketName, "The specified bucket is not valid.").
 -define(XML_ERROR_MSG_SignatureDoesNotMatch, "The request signature we calculated does not match the signature you provided. Check your AWS secret access key and signing method.").
@@ -308,7 +308,7 @@
         lists:append(["\"", leo_hex:integer_to_hex(_E,32), "\""])).
 -define(http_date(_D),
         leo_http:rfc1123_date(_D)).
--define(httP_cache_ctl(_C),
+-define(http_cache_ctl(_C),
         lists:append(["max-age=",integer_to_list(_C)])).
 -define(http_content_type(_H),
         case lists:keyfind(?HTTP_HEAD_CONTENT_TYPE,1,_H) of
@@ -622,7 +622,7 @@
           max_len_for_multipart = 0    :: non_neg_integer(),    %% max length a multipart object (byte)
           max_len_of_obj = 0           :: non_neg_integer(),    %% max length a object (byte)
           chunked_obj_len = 0          :: non_neg_integer(),    %% chunked object length for large-object (byte)
-          reading_chunked_obj_len = 0  :: non_neg_integer(),    %% creading hunked object length for large object (byte)
+          reading_chunked_obj_len = 0  :: non_neg_integer(),    %% reading chunked object length for large object (byte)
           threshold_of_chunk_len = 0   :: non_neg_integer(),    %% threshold of chunk length for large-object (byte)
           transfer_decode_fun       :: function() | undefined,  %% transfer decode function
           transfer_decode_state     :: #aws_chunk_decode_state{} | undefined,   %% transfer decode state
@@ -646,7 +646,9 @@
 -record(transport_record, {
           transport :: module(),
           socket    :: inet:socket(),
-          sending_chunked_obj_len :: pos_integer()
+          sending_chunked_obj_len :: pos_integer(),
+          %% Cowboy 2.x: use stream_body API instead of direct socket send
+          cowboy_req = undefined :: cowboy_req:req() | undefined
          }).
 
 -record(cache, {

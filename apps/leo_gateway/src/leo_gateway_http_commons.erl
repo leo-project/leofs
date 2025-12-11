@@ -214,7 +214,7 @@ onrequest_2(Req, Expire, Key, {ok, CachedObj}, SendChunkLen) ->
            etag = Checksum,
            body = Body,
            cmeta = CMetaBin,
-           size = Size} = binary_to_term(CachedObj),
+           size = _Size} = binary_to_term(CachedObj),
     Now = leo_date:now(),
     Diff = Now - MTime,
 
@@ -229,7 +229,7 @@ onrequest_2(Req, Expire, Key, {ok, CachedObj}, SendChunkLen) ->
                       {?HTTP_HEAD_RESP_CONTENT_TYPE,  ContentType},
                       {?HTTP_HEAD_RESP_AGE, integer_to_list(Diff)},
                       {?HTTP_HEAD_RESP_ETAG, ?http_etag(Checksum)},
-                      {?HTTP_HEAD_RESP_CACHE_CTRL, ?httP_cache_ctl(Expire)}],
+                      {?HTTP_HEAD_RESP_CACHE_CTRL, ?http_cache_ctl(Expire)}],
             Headers2 = case CMetaBin of
                            <<>> ->
                                Headers;
@@ -238,10 +238,11 @@ onrequest_2(Req, Expire, Key, {ok, CachedObj}, SendChunkLen) ->
                                CMeta ++ Headers
                        end,
 
+            %% Cowboy 2.x: parse_header returns value directly, not {ok, Value, Req}
             IMSSec = case cowboy_req:parse_header(?HTTP_HEAD_IF_MODIFIED_SINCE, Req) of
-                         {ok, undefined,_} ->
+                         undefined ->
                              0;
-                         {ok, IMSDateTime,_} ->
+                         IMSDateTime ->
                              calendar:datetime_to_gregorian_seconds(IMSDateTime)
                      end,
             case IMSSec of
@@ -249,11 +250,10 @@ onrequest_2(Req, Expire, Key, {ok, CachedObj}, SendChunkLen) ->
                     {ok, Req2} = ?reply_not_modified(Headers, Req),
                     Req2;
                 _ ->
-                    BodyFunc = fun(Socket, Transport) ->
-                                       leo_net:chunked_send(
-                                         Transport, Socket, Body, SendChunkLen)
-                               end,
-                    {ok, Req2} = ?reply_ok(Headers2, {Size, BodyFunc}, Req),
+                    %% Cowboy 2.x: use stream_reply and stream_body for streaming responses
+                    Req2 = cowboy_req:stream_reply(?HTTP_ST_OK, maps:from_list(Headers2), Req),
+                    ok = stream_body_from_cache(Body, SendChunkLen, Req2),
+                    cowboy_req:stream_body(<<>>, fin, Req2),
                     Req2
             end
     end.
@@ -302,7 +302,7 @@ onresponse(#cache_condition{expire = Expire} = Config, FunGenKey) ->
                                            content_type = ?http_content_type(Header1)}),
                             catch leo_cache_api:put(Key, Bin),
                             Header2 = lists:keydelete(?HTTP_HEAD_LAST_MODIFIED, 1, Header1),
-                            Header3 = [{?HTTP_HEAD_RESP_CACHE_CTRL, ?httP_cache_ctl(Expire)},
+                            Header3 = [{?HTTP_HEAD_RESP_CACHE_CTRL, ?http_cache_ctl(Expire)},
                                        {?HTTP_HEAD_RESP_LAST_MODIFIED, leo_http:rfc1123_date(Now)}
                                        |Header2],
                             {ok, Req2} = ?reply_ok(Header3, Req),
@@ -342,18 +342,6 @@ do_health_check([#member{node = Node}|Rest]) ->
             true;
         pang ->
             do_health_check(Rest)
-    end.
-
--spec(can_gzip(cowboy_req:req()) ->
-             boolean()).
-can_gzip(Req) ->
-    try cowboy_req:parse_header(<<"accept-encoding">>, Req) of
-        {ok, Encodings, _Req} when is_list(Encodings) ->
-            false =/= lists:keyfind(<<"gzip">>, 1, Encodings);
-        _ ->
-            false
-    catch _:_ ->
-        false
     end.
 
 -spec(get_mime_and_udm_from_cmeta(boolean(), binary(), binary()|list({binary(), binary()})) ->
@@ -443,23 +431,23 @@ get_object(Req, Key, #req_params{bucket_name = BucketName,
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, ?http_date(Meta#?METADATA.timestamp)}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
             Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
-            BodyFunc = fun(Socket, Transport) ->
-                               {ok, Pid} = leo_large_object_get_handler:start_link(
-                                             {Key, #transport_record{transport = Transport,
-                                                                     socket = Socket,
-                                                                     sending_chunked_obj_len = SendChunkLen},
-                                             HasDiskCache}),
-                               try
-                                   Ret = leo_large_object_get_handler:get(
-                                           Pid, TotalChunkedObjs, Req, Meta),
-                                   reply_fun(Ret, get, BucketName, Key, ObjLen, BeginTime),
-                                   ok
-                               after
-                                   ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, 0, BeginTime),
-                                   catch leo_large_object_get_handler:stop(Pid)
-                               end
-                       end,
-            cowboy_req:reply(?HTTP_ST_OK, maps:from_list(Headers2), {Meta#?METADATA.dsize, BodyFunc}, Req);
+            %% Cowboy 2.x: use stream_reply API for large objects
+            Req2 = cowboy_req:stream_reply(?HTTP_ST_OK, maps:from_list(Headers2), Req),
+            {ok, Pid} = leo_large_object_get_handler:start_link(
+                          {Key, #transport_record{transport = undefined,
+                                                  socket = undefined,
+                                                  sending_chunked_obj_len = SendChunkLen,
+                                                  cowboy_req = Req2},
+                          HasDiskCache}),
+            try
+                Ret = leo_large_object_get_handler:get(
+                        Pid, TotalChunkedObjs, Req2, Meta),
+                reply_fun(Ret, get, BucketName, Key, ObjLen, BeginTime),
+                {ok, Req2}
+            after
+                ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, 0, BeginTime),
+                catch leo_large_object_get_handler:stop(Pid)
+            end;
         {error, Cause} ->
             reply_fun({error, Cause}, get, BucketName, Key, 0, Req, BeginTime)
     end.
@@ -509,31 +497,18 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                     {_Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(IsCompatibleWithS3, Key, CMetaBin),
                     Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
 
-                    case file:open(Path, [raw, read]) of
-                        {ok, Fd} ->
-                            BodyFunc = fun(Socket,_Transport) ->
-                                               case file:sendfile(Fd, Socket, 0, 0,
-                                                                  [{chunk_size, SendChunkLen}]) of
-                                                   {ok,_} ->
-                                                       ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "hit:disk-cache");
-                                                   {error, Cause} ->
-                                                       ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "err:disk-cache"),
-                                                       ?warn("get_object_with_cache/4",
-                                                             [{key, Path},
-                                                              {summary, ?ERROR_COULD_NOT_SEND_DISK_CACHE},
-                                                              {cause, Cause}])
-                                               end,
-                                               _ = file:close(Fd),
-                                               ok
-                                       end,
-
-                            cowboy_req:reply(?HTTP_ST_OK, maps:from_list(Headers2), {CacheObj#cache.size, BodyFunc}, Req);
-                        {error, Reason} ->
+                    %% Cowboy 2.x: use sendfile tuple instead of BodyFunc
+                    case filelib:is_file(Path) of
+                        true ->
+                            ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "hit:disk-cache"),
+                            {ok, cowboy_req:reply(?HTTP_ST_OK, maps:from_list(Headers2),
+                                                  {sendfile, 0, CacheObj#cache.size, Path}, Req)};
+                        false ->
                             catch leo_cache_api:delete(Key),
                             ?warn("get_object_with_cache/4",
                                   [{key, Path},
                                    {summary, ?ERROR_COULD_NOT_OPEN_DISK_CACHE},
-                                   {cause, Reason}]),
+                                   {cause, file_not_found}]),
 
                             ?access_log_get(BucketName, Key, 0, ?HTTP_ST_INTERNAL_ERROR, BeginTime, "hit:disk-cache"),
                             ?reply_internal_error([?SERVER_HEADER], Key, <<>>, Req)
@@ -561,18 +536,9 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
             {_Mime, UDMHeaders} = get_mime_and_udm_from_cmeta(IsCompatibleWithS3, Key, CacheObj#cache.cmeta),
             Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
 
-            case can_gzip(Req) of
-                true ->
-                    ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "hit:mem-cache"),
-                    ?reply_ok(Headers2, CacheObj#cache.body, Req);
-                false ->
-                    BodyFunc = fun(Socket, Transport) ->
-                                       leo_net:chunked_send(
-                                         Transport, Socket, CacheObj#cache.body, SendChunkLen),
-                                       ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "hit:mem-cache")
-                               end,
-                    ?reply_ok(Headers2, {CacheObj#cache.size, BodyFunc}, Req)
-            end;
+            %% Cowboy 2.x: send body directly (no BodyFunc needed for in-memory data)
+            ?access_log_get(BucketName, Key, CacheObj#cache.size, ?HTTP_ST_OK, BeginTime, "hit:mem-cache"),
+            ?reply_ok(Headers2, CacheObj#cache.body, Req);
 
         %% MISS: For the case If-Modified-Since matches timestamp in metadata
         {ok, #?METADATA{timestamp = IMSSec}, _Resp} ->
@@ -598,18 +564,9 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
             Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
 
-            case can_gzip(Req) of
-                true ->
-                    ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime),
-                    ?reply_ok(Headers2, RespObject, Req);
-                false ->
-                    BodyFunc = fun(Socket, Transport) ->
-                                    leo_net:chunked_send(
-                                      Transport, Socket, RespObject, SendChunkLen),
-                                    ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime)
-                               end,
-                    ?reply_ok(Headers2, {Meta#?METADATA.dsize, BodyFunc}, Req)
-            end;
+            %% Cowboy 2.x: send body directly (no BodyFunc needed for in-memory data)
+            ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, ?HTTP_ST_OK, BeginTime),
+            ?reply_ok(Headers2, RespObject, Req);
 
         %% MISS: get an object from storage (large-size)
         {ok, #?METADATA{cnumber = TotalChunkedObjs,
@@ -622,23 +579,23 @@ get_object_with_cache(Req, Key, CacheObj, #req_params{bucket_name = BucketName,
                        {?HTTP_HEAD_RESP_LAST_MODIFIED, ?http_date(Meta#?METADATA.timestamp)}],
             {ok, CustomHeaders} = leo_nginx_conf_parser:get_custom_headers(Key, CustomHeaderSettings),
             Headers2 = UDMHeaders ++ Headers ++ CustomHeaders,
-            BodyFunc = fun(Socket, Transport) ->
-                               {ok, Pid} = leo_large_object_get_handler:start_link(
-                                             {Key, #transport_record{transport = Transport,
-                                                                     socket = Socket,
-                                                                     sending_chunked_obj_len = SendChunkLen},
-                                             HasDiskCache}),
-                               try
-                                   Ret = leo_large_object_get_handler:get(
-                                           Pid, TotalChunkedObjs, Req, Meta),
-                                   reply_fun(Ret, get, BucketName, Key, ObjLen, BeginTime),
-                                   ok
-                               after
-                                   ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, 0, BeginTime),
-                                   catch leo_large_object_get_handler:stop(Pid)
-                               end
-                       end,
-            cowboy_req:reply(?HTTP_ST_OK, maps:from_list(Headers2), {Meta#?METADATA.dsize, BodyFunc}, Req);
+            %% Cowboy 2.x: use stream_reply API for large objects
+            Req2 = cowboy_req:stream_reply(?HTTP_ST_OK, maps:from_list(Headers2), Req),
+            {ok, Pid} = leo_large_object_get_handler:start_link(
+                          {Key, #transport_record{transport = undefined,
+                                                  socket = undefined,
+                                                  sending_chunked_obj_len = SendChunkLen,
+                                                  cowboy_req = Req2},
+                          HasDiskCache}),
+            try
+                Ret = leo_large_object_get_handler:get(
+                        Pid, TotalChunkedObjs, Req2, Meta),
+                reply_fun(Ret, get, BucketName, Key, ObjLen, BeginTime),
+                {ok, Req2}
+            after
+                ?access_log_get(BucketName, Key, Meta#?METADATA.dsize, 0, BeginTime),
+                catch leo_large_object_get_handler:stop(Pid)
+            end;
         {error, Cause} ->
             reply_fun({error, Cause}, get, BucketName, Key, 0, Req, BeginTime)
     end.
@@ -851,7 +808,8 @@ put_small_object({ok, {Size, Bin, Req}}, Key, #req_params{bucket_name = BucketNa
                     RetCMeta =
                         case CMeta of
                             <<>> ->
-                                {ok, CMeta};
+                                %% Empty metadata: use guessed mime type from key
+                                {ok, CMeta, leo_mime:guess_mime(Key)};
                             _ ->
                                 case catch leo_misc:get_value(
                                              ?PROP_CMETA_UDM, binary_to_term(CMeta)) of
@@ -1085,13 +1043,13 @@ head_object(Req, Key, #req_params{bucket_name = BucketName,
                        %% so I changed to the lower case one from the Camel Cased
                        %% in order to cope with cowboy_req:merge_headers which only take care
                        %% lower case ones.
-                       {?HTTP_HEAD_RESP_LAST_MODIFIED, Timestamp}],
+                       {?HTTP_HEAD_RESP_LAST_MODIFIED, Timestamp},
+                       %% Cowboy 2.x: Set Content-Length header explicitly for HEAD requests
+                       %% This avoids creating a large dummy body which wastes memory
+                       {?HTTP_HEAD_RESP_CONTENT_LENGTH, integer_to_list(Meta#?METADATA.dsize)}],
             Headers2 = UDMHeaders ++ Headers,
             ?access_log_head(BucketName, Key, ?HTTP_ST_OK, BeginTime),
-            %% Cowboy 2.x: For HEAD requests, create a dummy body of correct size to set content-length properly
-            %% Cowboy will omit the body for HEAD requests but set correct content-length
-            DummyBody = binary:copy(<<0>>, Meta#?METADATA.dsize),
-            {ok, cowboy_req:reply(?HTTP_ST_OK, maps:from_list(Headers2), DummyBody, Req)};
+            {ok, cowboy_req:reply(?HTTP_ST_OK, maps:from_list(Headers2), Req)};
         {ok, #?METADATA{del = 1}} ->
             ?access_log_head(BucketName, Key, ?HTTP_ST_NOT_FOUND, BeginTime),
             ?reply_not_found_without_body([?SERVER_HEADER], Req);
@@ -1372,6 +1330,23 @@ parse_range_part(Part) ->
             %% Normal range: 0-499
             {binary_to_integer(StartBin), binary_to_integer(EndBin)}
     end.
+
+
+%% @doc Stream body data from cache using Cowboy 2.x stream_body API
+%% @private
+-spec(stream_body_from_cache(Data, ChunkLen, Req) ->
+             ok when Data::binary(),
+                     ChunkLen::pos_integer(),
+                     Req::cowboy_req:req()).
+stream_body_from_cache(<<>>, _ChunkLen, _Req) ->
+    ok;
+stream_body_from_cache(Data, ChunkLen, Req) when byte_size(Data) =< ChunkLen ->
+    cowboy_req:stream_body(Data, nofin, Req),
+    ok;
+stream_body_from_cache(Data, ChunkLen, Req) ->
+    <<Chunk:ChunkLen/binary, Rest/binary>> = Data,
+    cowboy_req:stream_body(Chunk, nofin, Req),
+    stream_body_from_cache(Rest, ChunkLen, Req).
 
 
 %%====================================================================
