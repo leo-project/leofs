@@ -1,24 +1,43 @@
+# rebar3 build directories
 _build/
+apps/*/_build/
+
+# Legacy rebar2 deps (no longer used)
 deps/
+
+# Release output
+package/
+
+# Generated config files
+rel/leo_manager/files/leo_manager.conf
+rel/leo_manager/files/leo_manager.schema
+apps/leo_manager/priv/leo_manager.conf
+apps/leo_manager/priv/leo_manager.schema
+
+# Legacy reltool output (no longer used with rebar3)
 rel/leo_manager/leo_manager/
 rel/leo_manager/service/
 rel/leo_gateway/leo_gateway/
 rel/leo_storage/leo_storage/
-package/
-
-rel/leo_manager/files/leo_manager.conf
-rel/leo_manager/files/leo_manager.schema
-
-# ignore this because it is env dependent
-rel/common/launch.environment
-
-# reltool.config files are generated from reltool.config.in
 rel/leo_gateway/reltool.config
 rel/leo_manager/reltool.config
 rel/leo_storage/reltool.config
 
+# Environment specific
+rel/common/launch.environment
+
+# App specific
 apps/leo_gateway/cache/
 
+# Documentation
 docs/_book/
 docs/node_modules/
 site/
+
+# Editor and OS files
+*.swp
+*.swo
+*~
+.DS_Store
+*.beam
+erl_crash.dump
