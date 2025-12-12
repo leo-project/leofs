@@ -141,11 +141,14 @@ start(#http_options{handler = Handler,
 -spec(start(atom(), #http_options{}) ->
              ok).
 start(Sup, Options) ->
-    %% launch Cowboy
+    %% launch Cowboy (may already be started if cowboy app is running)
     ChildSpec1 = {cowboy_sup,
                   {cowboy_sup, start_link, []},
                   permanent, ?SHUTDOWN_WAITING_TIME, supervisor, [cowboy_sup]},
-    {ok,_} = supervisor:start_child(Sup, ChildSpec1),
+    case supervisor:start_child(Sup, ChildSpec1) of
+        {ok, _} -> ok;
+        {error, {already_started, _}} -> ok
+    end,
 
     %% launch http-handler(s)
     start(Options).

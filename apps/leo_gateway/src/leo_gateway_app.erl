@@ -364,11 +364,14 @@ after_process_1(Pid, Managers) ->
             void
     end,
 
-    %% Launch LeoCache
-    {ok, _} = supervisor:start_child(
-                leo_gateway_sup, {leo_cache_sup,
-                                  {leo_cache_sup, start_link,
-                                   []}, permanent, 2000, worker, [leo_cache_sup]}),
+    %% Launch LeoCache (may already be started if leo_cache app is running)
+    case supervisor:start_child(
+           leo_gateway_sup, {leo_cache_sup,
+                             {leo_cache_sup, start_link,
+                              []}, permanent, 2000, worker, [leo_cache_sup]}) of
+        {ok, _} -> ok;
+        {error, {already_started, _}} -> ok
+    end,
     NumOfCacheWorkers     = HttpOptions#http_options.cache_workers,
     CacheRAMCapacity      = HttpOptions#http_options.cache_ram_capacity,
     CacheDiscCapacity     = HttpOptions#http_options.cache_disc_capacity,
@@ -427,8 +430,8 @@ after_process_2(SystemConf, MembersCur, MembersPrev) ->
                          permanent, 2000, supervisor, [leo_redundant_manager_sup]},
             {ok, _} = supervisor:start_child(leo_gateway_sup, ChildSpec);
         _ ->
-            {ok, _} = leo_redundant_manager_sup:start_link(
-                        gateway, NewManagers, ?env_queue_dir(leo_gateway))
+            %% Already started via leo_redundant_manager application
+            ok
     end,
     ok = leo_redundant_manager_api:set_options(
            [{n, SystemConf#?SYSTEM_CONF.n},
