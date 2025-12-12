@@ -183,8 +183,11 @@ after_proc_1(Pid, Managers) ->
     ensure_started(rex, rpc, start_link, worker, 2000),
     ok = leo_storage_api:register_in_monitor(first),
 
-    %% Launch leo-rpc
-    ok = leo_rpc:start(),
+    %% Launch leo-rpc (may already be started via start.script)
+    case leo_rpc:start() of
+        ok -> ok;
+        {error, {already_started, leo_rpc}} -> ok
+    end,
 
     %% Watchdog for Storage in order to operate 'auto-compaction' automatically
     WatchdogInterval = ?env_storage_watchdog_interval(),
