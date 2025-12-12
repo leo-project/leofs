@@ -1783,18 +1783,12 @@ get_bucket_1(_AccessKeyId, BucketName, none, Marker, MaxKeys, Prefix, _Versions)
                                         find_by_parent_dir,
                                         [Key, ?BIN_SLASH, Marker, MaxKeys],
                                         []) of
-        {ok, Metadata} when is_list(Metadata) =:= true ->
-            BodyFunc = fun(Socket, Transport) ->
-                               BucketName_1 = erlang:hd(leo_misc:binary_tokens(BucketName, <<"/">>)),
-                               HeadBin = generate_list_head_xml(BucketName_1, Prefix_1, MaxKeys, <<>>),
-                               ok = Transport:send(Socket, HeadBin),
-                               {ok, IsTruncated, NextMarker} =
-                                   recursive_find(BucketName, Redundancies, Metadata,
-                                                  Marker, MaxKeys, Transport, Socket),
-                               FootBin = generate_list_foot_xml(IsTruncated, NextMarker),
-                               ok = Transport:send(Socket, FootBin)
-                       end,
-            {ok, BodyFunc};
+        not_found ->
+            {ok, generate_bucket_xml(Key, Prefix_1, [], MaxKeys)};
+        {ok, []} ->
+            {ok, generate_bucket_xml(Key, Prefix_1, [], MaxKeys)};
+        {ok, MetadataL} when is_list(MetadataL) ->
+            {ok, generate_bucket_xml(Key, Prefix_1, MetadataL, MaxKeys)};
         {ok, _} ->
             {error, invalid_format};
         Error ->
@@ -2335,105 +2329,6 @@ formalize_bucket(BucketName) ->
             BucketName
     end.
 
-generate_list_head_xml(BucketName, Prefix, MaxKeys, Delimiter) ->
-    Delimiter_1 = case Delimiter of
-                      <<>> ->
-                          ?DEF_DELIMITER;
-                      _ ->
-                          Delimiter
-                  end,
-    io_lib:format(?XML_OBJ_LIST_HEAD,
-                  [xmerl_lib:export_text(BucketName),
-                   xmerl_lib:export_text(Prefix),
-                   integer_to_list(MaxKeys),
-                   xmerl_lib:export_text(Delimiter_1)]).
-
-generate_list_foot_xml(IsTruncated, NextMarker) ->
-    TruncatedStr = case IsTruncated of
-                       true ->
-                           << "true" >>;
-                       false ->
-                           << "false" >>
-                   end,
-    io_lib:format(?XML_OBJ_LIST_FOOT,
-                  [TruncatedStr,
-                   xmerl_lib:export_text(NextMarker)]).
-
-generate_list_file_xml(BucketName, #?METADATA{key = Key,
-                                              dsize = Length,
-                                              timestamp = TS,
-                                              checksum = CS,
-                                              del = 0}) ->
-    BucketNameLen = byte_size(BucketName),
-    << _:BucketNameLen/binary, Key_1/binary >> = Key,
-    io_lib:format(?XML_OBJ_LIST_FILE_1,
-                  [xmerl_lib:export_text(Key_1),
-                   leo_http:web_date(TS),
-                   leo_hex:integer_to_hex(CS, 32),
-                   integer_to_list(Length)]);
-generate_list_file_xml(_,_) ->
-    error.
-
-
-%% @doc Recursively find a key in the bucket
-%% @private
--spec(recursive_find(BucketName, Redundancies, MetadataList,
-                     Marker, MaxKeys, Transport, Socket) ->
-             {ok, CanFindKey, LastKey} | {error, any()} when BucketName::binary(),
-                                                             Redundancies::[#redundancies{}],
-                                                             MetadataList::[#?METADATA{}],
-                                                             Marker::binary(),
-                                                             MaxKeys::non_neg_integer(),
-                                                             Transport::atom(),
-                                                             Socket::port(),
-                                                             CanFindKey::boolean(),
-                                                             LastKey::binary()).
-recursive_find(BucketName, Redundancies, MetadataList,
-               Marker, MaxKeys, Transport, Socket) ->
-    recursive_find(BucketName, Redundancies, [], MetadataList,
-                   Marker, MaxKeys, <<>>, Transport, Socket).
-
-recursive_find(_BucketName, _Redundancies,_,_,_, 0, LastKey,_,_) ->
-    {ok, true, LastKey};
-recursive_find(_BucketName, _Redundancies,[],[],_,_,_,_,_) ->
-    {ok, false, <<>>};
-recursive_find(BucketName, Redundancies, [Head|Rest], [],
-               Marker, MaxKeys, LastKey, Transport, Socket) ->
-    recursive_find(BucketName, Redundancies, Rest, Head,
-                   Marker, MaxKeys, LastKey, Transport, Socket);
-recursive_find(BucketName, Redundancies, Acc,
-               [#?METADATA{dsize = -1, key = Key}|Rest],
-               Marker, MaxKeys, LastKey, Transport, Socket) ->
-    case leo_gateway_rpc_handler:invoke(Redundancies,
-                                        leo_storage_handler_directory,
-                                        find_by_parent_dir,
-                                        [Key, ?BIN_SLASH, Marker, MaxKeys],
-                                        []) of
-        {ok, Metadata} when is_list(Metadata) ->
-            recursive_find(BucketName, Redundancies, [Rest | Acc], Metadata,
-                           Marker, MaxKeys, LastKey, Transport, Socket);
-        {ok,_} ->
-            {error, invalid_format};
-        Error ->
-            Error
-    end;
-recursive_find(BucketName, Redundancies, Acc,
-               [#?METADATA{key = Key} = Head|Rest],
-               Marker, MaxKeys, LastKey, Transport, Socket) ->
-    case generate_list_file_xml(BucketName, Head) of
-        error ->
-            recursive_find(BucketName, Redundancies, Acc, Rest,
-                           MaxKeys, MaxKeys, LastKey, Transport, Socket);
-        Bin ->
-            case Transport:send(Socket, Bin) of
-                ok ->
-                    recursive_find(BucketName, Redundancies, Acc, Rest,
-                                   Marker, MaxKeys - 1, Key, Transport, Socket);
-                Error ->
-                    Error
-            end
-    end.
-
 %% @doc parse Custom Meta from Headers
 -spec(parse_headers_to_cmeta(Headers) ->
     {ok, Bin} | {error, Cause} when Headers::list(),
@@ -2486,10 +2381,9 @@ compact(Req) ->
              calendar:datetime() | {error, badarg}).
 parse_http_date(DateBin) when is_binary(DateBin) ->
     DateStr = binary_to_list(DateBin),
-    try
-        httpd_util:convert_request_date(DateStr)
-    catch
-        _:_ -> {error, badarg}
+    case httpd_util:convert_request_date(DateStr) of
+        bad_date -> {error, badarg};
+        DateTime -> DateTime
     end;
 parse_http_date(_) ->
     {error, badarg}.
