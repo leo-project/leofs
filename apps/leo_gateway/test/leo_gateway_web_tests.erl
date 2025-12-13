@@ -155,11 +155,12 @@ setup(InitFun, TermFun) ->
     net_kernel:start([NetKernelNode, shortnames]),
     inets:start(),
 
-    %% Start peer nodes using TCP connection (0) which creates a distributed Erlang node
-    %% that can be accessed via rpc:call from the local node
-    %% Use peer:start instead of peer:start_link to avoid peer termination when setup process exits
-    {ok, Peer0, Node0} = peer:start(#{name => storage_0, connection => 0}),
-    {ok, Peer1, Node1} = peer:start(#{name => storage_1, connection => 0}),
+    %% Start peer nodes using standard_io connection with unique names
+    Unique = erlang:unique_integer([positive]),
+    Name0 = list_to_atom("storage_" ++ integer_to_list(Unique) ++ "_0"),
+    Name1 = list_to_atom("storage_" ++ integer_to_list(Unique) ++ "_1"),
+    {ok, Peer0, Node0} = peer:start_link(#{name => Name0, connection => standard_io}),
+    {ok, Peer1, Node1} = peer:start_link(#{name => Name1, connection => standard_io}),
     %% Add all code paths to peer nodes
     CodePaths = code:get_path(),
     lists:foreach(fun(P) -> rpc:call(Node0, code, add_patha, [P]) end, CodePaths),
