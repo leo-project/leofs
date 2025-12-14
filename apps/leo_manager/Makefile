@@ -8,7 +8,13 @@ CALL_GRAPH_FILE = leo_manager.png
 
 all: compile xref eunit
 
-compile:
+get-deps:
+	@$(REBAR) get-deps
+
+patch-deps:
+	@./scripts/patch_deps.sh
+
+compile: get-deps patch-deps
 	@$(REBAR) compile
 
 xref:
