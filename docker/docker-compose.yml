@@ -1,0 +1,114 @@
+services:
+  leo_manager_0:
+    image: leofs-leo_manager_0:latest
+    container_name: leo_manager_0
+    hostname: leo_manager_0
+    environment:
+      - COMPONENT=leo_manager_0
+    volumes:
+      - ./config/leo_manager_0.conf:/opt/leo_manager_0/etc/leo_manager.conf:ro
+      - manager0_work:/opt/leo_manager_0/work
+      - manager0_log:/opt/leo_manager_0/log
+    ports:
+      - "10010:10010"
+      - "10020:10020"
+    networks:
+      - leofs_net
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "10010"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  leo_manager_1:
+    image: leofs-leo_manager_1:latest
+    container_name: leo_manager_1
+    hostname: leo_manager_1
+    environment:
+      - COMPONENT=leo_manager_1
+      - WAIT_FOR_HOST=leo_manager_0
+      - WAIT_FOR_PORT=10010
+      - WAIT_SECONDS=3
+    volumes:
+      - ./config/leo_manager_1.conf:/opt/leo_manager_1/etc/leo_manager.conf:ro
+      - manager1_work:/opt/leo_manager_1/work
+      - manager1_log:/opt/leo_manager_1/log
+    ports:
+      - "10012:10012"
+      - "10022:10022"
+    networks:
+      - leofs_net
+    depends_on:
+      leo_manager_0:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "10012"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  leo_storage:
+    image: leofs-leo_storage:latest
+    container_name: leo_storage
+    hostname: leo_storage
+    environment:
+      - COMPONENT=leo_storage
+      - WAIT_FOR_HOST=leo_manager_1
+      - WAIT_FOR_PORT=10012
+      - WAIT_SECONDS=3
+    volumes:
+      - ./config/leo_storage.conf:/opt/leo_storage/etc/leo_storage.conf:ro
+      - storage_avs:/opt/leo_storage/avs
+      - storage_work:/opt/leo_storage/work
+      - storage_log:/opt/leo_storage/log
+    networks:
+      - leofs_net
+    depends_on:
+      leo_manager_1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "13077"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  leo_gateway:
+    image: leofs-leo_gateway:latest
+    container_name: leo_gateway
+    hostname: leo_gateway
+    environment:
+      - COMPONENT=leo_gateway
+      - WAIT_FOR_HOST=leo_storage
+      - WAIT_FOR_PORT=13077
+      - WAIT_SECONDS=3
+    volumes:
+      - ./config/leo_gateway.conf:/opt/leo_gateway/etc/leo_gateway.conf:ro
+      - gateway_work:/opt/leo_gateway/work
+      - gateway_log:/opt/leo_gateway/log
+    ports:
+      - "28080:8080"
+    networks:
+      - leofs_net
+    depends_on:
+      leo_storage:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+networks:
+  leofs_net:
+    driver: bridge
+
+volumes:
+  manager0_work:
+  manager0_log:
+  manager1_work:
+  manager1_log:
+  storage_avs:
+  storage_work:
+  storage_log:
+  gateway_work:
+  gateway_log:
