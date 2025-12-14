@@ -28,8 +28,8 @@
 -behaviour(leo_mq_behaviour).
 
 -include("leo_storage.hrl").
+-include("leo_storage_logger.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_mq/include/leo_mq.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
@@ -839,7 +839,7 @@ correct_redundancies_2(ListOfMetadatas, ErrorNodes) ->
     %% it is adopted instead of the local 'number of replicas'
     {_Dest, CorrectNodes, InconsistentNodes} =
         lists:foldl(
-          fun({Node,_Metadata}, {{DestNode,_Metadata} = Dest, C, R}) when Node =:= DestNode ->
+          fun({Node, _Meta1}, {{DestNode, _Meta2} = Dest, C, R}) when Node =:= DestNode ->
                   {Dest, [Node|C], R};
              ({Node, #?METADATA{clock = Clock}},
               {{DestNode, #?METADATA{clock = DestClock}} = Dest, C, R}) when Node  =/= DestNode,

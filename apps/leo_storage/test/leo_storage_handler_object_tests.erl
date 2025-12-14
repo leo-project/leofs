@@ -3,6 +3,7 @@
 %% LeoStorage
 %%
 %% Copyright (c) 2012-2018 Rakuten, Inc.
+%% Copyright (c) 2019-2025 Lions Data, Ltd.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -26,8 +27,8 @@
 -module(leo_storage_handler_object_tests).
 
 -include("leo_storage.hrl").
+-include("leo_storage_logger.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").
@@ -76,21 +77,20 @@ setup() ->
 
     Node0 = list_to_atom("node_0@" ++ Hostname),
     net_kernel:start([Node0, shortnames]),
-    {ok, Node1} = slave:start_link(list_to_atom(Hostname), 'node_1'),
 
-    true = rpc:call(Node0, code, add_path, ["../deps/meck/ebin"]),
-    true = rpc:call(Node1, code, add_path, ["../deps/meck/ebin"]),
+    %% Use peer module instead of deprecated slave module
+    {ok, Peer, Node1} = peer:start_link(#{name => node_1}),
 
-    catch leo_logger_api:new("./", ?LOG_LEVEL_WARN),
-    catch leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                             "./", ?LOG_FILENAME_ACCESS),
-    {Node0, Node1}.
+    MeckPath = filename:dirname(code:which(meck)),
+    rpc:call(Node0, code, add_path, [MeckPath]),
+    rpc:call(Node1, code, add_path, [MeckPath]),
 
-teardown({_, Node1}) ->
-    meck:unload(),
+    {Node0, Node1, Peer}.
+
+teardown({_, _Node1, Peer}) ->
+    catch meck:unload(),
     net_kernel:stop(),
-    slave:stop(Node1),
-    leo_logger_api:stop(),
+    catch peer:stop(Peer),
     timer:sleep(100),
     ok.
 
@@ -99,7 +99,7 @@ teardown({_, Node1}) ->
 %%--------------------------------------------------------------------
 %% @doc  get/1
 %% @private
-get_a0_({Node0, Node1}) ->
+get_a0_({Node0, Node1, _Peer}) ->
     %% leo_redundant_manager_api
     meck:new(leo_redundant_manager_api, [non_strict]),
     meck:expect(leo_redundant_manager_api, get_redundancies_by_key,
@@ -137,7 +137,7 @@ get_a0_({Node0, Node1}) ->
 
 %% @doc  get/1
 %% @private
-get_a1_({Node0, Node1}) ->
+get_a1_({Node0, Node1, _Peer}) ->
     %% leo_redundant_manager_api
     meck:new(leo_redundant_manager_api, [non_strict]),
     meck:expect(leo_redundant_manager_api, get_redundancies_by_key,
@@ -174,7 +174,7 @@ get_a1_({Node0, Node1}) ->
 
 %% @doc  Get Test when One Node is up but another is down, up node does not hold the object
 %% @@ private
-get_nodedown({Node0, Node1}) ->
+get_nodedown({Node0, Node1, _Peer}) ->
     %% leo_redundant_manager_api
     meck:new(leo_redundant_manager_api, [non_strict]),
     meck:expect(leo_redundant_manager_api, get_redundancies_by_addr_id,
@@ -219,7 +219,7 @@ get_nodedown({Node0, Node1}) ->
     ?assertNotEqual({error, not_found}, Res),
     ok.
 
-get_unavailablenode({Node0, Node1}) ->
+get_unavailablenode({Node0, Node1, _Peer}) ->
     %% leo_redundant_manager_api
     meck:new(leo_redundant_manager_api, [non_strict]),
     meck:expect(leo_redundant_manager_api, get_redundancies_by_addr_id,
@@ -262,7 +262,7 @@ get_unavailablenode({Node0, Node1}) ->
 %% PUT
 %%--------------------------------------------------------------------
 %% put/6
-put_0_({Node0, Node1}) ->
+put_0_({Node0, Node1, _Peer}) ->
     AddrId    = 0,
     Key       = ?TEST_KEY_0,
     Bin       = ?TEST_BIN,
@@ -308,7 +308,7 @@ put_0_({Node0, Node1}) ->
     ok.
 
 %% put/2
-put_1_({_Node0, _Node1}) ->
+put_1_({_Node0, _Node1, _Peer}) ->
     meck:new(leo_object_storage_api, [non_strict]),
     meck:expect(leo_object_storage_api, put,
                 fun(_Key, _ObjPool) ->
@@ -327,7 +327,7 @@ put_1_({_Node0, _Node1}) ->
 %% DELETE
 %%--------------------------------------------------------------------
 %% delete/4
-delete_({Node0, Node1}) ->
+delete_({Node0, Node1, _Peer}) ->
     AddrId    = 0,
     Key       = ?TEST_KEY_0,
     ReqId     = 0,
@@ -419,7 +419,7 @@ delete_({Node0, Node1}) ->
 %%--------------------------------------------------------------------
 %% OTHER
 %%--------------------------------------------------------------------
-head_({Node0, Node1}) ->
+head_({Node0, Node1, _Peer}) ->
     %% 1.
     meck:new(leo_object_storage_api, [non_strict]),
     meck:expect(leo_object_storage_api, head,
@@ -461,31 +461,30 @@ head_({Node0, Node1}) ->
     Res1 = leo_storage_handler_object:head(0, ?TEST_KEY_0),
     ?assertEqual({error, not_found}, Res1),
 
-    %% 2.
+    %% 3. Test with local node available and remote node unavailable
     meck:unload(),
+    meck:new(leo_object_storage_api, [non_strict]),
+    meck:expect(leo_object_storage_api, head,
+                fun(_Key) ->
+                        {ok, term_to_binary(?TEST_META_0)}
+                end),
     meck:new(leo_redundant_manager_api, [non_strict]),
     meck:expect(leo_redundant_manager_api, get_redundancies_by_addr_id,
                 fun(get, _AddrId) ->
                         {ok, #redundancies{id = 0,
                                            nodes = [#redundant_node{node = Node0,
-                                                                    available = false},
+                                                                    available = true},
                                                     #redundant_node{node = Node1,
-                                                                    available = true}],
+                                                                    available = false}],
                                            n = 2, r = 1, w = 1, d = 1}}
                 end),
-
-    ok = rpc:call(Node1, meck, new,    [leo_object_storage_api, [no_link, non_strict]]),
-    ok = rpc:call(Node1, meck, expect, [leo_object_storage_api, head,
-                                        fun(_Arg) ->
-                                                {ok, term_to_binary(?TEST_META_0)}
-                                        end]),
 
     {ok, Res2} = leo_storage_handler_object:head(0, ?TEST_KEY_0),
     ?assertEqual(?TEST_META_0, Res2),
     ok.
 
 
-copy_({Node0, Node1}) ->
+copy_({Node0, Node1, _Peer}) ->
     %% 1. for WRITE
     %%
     %% Retrieve metadata from head-func
@@ -563,7 +562,7 @@ copy_({Node0, Node1}) ->
     ok.
 
 
-prefix_search_({_Node0, _Node1}) ->
+prefix_search_({_Node0, _Node1, _Peer}) ->
     meck:new(leo_object_storage_api, [non_strict]),
     meck:expect(leo_object_storage_api, fetch_by_key,
                 fun(_ParentDir, Fun) ->

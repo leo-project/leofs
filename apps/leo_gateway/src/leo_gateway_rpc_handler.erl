@@ -38,12 +38,10 @@
 
 -include("leo_http.hrl").
 -include("leo_gateway.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_bucket.hrl").
--undef(MAX_RETRY_TIMES).
--include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 -record(rpc_params, {
@@ -71,7 +69,6 @@ head(Key) ->
 -spec(get(binary()) ->
              {ok, #?METADATA{}, binary()}|{error, any()}).
 get(Key) ->
-    ok = leo_metrics_req:notify(?STAT_COUNT_GET),
     ReqParams = get_request_parameters(get, Key),
     invoke(ReqParams#rpc_params.redundancies,
            leo_storage_handler_object,
@@ -81,7 +78,6 @@ get(Key) ->
 -spec(get(binary(), integer()) ->
              {ok, match}|{ok, #?METADATA{}, binary()}|{error, any()}).
 get(Key, ETag) ->
-    ok = leo_metrics_req:notify(?STAT_COUNT_GET),
     ReqParams = get_request_parameters(get, Key),
     invoke(ReqParams#rpc_params.redundancies,
            leo_storage_handler_object,
@@ -92,7 +88,6 @@ get(Key, ETag) ->
 -spec(get(binary(), integer(), integer()) ->
              {ok, #?METADATA{}, binary()}|{error, any()}).
 get(Key, StartPos, EndPos) ->
-    ok = leo_metrics_req:notify(?STAT_COUNT_GET),
     ReqParams = get_request_parameters(get, Key),
     invoke(ReqParams#rpc_params.redundancies,
            leo_storage_handler_object,
@@ -120,7 +115,6 @@ get_dir_meta(Key) ->
 -spec(delete(binary()) ->
              ok|{error, any()}).
 delete(Key) ->
-    ok = leo_metrics_req:notify(?STAT_COUNT_DEL),
     ReqParams = get_request_parameters(delete, Key),
     invoke(ReqParams#rpc_params.redundancies,
            leo_storage_handler_object,
@@ -148,8 +142,6 @@ put(#put_req_params{path = Key,
                     %% bucket_info = BucketInfo
                     %% <<<
                    }) ->
-    ok = leo_metrics_req:notify(?STAT_COUNT_PUT),
-
     %% === NOTE: for 1.4.0 >>>
     %% #?BUCKET{redundancy_method = RedMethod,
     %%          cp_params = CPParams,

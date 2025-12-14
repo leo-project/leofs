@@ -28,7 +28,7 @@
 -include("leo_gateway.hrl").
 -include("leo_http.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_bucket.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
@@ -145,9 +145,8 @@ gen_tests_2(Arg) ->
             "-----END RSA PRIVATE KEY-----\n").
 
 setup(InitFun, TermFun) ->
-    ok = leo_logger_api:new("./", ?LOG_LEVEL_INFO),
-    ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                    "./", ?LOG_FILENAME_ACCESS),
+    %% Logger setup - using standard logger instead of leo_logger_api
+    logger:set_primary_config(level, info),
 
     io:format(user, "cwd:~p~n",[os:cmd("pwd")]),
     [] = os:cmd("epmd -daemon"),
@@ -156,10 +155,20 @@ setup(InitFun, TermFun) ->
     net_kernel:start([NetKernelNode, shortnames]),
     inets:start(),
 
-    Args = " -pa ../deps/*/ebin "
-        ++ " -kernel error_logger    '{file, \"../kernel.log\"}' ",
-    {ok, Node0} = slave:start_link(list_to_atom(Hostname), 'storage_0', Args),
-    {ok, Node1} = slave:start_link(list_to_atom(Hostname), 'storage_1', Args),
+    %% Start peer nodes using standard_io connection with unique names
+    Unique = erlang:unique_integer([positive]),
+    Name0 = list_to_atom("storage_" ++ integer_to_list(Unique) ++ "_0"),
+    Name1 = list_to_atom("storage_" ++ integer_to_list(Unique) ++ "_1"),
+    {ok, Peer0, Node0} = peer:start_link(#{name => Name0, connection => standard_io}),
+    {ok, Peer1, Node1} = peer:start_link(#{name => Name1, connection => standard_io}),
+    %% Add all code paths to peer nodes
+    CodePaths = code:get_path(),
+    lists:foreach(fun(P) -> rpc:call(Node0, code, add_patha, [P]) end, CodePaths),
+    lists:foreach(fun(P) -> rpc:call(Node1, code, add_patha, [P]) end, CodePaths),
+    %% Start meck application on peer nodes (required for mocking to work)
+    {ok, _} = rpc:call(Node0, application, ensure_all_started, [meck]),
+    {ok, _} = rpc:call(Node1, application, ensure_all_started, [meck]),
+    put(peer_pids, [Peer0, Peer1]),
 
     ok = leo_misc:init_env(),
 
@@ -193,6 +202,8 @@ setup(InitFun, TermFun) ->
 
     meck:new(leo_metrics_req, [non_strict]),
     meck:expect(leo_metrics_req, notify, fun(_) -> ok end),
+    ok = rpc:call(Node0, meck, new,    [leo_metrics_req, [no_link, non_strict]]),
+    ok = rpc:call(Node0, meck, expect, [leo_metrics_req, notify, fun(_) -> ok end]),
     ok = rpc:call(Node1, meck, new,    [leo_metrics_req, [no_link, non_strict]]),
     ok = rpc:call(Node1, meck, expect, [leo_metrics_req, notify, fun(_) -> ok end]),
 
@@ -239,11 +250,15 @@ setup_rest_api() ->
     TermFun = fun() -> leo_gateway_rest_api:stop() end,
     setup(InitFun, TermFun).
 
-teardown([TermFun, Node0, Node1]) ->
+teardown([TermFun, _Node0, _Node1]) ->
     inets:stop(),
     net_kernel:stop(),
-    slave:stop(Node0),
-    slave:stop(Node1),
+    %% Stop peer nodes
+    case get(peer_pids) of
+        Pids when is_list(Pids) ->
+            lists:foreach(fun(Pid) -> peer:stop(Pid) end, Pids);
+        _ -> ok
+    end,
 
     meck:unload(),
     TermFun(),
@@ -255,7 +270,6 @@ teardown([TermFun, Node0, Node1]) ->
     application:stop(ranch),
     application:stop(cowboy),
     leo_cache_api:stop(),
-    leo_logger_api:stop(),
     timer:sleep(250),
     ok.
 
@@ -452,13 +466,9 @@ head_object_error_([_TermFun, _Node0, Node1]) ->
             ok
     end.
 
-head_object_normal1_([_TermFun, _Node0, Node1]) ->
+head_object_normal1_([_TermFun, Node0, Node1]) ->
     fun() ->
-            ok = rpc:call(Node1, meck, new,
-                          [leo_storage_handler_object, [no_link, non_strict]]),
-            ok = rpc:call(Node1, meck, expect,
-                          [leo_storage_handler_object, head, 2,
-                           {ok, #?METADATA{
+            HeadResult = {ok, #?METADATA{
                                     key =  <<"a/b/c/d.png">>,
                                     addr_id    = 0,
                                     ksize      = 4,
@@ -476,8 +486,15 @@ head_object_normal1_([_TermFun, _Node0, Node1]) ->
                                     cluster_id = [],
                                     ver = 0,
                                     del = ?DEL_FALSE
-                                   }
-                           }]),
+                                   }},
+            ok = rpc:call(Node0, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node0, meck, expect,
+                          [leo_storage_handler_object, head, 2, HeadResult]),
+            ok = rpc:call(Node1, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node1, meck, expect,
+                          [leo_storage_handler_object, head, 2, HeadResult]),
             try
                 Date = leo_http:rfc1123_date(leo_date:now()),
                 {ok, {{_, SC, _}, Headers, _Body}} =
@@ -494,6 +511,7 @@ head_object_normal1_([_TermFun, _Node0, Node1]) ->
                 throw:Reason ->
                     throw(Reason)
             after
+                ok = rpc:call(Node0, meck, unload, [leo_storage_handler_object]),
                 ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object])
             end,
             ok
@@ -585,13 +603,9 @@ get_object_notfound_([_TermFun, Node0, Node1]) ->
             ok
     end.
 
-get_object_normal1_([_TermFun, _Node0, Node1]) ->
+get_object_normal1_([_TermFun, Node0, Node1]) ->
     fun() ->
-            ok = rpc:call(Node1, meck, new,
-                          [leo_storage_handler_object, [no_link, non_strict]]),
-            ok = rpc:call(Node1, meck, expect,
-                          [leo_storage_handler_object, get, 3,
-                           {ok, #?METADATA{
+            GetResult = {ok, #?METADATA{
                                     key =  <<"">>,
                                     addr_id    = 0,
                                     ksize      = 4,
@@ -610,7 +624,15 @@ get_object_normal1_([_TermFun, _Node0, Node1]) ->
                                     ver = 0,
                                     del = ?DEL_FALSE
                                    },
-                            <<"body">>}]),
+                            <<"body">>},
+            ok = rpc:call(Node0, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node0, meck, expect,
+                          [leo_storage_handler_object, get, 3, GetResult]),
+            ok = rpc:call(Node1, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node1, meck, expect,
+                          [leo_storage_handler_object, get, 3, GetResult]),
 
             try
                 Date = leo_http:rfc1123_date(leo_date:now()),
@@ -627,20 +649,16 @@ get_object_normal1_([_TermFun, _Node0, Node1]) ->
                 throw:Reason ->
                     throw(Reason)
             after
+                ok = rpc:call(Node0, meck, unload, [leo_storage_handler_object]),
                 ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object])
             end,
             ok
     end.
 
-get_object_cmeta_normal1_([_TermFun, _Node0, Node1]) ->
+get_object_cmeta_normal1_([_TermFun, Node0, Node1]) ->
     fun() ->
-            ok = rpc:call(Node1, meck, new,
-                          [leo_storage_handler_object, [no_link, non_strict]]),
-
             CMetaBin = term_to_binary([{<<"x-amz-meta-test">>, <<"custom metadata">>},{<<"x-amz-meta-leofs-content-type">>,<<"image/svg">>}]),
-            ok = rpc:call(Node1, meck, expect,
-                          [leo_storage_handler_object, get, 3,
-                           {ok, #?METADATA{
+            GetResult = {ok, #?METADATA{
                                     key =  <<"">>,
                                     addr_id    = 0,
                                     ksize      = 4,
@@ -659,7 +677,15 @@ get_object_cmeta_normal1_([_TermFun, _Node0, Node1]) ->
                                     ver = 0,
                                     del = ?DEL_FALSE
                                    },
-                            <<"body">>}]),
+                            <<"body">>},
+            ok = rpc:call(Node0, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node0, meck, expect,
+                          [leo_storage_handler_object, get, 3, GetResult]),
+            ok = rpc:call(Node1, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node1, meck, expect,
+                          [leo_storage_handler_object, get, 3, GetResult]),
 
             try
                 Date = leo_http:rfc1123_date(leo_date:now()),
@@ -676,6 +702,7 @@ get_object_cmeta_normal1_([_TermFun, _Node0, Node1]) ->
                 throw:Reason ->
                     throw(Reason)
             after
+                ok = rpc:call(Node0, meck, unload, [leo_storage_handler_object]),
                 ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object])
             end,
             ok
@@ -746,13 +773,9 @@ range_object_normal2_([_TermFun, _Node0, Node1]) ->
 range_object_normal3_([_TermFun, _Node0, Node1]) ->
     range_object_base([_TermFun, _Node0, Node1], "bytes=-1").
 
-range_object_base([_TermFun, _Node0, Node1], RangeValue) ->
+range_object_base([_TermFun, Node0, Node1], RangeValue) ->
     fun() ->
-            ok = rpc:call(Node1, meck, new,
-                          [leo_storage_handler_object, [no_link, non_strict]]),
-            ok = rpc:call(Node1, meck, expect,
-                          [leo_storage_handler_object, head, 2,
-                           {ok, #?METADATA{
+            HeadResult = {ok, #?METADATA{
                                     key =  <<"a/b.png">>,
                                     addr_id    = 0,
                                     ksize      = 4,
@@ -770,11 +793,8 @@ range_object_base([_TermFun, _Node0, Node1], RangeValue) ->
                                     cluster_id = [],
                                     ver = 0,
                                     del = ?DEL_FALSE
-                                   }
-                           }]),
-            ok = rpc:call(Node1, meck, expect,
-                          [leo_storage_handler_object, get, 5,
-                           {ok, #?METADATA{
+                                   }},
+            GetResult = {ok, #?METADATA{
                                     key =  <<"">>,
                                     addr_id    = 0,
                                     ksize      = 2,
@@ -793,7 +813,19 @@ range_object_base([_TermFun, _Node0, Node1], RangeValue) ->
                                     ver = 0,
                                     del = ?DEL_FALSE
                                    },
-                            <<"od">>}]),
+                            <<"od">>},
+            ok = rpc:call(Node0, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node0, meck, expect,
+                          [leo_storage_handler_object, head, 2, HeadResult]),
+            ok = rpc:call(Node0, meck, expect,
+                          [leo_storage_handler_object, get, 5, GetResult]),
+            ok = rpc:call(Node1, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node1, meck, expect,
+                          [leo_storage_handler_object, head, 2, HeadResult]),
+            ok = rpc:call(Node1, meck, expect,
+                          [leo_storage_handler_object, get, 5, GetResult]),
 
             try
                 Date = leo_http:rfc1123_date(leo_date:now()),
@@ -809,6 +841,7 @@ range_object_base([_TermFun, _Node0, Node1], RangeValue) ->
                 throw:Reason ->
                     throw(Reason)
             after
+                ok = rpc:call(Node0, meck, unload, [leo_storage_handler_object]),
                 ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object])
             end,
             ok
@@ -960,8 +993,12 @@ put_object_error_metadata_too_large_([_TermFun, _Node0, _Node1]) ->
             ok
     end.
 
-put_object_normal1_([_TermFun, _Node0, Node1]) ->
+put_object_normal1_([_TermFun, Node0, Node1]) ->
     fun() ->
+            ok = rpc:call(Node0, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node0, meck, expect,
+                          [leo_storage_handler_object, put, 2, {ok, 1}]),
             ok = rpc:call(Node1, meck, new,
                           [leo_storage_handler_object, [no_link, non_strict]]),
             ok = rpc:call(Node1, meck, expect,
@@ -980,6 +1017,7 @@ put_object_normal1_([_TermFun, _Node0, Node1]) ->
                 throw:Reason ->
                     throw(Reason)
             after
+                ok = rpc:call(Node0, meck, unload, [leo_storage_handler_object]),
                 ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object])
             end,
             ok
@@ -1009,15 +1047,19 @@ compute_chunk(PrevSign, SignHead, SignKey, Bin) ->
                   PrevSign/binary,  "\n",
                   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\n",
                   ChunkHashBin/binary>>,
-    Signature = crypto:hmac(sha256, SignKey, BinToSign),
+    Signature = crypto:mac(hmac, sha256, SignKey, BinToSign),
     Sign = leo_hex:binary_to_hexbin(Signature),
     SizeHexBin = list_to_binary(SizeHex),
     Chunk = <<SizeHexBin/binary, ";", "chunk-signature=", Sign/binary, "\r\n",
               Bin/binary, "\r\n">>,
     {Chunk, Sign}.
 
-put_object_aws_chunked_([_TermFun, _Node0, Node1]) ->
+put_object_aws_chunked_([_TermFun, Node0, Node1]) ->
     fun() ->
+            ok = rpc:call(Node0, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node0, meck, expect,
+                          [leo_storage_handler_object, put, 2, {ok, 1}]),
             ok = rpc:call(Node1, meck, new,
                           [leo_storage_handler_object, [no_link, non_strict]]),
             ok = rpc:call(Node1, meck, expect,
@@ -1046,14 +1088,19 @@ put_object_aws_chunked_([_TermFun, _Node0, Node1]) ->
                 throw:Reason ->
                     throw(Reason)
             after
+                ok = rpc:call(Node0, meck, unload, [leo_storage_handler_object]),
                 ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object]),
                 ok = meck:unload(leo_s3_auth)
             end,
             ok
     end.
 
-put_object_aws_chunked_error_([_TermFun, _Node0, Node1]) ->
+put_object_aws_chunked_error_([_TermFun, Node0, Node1]) ->
     fun() ->
+            ok = rpc:call(Node0, meck, new,
+                          [leo_storage_handler_object, [no_link, non_strict]]),
+            ok = rpc:call(Node0, meck, expect,
+                          [leo_storage_handler_object, put, 2, {ok, 1}]),
             ok = rpc:call(Node1, meck, new,
                           [leo_storage_handler_object, [no_link, non_strict]]),
             ok = rpc:call(Node1, meck, expect,
@@ -1085,6 +1132,7 @@ put_object_aws_chunked_error_([_TermFun, _Node0, Node1]) ->
                 throw:Reason ->
                     throw(Reason)
             after
+                ok = rpc:call(Node0, meck, unload, [leo_storage_handler_object]),
                 ok = rpc:call(Node1, meck, unload, [leo_storage_handler_object]),
                 ok = meck:unload(leo_s3_auth)
             end,

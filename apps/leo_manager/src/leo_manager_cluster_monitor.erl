@@ -24,7 +24,7 @@
 -behaviour(gen_server).
 
 -include("leo_manager.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_manager_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -undef(CRLF).
 -include_lib("leo_rpc/include/leo_rpc.hrl").
@@ -260,7 +260,7 @@ handle_cast(_Message, State) ->
 %%                                       {stop, Reason, State}
 %% Description: Handling all non call/cast messages
 handle_info({'DOWN', MonitorRef, _Type, Pid, _Info}, {MonitorRefs, Htbl, Pids}) ->
-    timer:sleep(random:uniform(500)),
+    timer:sleep(rand:uniform(500)),
     NewHtbl =
         case find_by_pid(Htbl, Pid) of
             undefined ->

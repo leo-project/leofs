@@ -70,9 +70,10 @@ transform() ->
     end,
 
     %% leo_statistics-related
-    ok = leo_statistics_api:create_tables(CopyType, ReplicaNodes),
-    ok = svc_tbl_column:transform(),
-    ok = svc_tbl_schema:transform(),
+    %% Temporarily disabled due to compatibility issues
+    %% ok = leo_statistics_api:create_tables(CopyType, ReplicaNodes),
+    %% ok = svc_tbl_column:transform(),
+    %% ok = svc_tbl_schema:transform(),
 
     %% call plugin-mod for creating mnesia-table(s)
     case ?env_plugin_mod_mnesia() of

@@ -26,7 +26,7 @@
 
 -include("leo_gateway.hrl").
 -include("leo_http.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_dcerl/include/leo_dcerl.hrl").
 -include_lib("leo_tran/include/leo_tran.hrl").
@@ -203,7 +203,7 @@ rollback(_,_,_,_,_,_) ->
 
 
 %%====================================================================
-%% INNTERNAL FUNCTION
+%% INTERNAL FUNCTION
 %%====================================================================
 %% @doc Retrieve chunked objects
 %% @private
@@ -232,19 +232,37 @@ handle_loop(Index, TotalChunkObjs, #req_info{key = AcctualKey,
         %% only children
         %%
         {ok, #?METADATA{cnumber = 0}, Bin} ->
-            #transport_record{transport = Transport,
-                              socket = Socket,
+            #transport_record{cowboy_req = CowboyReq,
                               sending_chunked_obj_len = SendChunkLen} = TransportRec,
-            case leo_net:chunked_send(Transport, Socket, Bin, SendChunkLen) of
-                ok ->
-                    catch leo_cache_api:put(Ref, AcctualKey, Bin),
-                    leo_tran:notify_all(AcctualKey, null, null),
-                    handle_loop(Index + 1, TotalChunkObjs, ReqInfo);
-                {error, Cause} ->
-                    ?error("handle_loop/3",
-                           [{key, binary_to_list(Key_1)},
-                            {index, Index}, {cause, Cause}]),
-                    erlang:error(Cause)
+            %% Cowboy 2.x: use stream_body API
+            case CowboyReq of
+                undefined ->
+                    %% Legacy mode: use direct socket send (should not happen in Cowboy 2.x)
+                    #transport_record{transport = Transport, socket = Socket} = TransportRec,
+                    case leo_net:chunked_send(Transport, Socket, Bin, SendChunkLen) of
+                        ok ->
+                            catch leo_cache_api:put(Ref, AcctualKey, Bin),
+                            leo_tran:notify_all(AcctualKey, null, null),
+                            handle_loop(Index + 1, TotalChunkObjs, ReqInfo);
+                        {error, Cause} ->
+                            ?error("handle_loop/3",
+                                   [{key, binary_to_list(Key_1)},
+                                    {index, Index}, {cause, Cause}]),
+                            erlang:error(Cause)
+                    end;
+                _ ->
+                    %% Cowboy 2.x: use stream_body
+                    case stream_body_chunked(Bin, SendChunkLen, CowboyReq) of
+                        ok ->
+                            catch leo_cache_api:put(Ref, AcctualKey, Bin),
+                            leo_tran:notify_all(AcctualKey, null, null),
+                            handle_loop(Index + 1, TotalChunkObjs, ReqInfo);
+                        {error, Cause} ->
+                            ?error("handle_loop/3",
+                                   [{key, binary_to_list(Key_1)},
+                                    {index, Index}, {cause, Cause}]),
+                            erlang:error(Cause)
+                    end
             end;
 
         %%
@@ -288,10 +306,17 @@ handle_read_loop(Offset, TotalSize, #req_info{key = Key,
                                               transport_rec = TransportRec} = ReqInfo) ->
     ReadSize = case file:read(Ref, 1024 * 1024) of
                    {ok, Bin} ->
-                       #transport_record{transport = Transport,
-                                         socket = Socket,
+                       #transport_record{cowboy_req = CowboyReq,
                                          sending_chunked_obj_len = SendChunkLen} = TransportRec,
-                       leo_net:chunked_send(Transport, Socket, Bin, SendChunkLen),
+                       %% Cowboy 2.x: use stream_body API
+                       case CowboyReq of
+                           undefined ->
+                               %% Legacy mode
+                               #transport_record{transport = Transport, socket = Socket} = TransportRec,
+                               leo_net:chunked_send(Transport, Socket, Bin, SendChunkLen);
+                           _ ->
+                               stream_body_chunked(Bin, SendChunkLen, CowboyReq)
+                       end,
                        byte_size(Bin);
                    eof ->
                        0;
@@ -305,6 +330,36 @@ handle_read_loop(Offset, TotalSize, #req_info{key = Key,
             handle_read_loop(Offset, TotalSize, ReqInfo);
         _ ->
             handle_read_loop(Offset + ReadSize, TotalSize, ReqInfo)
+    end.
+
+
+%% @doc Send body data in chunks using Cowboy 2.x stream_body API
+%% @private
+-spec(stream_body_chunked(Data, ChunkLen, Req) ->
+             ok | {error, any()} when Data::binary(),
+                                      ChunkLen::pos_integer(),
+                                      Req::cowboy_req:req()).
+stream_body_chunked(Data, ChunkLen, Req) ->
+    stream_body_chunked(Data, ChunkLen, Req, byte_size(Data)).
+
+stream_body_chunked(<<>>, _ChunkLen, _Req, _TotalSize) ->
+    ok;
+stream_body_chunked(Data, ChunkLen, Req, _TotalSize) when byte_size(Data) =< ChunkLen ->
+    try
+        cowboy_req:stream_body(Data, nofin, Req),
+        ok
+    catch
+        _:Reason ->
+            {error, Reason}
+    end;
+stream_body_chunked(Data, ChunkLen, Req, TotalSize) ->
+    <<Chunk:ChunkLen/binary, Rest/binary>> = Data,
+    try
+        cowboy_req:stream_body(Chunk, nofin, Req),
+        stream_body_chunked(Rest, ChunkLen, Req, TotalSize)
+    catch
+        _:Reason ->
+            {error, Reason}
     end.
 
 

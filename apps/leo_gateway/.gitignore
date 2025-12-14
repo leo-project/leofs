@@ -14,3 +14,7 @@ erl_crash.dump
 leo_gateway.dot
 .rebar/
 rel/leo_gateway/
+rebar3.crashdump
+build/
+server_cert.pem
+server_key.pem

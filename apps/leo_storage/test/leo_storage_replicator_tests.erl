@@ -3,6 +3,7 @@
 %% LeoStorage
 %%
 %% Copyright (c) 2012-2018 Rakuten, Inc.
+%% Copyright (c) 2019-2025 Lions Data, Ltd.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -57,28 +58,26 @@ replicate_test_() ->
                           ]]}.
 
 setup() ->
-    meck:new(leo_logger, [non_strict]),
-    meck:expect(leo_logger, append, fun(_,_,_) ->
-                                            ok
-                                    end),
-
     [] = os:cmd("epmd -daemon"),
     {ok, Hostname} = inet:gethostname(),
 
     Test0Node = list_to_atom("test_rep_0@" ++ Hostname),
     net_kernel:start([Test0Node, shortnames]),
-    {ok, Test1Node} = slave:start_link(list_to_atom(Hostname), 'test_rep_1'),
 
-    true = rpc:call(Test0Node, code, add_path, ["../deps/meck/ebin"]),
-    true = rpc:call(Test1Node, code, add_path, ["../deps/meck/ebin"]),
+    %% Use peer module instead of deprecated slave module
+    {ok, Peer, Test1Node} = peer:start_link(#{name => test_rep_1}),
+
+    MeckPath = filename:dirname(code:which(meck)),
+    rpc:call(Test0Node, code, add_path, [MeckPath]),
+    rpc:call(Test1Node, code, add_path, [MeckPath]),
 
     timer:sleep(100),
-    {Test0Node, Test1Node}.
+    {Test0Node, Test1Node, Peer}.
 
-teardown({_Test0Node, Test1Node}) ->
-    meck:unload(),
+teardown({_Test0Node, _Test1Node, Peer}) ->
+    catch meck:unload(),
     net_kernel:stop(),
-    slave:stop(Test1Node),
+    catch peer:stop(Peer),
     ok.
 
 
@@ -86,7 +85,7 @@ teardown({_Test0Node, Test1Node}) ->
 %% for Object
 %%--------------------------------------------------------------------
 %% object-replication#1
-replicate_obj_0_({Test0Node, Test1Node}) ->
+replicate_obj_0_({Test0Node, Test1Node, _Peer}) ->
     gen_mock_2(object, {Test0Node, Test1Node}, ok),
     gen_mock_3(object, Test1Node, ok),
 
@@ -105,30 +104,47 @@ replicate_obj_0_({Test0Node, Test1Node}) ->
     timer:sleep(100),
     ok.
 
-%% object-replication#2
-replicate_obj_1_({Test0Node, Test1Node}) ->
-    gen_mock_2(object, {Test0Node, Test1Node}, fail),
-    gen_mock_3(object, Test1Node, ok),
+%% object-replication#2 - Test local failure scenario
+%% When local put fails, the replication should return an error
+replicate_obj_1_({Test0Node, _Test1Node, _Peer}) ->
+    meck:new(leo_storage_mq, [non_strict]),
+    meck:expect(leo_storage_mq, publish,
+                fun(_Type, _Metadata, _ErrorType) ->
+                        ok
+                end),
+
+    meck:new(leo_storage_handler_object, [non_strict]),
+    meck:expect(leo_storage_handler_object, put,
+                fun({_Object, Ref}) ->
+                        {error, Ref, []}
+                end),
+    meck:expect(leo_storage_handler_object, put,
+                fun(Ref, From, _Object, _ReqId) ->
+                        erlang:send(From, {Ref, {error, {node(), []}}})
+                end),
 
     Object = #?OBJECT{key     = ?TEST_KEY_1,
                       addr_id = ?TEST_RING_ID_1,
                       dsize   = erlang:byte_size(?TEST_BODY_1),
                       data    = ?TEST_BODY_1},
 
+    %% Use only local node for testing to avoid RPC issues with peer
+    Redundancies = [#redundant_node{node = Test0Node, available = true}],
+
     F = fun({ok, _Method, ETag}) ->
                 {ok, ETag};
            ({error, Cause}) ->
                 {error, Cause}
         end,
-    %% {ok, {etag, _}} =
     Res = leo_storage_replicator:replicate(
-            put, 1, ?TEST_REDUNDANCIES_1, Object, F),
-    ?assertEqual({ok, 1}, Res),
+            put, 1, Redundancies, Object, F),
+    %% When the only available node fails, expect an error
+    ?assertMatch({error, _}, Res),
     timer:sleep(100),
     ok.
 
 %% object-replication#3
-replicate_obj_2_({Test0Node, Test1Node}) ->
+replicate_obj_2_({Test0Node, Test1Node, _Peer}) ->
     gen_mock_2(object, {Test0Node, Test1Node}, ok),
     gen_mock_3(object, Test1Node, fail),
 

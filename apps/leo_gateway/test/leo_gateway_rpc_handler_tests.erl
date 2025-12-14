@@ -30,7 +30,7 @@
 -include_lib("leo_s3_libs/include/leo_s3_bucket.hrl").
 -include_lib("leo_s3_libs/include/leo_s3_auth.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_logger.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").
@@ -62,17 +62,19 @@ api_test_() ->
             ]}}.
 
 setup() ->
-    ok = leo_logger_api:new("./", ?LOG_LEVEL_WARN),
+    %% Logger setup - using standard logger instead of leo_logger_api
+    logger:set_primary_config(level, warning),
     io:format(user, "cwd:~p~n",[os:cmd("pwd")]),
     [] = os:cmd("epmd -daemon"),
     {ok, Hostname} = inet:gethostname(),
     Node0 = list_to_atom("node_0@" ++ Hostname),
     net_kernel:start([Node0, shortnames]),
 
-    Args = " -pa ../deps/*/ebin "
-        ++ " -kernel error_logger    '{file, \"../kernel.log\"}' "
-        ++ " -sasl sasl_error_logger '{file, \"../sasl.log\"}' ",
-    {ok, Node1} = slave:start_link(list_to_atom(Hostname), 'manager_0', Args),
+    %% Start peer with inherited code path
+    {ok, Pid1, Node1} = peer:start_link(#{name => manager_0, connection => standard_io}),
+    %% Add all code paths to peer node
+    lists:foreach(fun(P) -> rpc:call(Node1, code, add_patha, [P]) end, code:get_path()),
+    put(peer_pid, Pid1),
 
     ok = leo_misc:init_env(),
 
@@ -102,11 +104,14 @@ setup() ->
 
     [Node0, Node1].
 
-teardown([_, Node1]) ->
+teardown([_, _Node1]) ->
     meck:unload(),
     net_kernel:stop(),
-    slave:stop(Node1),
-    leo_logger_api:stop(),
+    %% Stop peer node
+    case get(peer_pid) of
+        Pid when is_pid(Pid) -> peer:stop(Pid);
+        _ -> ok
+    end,
     ok.
 
 head_object_notfound_([Node0, Node1]) ->

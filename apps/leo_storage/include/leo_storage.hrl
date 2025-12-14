@@ -594,7 +594,7 @@
         end).
 
 %%----------------------------------------------------------------------
-%% FOR ACCESS-LOG
+%% FOR ACCESS-LOG (using OTP standard logger)
 %%----------------------------------------------------------------------
 %% access-log
 -define(LOG_GROUP_ID_ACCESS, 'log_grp_access_log').
@@ -627,18 +627,14 @@
             case ?can_output_access_log(_Case) of
                 true ->
                     _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-                    leo_logger_api:append(
-                      {?LOG_ID_ACCESS,
-                       #message_log{ format  = "[GET]\t[Gateway]\t~s\t~w\t~w\t~s\t~w\t~w\t~p\n",
-                                     message = [_Key,
-                                                _Size,
-                                                _ReqId,
-                                                leo_date:date_format(),
-                                                leo_date:clock(),
-                                                _Latency,
-                                                _Msg
-                                               ]}
-                      });
+                    logger:info(#{type => access_log,
+                                  operation => 'GET',
+                                  source => 'Gateway',
+                                  key => _Key,
+                                  size => _Size,
+                                  req_id => _ReqId,
+                                  latency_ms => _Latency,
+                                  result => _Msg});
                 false ->
                     ok
             end
@@ -651,17 +647,13 @@
             case ?can_output_access_log(_Case) of
                 true ->
                     _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-                    leo_logger_api:append(
-                      {?LOG_ID_ACCESS,
-                       #message_log{ format  = "[GET]\t[Storage]\t~s\t~w\t\t~s\t~w\t~w\t~p\n",
-                                     message = [_Key,
-                                                _Size,
-                                                leo_date:date_format(),
-                                                leo_date:clock(),
-                                                _Latency,
-                                                _Msg
-                                               ]}
-                      });
+                    logger:info(#{type => access_log,
+                                  operation => 'GET',
+                                  source => 'Storage',
+                                  key => _Key,
+                                  size => _Size,
+                                  latency_ms => _Latency,
+                                  result => _Msg});
                 false ->
                     ok
             end
@@ -674,20 +666,16 @@
             case ?can_output_access_log(_Case) of
                 true ->
                     _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-                    leo_logger_api:append(
-                      {?LOG_ID_ACCESS,
-                       #message_log{ format  = "[GET]\t[Gateway]\t~s[~w-~w]\t~w\t~w\t~s\t~w\t~w\t~p\n",
-                                     message = [_Key,
-                                                _Start,
-                                                _End,
-                                                _Size,
-                                                _ReqId,
-                                                leo_date:date_format(),
-                                                leo_date:clock(),
-                                                _Latency,
-                                                _Msg
-                                               ]}
-                      });
+                    logger:info(#{type => access_log,
+                                  operation => 'GET',
+                                  source => 'Gateway',
+                                  key => _Key,
+                                  range_start => _Start,
+                                  range_end => _End,
+                                  size => _Size,
+                                  req_id => _ReqId,
+                                  latency_ms => _Latency,
+                                  result => _Msg});
                 false ->
                     ok
             end
@@ -712,18 +700,14 @@
             case ?can_output_access_log(_Case) of
                 true ->
                     _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-                    leo_logger_api:append(
-                      {?LOG_ID_ACCESS,
-                       #message_log{ format  = "[DEL]\t[Storage]\t~s\t~w\t~w\t~s\t~w\t~w\t~p\n",
-                                     message = [_Key,
-                                                _Size,
-                                                _ReqId,
-                                                leo_date:date_format(),
-                                                leo_date:clock(),
-                                                _Latency,
-                                                _Msg
-                                               ]}
-                      });
+                    logger:info(#{type => access_log,
+                                  operation => 'DELETE',
+                                  source => 'Storage',
+                                  key => _Key,
+                                  size => _Size,
+                                  req_id => _ReqId,
+                                  latency_ms => _Latency,
+                                  result => _Msg});
                 false ->
                     ok
             end
@@ -734,18 +718,14 @@
             case ?can_output_access_log(_Case) of
                 true ->
                     _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-                    leo_logger_api:append(
-                      {?LOG_ID_ACCESS,
-                       #message_log{ format  = "[PUT]\t[Storage]\t~s\t~w\t~w\t~s\t~w\t~w\t~p\n",
-                                     message = [_Key,
-                                                _Size,
-                                                _ReqId,
-                                                leo_date:date_format(),
-                                                leo_date:clock(),
-                                                _Latency,
-                                                _Msg
-                                               ]}
-                      });
+                    logger:info(#{type => access_log,
+                                  operation => 'PUT',
+                                  source => 'Storage',
+                                  key => _Key,
+                                  size => _Size,
+                                  req_id => _ReqId,
+                                  latency_ms => _Latency,
+                                  result => _Msg});
                 false ->
                     ok
             end
@@ -758,18 +738,14 @@
             case ?can_output_access_log(_Case) of
                 true ->
                     _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-                    leo_logger_api:append(
-                      {?LOG_ID_ACCESS,
-                       #message_log{ format  = "[PUT]\t[Gateway]\t~s\t~w\t~w\t~s\t~w\t~w\t~p\n",
-                                     message = [_Key,
-                                                _Size,
-                                                _ReqId,
-                                                leo_date:date_format(),
-                                                leo_date:clock(),
-                                                _Latency,
-                                                _Msg
-                                               ]}
-                      });
+                    logger:info(#{type => access_log,
+                                  operation => 'PUT',
+                                  source => 'Gateway',
+                                  key => _Key,
+                                  size => _Size,
+                                  req_id => _ReqId,
+                                  latency_ms => _Latency,
+                                  result => _Msg});
                 false ->
                     ok
             end
@@ -782,18 +758,14 @@
             case ?can_output_access_log(_Case) of
                 true ->
                     _Latency = erlang:round((leo_date:clock() - _Begin) / 1000),
-                    leo_logger_api:append(
-                      {?LOG_ID_ACCESS,
-                       #message_log{ format  = "[DEL]\t[Gateway]\t~s\t~w\t~w\t~s\t~w\t~w\t~p\n",
-                                     message = [_Key,
-                                                _Size,
-                                                _ReqId,
-                                                leo_date:date_format(),
-                                                leo_date:clock(),
-                                                _Latency,
-                                                _Msg
-                                               ]}
-                      });
+                    logger:info(#{type => access_log,
+                                  operation => 'DELETE',
+                                  source => 'Gateway',
+                                  key => _Key,
+                                  size => _Size,
+                                  req_id => _ReqId,
+                                  latency_ms => _Latency,
+                                  result => _Msg});
                 false ->
                     ok
             end

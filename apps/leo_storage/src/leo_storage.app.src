@@ -4,7 +4,7 @@
 %% LeoStorage
 %%
 %% Copyright (c) 2012-2018 Rakuten, Inc.
-%% Copyright (c) 2019-2020 Lions Data, Ltd.
+%% Copyright (c) 2019-2025 Lions Data, Ltd.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -24,17 +24,17 @@
 {application, leo_storage,
  [
   {description, "LEO Storage Server"},
-  {vsn, "1.4.4"},
+  {vsn, "2.0.0"},
   {id, "leo_storage"},
   {registered,   []},
-  {applications, [kernel, stdlib, crypto, os_mon]},
+  {applications, [kernel, stdlib, crypto, os_mon, mnesia, snmp]},
   {mod, {leo_storage_app, []}},
   {env, [
          {num_of_replicators,  32},
          {num_of_repairers,    32},
          {num_of_mq_procs,      5},
          {log_level,            1},
-         {log_appender,        [{file, [{path, "./"}]}]}
+         {log_appender,        [{file, [{path, "./log"}]}]}
         ]}
  ]
 }.

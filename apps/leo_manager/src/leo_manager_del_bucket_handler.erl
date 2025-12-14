@@ -23,7 +23,7 @@
 -behaviour(gen_server).
 
 -include("leo_manager.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_manager_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
 -include_lib("eunit/include/eunit.hrl").
 

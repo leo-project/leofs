@@ -24,10 +24,9 @@
 -behaviour(application).
 
 -include("leo_storage.hrl").
+-include("leo_storage_logger.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
--include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("leo_watchdog/include/leo_watchdog.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
@@ -52,7 +51,6 @@ prep_stop(_State) ->
     catch leo_watchdog_sup:stop(),
     catch leo_mq_sup:stop(),
     catch leo_backend_db_sup:stop(),
-    catch leo_logger_api:stop(),
     catch leo_storage_sup:stop(),
     ok.
 
@@ -87,30 +85,12 @@ start_mnesia(RetryTimes) ->
     end.
 
 
-%% @doc Start statistics
+%% @doc Start SNMP
 %% @private
-start_statistics() ->
-    start_statistics(0).
-
-%% @private
-start_statistics(?RETRY_TIMES) ->
-    {error, "Launch failure of statistics"};
-start_statistics(RetryTimes) ->
-    try
-        %% Launch metric-servers
-        application:ensure_started(mnesia),
-        application:ensure_started(snmp),
-
-        leo_statistics_api:start_link(leo_storage),
-        leo_statistics_api:create_tables(ram_copies, [node()]),
-        leo_metrics_vm:start_link(?SNMP_SYNC_INTERVAL_10S),
-        leo_metrics_req:start_link(?SNMP_SYNC_INTERVAL_60S),
-        leo_storage_statistics:start_link(?SNMP_SYNC_INTERVAL_60S),
-        ok
-    catch
-        _:_Cause ->
-            start_statistics(RetryTimes + 1)
-    end.
+start_snmp() ->
+    application:ensure_started(mnesia),
+    application:ensure_started(snmp),
+    ok.
 
 
 %%----------------------------------------------------------------------
@@ -203,8 +183,11 @@ after_proc_1(Pid, Managers) ->
     ensure_started(rex, rpc, start_link, worker, 2000),
     ok = leo_storage_api:register_in_monitor(first),
 
-    %% Launch leo-rpc
-    ok = leo_rpc:start(),
+    %% Launch leo-rpc (may already be started via start.script)
+    case leo_rpc:start() of
+        ok -> ok;
+        {error, {already_started, leo_rpc}} -> ok
+    end,
 
     %% Watchdog for Storage in order to operate 'auto-compaction' automatically
     WatchdogInterval = ?env_storage_watchdog_interval(),
@@ -245,12 +228,11 @@ after_proc_1(Pid, Managers) ->
 
     ok = leo_storage_watchdog_sub:start(),
 
-    %% Launch statistics/mnesia-related processes
+    %% Launch mnesia and SNMP
     ok = start_mnesia(),
-    ok = start_statistics(),
+    ok = start_snmp(),
 
     ok = leo_misc:startup_notification(),
-    leo_logger_api:reset_hwm(),
     {ok, Pid}.
 
 
@@ -277,7 +259,7 @@ is_alive_managers([Node|Rest], Acc) ->
     is_alive_managers(Rest, [{Node, Ret} | Acc]).
 
 
-%% @doc Launch Logger
+%% @doc Launch Logger using OTP standard logger
 %% @private
 launch_logger() ->
     DefLogDir = "./log/",
@@ -287,17 +269,27 @@ launch_logger() ->
                  _ ->
                      DefLogDir
              end,
-    LogLevel = ?env_log_level(leo_storage),
-    ok = leo_logger_api:new(LogDir, LogLevel, log_file_appender()),
-
-    %% access-logger (file-appender)
-    case application:get_env(leo_storage, is_enable_access_log) of
-        {ok, true} ->
-            ok = leo_logger_api:new(?LOG_GROUP_ID_ACCESS, ?LOG_ID_ACCESS,
-                                            LogDir, ?LOG_FILENAME_ACCESS);
-        _ ->
-            void
-    end,
+    LogLevel = case ?env_log_level(leo_storage) of
+                   ?LOG_LEVEL_DEBUG -> debug;
+                   ?LOG_LEVEL_INFO  -> info;
+                   ?LOG_LEVEL_WARN  -> warning;
+                   ?LOG_LEVEL_ERROR -> error;
+                   ?LOG_LEVEL_FATAL -> critical;
+                   _ -> info
+               end,
+    %% Configure OTP logger
+    ok = filelib:ensure_dir(LogDir ++ "/"),
+    LogFile = filename:join(LogDir, "leo_storage.log"),
+    HandlerConfig = #{config => #{file => LogFile,
+                                   max_no_bytes => 10485760,
+                                   max_no_files => 10},
+                      level => LogLevel,
+                      formatter => {logger_formatter,
+                                    #{template => [time, " ", level, " ",
+                                                   {mfa, ["[", mfa, "]"], []}, " ",
+                                                   msg, "\n"]}}},
+    logger:add_handler(leo_storage_file_handler, logger_disk_log_h, HandlerConfig),
+    logger:set_primary_config(level, LogLevel),
     ok.
 
 
@@ -333,22 +325,3 @@ launch_redundant_manager(RefSup, Managers, QueueDir) ->
                  permanent, 2000, supervisor, [leo_redundant_manager_sup]},
     {ok, _} = supervisor:start_child(RefSup, ChildSpec),
     ok.
-
-
-%% @doc Retrieve log-appneder(s)
-%% @private
--spec(log_file_appender() ->
-             list()).
-log_file_appender() ->
-    case application:get_env(leo_storage, log_appender) of
-        undefined   -> log_file_appender([], []);
-        {ok, Value} -> log_file_appender(Value, [])
-    end.
-
-log_file_appender([], []) ->
-    [{?LOG_ID_FILE_INFO,  ?LOG_APPENDER_FILE},
-     {?LOG_ID_FILE_ERROR, ?LOG_APPENDER_FILE}];
-log_file_appender([], Acc) ->
-    lists:reverse(Acc);
-log_file_appender([{Type, _}|T], Acc) when Type == file ->
-    log_file_appender(T, [{?LOG_ID_FILE_ERROR, ?LOG_APPENDER_FILE}|[{?LOG_ID_FILE_INFO, ?LOG_APPENDER_FILE}|Acc]]).

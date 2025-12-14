@@ -26,13 +26,11 @@
 
 -include("leo_storage.hrl").
 -include_lib("leo_commons/include/leo_commons.hrl").
--include_lib("leo_logger/include/leo_logger.hrl").
+-include("leo_storage_logger.hrl").
 -include_lib("leo_mq/include/leo_mq.hrl").
 -include_lib("leo_object_storage/include/leo_object_storage.hrl").
 -include_lib("leo_ordning_reda/include/leo_ordning_reda.hrl").
 -include_lib("leo_redundant_manager/include/leo_redundant_manager.hrl").
--undef(MAX_RETRY_TIMES).
--include_lib("leo_statistics/include/leo_statistics.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 -export([get/1, get/2, get/3, get/4, get/5,
@@ -77,7 +75,6 @@
                                       Cause::any()).
 get({Ref, Key}) ->
     ?debug("get/1", [{from, storage}, {method, get}, {key, Key}]),
-    ok = leo_metrics_req:notify(?STAT_COUNT_GET),
     BeginTime = leo_date:clock(),
     case leo_redundant_manager_api:get_redundancies_by_key(get, Key) of
         {ok, #redundancies{id = AddrId}} ->
@@ -107,7 +104,6 @@ get({Ref, Key}) ->
              {error, any()} when ReadParams::#read_parameter{},
                                  Redundancies::[#redundant_node{}]).
 get(ReadParameter, Redundancies) when Redundancies /= [] ->
-    ok = leo_metrics_req:notify(?STAT_COUNT_GET),
     case read_and_repair(ReadParameter, Redundancies) of
         {ok, #?METADATA{meta = CMeta} = Meta, Bin} when CMeta =/= <<>> ->
             {ok, NewMeta} = get_cmeta(Meta),
@@ -376,7 +372,6 @@ put(Object, ReqId) ->
 put(Object, ReqId, From) ->
     BeginTime = leo_date:clock(),
     ?debug("put/2", [{from, From}, {method, put}, {key, Object#?OBJECT.key}, {req_id, ReqId}]),
-    ok = leo_metrics_req:notify(?STAT_COUNT_PUT),
     Ret = replicate_fun(?REP_LOCAL, ?CMD_PUT, Object#?OBJECT.addr_id,
                         Object#?OBJECT{method = ?CMD_PUT,
                                        clock = leo_date:clock(),
@@ -404,10 +399,8 @@ put(Ref, From, Object, ReqId) ->
     BeginTime = leo_date:clock(),
     Method = case Object#?OBJECT.del of
                  ?DEL_TRUE ->
-                     ok = leo_metrics_req:notify(?STAT_COUNT_DEL),
                      ?CMD_DELETE;
                  ?DEL_FALSE ->
-                     ok = leo_metrics_req:notify(?STAT_COUNT_PUT),
                      ?CMD_PUT
              end,
     Key = Object#?OBJECT.key,
@@ -583,7 +576,6 @@ delete(Object, ReqId, CheckUnderDir) ->
     BeginTime = leo_date:clock(),
     Key = Object#?OBJECT.key,
     ?debug("delete/3", [{from, gateway}, {method, del}, {key, Key}, {req_id, ReqId}]),
-    ok = leo_metrics_req:notify(?STAT_COUNT_DEL),
     case replicate_fun(?REP_LOCAL, ?CMD_DELETE,
                        Object#?OBJECT.addr_id,
                        Object#?OBJECT{method = ?CMD_DELETE,
@@ -1538,7 +1530,6 @@ replicate_callback(Object) ->
 
 -ifdef(EUNIT).
 get_cmeta_test() ->
-    ok = leo_logger_api:new("./", ?LOG_LEVEL_WARN),
     %% destination side with custom metadata
     UDM = [{<<"name">>, <<"LeoFS">>},
            {<<"category">>, <<"distributed storage">>},

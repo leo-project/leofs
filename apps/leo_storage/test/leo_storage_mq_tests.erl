@@ -3,6 +3,7 @@
 %% LeoStorage
 %%
 %% Copyright (c) 2012-2018 Rakuten, Inc.
+%% Copyright (c) 2019-2025 Lions Data, Ltd.
 %%
 %% This file is provided to you under the Apache License,
 %% Version 2.0 (the "License"); you may not use this file
@@ -80,20 +81,15 @@ setup() ->
 
     Test0Node = list_to_atom("test_0@" ++ Hostname),
     net_kernel:start([Test0Node, shortnames]),
-    {ok, Test1Node} = slave:start_link(list_to_atom(Hostname), 'test_1'),
 
-    true = rpc:call(Test0Node, code, add_path, ["../deps/meck/ebin"]),
-    true = rpc:call(Test1Node, code, add_path, ["../deps/meck/ebin"]),
+    %% Use peer module instead of deprecated slave module
+    {ok, Peer, Test1Node} = peer:start_link(#{name => test_1}),
+
+    MeckPath = filename:dirname(code:which(meck)),
+    rpc:call(Test0Node, code, add_path, [MeckPath]),
+    rpc:call(Test1Node, code, add_path, [MeckPath]),
 
     %% gen mock.
-    %% meck:new(leo_logger_api, [non_strict]),
-    %% meck:expect(leo_logger_api, new,          fun(_,_,_) -> ok end),
-    %% meck:expect(leo_logger_api, new,          fun(_,_,_,_,_) -> ok end),
-    %% meck:expect(leo_logger_api, new,          fun(_,_,_,_,_,_) -> ok end),
-    %% meck:expect(leo_logger_api, add_appender, fun(_,_) -> ok end),
-    %% meck:expect(leo_logger_api, append,       fun(_,_) -> ok end),
-    %% meck:expect(leo_logger_api, append,       fun(_,_,_) -> ok end),
-
     meck:new(leo_mq_api, [non_strict]),
     meck:expect(leo_mq_api, new,     fun(_,_,_) -> ok end),
     meck:expect(leo_mq_api, publish, fun(_,_,_) -> ok end),
@@ -140,22 +136,12 @@ setup() ->
                         {ok, []}
                 end),
 
-    meck:new(leo_logger_api, [non_strict]),
-    meck:expect(leo_logger_api, error,
-                fun(_) ->
-                        ok
-                end),
-    meck:expect(leo_logger_api, warn,
-                fun(_) ->
-                        ok
-                end),
-    {Test0Node, Test1Node}.
+    {Test0Node, Test1Node, Peer}.
 
-teardown({_Test0Node, Test1Node}) ->
-    meck:unload(),
-
+teardown({_Test0Node, _Test1Node, Peer}) ->
+    catch meck:unload(),
     net_kernel:stop(),
-    slave:stop(Test1Node),
+    catch peer:stop(Peer),
     timer:sleep(100),
     ok.
 
@@ -175,7 +161,7 @@ start_(_) ->
     ok.
 
 %% sync vnode-id queue.
-publish_({_, Test1Node}) ->
+publish_({_, Test1Node, _Peer}) ->
     ?TBL_REBALANCE_COUNTER = ets:new(?TBL_REBALANCE_COUNTER, [named_table, public]),
     meck:new(leo_object_storage_api, [non_strict]),
     meck:expect(leo_object_storage_api, head,
@@ -221,7 +207,7 @@ publish_({_, Test1Node}) ->
 
 
 %% miss-replication queue -> subscribe.
-subscribe_0_({Test0Node, Test1Node}) ->
+subscribe_0_({Test0Node, Test1Node, _Peer}) ->
     ?TBL_REBALANCE_COUNTER = ets:new(?TBL_REBALANCE_COUNTER, [named_table, public]),
 
     %% case-1.
@@ -253,7 +239,7 @@ subscribe_0_({Test0Node, Test1Node}) ->
     ok.
 
 %% miss-replication queue -> subscribe.
-subscribe_1_({Test0Node, Test1Node}) ->
+subscribe_1_({Test0Node, Test1Node, _Peer}) ->
     ?TBL_REBALANCE_COUNTER = ets:new(?TBL_REBALANCE_COUNTER, [named_table, public]),
 
     %% case-1.
@@ -303,7 +289,7 @@ subscribe_1_({Test0Node, Test1Node}) ->
     ok.
 
 
-subscribe_2_({Test0Node, _Test1Node}) ->
+subscribe_2_({Test0Node, _Test1Node, _Peer}) ->
     ?TBL_REBALANCE_COUNTER = ets:new(?TBL_REBALANCE_COUNTER, [named_table, public]),
 
     meck:new(leo_storage_handler_object, [non_strict]),
@@ -349,7 +335,7 @@ subscribe_2_({Test0Node, _Test1Node}) ->
 
 
 %% miss-replication queue -> subscribe.
-subscribe_3_({_Test0Node, _Test1Node}) ->
+subscribe_3_({_Test0Node, _Test1Node, _Peer}) ->
     ?TBL_REBALANCE_COUNTER = ets:new(?TBL_REBALANCE_COUNTER, [named_table, public]),
 
     meck:new(leo_object_storage_api, [non_strict]),

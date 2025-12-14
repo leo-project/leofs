@@ -1156,16 +1156,6 @@
          [leo_manager_api, synchronize]
  end}.
 
-%% @doc
-{mapping,
- "leo_statistics.profile",
- "leo_statistics.profile",
- [
-  {datatype, {enum, [true, false]}},
-  {default, false}
- ]}.
-
-
 %% --------------------------------------------------------------------
 %% VM.ARGS
 %% --------------------------------------------------------------------

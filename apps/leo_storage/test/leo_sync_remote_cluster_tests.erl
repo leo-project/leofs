@@ -48,8 +48,6 @@ suite_test_() ->
      fun (_) ->
              net_kernel:stop(),
              meck:unload(),
-
-             folsom:stop(),
              mnesia:stop()
      end,
      [
