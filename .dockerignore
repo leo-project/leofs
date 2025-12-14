@@ -1,0 +1,26 @@
+# Build artifacts (may contain platform-specific binaries)
+_build/
+*/_build/
+apps/*/_build/
+
+# Dependencies built for host platform
+deps/
+*/deps/
+
+# Package directory (built for host platform)
+package/
+
+# Logs and temporary files
+*.log
+*.beam
+erl_crash.dump
+
+# Docker directory config (mounted separately)
+docker/config/
+
+# Git
+.git/
+
+# IDE
+.idea/
+.vscode/
