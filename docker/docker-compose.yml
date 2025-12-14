@@ -10,8 +10,8 @@ services:
       - manager0_work:/opt/leo_manager_0/work
       - manager0_log:/opt/leo_manager_0/log
     ports:
-      - "20010:10010"
-      - "20020:10020"
+      - "10010:10010"
+      - "10020:10020"
     networks:
       - leofs_net
     healthcheck:
@@ -34,8 +34,8 @@ services:
       - manager1_work:/opt/leo_manager_1/work
       - manager1_log:/opt/leo_manager_1/log
     ports:
-      - "20012:10012"
-      - "20022:10022"
+      - "10012:10012"
+      - "10022:10022"
     networks:
       - leofs_net
     depends_on:

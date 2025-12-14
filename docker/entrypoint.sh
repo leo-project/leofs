@@ -50,6 +50,35 @@ if [ -f "$CONF_FILE" ]; then
         sed -i "s/{port_cui, \([0-9]*\)}/{bind_address, \"$BIND_ADDR\"}, {port_cui, \1}/" "$SYS_CONFIG_FILE"
     fi
 
+    # Add system/consistency settings to sys.config for leo_manager (master only)
+    if [ -n "$SYS_CONFIG_FILE" ] && [ "$COMPONENT" = "leo_manager_0" ]; then
+        # Extract consistency settings from config file
+        NUM_REPLICAS=$(grep -E "^consistency.num_of_replicas\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+        WRITE=$(grep -E "^consistency.write\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+        READ=$(grep -E "^consistency.read\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+        DELETE=$(grep -E "^consistency.delete\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+        RACK_AWARE=$(grep -E "^consistency.rack_aware_replicas\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+        DC_ID=$(grep -E "^system.dc_id\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+        CLUSTER_ID=$(grep -E "^system.cluster_id\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+
+        # Set defaults if not found
+        NUM_REPLICAS=${NUM_REPLICAS:-1}
+        WRITE=${WRITE:-1}
+        READ=${READ:-1}
+        DELETE=${DELETE:-1}
+        RACK_AWARE=${RACK_AWARE:-0}
+        DC_ID=${DC_ID:-dc_1}
+        CLUSTER_ID=${CLUSTER_ID:-leofs_1}
+
+        echo "Setting consistency: n=$NUM_REPLICAS, w=$WRITE, r=$READ, d=$DELETE"
+
+        # Build system config tuple
+        SYSTEM_CONFIG="{system, [{dc_id, $DC_ID}, {cluster_id, $CLUSTER_ID}, {n, $NUM_REPLICAS}, {w, $WRITE}, {r, $READ}, {d, $DELETE}, {bit_of_ring, 128}, {num_of_rack_replicas, $RACK_AWARE}]}"
+
+        # Add system config to leo_manager section (before port_cui)
+        sed -i "s/{port_cui, \([0-9]*\)}/$SYSTEM_CONFIG, {port_cui, \1}/" "$SYS_CONFIG_FILE"
+    fi
+
     # Update manager addresses for storage/gateway from config file
     if [ -n "$SYS_CONFIG_FILE" ] && ([ "$BIN_NAME" = "leo_storage" ] || [ "$BIN_NAME" = "leo_gateway" ]); then
         MANAGERS=$(grep -E "^managers\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
