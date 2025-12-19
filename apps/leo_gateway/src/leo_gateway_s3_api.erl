@@ -599,7 +599,9 @@ put_object(?BIN_EMPTY, Req, Key, #req_params{bucket_name = BucketName,
                     ?reply_bad_request([?SERVER_HEADER], ?XML_ERROR_CODE_EntityTooLarge,
                                        ?XML_ERROR_MSG_EntityTooLarge, Key, <<>>, Req);
                 true when Params#req_params.is_upload == false ->
-                    leo_gateway_http_commons:put_large_object(Req, Key, Size, Params);
+                    Ret = leo_gateway_http_commons:put_large_object(Req, Key, Size, Params),
+                    check_and_send_udp(Ret, BucketName, Key),
+                    Ret;
                 false ->
                     Ret = case cowboy_req:has_body(Req) of
                               true ->
@@ -625,7 +627,9 @@ put_object(?BIN_EMPTY, Req, Key, #req_params{bucket_name = BucketName,
                           end,
                     case Ret of
                         {ok, _} ->
-                            leo_gateway_http_commons:put_small_object(Ret, Key, Params);
+                            Ret2 = leo_gateway_http_commons:put_small_object(Ret, Key, Params),
+                            check_and_send_udp(Ret2, BucketName, Key),
+                            Ret2;
                         {error, signature_unmatch} ->
                             ?access_log_put(BucketName, Key, Size, ?HTTP_ST_FORBIDDEN, BeginTime),
                             ?reply_forbidden([?SERVER_HEADER], ?XML_ERROR_CODE_SignatureDoesNotMatch,
@@ -707,6 +711,7 @@ put_object_1(Req, Src, Key, Meta, Bin, #req_params{bucket_name = BucketName,
                                                      bucket_info = BucketInfo}) of
         {ok, _ETag} ->
             ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_OK, BeginTime),
+            send_udp_notification(BucketName, Key),
             resp_copy_obj_xml(Req, Meta);
         {error, unavailable} ->
             ?access_log_copy(BucketName, SrcDst, Size, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
@@ -727,6 +732,7 @@ put_large_object_1(Req, Src, Key, Meta, #req_params{bucket_name = BucketName,
     case leo_gateway_http_commons:move_large_object(Meta, Key, Params) of
         ok ->
             ?access_log_copy(BucketName, SrcDst, 0, ?HTTP_ST_OK, BeginTime),
+            send_udp_notification(BucketName, Key),
             resp_copy_obj_xml(Req, Meta);
         {error, timeout} ->
             ?reply_timeout([?SERVER_HEADER], Key, <<>>, Req);
@@ -2387,3 +2393,43 @@ parse_http_date(DateBin) when is_binary(DateBin) ->
     end;
 parse_http_date(_) ->
     {error, badarg}.
+
+%%--------------------------------------------------------------------
+%% UDP Notification Functions
+%%--------------------------------------------------------------------
+%% @private
+send_udp_notification(Bucket, Key) ->
+    Host = case os:getenv("BRIDGE_HOST") of
+               false -> "localhost";
+               Val -> Val
+           end,
+    Port = case os:getenv("BRIDGE_PORT") of
+               false -> 5000;
+               Val2 -> list_to_integer(Val2)
+           end,
+    Packet = <<Bucket/binary, "|", Key/binary>>,
+    ?info("send_udp_notification/2", "sending to ~s:~p - ~s", [Host, Port, Packet]),
+    case gen_udp:open(0, [binary]) of
+        {ok, Socket} ->
+            case gen_udp:send(Socket, Host, Port, Packet) of
+                ok ->
+                    ?info("send_udp_notification/2", "sent successfully to ~s:~p", [Host, Port]),
+                    gen_udp:close(Socket),
+                    ok;
+                {error, Reason} ->
+                    ?error("send_udp_notification/2", "send failed: ~p", [Reason]),
+                    gen_udp:close(Socket),
+                    {error, Reason}
+            end;
+        {error, Reason} ->
+            ?error("send_udp_notification/2", "socket open failed: ~p", [Reason]),
+            {error, Reason}
+    end.
+
+%% @private
+check_and_send_udp({ok, _}, Bucket, Key) ->
+    send_udp_notification(Bucket, Key);
+check_and_send_udp({ok, _, _}, Bucket, Key) ->
+    send_udp_notification(Bucket, Key);
+check_and_send_udp(_, _, _) ->
+    ok.

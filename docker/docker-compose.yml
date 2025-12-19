@@ -15,7 +15,7 @@ services:
     networks:
       - leofs_net
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "10010"]
+      test: [ "CMD", "nc", "-z", "localhost", "10010" ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -42,7 +42,7 @@ services:
       leo_manager_0:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "10012"]
+      test: [ "CMD", "nc", "-z", "localhost", "10012" ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -67,7 +67,7 @@ services:
       leo_manager_1:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "13077"]
+      test: [ "CMD", "nc", "-z", "localhost", "13077" ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -81,6 +81,8 @@ services:
       - WAIT_FOR_HOST=leo_storage
       - WAIT_FOR_PORT=13077
       - WAIT_SECONDS=3
+      - BRIDGE_HOST=leo_nats_bridge
+      - BRIDGE_PORT=5000
     volumes:
       - ./config/leo_gateway.conf:/opt/leo_gateway/etc/leo_gateway.conf:ro
       - gateway_work:/opt/leo_gateway/work
@@ -93,11 +95,40 @@ services:
       leo_storage:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      test: [ "CMD", "nc", "-z", "localhost", "8080" ]
       interval: 5s
       timeout: 3s
       retries: 10
 
+  nats:
+    image: nats:latest
+    command: "-js"
+    ports:
+      - "4222:4222"
+    networks:
+      - leofs_net
+    profiles:
+      - nats
+
+  leo_nats_bridge:
+    build:
+      context: ../apps/leo_nats_bridge
+      dockerfile: Dockerfile
+    image: leofs-nats-bridge:latest
+    container_name: leo_nats_bridge
+    hostname: leo_nats_bridge
+    environment:
+      - NATS_URL=nats://nats:4222
+      - BRIDGE_PORT=5000
+      - RUST_LOG=debug
+    ports:
+      - "5000:5000/udp"
+    networks:
+      - leofs_net
+    depends_on:
+      - nats
+    profiles:
+      - nats
 networks:
   leofs_net:
     driver: bridge
