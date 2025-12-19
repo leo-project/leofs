@@ -34,8 +34,15 @@ if [ -f "$CONF_FILE" ]; then
 
     if [ -n "$NODENAME" ] && [ -n "$VM_ARGS_FILE" ]; then
         echo "Setting nodename to: $NODENAME"
-        # Use -sname (short name) instead of -name (requires FQDN) for Docker networking
-        sed -i "s/-name .*/-sname $NODENAME/" "$VM_ARGS_FILE"
+        # Use -name (long name) for IP addresses, -sname (short name) for hostnames without dots
+        if echo "$NODENAME" | grep -q '@[0-9]'; then
+            # Contains IP address, use -name
+            sed -i "s/-sname .*/-name $NODENAME/" "$VM_ARGS_FILE"
+            sed -i "s/-name .*/-name $NODENAME/" "$VM_ARGS_FILE"
+        else
+            # Use -sname for simple hostnames
+            sed -i "s/-name .*/-sname $NODENAME/" "$VM_ARGS_FILE"
+        fi
     fi
 
     if [ -n "$COOKIE" ] && [ -n "$VM_ARGS_FILE" ]; then
@@ -87,6 +94,15 @@ if [ -f "$CONF_FILE" ]; then
             # Convert config format [a@b, c@d] to Erlang format ['a@b', 'c@d']
             ERLANG_MANAGERS=$(echo "$MANAGERS" | sed "s/\[/['/g" | sed "s/\]/']/" | sed "s/,/','/g")
             sed -i "s/{managers, \[.*\]}/{managers, $ERLANG_MANAGERS}/" "$SYS_CONFIG_FILE"
+        fi
+    fi
+
+    # Update RPC listen port for storage/gateway nodes (critical for running multiple nodes)
+    if [ -n "$SYS_CONFIG_FILE" ] && ([ "$BIN_NAME" = "leo_storage" ] || [ "$BIN_NAME" = "leo_gateway" ]); then
+        RPC_PORT=$(grep -E "^rpc.server.listen_port\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+        if [ -n "$RPC_PORT" ]; then
+            echo "Setting RPC listen port to: $RPC_PORT"
+            sed -i "s/{listen_port, [0-9]*}/{listen_port, $RPC_PORT}/" "$SYS_CONFIG_FILE"
         fi
     fi
 fi
