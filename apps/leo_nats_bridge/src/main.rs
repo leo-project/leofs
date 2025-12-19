@@ -112,18 +112,27 @@ async fn process_message(jetstream: async_nats::jetstream::Context, msg: String)
         info!("  -> Parsed: bucket={}, key={}", bucket, key);
         debug!("  -> Event: {:?}", event);
 
-        // Publish to JetStream
-        match jetstream.publish(subject.to_string(), payload.into()).await {
-             Ok(ack) => {
-                 let pub_count = MSG_PUBLISHED.fetch_add(1, Ordering::Relaxed) + 1;
-                 info!("  -> Published to NATS [subject={}] (total: {})", subject, pub_count);
-                 debug!("  -> Ack: {:?}", ack);
-             },
-             Err(e) => {
-                 let fail_count = MSG_FAILED.fetch_add(1, Ordering::Relaxed) + 1;
-                 error!("  -> NATS Publish FAILED: {} (total failures: {})", e, fail_count);
-                 return Err(e.into());
-             }
+        // Publish to JetStream (async-nats 0.44+ requires two awaits)
+        match jetstream.publish(subject, payload.into()).await {
+            Ok(ack_future) => {
+                match ack_future.await {
+                    Ok(ack) => {
+                        let pub_count = MSG_PUBLISHED.fetch_add(1, Ordering::Relaxed) + 1;
+                        info!("  -> Published to NATS [subject={}] (total: {})", subject, pub_count);
+                        debug!("  -> Ack: {:?}", ack);
+                    }
+                    Err(e) => {
+                        let fail_count = MSG_FAILED.fetch_add(1, Ordering::Relaxed) + 1;
+                        error!("  -> NATS Ack FAILED: {} (total failures: {})", e, fail_count);
+                        return Err(e.into());
+                    }
+                }
+            }
+            Err(e) => {
+                let fail_count = MSG_FAILED.fetch_add(1, Ordering::Relaxed) + 1;
+                error!("  -> NATS Publish FAILED: {} (total failures: {})", e, fail_count);
+                return Err(e.into());
+            }
         }
     } else {
         warn!("  -> Invalid message format (expected 'bucket|key'): {}", trimmed_msg);
