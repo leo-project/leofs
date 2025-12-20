@@ -105,6 +105,46 @@ if [ -f "$CONF_FILE" ]; then
             sed -i "s/{listen_port, [0-9]*}/{listen_port, $RPC_PORT}/" "$SYS_CONFIG_FILE"
         fi
     fi
+
+    # Add internal_network settings for leo_gateway
+    if [ -n "$SYS_CONFIG_FILE" ] && [ "$BIN_NAME" = "leo_gateway" ]; then
+        INTERNAL_NETWORK_ENABLED=$(grep -E "^internal_network\.enabled\s*=" "$CONF_FILE" | sed 's/.*=\s*//' | tr -d ' ')
+        INTERNAL_NETWORK_CIDRS=$(grep -E "^internal_network\.cidrs\s*=" "$CONF_FILE" | sed 's/.*=\s*//')
+
+        if [ -n "$INTERNAL_NETWORK_ENABLED" ]; then
+            echo "Setting internal_network.enabled to: $INTERNAL_NETWORK_ENABLED"
+
+            # Convert CIDRs to Erlang format: "10.0.0.0/8, 172.16.0.0/12" -> [{{10,0,0,0}, 8}, {{172,16,0,0}, 12}]
+            ERLANG_CIDRS="[]"
+            if [ -n "$INTERNAL_NETWORK_CIDRS" ]; then
+                ERLANG_CIDRS="["
+                FIRST=1
+                # Process each CIDR
+                for CIDR in $(echo "$INTERNAL_NETWORK_CIDRS" | tr ',' ' '); do
+                    CIDR=$(echo "$CIDR" | tr -d ' ')
+                    if [ -n "$CIDR" ]; then
+                        IP=$(echo "$CIDR" | cut -d'/' -f1)
+                        MASK=$(echo "$CIDR" | cut -d'/' -f2)
+                        # Convert IP to tuple format: 10.0.0.0 -> {10,0,0,0}
+                        IP_TUPLE=$(echo "$IP" | sed 's/\./,/g')
+                        if [ "$FIRST" = "1" ]; then
+                            ERLANG_CIDRS="${ERLANG_CIDRS}{{${IP_TUPLE}}, ${MASK}}"
+                            FIRST=0
+                        else
+                            ERLANG_CIDRS="${ERLANG_CIDRS}, {{${IP_TUPLE}}, ${MASK}}"
+                        fi
+                    fi
+                done
+                ERLANG_CIDRS="${ERLANG_CIDRS}]"
+            fi
+
+            echo "Setting internal_network.cidrs to: $ERLANG_CIDRS"
+
+            # Add internal_network settings to leo_gateway section in sys.config
+            # Insert before the closing of leo_gateway tuple
+            sed -i "s/{managers, \(\[.*\]\)}/{managers, \1}, {internal_network_enabled, $INTERNAL_NETWORK_ENABLED}, {internal_network_cidrs, $ERLANG_CIDRS}/" "$SYS_CONFIG_FILE"
+        fi
+    fi
 fi
 
 # Wait for dependencies

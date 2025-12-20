@@ -684,6 +684,18 @@ get_options() ->
     ?info("start/3", "chunked_obj_len: ~p", [ChunkedObjLen]),
     ?info("start/3", "reading_chunked_obj_len: ~p", [ReadingChunkedLen]),
     ?info("start/3", "threshold_of_chunk_len: ~p", [ThresholdChunkLen]),
+
+    %% Log internal network bypass configuration
+    InternalNetworkEnabled = ?env_internal_network_enabled(),
+    InternalNetworkCIDRs = ?env_internal_network_cidrs(),
+    ?info("start/3", "internal_network.enabled: ~p", [InternalNetworkEnabled]),
+    case InternalNetworkEnabled of
+        true ->
+            ?info("start/3", "internal_network.cidrs: ~p", [InternalNetworkCIDRs]);
+        false ->
+            ok
+    end,
+
     {ok, HttpOptions}.
 
 

@@ -90,7 +90,9 @@ services:
     ports:
       - "28080:8080"
     networks:
-      - leofs_net
+      leofs_net:
+        aliases:
+          - leogateway
     depends_on:
       leo_storage:
         condition: service_healthy
@@ -102,9 +104,13 @@ services:
 
   nats:
     image: nats:latest
-    command: "-js"
+    container_name: nats
+    command: "-c /etc/nats/nats.conf"
     ports:
       - "4222:4222"
+    volumes:
+      - ./config/nats.conf:/etc/nats/nats.conf:ro
+      - nats_data:/data
     networks:
       - leofs_net
     profiles:
@@ -129,6 +135,47 @@ services:
       - nats
     profiles:
       - nats
+
+  leo_indexer:
+    build:
+      context: ../apps/leo_indexer
+      dockerfile: Dockerfile
+    image: leofs-indexer:latest
+    container_name: leo_indexer
+    hostname: leo_indexer
+    environment:
+      # NATS Configuration
+      - NATS_URL=nats://nats:4222
+      - NATS_STREAM=LEOFS_EVENTS
+      - NATS_SUBJECT=leofs.events.upload
+      - NATS_CONSUMER=leo-indexer
+      - NATS_MAX_DELIVER=3
+      - NATS_ACK_WAIT=30
+      # LeoFS S3 Configuration (use alias without underscore for boto3 compatibility)
+      - LEOFS_ENDPOINT=http://leogateway:8080
+      - LEOFS_ACCESS_KEY=${LEOFS_ACCESS_KEY:-}
+      - LEOFS_SECRET_KEY=${LEOFS_SECRET_KEY:-}
+      # Storage Configuration
+      - TEMP_DIR=/tmp/lance
+      # DLQ Configuration
+      - DLQ_SUBJECT=leofs.events.dlq
+      # Logging
+      - LOG_LEVEL=INFO
+    volumes:
+      - indexer_tmp:/tmp/lance
+    networks:
+      - leofs_net
+    depends_on:
+      leo_gateway:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      leo_nats_bridge:
+        condition: service_started
+    profiles:
+      - nats
+    restart: unless-stopped
+
 networks:
   leofs_net:
     driver: bridge
@@ -143,3 +190,5 @@ volumes:
   storage_log:
   gateway_work:
   gateway_log:
+  indexer_tmp:
+  nats_data:
