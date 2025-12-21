@@ -1,6 +1,7 @@
 """Main entry point for LeoFS Indexing Worker."""
 
 import asyncio
+import logging
 import signal
 import sys
 from typing import Optional
@@ -8,6 +9,13 @@ from typing import Optional
 import structlog
 
 from .config import settings
+
+# Configure stdlib logging level based on settings
+logging.basicConfig(
+    format="%(message)s",
+    stream=sys.stdout,
+    level=getattr(logging, settings.log_level.upper(), logging.INFO),
+)
 from .consumer import NATSConsumer
 from .task_index import TaskIndex
 from .models import UploadEvent, IndexResult
@@ -23,7 +31,11 @@ structlog.configure(
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
-        structlog.dev.ConsoleRenderer() if sys.stdout.isatty() else structlog.processors.JSONRenderer(),
+        (
+            structlog.dev.ConsoleRenderer()
+            if sys.stdout.isatty()
+            else structlog.processors.JSONRenderer()
+        ),
     ],
     wrapper_class=structlog.stdlib.BoundLogger,
     context_class=dict,
@@ -178,6 +190,7 @@ async def main() -> None:
 def run() -> None:
     """Run the worker (blocking)."""
     import traceback
+
     try:
         asyncio.run(main())
     except KeyboardInterrupt:

@@ -9,64 +9,59 @@ class Settings(BaseSettings):
 
     # NATS Configuration
     nats_url: str = Field(
-        default="nats://localhost:4222",
-        description="NATS server URL"
+        default="nats://localhost:4222", description="NATS server URL"
     )
     nats_stream: str = Field(
-        default="LEOFS_EVENTS",
-        description="JetStream stream name"
+        default="LEOFS_EVENTS", description="JetStream stream name"
     )
     nats_subject: str = Field(
-        default="leofs.events.upload",
-        description="Subject to subscribe to"
+        default="leofs.events.upload", description="Subject to subscribe to"
     )
     nats_consumer: str = Field(
-        default="leo-indexer",
-        description="Durable consumer name"
+        default="leo-indexer", description="Durable consumer name"
     )
     nats_max_deliver: int = Field(
-        default=3,
-        description="Max delivery attempts before DLQ"
+        default=3, description="Max delivery attempts before DLQ"
     )
-    nats_ack_wait: int = Field(
-        default=30,
-        description="ACK wait time in seconds"
-    )
+    nats_ack_wait: int = Field(default=30, description="ACK wait time in seconds")
 
     # LeoFS S3 Configuration
     leofs_endpoint: str = Field(
-        default="http://localhost:8080",
-        description="LeoFS S3 API endpoint"
+        default="http://localhost:8080", description="LeoFS S3 API endpoint"
     )
-    leofs_access_key: str = Field(
-        default="",
-        description="LeoFS access key"
-    )
-    leofs_secret_key: str = Field(
-        default="",
-        description="LeoFS secret key"
-    )
+    leofs_access_key: str = Field(default="", description="LeoFS access key")
+    leofs_secret_key: str = Field(default="", description="LeoFS secret key")
 
     # Storage Configuration
     temp_dir: str = Field(
         default="/tmp/lance",
-        description="Temporary directory for LanceDB"
+        description="Temporary directory for LanceDB (used for local fallback)",
     )
     vectors_bucket: str = Field(
         default="",
-        description="Bucket for vector storage (empty = same as source bucket)"
+        description="Bucket for vector storage (empty = same as source bucket)",
+    )
+
+    # LanceDB S3 Backend Configuration
+    lancedb_s3_enabled: bool = Field(
+        default=True,
+        description="Enable S3 backend for LanceDB (direct write to LeoFS)",
+    )
+    lancedb_table_name: str = Field(
+        default="documents", description="LanceDB table name (1 table per bucket)"
+    )
+    lancedb_vectors_prefix: str = Field(
+        default=".vectors", description="Prefix for LanceDB storage in bucket"
     )
 
     # DLQ Configuration
     dlq_subject: str = Field(
-        default="leofs.events.dlq",
-        description="Dead Letter Queue subject"
+        default="leofs.events.dlq", description="Dead Letter Queue subject"
     )
 
     # Logging
     log_level: str = Field(
-        default="INFO",
-        description="Log level (DEBUG, INFO, WARNING, ERROR)"
+        default="INFO", description="Log level (DEBUG, INFO, WARNING, ERROR)"
     )
 
     model_config = {

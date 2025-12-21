@@ -144,6 +144,8 @@ services:
     container_name: leo_indexer
     hostname: leo_indexer
     environment:
+      # Python unbuffered output for real-time logs
+      - PYTHONUNBUFFERED=1
       # NATS Configuration
       - NATS_URL=nats://nats:4222
       - NATS_STREAM=LEOFS_EVENTS
@@ -157,6 +159,10 @@ services:
       - LEOFS_SECRET_KEY=${LEOFS_SECRET_KEY:-}
       # Storage Configuration
       - TEMP_DIR=/tmp/lance
+      # LanceDB S3 Backend Configuration
+      - LANCEDB_S3_ENABLED=true
+      - LANCEDB_TABLE_NAME=documents
+      - LANCEDB_VECTORS_PREFIX=.vectors
       # DLQ Configuration
       - DLQ_SUBJECT=leofs.events.dlq
       # Logging

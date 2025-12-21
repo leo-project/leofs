@@ -1,7 +1,5 @@
 """Task Index - Core indexing logic for LeoFS documents."""
 
-import tarfile
-import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -20,27 +18,50 @@ class TaskIndex:
     """
     Implements the task.index processing step.
 
-    Flow:
+    Flow (S3 Backend - New):
     1. Fetch original file from LeoFS (S3 API)
     2. Check idempotency (skip if already processed)
-    3. Create LanceDB table
-    4. Compress .lance directory to tar.gz
-    5. Upload to same bucket's .vectors/ directory
-    6. Cleanup temporary files
+    3. Add document to LanceDB table (direct S3 write)
+    4. Document is immediately searchable
 
     Storage format:
-        {bucket}/.vectors/{etag}.lance.tar.gz
-    """
+        s3://{bucket}/.vectors/documents.lance/
 
-    # Directory name for storing LanceDB indexes within the bucket
-    VECTORS_DIR = ".vectors"
+    Legacy Flow (Local - Deprecated):
+    1. Fetch original file from LeoFS
+    2. Create LanceDB table locally
+    3. Compress to tar.gz
+    4. Upload to bucket
+    """
 
     # Supported text file extensions for initial implementation
     TEXT_EXTENSIONS = {
-        ".txt", ".md", ".json", ".xml", ".html", ".htm",
-        ".csv", ".log", ".yaml", ".yml", ".ini", ".cfg",
-        ".py", ".js", ".ts", ".java", ".go", ".rs", ".rb",
-        ".c", ".cpp", ".h", ".hpp", ".cs", ".php", ".sh",
+        ".txt",
+        ".md",
+        ".json",
+        ".xml",
+        ".html",
+        ".htm",
+        ".csv",
+        ".log",
+        ".yaml",
+        ".yml",
+        ".ini",
+        ".cfg",
+        ".py",
+        ".js",
+        ".ts",
+        ".java",
+        ".go",
+        ".rs",
+        ".rb",
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".cs",
+        ".php",
+        ".sh",
     }
 
     def __init__(
@@ -110,25 +131,19 @@ class TaskIndex:
                     reason="decode_failed",
                 )
 
-            # 5. Create LanceDB table
-            lance_dir = self.lance.create_table(
-                etag=etag,
+            # 5. Add document to LanceDB table (direct S3 write)
+            db_uri = self.lance.add_document(
                 bucket=bucket,
+                etag=etag,
                 key=key,
                 content=content_text,
                 timestamp=timestamp,
             )
 
-            # 6. Compress to tar.gz
-            archive_path = self._create_archive(lance_dir, etag)
-
-            # 7. Upload to same bucket's .vectors/ directory
-            vectors_key = f"{self.VECTORS_DIR}/{etag}.lance.tar.gz"
-            self._upload_archive(archive_path, bucket, vectors_key)
-
-            # 8. Cleanup
-            self.lance.cleanup(etag)
-            archive_path.unlink(missing_ok=True)
+            # Construct vectors key for reporting
+            vectors_key = (
+                f"{settings.lancedb_vectors_prefix}/{settings.lancedb_table_name}"
+            )
 
             logger.info(
                 "task_index_success",
@@ -136,6 +151,7 @@ class TaskIndex:
                 key=key,
                 etag=etag,
                 vectors_key=vectors_key,
+                db_uri=db_uri,
             )
 
             return IndexResult(
@@ -167,59 +183,9 @@ class TaskIndex:
         """
         Check if this file has already been processed (idempotency).
 
-        Looks for existing .lance.tar.gz in the same bucket's .vectors/ directory.
+        Uses LanceDB's document_exists to check if ETag already exists in table.
         """
-        vectors_key = f"{self.VECTORS_DIR}/{etag}.lance.tar.gz"
-        return self.s3.object_exists(bucket, vectors_key)
-
-    def _create_archive(self, lance_dir: Path, etag: str) -> Path:
-        """
-        Compress the .lance directory to tar.gz.
-
-        Args:
-            lance_dir: Path to .lance directory
-            etag: Object ETag for naming
-
-        Returns:
-            Path to created archive
-        """
-        archive_path = lance_dir.parent / f"{etag}.lance.tar.gz"
-
-        logger.debug("creating_archive", source=str(lance_dir), dest=str(archive_path))
-
-        with tarfile.open(archive_path, "w:gz") as tar:
-            # Add the .lance directory with its base name
-            tar.add(lance_dir, arcname=lance_dir.name)
-
-        logger.info(
-            "archive_created",
-            path=str(archive_path),
-            size=archive_path.stat().st_size,
-        )
-
-        return archive_path
-
-    def _upload_archive(self, archive_path: Path, bucket: str, vectors_key: str) -> None:
-        """
-        Upload the archive to the same bucket's .vectors/ directory.
-
-        Args:
-            archive_path: Local path to archive
-            bucket: Target bucket (same as source bucket)
-            vectors_key: Destination key (e.g., .vectors/{etag}.lance.tar.gz)
-        """
-        self.s3.upload_file(
-            str(archive_path),
-            bucket,
-            vectors_key,
-            content_type="application/gzip",
-        )
-
-        logger.info(
-            "archive_uploaded",
-            bucket=bucket,
-            key=vectors_key,
-        )
+        return self.lance.document_exists(bucket, etag)
 
 
 # Convenience function for direct usage
