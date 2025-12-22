@@ -1,6 +1,5 @@
 """LanceDB Handler for creating and managing document tables with S3 backend."""
 
-import os
 import shutil
 from pathlib import Path
 from typing import Optional, List, Dict, Any
@@ -13,6 +12,14 @@ from .config import settings
 from .exceptions import LanceDBError
 
 logger = structlog.get_logger(__name__)
+
+# Try to import lancedb.pydantic for vector type
+try:
+    from lancedb.pydantic import LanceModel, Vector
+
+    LANCEDB_PYDANTIC_AVAILABLE = True
+except ImportError:
+    LANCEDB_PYDANTIC_AVAILABLE = False
 
 
 class LanceDBHandler:
@@ -37,7 +44,7 @@ class LanceDBHandler:
     - metadata: struct (additional info)
     """
 
-    # Table schema for initial implementation
+    # Table schema for initial implementation (Phase 1 - text only)
     SCHEMA = pa.schema(
         [
             pa.field("id", pa.string()),
@@ -47,6 +54,31 @@ class LanceDBHandler:
             pa.field("created_at", pa.int64()),
         ]
     )
+
+    @staticmethod
+    def get_vector_schema(embedding_dim: int = 768) -> pa.Schema:
+        """
+        Get the Phase 2 schema with vector support.
+
+        Args:
+            embedding_dim: Dimension of embedding vectors (default: 768)
+
+        Returns:
+            PyArrow schema with vector field
+        """
+        return pa.schema(
+            [
+                pa.field("id", pa.string()),  # {etag}_{chunk_id}
+                pa.field("bucket", pa.string()),
+                pa.field("key", pa.string()),
+                pa.field("etag", pa.string()),  # Original file ETag
+                pa.field("chunk_id", pa.int32()),  # Chunk index
+                pa.field("content", pa.string()),  # Chunk text
+                pa.field("vector", pa.list_(pa.float32(), embedding_dim)),
+                pa.field("language", pa.string()),  # Detected language
+                pa.field("created_at", pa.int64()),
+            ]
+        )
 
     def __init__(
         self,
@@ -443,3 +475,250 @@ class LanceDBHandler:
                 if item.is_dir() and item.name.startswith("db_"):
                     shutil.rmtree(item)
             logger.info("local_cleanup_all", temp_dir=str(self.temp_dir))
+
+    # --- Phase 2: Vector support methods ---
+
+    def add_embedded_chunks(
+        self,
+        bucket: str,
+        chunks: List[Dict[str, Any]],
+        embedding_dim: int = settings.embedding_dimension,
+        table_name: Optional[str] = None,
+    ) -> str:
+        """
+        Add embedded chunks to the bucket's LanceDB table.
+
+        This method is used by the Phase 2 pipeline to store chunks
+        with their embedding vectors.
+
+        Args:
+            bucket: Source bucket name
+            chunks: List of chunk dicts with keys:
+                    id, bucket, key, etag, chunk_id, content, vector, language, created_at
+            embedding_dim: Dimension of embedding vectors
+            table_name: Optional table name override
+
+        Returns:
+            The table URI where chunks were stored
+
+        Raises:
+            LanceDBError: If operation fails
+        """
+        if not chunks:
+            raise LanceDBError("No chunks to add")
+
+        db_uri = self._get_db_uri(bucket)
+        table = table_name or f"{self.table_name}_vectors"
+
+        try:
+            logger.debug(
+                "adding_embedded_chunks",
+                bucket=bucket,
+                count=len(chunks),
+                db_uri=db_uri,
+                table=table,
+            )
+
+            db = lancedb.connect(db_uri, storage_options=self.storage_options)
+            schema = self.get_vector_schema(embedding_dim)
+
+            if table in db.table_names():
+                tbl = db.open_table(table)
+                tbl.add(chunks)
+                logger.info(
+                    "embedded_chunks_appended",
+                    bucket=bucket,
+                    count=len(chunks),
+                    table=table,
+                )
+            else:
+                tbl = db.create_table(
+                    table,
+                    data=chunks,
+                    schema=schema,
+                )
+                logger.info(
+                    "embedded_chunks_table_created",
+                    bucket=bucket,
+                    count=len(chunks),
+                    table=table,
+                )
+
+            return db_uri
+
+        except Exception as e:
+            logger.error(
+                "add_embedded_chunks_failed",
+                bucket=bucket,
+                count=len(chunks),
+                error=str(e),
+            )
+            raise LanceDBError(f"Failed to add embedded chunks: {e}") from e
+
+    def chunk_exists(
+        self,
+        bucket: str,
+        composite_id: str,
+        table_name: Optional[str] = None,
+    ) -> bool:
+        """
+        Check if a chunk with the given composite ID already exists.
+
+        Args:
+            bucket: Bucket name
+            composite_id: Composite ID ({etag}_{chunk_id})
+            table_name: Optional table name override
+
+        Returns:
+            True if chunk exists, False otherwise
+        """
+        db_uri = self._get_db_uri(bucket)
+        table = table_name or f"{self.table_name}_vectors"
+
+        try:
+            db = lancedb.connect(db_uri, storage_options=self.storage_options)
+
+            if table not in db.table_names():
+                return False
+
+            tbl = db.open_table(table)
+            result = tbl.search().where(f"id = '{composite_id}'").limit(1).to_list()
+            return len(result) > 0
+
+        except Exception as e:
+            logger.warning(
+                "chunk_exists_check_failed",
+                bucket=bucket,
+                composite_id=composite_id,
+                error=str(e),
+            )
+            return False
+
+    def etag_exists(
+        self,
+        bucket: str,
+        etag: str,
+        table_name: Optional[str] = None,
+    ) -> bool:
+        """
+        Check if any chunks for the given ETag already exist.
+
+        This is used for idempotency checking - if a document's ETag
+        is already in the table, we skip reprocessing.
+
+        Args:
+            bucket: Bucket name
+            etag: Original file ETag
+            table_name: Optional table name override
+
+        Returns:
+            True if any chunks for this ETag exist, False otherwise
+        """
+        db_uri = self._get_db_uri(bucket)
+        table = table_name or f"{self.table_name}_vectors"
+
+        try:
+            db = lancedb.connect(db_uri, storage_options=self.storage_options)
+
+            if table not in db.table_names():
+                return False
+
+            tbl = db.open_table(table)
+            result = tbl.search().where(f"etag = '{etag}'").limit(1).to_list()
+            return len(result) > 0
+
+        except Exception as e:
+            logger.warning(
+                "etag_exists_check_failed",
+                bucket=bucket,
+                etag=etag,
+                error=str(e),
+            )
+            return False
+
+    def vector_search(
+        self,
+        bucket: str,
+        query_vector: List[float],
+        limit: int = 10,
+        table_name: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """
+        Search for similar chunks using vector similarity.
+
+        Args:
+            bucket: Bucket name
+            query_vector: Query embedding vector
+            limit: Maximum number of results
+            table_name: Optional table name override
+
+        Returns:
+            List of matching chunks with similarity scores
+        """
+        db_uri = self._get_db_uri(bucket)
+        table = table_name or f"{self.table_name}_vectors"
+
+        try:
+            db = lancedb.connect(db_uri, storage_options=self.storage_options)
+
+            if table not in db.table_names():
+                logger.warning("vector_search_no_table", bucket=bucket, table=table)
+                return []
+
+            tbl = db.open_table(table)
+            results = tbl.search(query_vector).limit(limit).to_list()
+
+            logger.debug(
+                "vector_search_completed",
+                bucket=bucket,
+                num_results=len(results),
+            )
+
+            return results
+
+        except Exception as e:
+            logger.error(
+                "vector_search_failed",
+                bucket=bucket,
+                error=str(e),
+            )
+            return []
+
+    def get_vector_table_stats(
+        self,
+        bucket: str,
+        table_name: Optional[str] = None,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Get statistics for the bucket's vector table.
+
+        Args:
+            bucket: Bucket name
+            table_name: Optional table name override
+
+        Returns:
+            Dict with table stats or None if table doesn't exist
+        """
+        db_uri = self._get_db_uri(bucket)
+        table = table_name or f"{self.table_name}_vectors"
+
+        try:
+            db = lancedb.connect(db_uri, storage_options=self.storage_options)
+
+            if table not in db.table_names():
+                return None
+
+            tbl = db.open_table(table)
+            return {
+                "row_count": tbl.count_rows(),
+                "uri": db_uri,
+                "table_name": table,
+            }
+
+        except Exception as e:
+            logger.error(
+                "get_vector_table_stats_failed",
+                bucket=bucket,
+                error=str(e),
+            )
+            return None

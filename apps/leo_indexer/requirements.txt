@@ -17,6 +17,16 @@ pydantic-settings>=2.1.0
 structlog>=24.1.0
 tenacity>=8.2.0
 
+# Phase 2: Language Detection
+fasttext>=0.9.2
+
+# Phase 2: Chunking (LlamaIndex)
+llama-index-core>=0.10.0
+
+# Phase 2: Embeddings
+sentence-transformers>=2.2.0
+torch>=2.0.0
+
 # Development/Testing
 pytest>=7.4.0
 pytest-asyncio>=0.23.0

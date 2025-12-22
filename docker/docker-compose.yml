@@ -153,10 +153,8 @@ services:
       - NATS_CONSUMER=leo-indexer
       - NATS_MAX_DELIVER=3
       - NATS_ACK_WAIT=30
-      # LeoFS S3 Configuration (use alias without underscore for boto3 compatibility)
+      # LeoFS S3 Configuration (internal network bypass)
       - LEOFS_ENDPOINT=http://leogateway:8080
-      - LEOFS_ACCESS_KEY=${LEOFS_ACCESS_KEY:-}
-      - LEOFS_SECRET_KEY=${LEOFS_SECRET_KEY:-}
       # Storage Configuration
       - TEMP_DIR=/tmp/lance
       # LanceDB S3 Backend Configuration
@@ -165,6 +163,24 @@ services:
       - LANCEDB_VECTORS_PREFIX=.vectors
       # DLQ Configuration
       - DLQ_SUBJECT=leofs.events.dlq
+      # Language Detection Configuration
+      - FASTTEXT_MODEL_PATH=${FASTTEXT_MODEL_PATH:-models/lid.176.ftz}
+      - LANGUAGE_DETECTION_CHARS=${LANGUAGE_DETECTION_CHARS:-1000}
+      - LANGUAGE_CONFIDENCE_THRESHOLD=${LANGUAGE_CONFIDENCE_THRESHOLD:-0.5}
+      - SUPPORTED_LANGUAGES=${SUPPORTED_LANGUAGES:-ja,en}
+      # Chunking Configuration
+      - CHUNK_SIZE=${CHUNK_SIZE:-512}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-50}
+      # Embedding Configuration (language-specific models)
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-intfloat/multilingual-e5-base}
+      - EMBEDDING_MODEL_JA=${EMBEDDING_MODEL_JA:-cl-nagoya/ruri-v3-pt-30m}
+      - EMBEDDING_MODEL_EN=${EMBEDDING_MODEL_EN:-intfloat/multilingual-e5-base}
+      - EMBEDDING_BATCH_SIZE=${EMBEDDING_BATCH_SIZE:-32}
+      - EMBEDDING_DIMENSION=${EMBEDDING_DIMENSION:-768}
+      - EMBEDDING_DIMENSION_JA=${EMBEDDING_DIMENSION_JA:-256}
+      - EMBEDDING_DIMENSION_EN=${EMBEDDING_DIMENSION_EN:-768}
+      # Pipeline Mode
+      - PIPELINE_MODE=${PIPELINE_MODE:-full}
       # Logging
       - LOG_LEVEL=INFO
     volumes:

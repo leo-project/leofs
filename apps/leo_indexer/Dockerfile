@@ -41,7 +41,7 @@ ENV PYTHONPATH=/app
 
 # Health check (basic process check)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD pgrep -f "python -m src.pipeline.main" || exit 1
+    CMD pgrep -f "python -m src.main" || exit 1
 
 # Run the worker
-CMD ["python", "-m", "src.pipeline.main"]
+CMD ["python", "-m", "src.main"]

@@ -44,11 +44,8 @@ def create_s3_client(endpoint: str, access_key: str, secret_key: str):
             signature_version="s3",
             s3={
                 "addressing_style": "path",
-                "payload_signing_enabled": False,
             },
             retries={"max_attempts": 1},
-            request_checksum_calculation="when_required",
-            response_checksum_validation="when_required",
         ),
     )
 

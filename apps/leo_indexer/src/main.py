@@ -74,7 +74,7 @@ class IndexingWorker:
             "worker_starting",
             nats_url=settings.nats_url,
             subject=settings.nats_subject,
-            vectors_bucket=settings.vectors_bucket,
+            pipeline_mode=settings.pipeline_mode,
         )
 
         # Initialize components
@@ -89,7 +89,7 @@ class IndexingWorker:
             await self.consumer.connect()
 
             # Start consuming
-            logger.info("worker_started")
+            logger.info("worker_started", pipeline_mode=settings.pipeline_mode)
             await self.consumer.consume(self._handle_event)
 
         except asyncio.CancelledError:
@@ -101,13 +101,16 @@ class IndexingWorker:
         """
         Handle a single upload event.
 
+        Uses process_auto() to automatically select pipeline based on config.
+
         Args:
             event: Parsed upload event from NATS
         """
         self._processed_count += 1
 
         try:
-            result = await self.task_index.process(event)
+            # Use auto mode to respect pipeline_mode setting
+            result = await self.task_index.process_auto(event)
 
             if result.status == "success":
                 self._success_count += 1
@@ -117,6 +120,8 @@ class IndexingWorker:
                     bucket=result.bucket,
                     key=result.key,
                     vectors_key=result.vectors_key,
+                    language=result.language,
+                    num_chunks=result.num_chunks,
                 )
             elif result.status == "skipped":
                 self._skip_count += 1
