@@ -19,6 +19,8 @@ tenacity>=8.2.0
 
 # Phase 2: Language Detection
 fasttext>=0.9.2
+# NumPy 1.x required for fasttext compatibility
+numpy<2.0
 
 # Phase 2: Chunking (LlamaIndex)
 llama-index-core>=0.10.0

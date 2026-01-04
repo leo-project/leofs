@@ -21,6 +21,12 @@ except ImportError:
     print("ERROR: boto3 is required. Install with: pip install boto3")
     sys.exit(1)
 
+try:
+    import pyarrow.fs as pafs
+    PYARROW_AVAILABLE = True
+except ImportError:
+    PYARROW_AVAILABLE = False
+
 
 def setup_expect_header_removal():
     """Monkey-patch to remove Expect: 100-continue header from all requests."""
@@ -79,7 +85,70 @@ def upload_files(s3, bucket: str, file_count: int) -> list:
     return uploaded
 
 
-def list_objects(s3, bucket: str):
+def list_vectors_pyarrow(endpoint: str, access_key: str, secret_key: str, bucket: str):
+    """List .vectors/ files using PyArrow filesystem (more reliable for LeoFS)."""
+    if not PYARROW_AVAILABLE:
+        return []
+
+    try:
+        # Parse endpoint to get host and port
+        from urllib.parse import urlparse
+        parsed = urlparse(endpoint)
+        host_port = parsed.netloc  # e.g., "127.0.0.1:28080"
+
+        fs = pafs.S3FileSystem(
+            endpoint_override=host_port,
+            access_key=access_key,
+            secret_key=secret_key,
+            scheme=parsed.scheme,
+            region="us-east-1",
+        )
+
+        vector_objects = []
+        lance_dirs = {}  # Track .lance directories with their stats
+
+        try:
+            # First, list .vectors directory to find .lance directories
+            files = fs.get_file_info(pafs.FileSelector(f"{bucket}/.vectors", recursive=False))
+            for f in files:
+                if f.type == pafs.FileType.Directory and f.path.endswith('.lance'):
+                    lance_path = f.path
+                    lance_key = f.path.replace(f"{bucket}/", "", 1)
+
+                    # List data directory inside .lance to get actual files
+                    total_size = 0
+                    file_count = 0
+                    try:
+                        data_files = fs.get_file_info(
+                            pafs.FileSelector(f"{lance_path}/data", recursive=True)
+                        )
+                        for df in data_files:
+                            if df.type == pafs.FileType.File and df.size:
+                                total_size += df.size
+                                file_count += 1
+                    except Exception:
+                        pass  # data directory may not exist yet
+
+                    lance_dirs[lance_key] = {
+                        'size': total_size,
+                        'files': file_count
+                    }
+
+            # Create summary entries for each .lance directory
+            for lance_key, stats in lance_dirs.items():
+                summary = f"{lance_key}/ [{stats['files']} files]"
+                vector_objects.append((summary, stats['size']))
+
+        except Exception as e:
+            print(f"  (PyArrow .vectors listing error: {e})")
+
+        return vector_objects
+    except Exception as e:
+        print(f"  (PyArrow listing failed: {e})")
+        return []
+
+
+def list_objects(s3, bucket: str, endpoint: str = None, access_key: str = None, secret_key: str = None):
     """List all objects in bucket (regular + .vectors/)."""
     print("\n" + "=" * 60)
     print("=== Uploaded Files ===")
@@ -95,23 +164,30 @@ def list_objects(s3, bucket: str):
             for obj in page.get('Contents', []):
                 key = obj['Key']
                 size = obj['Size']
-                if key.startswith('.vectors/'):
+                if key.startswith('.vectors/') or key.startswith('/.vectors/'):
                     vector_objects.append((key, size))
                 else:
                     regular_objects.append((key, size))
 
-        # Also explicitly list .vectors/ prefix
+        # Try boto3 prefix listing first
         for page in paginator.paginate(Bucket=bucket, Prefix='.vectors/', MaxKeys=1000):
             for obj in page.get('Contents', []):
                 key = obj['Key']
                 size = obj['Size']
-                # Avoid duplicates
                 if (key, size) not in vector_objects:
                     vector_objects.append((key, size))
 
     except ClientError as e:
         print(f"ERROR listing objects: {e}")
         return
+
+    # If no vectors found via boto3, try PyArrow (works better with LeoFS)
+    if not vector_objects and endpoint and access_key and secret_key:
+        if PYARROW_AVAILABLE:
+            print("  (Using PyArrow to list .vectors/ files...)")
+            vector_objects = list_vectors_pyarrow(endpoint, access_key, secret_key, bucket)
+        else:
+            print("  (PyArrow not available - install with: pip install pyarrow)")
 
     # Print regular objects
     for key, size in sorted(regular_objects):
@@ -184,7 +260,7 @@ def main():
     time.sleep(args.wait)
 
     # List objects
-    list_objects(s3, args.bucket)
+    list_objects(s3, args.bucket, args.endpoint, args.access_key, args.secret_key)
 
     print("\nDone.")
 

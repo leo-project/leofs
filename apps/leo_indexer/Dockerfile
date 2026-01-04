@@ -20,9 +20,15 @@ FROM python:3.14-slim
 
 WORKDIR /app
 
-# Install runtime dependencies (for tar operations)
+# Install runtime dependencies (curl for model download)
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Download fasttext language detection model
+RUN mkdir -p /app/models && \
+    curl -L -o /app/models/lid.176.ftz \
+    https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.ftz
 
 # Copy installed packages from builder
 COPY --from=builder /root/.local /root/.local

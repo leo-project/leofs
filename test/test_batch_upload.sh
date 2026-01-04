@@ -88,7 +88,7 @@ python3 "$SCRIPT_DIR/batch_upload.py" \
     --access-key "$ACCESS_KEY" \
     --secret-key "$SECRET_KEY" \
     --count "$FILE_COUNT" \
-    --wait 5
+    --wait 10
 
 echo ""
 echo -e "${GREEN}========================================${NC}"

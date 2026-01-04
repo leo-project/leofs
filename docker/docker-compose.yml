@@ -136,6 +136,27 @@ services:
     profiles:
       - nats
 
+  leofs_init:
+    image: leofs-leo_manager_0:latest
+    container_name: leofs_init
+    hostname: leofs_init
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Waiting for LeoFS cluster to be ready..."
+        sleep 5
+        echo "Adding internal endpoint: leogateway"
+        /opt/leo_manager_0/bin/leofs-adm add-endpoint leogateway || echo "(endpoint may already exist)"
+        echo "LeoFS initialization complete"
+    networks:
+      - leofs_net
+    depends_on:
+      leo_gateway:
+        condition: service_healthy
+    profiles:
+      - nats
+    restart: "no"
+
   leo_indexer:
     build:
       context: ../apps/leo_indexer
@@ -143,6 +164,8 @@ services:
     image: leofs-indexer:latest
     container_name: leo_indexer
     hostname: leo_indexer
+    env_file:
+      - ../apps/leo_indexer/.env
     environment:
       # Python unbuffered output for real-time logs
       - PYTHONUNBUFFERED=1
@@ -167,7 +190,7 @@ services:
       - FASTTEXT_MODEL_PATH=${FASTTEXT_MODEL_PATH:-models/lid.176.ftz}
       - LANGUAGE_DETECTION_CHARS=${LANGUAGE_DETECTION_CHARS:-1000}
       - LANGUAGE_CONFIDENCE_THRESHOLD=${LANGUAGE_CONFIDENCE_THRESHOLD:-0.5}
-      - SUPPORTED_LANGUAGES=${SUPPORTED_LANGUAGES:-ja,en}
+      - SUPPORTED_LANGUAGES=${SUPPORTED_LANGUAGES:-["ja","en"]}
       # Chunking Configuration
       - CHUNK_SIZE=${CHUNK_SIZE:-512}
       - CHUNK_OVERLAP=${CHUNK_OVERLAP:-50}

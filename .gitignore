@@ -22,3 +22,4 @@ apps/leo_gateway/cache/
 docs/_book/
 docs/node_modules/
 site/
+apps/leo_indexer/.env
