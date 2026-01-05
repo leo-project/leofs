@@ -789,6 +789,80 @@
 
 
 %% --------------------------------------------------------------------
+%% GATEWAY - Internal Network (Authentication Bypass)
+%% --------------------------------------------------------------------
+%% @doc Enable internal network authentication bypass
+{mapping,
+ "internal_network.enabled",
+ "leo_gateway.internal_network_enabled",
+ [
+  {datatype, {enum, [true, false]}},
+  {default, false}
+ ]}.
+
+%% @doc CIDR ranges for internal network (comma-separated)
+{mapping,
+ "internal_network.cidrs",
+ "leo_gateway.internal_network_cidrs_raw",
+ [
+  {datatype, string},
+  {default, ""}
+ ]}.
+
+{translation, "leo_gateway.internal_network_cidrs",
+ fun(Conf) ->
+         CIDRStr = cuttlefish_util:conf_get_value("internal_network.cidrs", Conf),
+         case CIDRStr of
+             "" ->
+                 [];
+             _ ->
+                 Tokens = string:tokens(CIDRStr, ", "),
+                 lists:filtermap(
+                   fun(CIDR) ->
+                           Trimmed = string:trim(CIDR),
+                           case string:tokens(Trimmed, "/") of
+                               [IPStr, MaskStr] ->
+                                   case {inet:parse_address(IPStr),
+                                         catch list_to_integer(MaskStr)} of
+                                       {{ok, IP}, Mask} when is_integer(Mask),
+                                                             Mask >= 0, Mask =< 32 ->
+                                           {true, {IP, Mask}};
+                                       _ ->
+                                           false
+                                   end;
+                               _ ->
+                                   false
+                           end
+                   end, Tokens)
+         end
+ end}.
+
+%% @doc Internal endpoints (comma-separated hostnames for authentication bypass)
+{mapping,
+ "internal_network.endpoints",
+ "leo_gateway.internal_network_endpoints_raw",
+ [
+  {datatype, string},
+  {default, ""}
+ ]}.
+
+{translation, "leo_gateway.internal_network_endpoints",
+ fun(Conf) ->
+         EndpointsStr = cuttlefish_util:conf_get_value("internal_network.endpoints", Conf),
+         case EndpointsStr of
+             "" ->
+                 [];
+             _ ->
+                 Tokens = string:tokens(EndpointsStr, ", "),
+                 lists:map(
+                   fun(Endpoint) ->
+                           list_to_binary(string:trim(Endpoint))
+                   end, Tokens)
+         end
+ end}.
+
+
+%% --------------------------------------------------------------------
 %% GATEWAY - NFS-related configuration
 %% --------------------------------------------------------------------
 %% @doc Mountd's port number

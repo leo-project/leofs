@@ -1,0 +1,5 @@
+# Rust build output
+/target/
+
+# Cargo.lock for libraries (keep for binaries)
+# Cargo.lock

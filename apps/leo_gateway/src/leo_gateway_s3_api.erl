@@ -89,6 +89,9 @@ init(Req, Opts) ->
              {ok, Req, State} when Req::cowboy_req:req(),
                                    State::term()).
 handle(Req, State) ->
+    {PeerIP, _PeerPort} = cowboy_req:peer(Req),
+    ?info("handle/2", "peer_ip=~p, method=~p, path=~p",
+          [PeerIP, cowboy_req:method(Req), cowboy_req:path(Req)]),
     case leo_watchdog_state:find_not_safe_items() of
         not_found ->
             Host = cowboy_req:host(Req),
@@ -163,7 +166,13 @@ check_bad_date(Req) ->
             %% no date header needed
             ok;
         _ ->
-            check_bad_date_1(Req)
+            %% Skip date validation for internal network requests
+            case is_internal_network_request(Req) of
+                true ->
+                    ok;
+                false ->
+                    check_bad_date_1(Req)
+            end
     end.
 
 %% @private
@@ -453,7 +462,9 @@ head_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
         {error, timeout} ->
             ?access_log_bucket_head(Bucket, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
             ?reply_timeout_without_body([?SERVER_HEADER], Req);
-        {error, _} ->
+        {error, Reason} ->
+            error_logger:error_msg("head_bucket error: bucket=~p, access_key=~p, reason=~p~n",
+                                   [Bucket, AccessKeyId, Reason]),
             ?access_log_bucket_head(Bucket, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
             ?reply_internal_error_without_body([?SERVER_HEADER], Req)
     end.
@@ -1560,6 +1571,31 @@ is_public_read_write([H|Rest]) ->
     end.
 
 
+%%----------------------------------------------------------------------
+%% Internal Network Authentication Bypass
+%%----------------------------------------------------------------------
+%% @doc Check if request is from internal network
+%% @private
+-spec(is_internal_network_request(Req) ->
+             boolean() when Req::cowboy_req:req()).
+is_internal_network_request(Req) ->
+    Enabled = ?env_internal_network_enabled(),
+    ?info("is_internal_network_request/1", "enabled=~p", [Enabled]),
+    case Enabled of
+        false ->
+            false;
+        true ->
+            %% Check Host header against internal endpoints
+            Host = cowboy_req:host(Req),
+            InternalEndpoints = ?env_internal_network_endpoints(),
+            IsInternal = lists:member(Host, InternalEndpoints),
+            ?info("is_internal_network_request/1",
+                  "host=~p, internal_endpoints=~p, is_internal=~p",
+                  [Host, InternalEndpoints, IsInternal]),
+            IsInternal
+    end.
+
+
 %% @doc Authentication
 %% @private
 -spec(auth(Req, HTTPMethod, Path, TokenLen, ReqParams) ->
@@ -1575,6 +1611,21 @@ is_public_read_write([H|Rest]) ->
                                  SignKey::binary(),
                                  Cause::any()).
 auth(Req, HTTPMethod, Path, TokenLen, ReqParams) ->
+    %% First: Check internal network bypass
+    case is_internal_network_request(Req) of
+        true ->
+            %% Internal network: bypass authentication
+            %% Set flag for access log identification
+            ?set_internal_access(),
+            {ok, ?INTERNAL_ACCESS_KEY_ID, undefined};
+        false ->
+            %% Normal authentication flow
+            auth_normal(Req, HTTPMethod, Path, TokenLen, ReqParams)
+    end.
+
+%% @doc Normal authentication (when not internal network)
+%% @private
+auth_normal(Req, HTTPMethod, Path, TokenLen, ReqParams) ->
     BucketName = case (TokenLen >= 1) of
                      true ->
                          erlang:hd(leo_misc:binary_tokens(Path, ?BIN_SLASH));
@@ -1765,6 +1816,8 @@ get_bucket_1(_AccessKeyId, BucketName, _Delimiter, _Marker, 0, Prefix, _Versions
     Prefix_1 = case Prefix of
                    none ->
                        <<>>;
+                   <<"/", Rest/binary>> ->
+                       Rest;
                    _ ->
                        Prefix
                end,
@@ -1776,6 +1829,8 @@ get_bucket_1(_AccessKeyId, BucketName, none, Marker, MaxKeys, Prefix, _Versions)
     Prefix_1 = case Prefix of
                    none ->
                        <<>>;
+                   <<"/", Rest/binary>> ->
+                       Rest;
                    _ ->
                        Prefix
                end,
@@ -1809,6 +1864,8 @@ get_bucket_1(_AccessKeyId, BucketName, Delimiter, Marker, MaxKeys, Prefix, true)
                        <<>>;
                    true ->
                        <<>>;
+                   <<"/", Rest/binary>> ->
+                       Rest;
                    _ ->
                        Prefix
                end,
@@ -1840,6 +1897,8 @@ get_bucket_1(_AccessKeyId, BucketName, Delimiter, Marker, MaxKeys, Prefix, false
                        <<>>;
                    true ->
                        <<>>;
+                   <<"/", Rest/binary>> ->
+                       Rest;
                    _ ->
                        Prefix
                end,
@@ -2407,7 +2466,16 @@ send_udp_notification(Bucket, Key) ->
                false -> 5000;
                Val2 -> list_to_integer(Val2)
            end,
-    Packet = <<Bucket/binary, "|", Key/binary>>,
+    %% Strip bucket prefix from Key if present (internal path format is "bucket/key")
+    BucketPrefix = <<Bucket/binary, "/">>,
+    PrefixLen = byte_size(BucketPrefix),
+    ActualKey = case binary:match(Key, BucketPrefix) of
+                    {0, PrefixLen} ->
+                        binary:part(Key, PrefixLen, byte_size(Key) - PrefixLen);
+                    _ ->
+                        Key
+                end,
+    Packet = <<Bucket/binary, "|", ActualKey/binary>>,
     ?info("send_udp_notification/2", "sending to ~s:~p - ~s", [Host, Port, Packet]),
     case gen_udp:open(0, [binary]) of
         {ok, Socket} ->

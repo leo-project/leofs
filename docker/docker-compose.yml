@@ -90,7 +90,9 @@ services:
     ports:
       - "28080:8080"
     networks:
-      - leofs_net
+      leofs_net:
+        aliases:
+          - leogateway
     depends_on:
       leo_storage:
         condition: service_healthy
@@ -102,9 +104,13 @@ services:
 
   nats:
     image: nats:latest
-    command: "-js"
+    container_name: nats
+    command: "-c /etc/nats/nats.conf"
     ports:
       - "4222:4222"
+    volumes:
+      - ./config/nats.conf:/etc/nats/nats.conf:ro
+      - nats_data:/data
     networks:
       - leofs_net
     profiles:
@@ -129,6 +135,92 @@ services:
       - nats
     profiles:
       - nats
+
+  leofs_init:
+    image: leofs-leo_manager_0:latest
+    container_name: leofs_init
+    hostname: leofs_init
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Waiting for LeoFS cluster to be ready..."
+        sleep 5
+        echo "Adding internal endpoint: leogateway"
+        /opt/leo_manager_0/bin/leofs-adm add-endpoint leogateway || echo "(endpoint may already exist)"
+        echo "LeoFS initialization complete"
+    networks:
+      - leofs_net
+    depends_on:
+      leo_gateway:
+        condition: service_healthy
+    profiles:
+      - nats
+    restart: "no"
+
+  leo_indexer:
+    build:
+      context: ../apps/leo_indexer
+      dockerfile: Dockerfile
+    image: leofs-indexer:latest
+    container_name: leo_indexer
+    hostname: leo_indexer
+    env_file:
+      - ../apps/leo_indexer/.env
+    environment:
+      # Python unbuffered output for real-time logs
+      - PYTHONUNBUFFERED=1
+      # NATS Configuration
+      - NATS_URL=nats://nats:4222
+      - NATS_STREAM=LEOFS_EVENTS
+      - NATS_SUBJECT=leofs.events.upload
+      - NATS_CONSUMER=leo-indexer
+      - NATS_MAX_DELIVER=3
+      - NATS_ACK_WAIT=30
+      # LeoFS S3 Configuration (internal network bypass)
+      - LEOFS_ENDPOINT=http://leogateway:8080
+      # Storage Configuration
+      - TEMP_DIR=/tmp/lance
+      # LanceDB S3 Backend Configuration
+      - LANCEDB_S3_ENABLED=true
+      - LANCEDB_TABLE_NAME=documents
+      - LANCEDB_VECTORS_PREFIX=.vectors
+      # DLQ Configuration
+      - DLQ_SUBJECT=leofs.events.dlq
+      # Language Detection Configuration
+      - FASTTEXT_MODEL_PATH=${FASTTEXT_MODEL_PATH:-models/lid.176.ftz}
+      - LANGUAGE_DETECTION_CHARS=${LANGUAGE_DETECTION_CHARS:-1000}
+      - LANGUAGE_CONFIDENCE_THRESHOLD=${LANGUAGE_CONFIDENCE_THRESHOLD:-0.5}
+      - SUPPORTED_LANGUAGES=${SUPPORTED_LANGUAGES:-["ja","en"]}
+      # Chunking Configuration
+      - CHUNK_SIZE=${CHUNK_SIZE:-512}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-50}
+      # Embedding Configuration (language-specific models)
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-intfloat/multilingual-e5-base}
+      - EMBEDDING_MODEL_JA=${EMBEDDING_MODEL_JA:-cl-nagoya/ruri-v3-pt-30m}
+      - EMBEDDING_MODEL_EN=${EMBEDDING_MODEL_EN:-intfloat/multilingual-e5-base}
+      - EMBEDDING_BATCH_SIZE=${EMBEDDING_BATCH_SIZE:-32}
+      - EMBEDDING_DIMENSION=${EMBEDDING_DIMENSION:-768}
+      - EMBEDDING_DIMENSION_JA=${EMBEDDING_DIMENSION_JA:-256}
+      - EMBEDDING_DIMENSION_EN=${EMBEDDING_DIMENSION_EN:-768}
+      # Pipeline Mode
+      - PIPELINE_MODE=${PIPELINE_MODE:-full}
+      # Logging
+      - LOG_LEVEL=INFO
+    volumes:
+      - indexer_tmp:/tmp/lance
+    networks:
+      - leofs_net
+    depends_on:
+      leo_gateway:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      leo_nats_bridge:
+        condition: service_started
+    profiles:
+      - nats
+    restart: unless-stopped
+
 networks:
   leofs_net:
     driver: bridge
@@ -143,3 +235,5 @@ volumes:
   storage_log:
   gateway_work:
   gateway_log:
+  indexer_tmp:
+  nats_data:

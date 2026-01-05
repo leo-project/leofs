@@ -108,6 +108,50 @@
 
 
 %%----------------------------------------------------------------------
+%% INTERNAL NETWORK AUTHENTICATION BYPASS
+%%----------------------------------------------------------------------
+%% Special access_key_id for internal network requests
+-define(INTERNAL_ACCESS_KEY_ID, <<"_internal_">>).
+
+%% Process dictionary key for internal access flag
+-define(PD_KEY_INTERNAL_ACCESS, '$is_internal_access').
+
+%% Environment macros for internal network settings
+-define(env_internal_network_enabled(),
+        case application:get_env(leo_gateway, internal_network_enabled) of
+            {ok, true} -> true;
+            _ -> false
+        end).
+
+-define(env_internal_network_cidrs(),
+        case application:get_env(leo_gateway, internal_network_cidrs) of
+            {ok, _EnvCIDRs} when is_list(_EnvCIDRs) -> _EnvCIDRs;
+            _ -> []
+        end).
+
+-define(env_internal_network_endpoints(),
+        case application:get_env(leo_gateway, internal_network_endpoints) of
+            {ok, _EnvEndpoints} when is_list(_EnvEndpoints) -> _EnvEndpoints;
+            _ -> []
+        end).
+
+%% Set internal access flag in process dictionary
+-define(set_internal_access(),
+        put(?PD_KEY_INTERNAL_ACCESS, true)).
+
+%% Check if current request is from internal network
+-define(is_internal_access(),
+        get(?PD_KEY_INTERNAL_ACCESS) =:= true).
+
+%% Get log prefix based on internal access flag
+-define(log_prefix(_Method),
+        case ?is_internal_access() of
+            true  -> "[" ++ _Method ++ "][INTERNAL]";
+            false -> "[" ++ _Method ++ "]"
+        end).
+
+
+%%----------------------------------------------------------------------
 %% RECORDS
 %%----------------------------------------------------------------------
 %% large-object
@@ -371,6 +415,7 @@
         end).
 
 %% Access log macros using Erlang standard logger
+%% Note: Uses ?is_internal_access() to add [INTERNAL] marker for internal network requests
 -define(access_log_get(_Bucket,_Path,_Size,_Response,_Begin),
         begin
             ?access_log_get(_Bucket,_Path,_Size,_Response,_Begin,"miss")
@@ -380,8 +425,9 @@
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[GET] ~s ~s ~w ~w ~s ~w ~w ~w ~s",
-                       [binary_to_list(_Bucket), _OrgPath, _ChildNum, _Size,
+            _Prefix = ?log_prefix("GET"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w ~s",
+                       [_Prefix, binary_to_list(_Bucket), _OrgPath, _ChildNum, _Size,
                         leo_date:date_format(), _Clock, _Response, _Latency, _Cache],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -390,8 +436,9 @@
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[GET-ACL] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), _OrgPath, _ChildNum, 0,
+            _Prefix = ?log_prefix("GET-ACL"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), _OrgPath, _ChildNum, 0,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -400,8 +447,9 @@
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
-            logger:info("[PUT] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), _OrgPath, _ChildNum, _Size,
+            _Prefix = ?log_prefix("PUT"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), _OrgPath, _ChildNum, _Size,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -409,8 +457,9 @@
         begin
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[COPY] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), _Path, 0, _Size,
+            _Prefix = ?log_prefix("COPY"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), _Path, 0, _Size,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -419,8 +468,9 @@
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[DELETE] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), _OrgPath, _ChildNum, _Size,
+            _Prefix = ?log_prefix("DELETE"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), _OrgPath, _ChildNum, _Size,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -429,8 +479,9 @@
             {_OrgPath, _ChildNum} = ?get_child_num(binary_to_list(_Path)),
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[HEAD] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), _OrgPath, _ChildNum, 0,
+            _Prefix = ?log_prefix("HEAD"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), _OrgPath, _ChildNum, 0,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -456,8 +507,9 @@
         begin
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[BUCKET-PUT] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), "", 0, 0,
+            _Prefix = ?log_prefix("BUCKET-PUT"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), "", 0, 0,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -465,8 +517,9 @@
         begin
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[BUCKET-DELETE] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), "", 0, 0,
+            _Prefix = ?log_prefix("BUCKET-DELETE"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), "", 0, 0,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -474,8 +527,9 @@
         begin
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[BUCKET-HEAD] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), "", 0, 0,
+            _Prefix = ?log_prefix("BUCKET-HEAD"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), "", 0, 0,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -483,8 +537,9 @@
         begin
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[BUCKET-GET] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), binary_to_list(_Prefix), 0, 0,
+            _LogPrefix = ?log_prefix("BUCKET-GET"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_LogPrefix, binary_to_list(_Bucket), binary_to_list(_Prefix), 0, 0,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -492,8 +547,9 @@
         begin
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[BUCKET-GETACL] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), "", 0, 0,
+            _Prefix = ?log_prefix("BUCKET-GETACL"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), "", 0, 0,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).
@@ -501,8 +557,9 @@
         begin
             _Clock = leo_date:clock(),
             _Latency = erlang:round((_Clock - _Begin) / 1000),
-            logger:info("[BUCKET-PUTACL] ~s ~s ~w ~w ~s ~w ~w ~w",
-                       [binary_to_list(_Bucket), _CannedACL, 0, 0,
+            _Prefix = ?log_prefix("BUCKET-PUTACL"),
+            logger:info("~s ~s ~s ~w ~w ~s ~w ~w ~w",
+                       [_Prefix, binary_to_list(_Bucket), _CannedACL, 0, 0,
                         leo_date:date_format(), _Clock, _Response, _Latency],
                        #{domain => [leo_gateway, access_log]})
         end).

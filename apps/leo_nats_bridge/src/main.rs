@@ -10,6 +10,9 @@ static MSG_RECEIVED: AtomicU64 = AtomicU64::new(0);
 static MSG_PUBLISHED: AtomicU64 = AtomicU64::new(0);
 static MSG_FAILED: AtomicU64 = AtomicU64::new(0);
 
+// Key prefix to filter out (internal vector storage files)
+const FILTER_KEY_PREFIX_VECTORS: &str = ".vectors/";
+
 #[derive(Serialize, Debug)]
 struct UploadEvent {
     event: String,
@@ -96,6 +99,12 @@ async fn process_message(jetstream: async_nats::jetstream::Context, msg: String)
         if bucket.is_empty() || key.is_empty() {
              warn!("  -> Invalid format (empty bucket or key): {}", trimmed_msg);
              return Ok(());
+        }
+
+        // Filter out .vectors/* files (internal vector storage, no need to notify)
+        if key.starts_with(FILTER_KEY_PREFIX_VECTORS) {
+            debug!("  -> Filtered: skipping vector file key={}", key);
+            return Ok(());
         }
 
         let event = UploadEvent {

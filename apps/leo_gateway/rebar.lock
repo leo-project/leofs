@@ -66,7 +66,7 @@
   1},
  {<<"leo_s3_libs">>,
   {git,"https://github.com/leo-project/leo_s3_libs.git",
-       {ref,"6234d900a38a1bea8f396569b535de663816e686"}},
+       {ref,"c53cd728b79be7eb9614c53bf8dcb8df9b23add7"}},
   0},
  {<<"leo_tran">>,
   {git,"https://github.com/leo-project/leo_tran.git",
