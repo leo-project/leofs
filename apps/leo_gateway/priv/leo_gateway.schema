@@ -837,6 +837,30 @@
          end
  end}.
 
+%% @doc Internal endpoints (comma-separated hostnames for authentication bypass)
+{mapping,
+ "internal_network.endpoints",
+ "leo_gateway.internal_network_endpoints_raw",
+ [
+  {datatype, string},
+  {default, ""}
+ ]}.
+
+{translation, "leo_gateway.internal_network_endpoints",
+ fun(Conf) ->
+         EndpointsStr = cuttlefish_util:conf_get_value("internal_network.endpoints", Conf),
+         case EndpointsStr of
+             "" ->
+                 [];
+             _ ->
+                 Tokens = string:tokens(EndpointsStr, ", "),
+                 lists:map(
+                   fun(Endpoint) ->
+                           list_to_binary(string:trim(Endpoint))
+                   end, Tokens)
+         end
+ end}.
+
 
 %% --------------------------------------------------------------------
 %% GATEWAY - NFS-related configuration

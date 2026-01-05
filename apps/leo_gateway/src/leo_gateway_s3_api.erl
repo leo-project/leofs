@@ -462,7 +462,9 @@ head_bucket(Req, Key, #req_params{access_key_id = AccessKeyId,
         {error, timeout} ->
             ?access_log_bucket_head(Bucket, ?HTTP_ST_SERVICE_UNAVAILABLE, BeginTime),
             ?reply_timeout_without_body([?SERVER_HEADER], Req);
-        {error, _} ->
+        {error, Reason} ->
+            error_logger:error_msg("head_bucket error: bucket=~p, access_key=~p, reason=~p~n",
+                                   [Bucket, AccessKeyId, Reason]),
             ?access_log_bucket_head(Bucket, ?HTTP_ST_INTERNAL_ERROR, BeginTime),
             ?reply_internal_error_without_body([?SERVER_HEADER], Req)
     end.
@@ -1583,18 +1585,14 @@ is_internal_network_request(Req) ->
         false ->
             false;
         true ->
-            case cowboy_req:peer(Req) of
-                {IP, Port} ->
-                    CIDRs = ?env_internal_network_cidrs(),
-                    IsInternal = leo_gateway_cidr:is_in_cidrs(IP, CIDRs),
-                    ?info("is_internal_network_request/1",
-                          "peer_ip=~p, port=~p, cidrs=~p, is_internal=~p",
-                          [IP, Port, CIDRs, IsInternal]),
-                    IsInternal;
-                Other ->
-                    ?info("is_internal_network_request/1", "peer_result=~p", [Other]),
-                    false
-            end
+            %% Check Host header against internal endpoints
+            Host = cowboy_req:host(Req),
+            InternalEndpoints = ?env_internal_network_endpoints(),
+            IsInternal = lists:member(Host, InternalEndpoints),
+            ?info("is_internal_network_request/1",
+                  "host=~p, internal_endpoints=~p, is_internal=~p",
+                  [Host, InternalEndpoints, IsInternal]),
+            IsInternal
     end.
 
 
@@ -1818,6 +1816,8 @@ get_bucket_1(_AccessKeyId, BucketName, _Delimiter, _Marker, 0, Prefix, _Versions
     Prefix_1 = case Prefix of
                    none ->
                        <<>>;
+                   <<"/", Rest/binary>> ->
+                       Rest;
                    _ ->
                        Prefix
                end,
@@ -1829,6 +1829,8 @@ get_bucket_1(_AccessKeyId, BucketName, none, Marker, MaxKeys, Prefix, _Versions)
     Prefix_1 = case Prefix of
                    none ->
                        <<>>;
+                   <<"/", Rest/binary>> ->
+                       Rest;
                    _ ->
                        Prefix
                end,
@@ -1862,6 +1864,8 @@ get_bucket_1(_AccessKeyId, BucketName, Delimiter, Marker, MaxKeys, Prefix, true)
                        <<>>;
                    true ->
                        <<>>;
+                   <<"/", Rest/binary>> ->
+                       Rest;
                    _ ->
                        Prefix
                end,
@@ -1893,6 +1897,8 @@ get_bucket_1(_AccessKeyId, BucketName, Delimiter, Marker, MaxKeys, Prefix, false
                        <<>>;
                    true ->
                        <<>>;
+                   <<"/", Rest/binary>> ->
+                       Rest;
                    _ ->
                        Prefix
                end,

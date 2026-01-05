@@ -12,6 +12,7 @@ set -e
 ENDPOINT="http://127.0.0.1:28080"
 LEOFS_ADM="./leofs-adm"
 DEFAULT_FILE_COUNT=100
+DEFAULT_WAIT_SEC=10
 
 # Colors for output
 RED='\033[0;31m'
@@ -20,16 +21,20 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 usage() {
-    echo "Usage: $0 <username> <bucket-name> [file-count]"
+    echo "Usage: $0 <username> <bucket-name> [file-count] [--wait <seconds>] [--debug]"
     echo ""
     echo "Arguments:"
-    echo "  username     User name to create"
-    echo "  bucket-name  Bucket name to create"
-    echo "  file-count   Number of files to upload (default: $DEFAULT_FILE_COUNT)"
+    echo "  username        User name to create"
+    echo "  bucket-name     Bucket name to create"
+    echo "  file-count      Number of files to upload (default: $DEFAULT_FILE_COUNT)"
+    echo "  --wait <sec>    Wait time in seconds before listing objects (default: $DEFAULT_WAIT_SEC)"
+    echo "  --debug         Enable debug output for list_objects"
     echo ""
     echo "Example:"
     echo "  $0 test-user test-bucket"
     echo "  $0 test-user test-bucket 50"
+    echo "  $0 test-user test-bucket 50 --wait 20"
+    echo "  $0 test-user test-bucket 50 --wait 20 --debug"
     exit 1
 }
 
@@ -41,6 +46,35 @@ fi
 USERNAME="$1"
 BUCKET_NAME="$2"
 FILE_COUNT="${3:-$DEFAULT_FILE_COUNT}"
+WAIT_SEC="$DEFAULT_WAIT_SEC"
+DEBUG_FLAG=""
+
+# If $3 is a flag, reset FILE_COUNT to default
+if [[ "$3" == --* ]]; then
+    FILE_COUNT="$DEFAULT_FILE_COUNT"
+fi
+
+# Parse optional flags
+shift 2  # Skip username and bucket-name
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --wait)
+            WAIT_SEC="$2"
+            shift 2
+            ;;
+        --debug)
+            DEBUG_FLAG="--debug"
+            shift
+            ;;
+        *)
+            # Positional argument (file-count)
+            if [[ ! "$1" == --* ]]; then
+                FILE_COUNT="$1"
+            fi
+            shift
+            ;;
+    esac
+done
 
 echo -e "${YELLOW}========================================${NC}"
 echo -e "${YELLOW}  LeoFS Batch Upload Test${NC}"
@@ -48,7 +82,9 @@ echo -e "${YELLOW}========================================${NC}"
 echo "  Username:    $USERNAME"
 echo "  Bucket:      $BUCKET_NAME"
 echo "  File count:  $FILE_COUNT"
+echo "  Wait:        ${WAIT_SEC}s"
 echo "  Endpoint:    $ENDPOINT"
+echo "  Debug:       ${DEBUG_FLAG:-off}"
 echo ""
 
 # Step 1: Create user
@@ -88,7 +124,8 @@ python3 "$SCRIPT_DIR/batch_upload.py" \
     --access-key "$ACCESS_KEY" \
     --secret-key "$SECRET_KEY" \
     --count "$FILE_COUNT" \
-    --wait 10
+    --wait "$WAIT_SEC" \
+    $DEBUG_FLAG
 
 echo ""
 echo -e "${GREEN}========================================${NC}"

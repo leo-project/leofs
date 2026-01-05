@@ -129,6 +129,12 @@
             _ -> []
         end).
 
+-define(env_internal_network_endpoints(),
+        case application:get_env(leo_gateway, internal_network_endpoints) of
+            {ok, _EnvEndpoints} when is_list(_EnvEndpoints) -> _EnvEndpoints;
+            _ -> []
+        end).
+
 %% Set internal access flag in process dictionary
 -define(set_internal_access(),
         put(?PD_KEY_INTERNAL_ACCESS, true)).

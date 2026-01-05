@@ -24,7 +24,7 @@ echo "[2/2] Building runtime images..."
 
 for COMPONENT in leo_manager_0 leo_manager_1 leo_storage leo_gateway; do
     echo "  Building ${COMPONENT}..."
-    docker build -f docker/Dockerfile \
+    docker build --no-cache -f docker/Dockerfile \
         --build-arg COMPONENT=${COMPONENT} \
         -t leofs-${COMPONENT}:latest .
 done

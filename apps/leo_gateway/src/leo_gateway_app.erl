@@ -691,12 +691,84 @@ get_options() ->
     ?info("start/3", "internal_network.enabled: ~p", [InternalNetworkEnabled]),
     case InternalNetworkEnabled of
         true ->
-            ?info("start/3", "internal_network.cidrs: ~p", [InternalNetworkCIDRs]);
+            ?info("start/3", "internal_network.cidrs: ~p", [InternalNetworkCIDRs]),
+            %% Parse internal_network_endpoints_raw and set internal_network_endpoints
+            %% This is needed because cuttlefish translation may not work correctly
+            InternalEndpoints = parse_internal_endpoints(),
+            application:set_env(leo_gateway, internal_network_endpoints, InternalEndpoints),
+            ?info("start/3", "internal_network.endpoints: ~p", [InternalEndpoints]);
         false ->
             ok
     end,
 
     {ok, HttpOptions}.
+
+
+%% @doc Parse internal_network.endpoints from config file directly
+%% @private
+-spec parse_internal_endpoints() -> [binary()].
+parse_internal_endpoints() ->
+    %% Try application env first (set by cuttlefish)
+    case application:get_env(leo_gateway, internal_network_endpoints_raw) of
+        {ok, EndpointsStr} when is_list(EndpointsStr), EndpointsStr =/= "" ->
+            parse_endpoints_string(EndpointsStr);
+        _ ->
+            %% Fallback: read directly from config file
+            ConfigFile = filename:join([code:priv_dir(leo_gateway), "..", "etc", "leo_gateway.conf"]),
+            case file:read_file(ConfigFile) of
+                {ok, Content} ->
+                    parse_endpoints_from_config(binary_to_list(Content));
+                {error, _} ->
+                    %% Try alternative path
+                    AltConfigFile = "/opt/leo_gateway/etc/leo_gateway.conf",
+                    case file:read_file(AltConfigFile) of
+                        {ok, Content2} ->
+                            parse_endpoints_from_config(binary_to_list(Content2));
+                        {error, _} ->
+                            []
+                    end
+            end
+    end.
+
+%% @private
+parse_endpoints_string(EndpointsStr) ->
+    Tokens = string:tokens(EndpointsStr, ", "),
+    lists:map(fun(Endpoint) ->
+                      list_to_binary(string:trim(Endpoint))
+              end, Tokens).
+
+%% @private
+parse_endpoints_from_config(Content) ->
+    Lines = string:tokens(Content, "\n"),
+    parse_endpoints_from_lines(Lines).
+
+%% @private
+parse_endpoints_from_lines([]) ->
+    [];
+parse_endpoints_from_lines([Line | Rest]) ->
+    Trimmed = string:trim(Line),
+    case Trimmed of
+        [$# | _] ->
+            %% Comment line, skip
+            parse_endpoints_from_lines(Rest);
+        _ ->
+            case string:split(Trimmed, "=") of
+                [Key, Value] ->
+                    KeyTrimmed = string:trim(Key),
+                    case KeyTrimmed of
+                        "internal_network.endpoints" ->
+                            ValueTrimmed = string:trim(Value),
+                            case ValueTrimmed of
+                                "" -> [];
+                                _ -> parse_endpoints_string(ValueTrimmed)
+                            end;
+                        _ ->
+                            parse_endpoints_from_lines(Rest)
+                    end;
+                _ ->
+                    parse_endpoints_from_lines(Rest)
+            end
+    end.
 
 
 %% @doc Data-type transmit from list to binary
